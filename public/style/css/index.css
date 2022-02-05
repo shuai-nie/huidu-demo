@@ -1,0 +1,126 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.container{
+   
+}
+.banner{
+    height: 176px;
+}
+.banner img {
+    width: 100%;
+    height: 176px;
+}
+.login{
+    width: 272px;
+    height:334px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    bottom: 35px;
+    border-radius: 7px;
+    box-shadow:0px 10px 20px #888888;
+    text-align: center;
+}
+.kong{
+    height: 30px;
+}
+input::-webkit-input-placeholder {
+    font-size: 10px;
+    padding-left:5px;
+}
+   
+.name{
+    height: 48px;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+}
+.color{
+	width: 45%;
+    height: 27px;
+    border-radius: 3px;
+    border: 1px solid #9B82AF;
+    outline: none;
+}
+.school{
+    height: 48px;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+}
+.school select{
+    width: 125px;
+    height: 29px;
+    background: #fff;
+    outline: none;
+    border: 1px solid #9B82AF;    
+    border-radius: 3px;
+     position: relative;
+    right: 2px;
+}
+.btn{
+    position: relative;
+    top: 25px;
+    width: 152px;
+    height: 31px;
+    margin: 0 auto;
+    text-align: center;
+}
+.btn button{
+    width: 152px;
+    height: 31px;
+    background: #957AAF;
+    border: 0;
+    border-radius: 3px;
+    color: #fff;
+    outline: none;
+}
+.change{
+    border:1px solid red;
+}
+#prompt{
+    color: red;
+    position: relative;
+    top:2px;
+}
+.prompt{
+    margin-top: 5px;
+    width: auto;
+    margin-left: 60px;
+}
+.prompt p{
+    display: inline-block;
+    font-size:8px ;
+    font-weight: 400;
+}
+.black_overlay{ 
+    display: none; 
+    position: absolute; 
+    top: 0%; 
+    left: 0%; 
+    width: 100%; 
+    height: 100%; 
+    z-index:1001; 
+    -moz-opacity: 0.8; 
+    opacity:.80; 
+    filter: alpha(opacity=88); 
+} 
+.white_content { 
+    width: 152px;
+    height: 152px;
+    display: none; 
+    background-color: white; 
+    z-index:1002; 
+    overflow: auto; 
+    text-align: center;
+} 
+
+.white_content img{
+    width: 125px;
+    height: 125px;
+}
+.white_content a {
+    font-size: 10px;
+}

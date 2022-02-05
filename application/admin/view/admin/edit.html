@@ -1,0 +1,64 @@
+{include file="moban/css"}
+	{include file="moban/js"}
+	  <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+	  	<div class="layui-form-item">
+    <label class="layui-form-label">用户分组</label>
+    <div class="layui-input-block">
+      <select name="group_id" lay-verify="required">
+        <option value=""></option>
+        {volist name="groupList" id="val"}
+			<option value="{$val['id']}" {if condition="$val['id'] eq $info['group_id']"} selected {/if}>{$val['group_name']}</option>
+        {/volist}
+      </select>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="username" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value="{$info['username']}">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" value="{$info['password']}" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">姓名</label>
+    <div class="layui-input-block">
+      <input type="text" name="name" required lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input" value="{$info['name']}">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">联系方式</label>
+    <div class="layui-input-block">
+      <input type="text" name="phone" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" value="{$info['phone']}">
+    </div>
+  </div>
+   <div class="layui-form-item layui-hide">
+      <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+      <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+  <!-- <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div> -->
+</div>
+ 
+<script>
+//Demo
+layui.use('form', function(){
+  var form = layui.form;
+  
+  //监听提交
+  form.on('submit(submit)', function(data){
+    // layer.msg(JSON.stringify(data.field));
+    Api.edit(data.field,function(res){
+    	console.log(res);
+    });
+  });
+});
+</script>	

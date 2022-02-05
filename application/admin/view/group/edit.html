@@ -1,0 +1,39 @@
+{include file="moban/css"}
+	{include file="moban/js"}
+	 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+	  	<div class="layui-form-item">
+		    <label class="layui-form-label">用户组名称</label>
+		    <div class="layui-input-block">
+		     <input type="text" name="group_name" required  lay-verify="required" placeholder="请输入用户组名称" autocomplete="off" class="layui-input" value="{$info['group_name']}">
+		    </div>
+		  </div>
+		  {volist name="menuList" id="val"}
+		  	<div class="layui-form-item">
+			   <label class="layui-form-label">权限列表</label>
+			    <div class="layui-input-block">
+			    	<input type="checkbox" name="rules[]" value="{$val['id']}" title="{$val['title']}" {if condition="in_array($val['id'],explode(',',$info['rules']))"}checked{/if}>
+			     {volist name="val['_data']" id="item"}
+					<input type="checkbox" name="rules[]" title="{$item['title']}" value="{$item['id']}" {if condition="in_array($item['id'],explode(',',$info['rules']))"}checked{/if}>
+			     {/volist}
+			    </div>
+			  </div>
+		  {/volist}
+	  <div class="layui-form-item layui-hide">
+      <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+      <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+	</div>
+	<script>
+//Demo
+layui.use('form', function(){
+  var form = layui.form;
+  
+  //监听提交
+  form.on('submit(submit)', function(data){
+    // layer.msg(JSON.stringify(data.field));
+    Api.edit(data.field,function(res){
+    	console.log(res);
+    });
+  });
+});
+</script>	

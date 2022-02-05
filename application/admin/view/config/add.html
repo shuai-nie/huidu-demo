@@ -1,0 +1,92 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<div class="layui-form" id="layuiadmin-app-form-list" lay-filter="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">提示</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" disabled class="layui-input" placeholder="请输入" required type="text" value="内容1 内容2 只能选择1个进行添加">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">键</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" class="layui-input" lay-verify="required" name="key" placeholder="请输入" required type="text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" class="layui-input" name="remarks" placeholder="请输入" required type="text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">*内容1</label>
+        <div class="layui-input-block">
+            <input autocomplete="off" class="layui-input" name="info1" placeholder="请输入" required type="text">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"><span class="x-red">*</span>内容2</label>
+        <div class="layui-input-inline">
+            <textarea id="content" name="content" rows="10"></textarea>
+            <input type="hidden" name="info2" id="info2">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input id="submit" lay-filter="submit" lay-submit type="button" value="确认">
+        <input id="layuiadmin-app-form-edit" lay-filter="layuiadmin-app-form-edit" lay-submit type="button" value="取消">
+    </div>
+</div>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.all.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/lang/zh-cn/zh-cn.js"></script>
+
+<script>
+    var ue = UE.getEditor('content', {
+        initialFrameWidth: 500,    //初始化宽度
+        initialFrameHeight: 300,   //初始化高度
+        maximumWords:1000,         //最大长度限制
+        autoHeightEnabled: false,  //禁止自动长高
+        autoFloatEnabled:false,    //禁止工具条漂浮
+        zIndex:"0"
+    });
+
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage') {
+            return "/Admin/loupan/fuwenben_upload_file";
+        } else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            var content = ue.getContent();
+            $("#info2").val(content);
+            console.log($("#info2").val());
+            data.field.info2 = $("#info2").val();
+            if(data.field.info1 != '' && data.field.info2 != ''){
+                layer.msg('内容1 内容2 只能选择1个进行添加', {
+                    time: 1500,
+                    icon:2
+                });
+                return ;
+            }
+            // layer.msg(JSON.stringify(data.field));
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+    });
+
+</script>

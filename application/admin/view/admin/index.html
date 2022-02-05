@@ -1,0 +1,57 @@
+{include file="moban/bone_header"}
+<div class="layui-btn-container">
+  {if condition="checkAuth('adminadd')"}
+  <button class="layui-btn" data-type="addAdmin">添加用户</button>
+  {/if}
+</div>
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+<script type="text/html" id="barDemo">
+ {{# if(d['id']!=1){ }}
+  {if condition="checkAuth('adminedit')"}
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  {/if}
+  {if condition="checkAuth('del_admin')"}
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  {/if}
+  {if condition="!checkAuth('del_admin') and !checkAuth('adminedit')"}
+    暂无任何权限
+  {/if}
+  {{# }else{
+    return "禁止修改";
+} }}
+</script>
+	<script>
+		layui.use('table', function(){
+          var table = layui.table;
+          UI.getPageTable(table,"{:url('')}",[
+          	{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+          	,{field: 'name', title: '姓名'}
+          	,{field: 'phone', title: '联系方式'}
+          	,{field: 'username', title: '用户名'}
+          	,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+          ]);
+          table.on('tool(think-table)', function(obj){
+          		var data=obj.data;
+          		if(obj.event==="edit"){
+          			UI.openLayer("{:url('edit')}?id="+data['id']);
+          		}else if(obj.event==='del'){
+          			UI.delete(data['id'],function(res){
+                  if(res.code==200){
+                    table.reload("think-table");
+                  }
+                });
+          		}
+          });
+          var $ = layui.$, active = {
+            addAdmin:function(){
+               UI.openLayer("{:url('add')}");
+            }
+          };
+          
+          $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+          });
+      });
+	</script>
+{include file="moban/bone_footer"}

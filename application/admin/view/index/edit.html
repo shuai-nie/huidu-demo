@@ -1,0 +1,72 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<div class="layui-form think-table" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">初始密码</label>
+    <div class="layui-input-block">
+      <input type="text" name="password_old" required  lay-verify="required" placeholder="请输入初始密码" autocomplete="off" class="layui-input" >
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">新密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="password_new" id="password_new" required  lay-verify="required" placeholder="请输入新密码" autocomplete="off" class="layui-input" value="">
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">重复密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="password_re" id="password_re" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" value="">
+    </div>
+  </div>
+
+  <div class="layui-form-item layui-hide">
+    <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+    <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+  </div>
+
+</div>
+
+<script>
+  //Demo
+  var info;
+
+  layui.use('form', function(){
+    var form = layui.form;
+    //监听提交
+    form.on('submit(submit)', function(data){
+      // layer.msg(JSON.stringify(data.field));
+      var password_new = $("#password_new").val();
+      var re_password = $("#password_re").val();
+
+      if(password_new !== re_password ) {
+        layer.alert('两次密码不一致');
+        return false;
+      }
+
+      Api.edit(data.field,function(res){
+        if(res.code === 400){
+          layer.alert(res.msg);
+        }else{
+          re();
+        }
+      });
+    });
+    function re(){
+      parent.location.reload();
+    }
+    form.verify({
+      article_desc: function(value){
+        layui.layedit.sync(info);
+      }
+    });
+  });
+
+
+</script>
