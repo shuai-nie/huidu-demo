@@ -43,9 +43,9 @@ class Menu extends Base
 		if(request()->isPost()){
 			$this->logic->save_one(input('post.'));
 		}
-		$info=$this->logic->get_find($id);
-		$menuList=$this->logic->get_all_menu(['pid'=>0]);
-		return view('',[
+		$info = $this->logic->get_find($id);
+		$menuList = $this->logic->get_all_menu(['pid'=>0]);
+		return view('', [
 			'info'=>$info,
 			'menuList'=>$menuList
 		]);

@@ -1,15 +1,12 @@
 {include file="moban/css"}
 {include file="moban/js"}
-<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
-    <form class="layui-form"  lay-filter="first">
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+    <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
         <div class="layui-input-block">
             <select name="pid" lay-verify="required">
                 <option value="0">请选择菜单</option>
-                {volist name="menuList" id="val"}
-                <option value="{$val['id']}" >{$val['title']}</option>
-                {/volist}
             </select>
         </div>
     </div>
@@ -17,42 +14,41 @@
         <label class="layui-form-label">菜单标题</label>
         <div class="layui-input-block">
             <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off"
-                   class="layui-input" value="{$info['title']}">
+                   class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">链接</label>
         <div class="layui-input-block">
-            <input type="text" name="link" required lay-verify="required" placeholder="链接" autocomplete="off" class="layui-input" >
+            <input type="text" name="link" required lay-verify="required" placeholder="链接" autocomplete="off"
+                   class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">字体图标</label>
         <div class="layui-input-block">
-            <input type="text" name="icon" placeholder="字体图标" autocomplete="off" class="layui-input" >
+            <input type="text" name="icon" placeholder="字体图标" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">是否展示</label>
         <div class="layui-input-block">
-            <input type="radio" name="show" value="1" title="展示" checked >
-            <input type="radio" name="show" value="0" title="隐藏" >
+            <input type="radio" name="show" value="1" title="展示" checked>
+            <input type="radio" name="show" value="0" title="隐藏">
         </div>
     </div>
-
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-
-    </form>
     <!-- <div class="layui-form-item">
       <div class="layui-input-block">
         <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
       </div>
     </div> -->
-</div>
+    </form>
+<!--</div>-->
 
 <script>
     //Demo
@@ -61,16 +57,12 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            Api.edit(data.field, function (res) {
+            // layer.msg(JSON.stringify(data.field));
+            Api.add(data.field, function (res) {
                 console.log(res);
             });
         });
 
-        form.val('first', {
-            "pid":"{$info['pid']}",
-            "link":"{$info['link']}",
-            "icon":"{$info['icon']}",
-            "show":"{$info['show']}",
-        })
+
     });
-</script>	
+</script>

@@ -20,7 +20,7 @@ class Ad extends Controller
      */
     public function index()
     {
-        if(Request::instance()->isPost() ) {
+        if(Request()->isPost()) {
             $adAll = [];
             return json(['data'=>['count'=>0, 'list'=>$adAll]], 200);
         }
@@ -34,7 +34,7 @@ class Ad extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
 
     /**

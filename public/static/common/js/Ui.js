@@ -5,6 +5,8 @@ var UI = {
     "getPageTable": function (table, url, cols, elem = "#think-table", height = "500") {
         table.render({
             elem: elem
+            ,id : 'table'
+            ,method:'post'
             , height: height
             , url: url //数据接口
             , page: true//开启分页
