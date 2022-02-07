@@ -1,6 +1,6 @@
 {include file="moban/css"}
 {include file="moban/js"}
-<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
     <form class="layui-form"  lay-filter="first">
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
@@ -13,6 +13,7 @@
             </select>
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">菜单标题</label>
         <div class="layui-input-block">
@@ -20,18 +21,21 @@
                    class="layui-input" value="{$info['title']}">
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">链接</label>
         <div class="layui-input-block">
             <input type="text" name="link" required lay-verify="required" placeholder="链接" autocomplete="off" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">字体图标</label>
         <div class="layui-input-block">
             <input type="text" name="icon" placeholder="字体图标" autocomplete="off" class="layui-input" >
         </div>
     </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">是否展示</label>
         <div class="layui-input-block">
@@ -52,17 +56,19 @@
         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
       </div>
     </div> -->
-</div>
+<!--</div>-->
 
 <script>
     //Demo
-    layui.use('form', function () {
-        var form = layui.form;
+    layui.use(['form','table'], function () {
+        var form = layui.form,
+            table = layui.table;
 
         //监听提交
         form.on('submit(submit)', function (data) {
             Api.edit(data.field, function (res) {
                 console.log(res);
+                table.reload("think-table");
             });
         });
 

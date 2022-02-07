@@ -22,7 +22,7 @@ var UI = {
 
         });
     },
-    "openLayer": function (url, x = 750, y = 600, confirmButton = "#submit") {
+    "openLayer": function (url, x = 750, y = 600, confirmButton = "#submit", callback) {
         layer.open({
             type: 2,
             anim: 2,
@@ -32,10 +32,12 @@ var UI = {
                 //点击确认触发 iframe 内容中的按钮提交
                 var submit = layero.find('iframe').contents().find(confirmButton);
                 submit.click();
+                callback();
             },
             content: url,//这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
             end: function () {
                 // think-table
+
 
             }
         });

@@ -19,6 +19,7 @@ class Menu extends Base
 
     public function index()
     {
+        //var_dump(lang('EditSuccess', [lang('Bannel')]));exit();
         if (Request()->isPost()) {
             //$this->logic->getPageWithAdmin($this->page,$this->limit);exit;
             $map   = ['pid' => 0];
@@ -55,17 +56,9 @@ class Menu extends Base
             $id = request()->get('id');
             $state = model('AuthMenu')->update($data, ["id"=>$id]);
             if($state !== false ) {
-                return json([
-                    'msg' => '成功',
-                    'data' => [],
-                    'code' => 200,
-                ], 200);
+               return success_json();
             }
-            return json([
-                'msg' => '失败',
-                'data' => [],
-                'code' => 400,
-            ], 200);
+            return error_json();
         }
         $info     = $this->logic->get_find($id);
         $menuList = $this->logic->get_all_menu(['pid' => 0]);

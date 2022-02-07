@@ -109,6 +109,42 @@ function error_callback($msg = "返回失败", $returndata = [], $code = 400)
     exit;
 }
 
+/**
+ * 成功
+ * User: yesheng35@126.com
+ * DateTime 2022/2/7 15:12
+ * @param string $msg
+ * @param array $returndata
+ * @param int $code
+ * @return \think\response\Jsons
+ */
+function success_json($msg = "返回成功", $returndata = [], $code = 200)
+{
+    return json([
+        'msg' => $msg,
+        'data' => $returndata,
+        'code' => $code
+    ]);
+}
+
+/**
+ * 失败
+ * User: yesheng35@126.com
+ * DateTime 2022/2/7 15:12
+ * @param string $msg
+ * @param array $returndata
+ * @param int $code
+ * @return \think\response\Json
+ */
+function error_json($msg = "返回失败", $returndata = [], $code = 400)
+{
+    return json([
+        'msg' => $msg,
+        'data' => $returndata,
+        'code' => $code
+    ]);
+}
+
 /*检测权限*/
 function checkAuth($url)
 {

@@ -13,7 +13,6 @@ class AuthMenu
 		$AuthMenu=Loader::model("AuthMenu");
 		$count=$AuthMenu->count();
 		$list=$AuthMenu->limit(($page-1)*$limit.",$limit")->select();
-		// dump($list);
 		echo success_callback('',['count'=>$count,'list'=>$list]);
 	}
 	function get_find($id){

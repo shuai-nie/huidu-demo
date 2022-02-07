@@ -13,8 +13,21 @@ class Admin extends Base
 	// 主页
 	public function index()
     {
-		if($this->page!=null){
-			$this->logic->getPageWithAdmin($this->page,$this->limit);exit;
+        if (Request()->isPost()) {
+			//$this->logic->getPageWithAdmin($this->page,$this->limit);exit;
+            $map = [];
+            $userData = model("Admin")->where($map)->select();
+            $count = model("Admin")->where($map)->count();
+            $data  = [
+                'code' => 0,
+                'msg'  => '',
+                'data' => [
+                    'count' => $count,
+                    'list'  => $userData
+                ],
+            ];
+            return json($data);
+
 		}
 		return view();
 	}
