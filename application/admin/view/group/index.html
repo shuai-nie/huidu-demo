@@ -10,6 +10,7 @@
   {if condition="checkAuth('groupedit')"}
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
   {/if}
+  <a class="layui-btn layui-btn-xs" lay-event="juri">权限</a>
   {if condition="checkAuth('del_group')"}
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
   {/if}
@@ -38,6 +39,8 @@
                     table.reload("think-table");
                   }
                 });
+              }else if(obj.event === 'juri') {
+                UI.openLayer("{:url('juri')}?id="+data['id']);
               }
           });
         var $ = layui.$, active = {

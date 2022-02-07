@@ -22,8 +22,17 @@ class Group extends Base
     public function index()
     {
         if (Request()->isPost()) {
-            $this->logic->getPageWithAdmin($this->page, $this->limit);
-            exit;
+            $data = model("Group")->where($map)->select();
+            $count = model("Group")->where($map)->count();
+            $data  = [
+                'code' => 0,
+                'msg'  => '',
+                'data' => [
+                    'count' => $count,
+                    'list'  => $data
+                ],
+            ];
+            return json($data);
         }
         return view();
     }
@@ -52,6 +61,11 @@ class Group extends Base
         return view('', [
 //            'menuList' => $menuList,
         ]);
+    }
+
+    public function juri()
+    {
+        return view('', []);
     }
 
     /**
