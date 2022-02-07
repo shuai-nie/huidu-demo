@@ -42,12 +42,12 @@
           		var data=obj.data;
           		if(obj.event==="edit"){
           			UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', function(obj){
-                      table.reload("think-table");
+                      table.reload("table");
                     });
           		}else if(obj.event==='del'){
-          			UI.delete(data['id'],function(res){
+          			UI.delete(data['id'], function(res){
                     if(res.code==200){
-                      table.reload("think-table");
+                      table.reload("table");
                     }
                 });
           		}
