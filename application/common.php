@@ -1,4 +1,6 @@
 <?php
+
+error_reporting(E_ERROR | E_PARSE );
 // 获取公共参数
 function getConfig($key){
     $res =  \think\Db::query("select `value` from cg_config where `key` = '$key'");

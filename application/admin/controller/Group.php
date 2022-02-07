@@ -1,45 +1,58 @@
 <?php
+
 namespace app\admin\controller;
+
+use think\App;
 use think\Loader;
 use lib\Jurisdiction;
+use think\Request;
+
 class Group extends Base
 {
-	private $model;
-	private $logic;
-	function _initialize(){
-		parent::_initialize();
-		$this->model=Loader::model("Group");
-		$this->logic=Loader::model('Group','logic');
-	}
-	public function index(){
-		if($this->page!=null){
-			$this->logic->getPageWithAdmin($this->page,$this->limit);exit;
-		}
-		return view();
-	}
-	public function edit($id){
-		if(request()->isPost()){
-			$this->logic->save_one(input('post.'));
-		}
-		$Jurisdiction=new Jurisdiction();
-        $menuList=$Jurisdiction->getAuthMenu(getLoginUserId(),0);
-		$info=$this->logic->get_find($id);
-		return view('',[
-			'info'=>$info,
-			'menuList'=>$menuList
-		]);
-	}
+    private $model;
+    private $logic;
 
-	public function add(){
-		if(request()->isPost()){
-			$this->logic->insert_one(input('post.'));
-		}
-		$Jurisdiction=new Jurisdiction();
-        $menuList=$Jurisdiction->getAuthMenu(getLoginUserId(),0);
-		return view('',[
-			'menuList'=>$menuList
-		]);
-	}
+    function _initialize()
+    {
+        parent::_initialize();
+        $this->model = Loader::model("Group");
+        $this->logic = Loader::model('Group', 'logic');
+    }
+
+    public function index()
+    {
+        if (Request()->isPost()) {
+            $this->logic->getPageWithAdmin($this->page, $this->limit);
+            exit;
+        }
+        return view();
+    }
+
+    public function edit($id)
+    {
+        if (request()->isPost()) {
+            $this->logic->save_one(input('post.'));
+        }
+        $Jurisdiction = new Jurisdiction();
+        $menuList     = $Jurisdiction->getAuthMenu(getLoginUserId(), 0);
+        $info         = $this->logic->get_find($id);
+        return view('', [
+            'info'     => $info,
+            'menuList' => $menuList,
+        ]);
+    }
+
+    public function add()
+    {
+        if (request()->isPost()) {
+            $this->logic->insert_one(input('post.'));
+        }
+        $Jurisdiction = new Jurisdiction();
+//        $menuList = $Jurisdiction->getAuthMenu(getLoginUserId(), 0);
+        return view('', [
+//            'menuList' => $menuList,
+        ]);
+    }
 
     /**
      * @param object|Request|null $request
@@ -54,9 +67,10 @@ class Group extends Base
         return view('add2');
     }
 
-	public function delete($id=""){
-		if($id!=""){
-			$this->logic->delete($id);
-		}
-	}
+    public function delete($id = "")
+    {
+        if ($id != "") {
+            $this->logic->delete($id);
+        }
+    }
 }
