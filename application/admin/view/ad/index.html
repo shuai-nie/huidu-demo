@@ -1,37 +1,187 @@
 {include file="moban/bone_header"}
+
 <div class="layui-btn-container">
-
     <button class="layui-btn" data-type="create">添加</button>
-
 </div>
-<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<!--<table class="layui-hide" id="think-table" lay-filter="think-table"></table>-->
+
+<table class="layui-table" id="test" lay-data="{page:true,limit:50,width:1400,defaultToolbar: ['exports']}" id="think-table" lay-filter="think-table">
+    <thead>
+    <tr>
+        <th lay-data="{field:'id', width:60}">ID</th>
+        <th lay-data="{field:'name', width:140}">广告位名称</th>
+        <th lay-data="{field:'sort', width:60}">排序</th>
+        <th lay-data="{field:'page', width:120}">广告位面</th>
+        <th lay-data="{field:'category',width:90}">分类</th>
+        <th lay-data="{field:'pic1', width:120}">图片</th>
+        <th lay-data="{field:'load1', width:120}">预加载</th>
+        <th lay-data="{field:'url1', width: 160}">链接</th>
+        <th lay-data="{field:'begin1', width: 170,align:'center',sort:true}">上架时间</th>
+        <th lay-data="{field:'end1', width: 170,align:'center',sort:true}">下架时间</th>
+        <th lay-data="{field:'s',width: 120}">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        {volist name="data" id="vo"}
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.id}:{$vo.name}</td>
+            <td>{$vo.sort}</td>
+            <td>{$vo.pages}</td>
+            <td>{$vo.categorys}</td>
+            <td><img src="{$vo.pic1}" height="40"></td>
+            <td><img src="{$vo.load1}" height="40"></td>
+            <td>{$vo.url1}</td>
+            <td>{$vo.begin1}</td>
+            <td>{$vo.end1}</td>
+            <td>
+                <div class="layui-btn-group" style="overflow:visible;">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+                </div>
+            </td>
+        </tr>
+        {/volist}
+    </tbody>
+</table>
+
+
 <script type="text/html" id="barDemo">
-    {if condition="checkAuth('menuedit')"}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {/if}
-    {if condition="checkAuth('del_menu')"}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    {/if}
-    {if condition="!checkAuth('menuedit') and !checkAuth('del_menu')"}
-    暂无任何权限
-    {/if}
 </script>
+
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
-        UI.getPageTable(table, "{:url('')}", [
+    layui.use(['table','jquery'], function(){
+        var table = layui.table,
+            $ = layui.jquery;
+        /*UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-            ,{field: 'title', title: '菜单名称'}
-            ,{field: 'link', title: '链接'}
-            ,{field: 'show', title: '显示状态',templet:function(d){
-                    if(d['show']==0){
-                        return "隐藏";
-                    }else if(d['show']==1){
-                        return "显示";
+            ,{field: 'name', title: '广告位名称'}
+            ,{field: 'sort', title: '排序'}
+            ,{field: 'page', title: '位置',templet:function(d){
+                    switch (d.page*1){
+                        case 0:return '首页顶部';
+                        case 1:return '首页左侧';
+                        case 2:return '首页右侧';
+                        default:return '';
                     }
                 }}
+            ,{field: 'category', title: '分栏',templet:function(d){
+                switch (d.category*1){
+                    case 1:return '一栏';
+                    case 2:return '二栏';
+                    case 3:return '三栏';
+                    default:return '';
+                }
+
+                }}
+            ,{field: 'pic1', title: '图片'}
+            ,{field: 'load1', title: '预加载'}
+            ,{field: 'url1', title: '地址'}
+            ,{field: 'begin1', title: '上架时间',templet:function(d){
+                return "<div>"+d.id+'|'+d.begin1+""+d.end1+"</div>";
+                }}
             ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
-        ]);
+        ]);*/
+
+
+        var execRowspan = function (fieldName, index, flag) {
+            // 1为不冻结的情况，左侧列为冻结的情况
+            let fixedNode = index=="1"?$(".layui-table-body")[index - 1]:(index=="3"?$(".layui-table-fixed-r"):$(".layui-table-fixed-l"));
+            // 左侧导航栏不冻结的情况
+            let child = $(fixedNode).find("td");
+            let childFilterArr = [];
+            // 获取data-field属性为fieldName的td
+            for(let i = 0; i < child.length; i++){
+                if(child[i].getAttribute("data-field") == fieldName){
+                    childFilterArr.push(child[i]);
+                }
+            }
+            // 获取td的个数和种类
+            let childFilterTextObj = {};
+            for(let i = 0; i < childFilterArr.length; i++){
+                let childText = flag?childFilterArr[i].innerHTML:childFilterArr[i].textContent;
+                if(childFilterTextObj[childText] == undefined){
+                    childFilterTextObj[childText] = 1;
+                }else{
+                    let num = childFilterTextObj[childText];
+                    childFilterTextObj[childText] = num*1 + 1;
+                }
+            }
+            let canRowspan = true;
+            let maxNum;//以前列单元格为基础获取的最大合并数
+            let finalNextIndex;//获取其下第一个不合并单元格的index
+            let finalNextKey;//获取其下第一个不合并单元格的值
+            for(let i = 0; i < childFilterArr.length; i++){
+                (maxNum>9000||!maxNum)&&(maxNum = $(childFilterArr[i]).prev().attr("rowspan")&&fieldName!="8"?$(childFilterArr[i]).prev().attr("rowspan"):9999);
+                let key = flag?childFilterArr[i].innerHTML:childFilterArr[i].textContent;//获取下一个单元格的值
+                let nextIndex = i+1;
+                let tdNum = childFilterTextObj[key];
+                let curNum = maxNum<tdNum?maxNum:tdNum;
+                if(canRowspan){
+
+                    for(let j =1;j<=curNum&&(i+j<childFilterArr.length);){
+                        //循环获取最终合并数及finalNext的index和key
+                        finalNextKey = flag?childFilterArr[i+j].innerHTML:childFilterArr[i+j].textContent;
+                        finalNextIndex = i+j;
+                        if((key!=finalNextKey&&curNum>1)||maxNum == j){
+                            canRowspan = true;
+                            curNum = j;
+                            break;
+                        }
+                        j++;
+                        if((i+j)==childFilterArr.length){
+                            finalNextKey=undefined;
+                            finalNextIndex=i+j;
+                            break;
+                        }
+                    }
+
+                    childFilterArr[i].setAttribute("rowspan", curNum);
+
+                    if ($(childFilterArr[i]).find("div.rowspan").length > 0) {
+                        //设置td内的div.rowspan高度适应合并后的高度
+                        $(childFilterArr[i]).find("div.rowspan").parent("div.layui-table-cell").addClass("rowspanParent");
+                        $(childFilterArr[i]).find("div.layui-table-cell")[0].style.height = curNum * 38 - 10 + "px";
+                    }
+                    canRowspan = false;
+
+                }else{
+                    childFilterArr[i].style.display = "none";
+                }
+
+                if(--childFilterTextObj[key]==0|--maxNum==0|--curNum==0|(finalNextKey!=undefined&&nextIndex==finalNextIndex)){
+                    //||(finalNextKey!=undefined&&key!=finalNextKey)
+                    canRowspan = true;
+                }
+            }
+        }
+        //合并数据表格行
+        var layuiRowspan = function(fieldNameTmp,index,flag){
+            let fieldName = [];
+            if(typeof fieldNameTmp == "string"){
+                fieldName.push(fieldNameTmp);
+            }else{
+                fieldName = fieldName.concat(fieldNameTmp);
+            }
+            for(let i = 0;i<fieldName.length;i++){
+                execRowspan(fieldName[i],index,flag);
+            }
+        }
+
+        table.init('think-table', {
+            done: function (res, curr, count) {
+                layuiRowspan(['name','page','category'], 1, true);//支持数组
+                // layuiRowspan("8",1,true);
+            },
+            initSort:{
+                field:'id',
+                type:'desc',
+            }
+        });
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
@@ -46,7 +196,7 @@
         });
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}");
+                UI.openLayer("{:url('create')}", 750, 600);
             }
         };
 

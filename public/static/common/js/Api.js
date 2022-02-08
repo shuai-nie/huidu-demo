@@ -24,7 +24,7 @@ var Api = {
     'add': function (data, callback) {
         return HttpUtils.post("", data, function (res) {
             if (res.code == 200) {
-                layer.msg(res.msg, function(){
+                layer.msg(res.msg,  {icon: 1}, function(){
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layui.table.reload("table");
                     parent.layer.close(index);

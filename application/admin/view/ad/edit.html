@@ -1,0 +1,443 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告位名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请填写" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="sort" placeholder="请填写" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置</label>
+        <div class="layui-input-block">
+            <input type="radio" name="page" value="0" title="首页顶部" checked>
+            <input type="radio" name="page" value="1" title="首页左侧">
+            <input type="radio" name="page" value="2" title="首页右侧">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分栏</label>
+        <div class="layui-input-block">
+            <input type="radio" name="category" value="1" title="一栏" checked lay-filter="filter">
+            <input type="radio" name="category" value="2" title="二栏" lay-filter="filter">
+            <input type="radio" name="category" value="3" title="三栏" lay-filter="filter">
+        </div>
+    </div>
+
+    <div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>一栏</legend>
+        </fieldset>
+
+        <div class="layui-form-item test1-pic1" {if condition="empty($data['pic1'])"}style="display:none;"{/if} >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['pic1']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic1">
+                <button type="button" class="layui-btn" id="test1-pic1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item test1-load1" {if condition="empty($data['load1'])"}style="display:none;"{/if} >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['load1']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load1">
+                <button type="button" class="layui-btn" id="test1-load1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin1" id="begin1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end1" id="end1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div id="lan-2">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>二栏</legend>
+        </fieldset>
+
+        <div class="layui-form-item test1-pic2" {if condition="empty($data['pic2'])"}style="display:none;"{/if} >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['pic2']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic2">
+                <button type="button" class="layui-btn" id="test1-pic2">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item test1-load2" {if condition="empty($data['load2'])"}style="display:none;"{/if} >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['load2']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load2">
+                <button type="button" class="layui-btn" id="test1-load2">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin2" id="begin2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end2" id="end2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div id="lan-3">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>三栏</legend>
+        </fieldset>
+
+        <div class="layui-form-item test1-pic3" {if condition="empty($data['pic3'])"}style="display:none;"{/if} >
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['pic3']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic3">
+                <button type="button" class="layui-btn" id="test1-pic3">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item test1-load3" {if condition="empty($data['load3'])"}style="display:none;"{/if}>
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="{$data['load3']}" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load3">
+                <button type="button" class="layui-btn" id="test1-load3">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin3" id="begin3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end3" id="end3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+    <!-- <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div> -->
+</form>
+<!--</div>-->
+
+<script>
+    //Demo
+    layui.use(['form','upload','laydate'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            laydate = layui.laydate;
+
+        {if condition="$data['category'] eq 1"}
+            $('#lan-2').hide();
+            $('#lan-3').hide();
+        {elseif ($data['category'] eq 2)}
+            $('#lan-3').hide();
+        {/if}
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept = 'images';
+        var upload_acceptMime = 'image/*';
+        var upload_size = 3145728;
+        var uploadInst = upload.render({
+            elem: '#test1-pic1',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-pic1").show();
+                    $(".test1-pic1 img").attr('src', res.url);
+                    $("input[name='pic1']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+        upload.render({
+            elem: '#test1-load1',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-load1").show();
+                    $(".test1-load1 img").attr('src', res.url);
+                    $("input[name='load1']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#test1-pic2',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-pic2").show();
+                    $(".test1-pic2 img").attr('src', res.url);
+                    $("input[name='pic2']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+        upload.render({
+            elem: '#test1-load2',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-load2").show();
+                    $(".test1-load2 img").attr('src', res.url);
+                    $("input[name='load2']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#test1-pic3',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-pic3").show();
+                    $(".test1-pic3 img").attr('src', res.url);
+                    $("input[name='pic3']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+        upload.render({
+            elem: '#test1-load3',
+            url: upload_url,
+            accept: upload_accept,
+            acceptMime: upload_acceptMime,
+            size: upload_size
+            ,
+            done: function (res) {
+                if (res.code == 0) {
+                    $(".test1-load3").show();
+                    $(".test1-load3 img").attr('src', res.url);
+                    $("input[name='load3']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,
+            error: function () {
+                //请求异常回调
+            }
+        });
+
+        laydate.render({elem: '#begin1', type: 'datetime'});
+        laydate.render({elem: '#end1', type: 'datetime'});
+        laydate.render({elem: '#begin2', type: 'datetime'});
+        laydate.render({elem: '#end2', type: 'datetime'});
+        laydate.render({elem: '#begin3', type: 'datetime'});
+        laydate.render({elem: '#end3', type: 'datetime'});
+
+        form.val('first', {
+            'name': "{$data['name']}",
+            'sort': "{$data['sort']}",
+            'page': "{$data['page']}",
+            'category': "{$data['category']}",
+            'pic1': "{$data['pic1']}",
+            'load1': "{$data['load1']}",
+            'url1': "{$data['url1']}",
+            'begin1': "{$data['begin1']}",
+            'end1': "{$data['end1']}",
+
+            'pic2': "{$data['pic2']}",
+            'load2': "{$data['load2']}",
+            'url2': "{$data['url2']}",
+            'begin2': "{$data['begin2']}",
+            'end2': "{$data['end2']}",
+
+            'pic3': "{$data['pic3']}",
+            'load3': "{$data['load3']}",
+            'url3': "{$data['url3']}",
+            'begin3': "{$data['begin3']}",
+            'end3': "{$data['end3']}",
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {
+                console.log(res);
+                parent.window.location.href = "{:url('index')}";
+            });
+        });
+
+        form.on('radio(filter)', function(data){
+            switch (data.value*1) {
+                case 1:
+                    $("#lan-2").hide();
+                    $("#lan-3").hide();
+                    break;
+                case 2:
+                    $('#lan-2').show();
+                    $('#lan-3').hide();
+                    break;
+                case 3:
+                    $('#lan-2').show();
+                    $('#lan-3').show();
+                    break;
+                default:
+                    break;
+            }
+        })
+
+
+
+    });
+</script>
