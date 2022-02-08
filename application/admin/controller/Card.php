@@ -14,7 +14,16 @@ class Card extends Controller
      */
     public function index()
     {
-        //
+        if(Request()->isPost()) {
+            $map = ['status'=>1];
+            $page = Request()->param('page');
+            $limit = Request()->param('limit');
+            $offset = ($page - 1) * $limit;
+            $adAll = model("Card")->where($map)->limit($offset, $limit)->select();
+            $count = model("Card")->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+        }
+        return view('');
     }
 
     /**
@@ -24,7 +33,17 @@ class Card extends Controller
      */
     public function create()
     {
-        //
+        if(Request()->isPost()) {
+            $data = Request()->param();
+            $data['create_id'] = getLoginUserId();
+            $data['update_id'] = getLoginUserId();
+            $state = model("Card")->save($data);
+            if($state !== false){
+                return success_json();
+            }
+            return error_json();
+        }
+        return view();
     }
 
     /**

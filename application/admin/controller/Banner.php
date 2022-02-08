@@ -14,7 +14,13 @@ class Banner extends Controller
      */
     public function index()
     {
-        //
+        if(Request()->isPost()) {
+            $map = ['status'=>1];
+            $adAll = model("Banner")->where($map)->select();
+            $count = model("Banner")->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+        }
+        return view();
     }
 
     /**
@@ -24,30 +30,19 @@ class Banner extends Controller
      */
     public function create()
     {
-        //
+        if(Request()->isPost()) {
+            $data = Request()->param();
+            $data['create_id'] = getLoginUserId();
+            $data['update_id'] = getLoginUserId();
+            $state = model("Banner")->save($data);
+            if($state !== false){
+                return success_json();
+            }
+            return error_json();
+        }
+        return view();
     }
 
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
 
     /**
      * 显示编辑资源表单页.
@@ -57,20 +52,20 @@ class Banner extends Controller
      */
     public function edit($id)
     {
-        //
+        if(Request()->isPost()) {
+            $data = Request()->param();
+            $data['update_id'] = getLoginUserId();
+            $state = model("Banner")->save($data, ['id'=>$data['id']]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', [lang('Bannel')]) );
+            }
+            return error_json();
+        }
+        $data = model("Banner")->find($id);
+        return view('edit', ['data'=>$data]);
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * 删除指定资源
@@ -80,6 +75,11 @@ class Banner extends Controller
      */
     public function delete($id)
     {
-        //
+        $id = Request()->param('id');
+        $state = model("Banner")->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
+        if($state !== false){
+            return success_json(lang('EditSuccess', [lang('Bannel')]) );
+        }
+        return error_json();
     }
 }

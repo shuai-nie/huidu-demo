@@ -1,0 +1,63 @@
+{include file="moban/bone_header"}
+
+<!--<div class="layui-btn-container">
+    <button class="layui-btn" data-type="create">添加</button>
+</div>-->
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<!--<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>-->
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'uname', title: '用户名称'}
+            ,{field: 'uid', title: '投递者id'}
+            ,{field: 'fuid', title: '接收者id'}
+            ,{field: 'username', title: '接收者名称'}
+            ,{field: 'type', title: '方式',templet:function(d){
+                    switch (d['type']*1){
+                        case 1:return '投递名片';break;
+                        case 2:return '查看联系方式';break;
+                    }
+                }}
+            ,{field: 'time', title: '动态时间'}
+            ,{field: 'type_status', title: '添加方式',templet:function(d){
+                    switch (d['type_status']*1){
+                        case 1:return '后台添加';break;
+                        case 2:return '前台添加';break;
+                    }
+                }}
+            ,{field: 'remarks', title: '备注'}
+            // ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+        ]);
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}");
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{include file="moban/bone_footer"}

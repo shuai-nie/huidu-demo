@@ -14,7 +14,16 @@ class Package extends Controller
      */
     public function index()
     {
-        //
+        if(Request()->isPost()) {
+            $map = ['status'=>1];
+            $page = Request()->param('page');
+            $limit = Request()->param('limit');
+            $offset = ($page - 1) * $limit;
+            $adAll = model("Package")->where($map)->limit($offset, $limit)->select();
+            $count = model("Package")->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+        }
+        return view();
     }
 
     /**

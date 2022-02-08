@@ -1,0 +1,62 @@
+{include file="moban/bone_header"}
+
+<div class="layui-btn-container">
+<!--    <button class="layui-btn" data-type="create">添加</button>-->
+</div>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<!--<script type="text/html" id="barDemo">-->
+<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+<!--</script>-->
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'uid', title: '用户uid'}
+            ,{field: 'firm_id', title: '企业uid'}
+            ,{field: 'logo', title: 'logo', templet:function (d) {
+                if(d.logo) {
+                    return '<img src="'+d.logo+'" height="10" width="40" />';
+                }
+                return '-';
+            }}
+            ,{field: 'logo_watermark', title: 'logo水印', templet:function (d) {
+                    if(d.logo_watermark) {
+                        return '<img src="'+d.logo_watermark+'" height="10" width="40" />';
+                    }
+                    return '-';
+                }}
+            ,{field: 'position', title: '职位'}
+            ,{field: 'greet', title: '默认打招呼语'}
+
+            // ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+        ]);
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}");
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{include file="moban/bone_footer"}

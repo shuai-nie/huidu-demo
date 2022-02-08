@@ -11,26 +11,30 @@ var Api = {
     'edit': function (data, callback) {
         return HttpUtils.post("", data, function (res) {
             if (res.code == 200) {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload("think-table");
-                parent.layer.close(index);
+                layer.msg(res.msg, {icon: 1}, function(){
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layui.table.reload("table");
+                    parent.layer.close(index);
+                })
             }
+
             callback(res);
-        });
+        }, 'json');
     },
     'add': function (data, callback) {
         return HttpUtils.post("", data, function (res) {
             if (res.code == 200) {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload("think-table");
-                parent.layer.close(index);
+                layer.msg(res.msg, function(){
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layui.table.reload("table");
+                    parent.layer.close(index);
+                })
             }
             callback(res);
         });
     },
     "del": function (id, callback, url = 'delete') {
         return HttpUtils.get(url, {"id": id}, function (res) {
-
             callback(res);
         });
     }

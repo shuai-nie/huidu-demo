@@ -14,7 +14,16 @@ class Userinfo extends Controller
      */
     public function index()
     {
-        //
+        if(Request()->isPost()) {
+            $map = [];
+            $page = Request()->param('page');
+            $limit = Request()->param('limit');
+            $offset = ($page - 1) * $limit;
+            $adAll = model("UserInfo")->where($map)->limit($offset, $limit)->select();
+            $count = model("UserInfo")->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+        }
+        return view();
     }
 
     /**
