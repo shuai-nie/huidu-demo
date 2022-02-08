@@ -8,14 +8,16 @@ class Login extends Controller
     {
     	return view();
     }
-    public function login(){
-    	$model=Loader::model('Admin');
-    	$data=input('post.');
-    	$isUser=$model->where(['username'=>$data['username'],'password'=>$data['password']])->find();
+
+    public function login()
+    {
+        $model  = Loader::model('Admin');
+        $data   = input('post.');
+        $isUser = $model->where(['username' => $data['username'], 'password' => $data['password']])->find();
     	if(!empty($isUser)){
     		//设置登陆str
     		$number = GetRandStr(12);
-		    setLoginStr($number);//loginStr
+		    setLoginStr($number);
 		    $model->where(array('id'=>$isUser['id']))->update(array('str'=>$number));
     		setLoginUserId($isUser['id']);
     		success_callback("登陆成功",['href'=>'http://'.$_SERVER['HTTP_HOST']]);

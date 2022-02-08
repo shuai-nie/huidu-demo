@@ -15,13 +15,18 @@ class Card extends Controller
     public function index()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1];
+            $map = ['A.status'=>1];
             $page = Request()->param('page');
             $limit = Request()->param('limit');
             $offset = ($page - 1) * $limit;
-            $adAll = model("Card")->where($map)->limit($offset, $limit)->select();
-            $count = model("Card")->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+            $CardAll = model("Card")->alias('A')
+                ->join(model('CardContact')->getTable().' B', 'A.id=B.card_id', 'LEFT')
+                ->field('A.*,B.contact_type,B.contact_number')
+                ->where($map)->limit($offset, $limit)->select();
+            $count = model("Card")->alias('A')
+                ->join(model('CardContact')->getTable().' B', 'A.id=B.card_id', 'LEFT')
+                ->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$CardAll]], 200);
         }
         return view('');
     }

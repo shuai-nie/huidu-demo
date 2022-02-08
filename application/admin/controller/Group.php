@@ -6,6 +6,7 @@ use think\App;
 use think\Loader;
 use lib\Jurisdiction;
 use think\Request;
+use util\Tree;
 
 class Group extends Base
 {
@@ -63,9 +64,43 @@ class Group extends Base
         ]);
     }
 
-    public function juri()
+    public function juri($id)
     {
-        return view('', []);
+        if (request()->isPost()) {
+            $_post = request()->param();
+            var_dump($_post);
+            exit();
+        }
+        $AuthMenu = model('AuthMenu');
+        $data = $AuthMenu->where(['show'=>1])->field('id,pid,title')->select();
+        if($data) {
+            $data = collection($data)->toArray();
+        }
+
+        $GroupInfo = model('Group')->where(['id'=>$id])->find();
+        Tree::config([
+            'id'    => 'id',
+            'pid'   => 'pid',
+            'title' => 'title',
+            'child' => 'children',
+            'html'  => '┝ ',
+            'step'  => 4,
+        ]);
+        $rules = explode(',', $GroupInfo->rules);
+        foreach ($data as $key=>$val){
+            if(in_array($val['id'], $rules)) {
+                $val['checked'] = true;
+            }else {
+                $val['checked'] = false;
+            }
+            $val['spread'] = true;
+            $data[$key] = $val;
+        }
+        $data = Tree::toLayer($data);
+        return view('', [
+            'data'=> json_encode($data, JSON_UNESCAPED_UNICODE),
+            'groupInfo'=>$GroupInfo
+        ]);
     }
 
     /**

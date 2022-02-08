@@ -22,18 +22,6 @@ function setLoginUserId($user_id)
     cookie('user_id_with_app', $user_id);
 }
 
-// 获取用户id
-function getBoenUserId()
-{
-    return cookie('boen_user_id');
-}
-
-// 获取用户前端id
-function getBoenUserName()
-{
-    return cookie('boen_user_name');
-}
-
 // 设置用户权限
 function setRules($rules)
 {

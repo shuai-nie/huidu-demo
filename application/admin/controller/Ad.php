@@ -34,7 +34,6 @@ class Ad extends Controller
 //        }
         $map = ['status'=>1];
         $data = model("Ad")->where($map)->field('id,name,sort,page,category,load1,pic1,url1,begin1,end1')->order('end1 desc,id desc')->select();
-        //$data = $data->toArray();
         if($data) {
             $data = collection($data)->toArray();
         }
