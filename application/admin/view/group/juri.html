@@ -26,9 +26,6 @@
 <!--</div>-->
 
 <script>
-
-
-
 //Demo
 layui.use(['form','tree','util','jquery'], function(){
     var form = layui.form,
@@ -55,33 +52,33 @@ layui.use(['form','tree','util','jquery'], function(){
 
     //监听提交
     form.on('submit(submit)', function(data){
-        let treecheckdata  = tree.getChecked('demoId');
-        let nodeIds = new Array();
-        console.log(treecheckdata);
+        var treecheckdata  = tree.getChecked('demoId');
+        var nodeIds = new Array();
         nodeIds = getCheckedId(treecheckdata);
-// 测试
-        let permList = nodeIds;
-        console.log("permList:"+permList);
+        console.log("permList:"+nodeIds);
         return false;
         Api.add(data.field, function(res){
             console.log(res);
         });
     });
 
-
     // 获取选中节点的id
     function getCheckedId(jsonObj) {
-        let id = "";
+        var id = _i = "";
+        console.log(jsonObj);
         $.each(jsonObj, function (index, item) {
+            console.log(item)
             if (id != "") {
                 id = id + "," + item.id;
             }else {
                 id = item.id;
             }
-            let i = getCheckedId(item.children);
-            // if (i != "") {
-            //     id = id + "," + i;
-            // }
+            if(item.children) {
+                _i = getCheckedId(item.children);
+                if (_i != "") {
+                    id = id + "," + _i;
+                }
+            }
         });
         return id;
     }
