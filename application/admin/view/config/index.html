@@ -1,18 +1,14 @@
 {include file="moban/bone_header"}
-<div class="layui-btn-container" style="display: inline-block">
-    {if condition="checkAuth('resources')"}
-    <button class="layui-btn" data-type="addGroup">添加</button>
-    {/if}
-</div>
+
+<!--<div class="layui-btn-container" style="display: inline-block">-->
+<!--    <button class="layui-btn" data-type="addGroup">添加</button>-->
+<!--</div>-->
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
 <script id="barDemo" type="text/html">
-    {if condition="checkAuth('resources')"}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    {else}
-    暂无任何权限
-    {/if}
 </script>
 
 <script>
