@@ -12,10 +12,10 @@
 <table id="think-table" class="layui-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-  {if condition="checkAuth('menuedit')"}
+  {if condition="checkAuth('MenuEdit')"}
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
   {/if}
-  {if condition="checkAuth('del_menu')"}
+  {if condition="checkAuth('MenuDelete')"}
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
   {/if}
   {if condition="!checkAuth('menuedit') and !checkAuth('del_menu')"}
