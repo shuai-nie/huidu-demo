@@ -1,0 +1,69 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" autocomplete="off" disabled class="layui-input" value="{$userInfo['username']}" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">套餐</label>
+        <div class="layui-input-block">
+            {volist name="package" id='vo'}
+            <input type="radio" name="package_id" value="{$vo['id']}" title="{$vo['title']}" >
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">使用期限</label>
+        <div class="layui-input-block">
+            <input type="number" name="time" placeholder="请填写时间，1为一个月" autocomplete="off" class="layui-input">
+            <div class="layui-form-mid layui-word-aux">单位为月/30天 开始时间为当前时间，基础套餐不用填时间</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="hidden" name="uid"  >
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+    <!-- <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div> -->
+</form>
+<!--</div>-->
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        form.val('first', {
+            "package_id":"{$userInfo['package_id']}",
+            "uid":"{$userInfo['uid']}",
+        })
+
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            if(data.field.package_id != 1){
+                if(data.field.time == '' || data.field.time == null) {
+                    layer.msg('使用期限必填', {icon:2})
+                    return false;
+                }
+            }
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+    });
+</script>
