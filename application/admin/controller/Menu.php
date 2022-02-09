@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\Loader;
 use think\Log;
+use util\Tree;
 
 class Menu extends Base
 {
@@ -13,15 +14,13 @@ class Menu extends Base
     function _initialize()
     {
         parent::_initialize();
-        $this->model = Loader::model("AuthMenu");
+        $this->model = model("AuthMenu");
         $this->logic = Loader::model('AuthMenu', 'logic');
     }
 
     public function index()
     {
-        //var_dump(lang('EditSuccess', [lang('Bannel')]));exit();
         if (Request()->isPost()) {
-            //$this->logic->getPageWithAdmin($this->page,$this->limit);exit;
             $map   = ['pid' => 0];
             $Menu  = $this->model->where($map)->select();
             $count = $this->model->where($map)->count();
@@ -38,12 +37,25 @@ class Menu extends Base
         return view();
     }
 
+    public function read()
+    {
+        $map   = [];
+        $Menu  = $this->model->where($map)->field('id,pid,title,link')->select();
+        return json(['code'=>0,'count'=>24,'data'=>$Menu], 200);
+
+    }
+
     function add()
     {
         if (request()->isPost()) {
-            $this->logic->add_one(input('post.'));
+            $_post = request()->param();
+            $state = model('AuthMenu')->save($_post);
+            if($state !== false ) {
+                return success_json();
+            }
+            return error_json();
         }
-        $menuList = $this->logic->get_all_menu(['pid' => 0]);
+        $menuList = $this->logic->get_all_menu();
         return view('', [
             'menuList' => $menuList
         ]);
@@ -61,10 +73,8 @@ class Menu extends Base
             return error_json();
         }
         $info     = $this->logic->get_find($id);
-        $menuList = $this->logic->get_all_menu(['pid' => 0]);
         return view('', [
             'info'     => $info,
-            'menuList' => $menuList
         ]);
     }
 
@@ -73,5 +83,31 @@ class Menu extends Base
         if ($id != "") {
             $this->logic->delete($id);
         }
+    }
+
+    public function json()
+    {
+        Tree::config([
+            'id'    => 'id',
+            'pid'   => 'pid',
+            'title' => 'title',
+            'child' => 'children',
+            'html'  => '┝ ',
+            'step'  => 4,
+        ]);
+
+        $data = $this->model->where([])->select();
+        if($data) {
+            $data = collection($data)->toArray();
+        }
+
+        foreach ($data as  $key => $value) {
+            $value['name'] = $value['title'];
+            $value['open'] = true;
+            $data[$key] = $value;
+        }
+
+        $data = Tree::toLayer($data);
+        return json($data, 200);
     }
 }

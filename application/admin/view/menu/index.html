@@ -1,11 +1,13 @@
 {include file="moban/bone_header"}
+
 <div class="layui-btn-container">
   {if condition="checkAuth('menuadd')"}
   <button class="layui-btn" data-type="addMenu">添加菜单</button>
   {/if}
 </div>
 
-<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+<!--<table class="layui-table layui-form" id="think-table" lay-filter="think-table" lay-size="sm"></table>-->
+<table id="think-table" class="layui-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
   {if condition="checkAuth('menuedit')"}
@@ -19,50 +21,81 @@
   {/if}
 </script>
 
-
-
 <script>
-	layui.use('table', function(){
-          var table = layui.table;
-          UI.getPageTable(table,"{:url('')}",[
-          	{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-          	,{field: 'title', title: '菜单名称'}
-            ,{field: 'link', title: '链接'}
-            ,{field: 'show', title: '显示状态',templet:function(d){
-              if(d['show']==0){
-                return "隐藏";
-              }else if(d['show']==1){
-                return "显示";
-              }
-            }}
-          	,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
-          ]);
 
-          table.on('tool(think-table)', function(obj){
-          		var data=obj.data;
-          		if(obj.event==="edit"){
-          			UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', function(obj){
-                      table.reload("table");
-                    });
-          		}else if(obj.event==='del'){
-          			UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                      table.reload("table");
-                    }
-                });
-          		}
-          });
+  layui.config({
+    base: "/static/admin_templete/lib/",
+    version: true
+  }).extend({
+    treetable: 'treetable-lay/treetable',
+  });
+	layui.use(['table','treetable'], function(){
+          var table = layui.table,
+              treetable = layui.treetable,
+          $ = layui.jquery;
 
-           var $ = layui.$, active = {
-            addMenu:function(){
-               UI.openLayer("{:url('add')}");
-            }
-          };
-          
-          $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-          });
+      layer.load(2);
+      treetable.render({
+        treeColIndex: 1,
+        treeSpid: 0,
+        treeIdName: 'id',
+        treePidName: 'pid',
+        elem: '#think-table',
+        url: "{:url('read')}",
+        page: false,
+        cols: [[
+          {type: 'numbers'},
+          {field: 'title', width:290, title: '权限名称'},
+          {field: 'link', title: '菜单url'},
+          {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
+        ]],
+        done: function () {
+          layer.closeAll('loading');
+        }
       });
+
+      $('#btn-expand').click(function () {
+        treetable.expandAll('#munu-table');
+      });
+
+      $('#btn-fold').click(function () {
+        treetable.foldAll('#munu-table');
+      });
+
+
+
+
+
+
+
+      table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', function(obj){
+                  table.reload("table");
+                  parent.window.location.reload();
+                  window.location.reload();
+                });
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                if(res.code==200){
+                  table.reload("table");
+                  parent.window.location.reload();
+                }
+            });
+            }
+      });
+
+    var $ = layui.$, active = {
+      addMenu:function(){
+        UI.openLayer("{:url('add')}");
+      }
+    };
+
+    $('.layui-btn-container .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+});
 </script>
 {include file="moban/bone_footer"}

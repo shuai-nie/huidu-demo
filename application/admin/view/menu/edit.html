@@ -5,12 +5,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
         <div class="layui-input-block">
-            <select name="pid" lay-verify="required">
-                <option value="0">请选择菜单</option>
-                {volist name="menuList" id="val"}
-                <option value="{$val['id']}" >{$val['title']}</option>
-                {/volist}
-            </select>
+            <input type="text" name="pid" id="tree" lay-filter="tree" class="layui-input">
         </div>
     </div>
 
@@ -59,24 +54,46 @@
 <!--</div>-->
 
 <script>
-    //Demo
-    layui.use(['form','table'], function () {
-        var form = layui.form,
-            table = layui.table;
+layui.config({
+    base: "/static/admin_templete/lib/",
+    version: true
+}).extend({
+    treeSelect: 'treeSelect/treeSelect'
+});
+layui.use(['form','treeSelect'], function () {
+    var form = layui.form,
+        treeSelect= layui.treeSelect;
 
-        //监听提交
-        form.on('submit(submit)', function (data) {
-            Api.edit(data.field, function (res) {
-                console.log(res);
-                table.reload("think-table");
-            });
-        });
-
-        form.val('first', {
-            "pid":"{$info['pid']}",
-            "link":"{$info['link']}",
-            "icon":"{$info['icon']}",
-            "show":"{$info['show']}",
-        })
+    treeSelect.render({
+        elem: '#tree',
+        data: "{:url('json')}",
+        type: 'get',
+        placeholder: '请选择上级菜单',
+        search: true,
+        click: function(d){
+        },
+        success: function (d) {
+//                选中节点，根据id筛选
+               treeSelect.checkNode('tree', "{$info['pid']}");
+//                获取zTree对象，可以调用zTree方法
+//                var treeObj = treeSelect.zTree('tree');
+//                console.log(treeObj);
+// //                刷新树结构
+//                treeSelect.refresh();
+        }
     });
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.edit(data.field, function (res) {
+            parent.window.location.href = "{:url('index')}";
+        });
+    });
+
+    form.val('first', {
+        "link":"{$info['link']}",
+        "icon":"{$info['icon']}",
+        "show":"{$info['show']}",
+    })
+});
 </script>	
