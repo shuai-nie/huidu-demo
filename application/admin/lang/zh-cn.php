@@ -18,4 +18,10 @@ return [
     'CreateSuccess' => '%s 新建成功',
     'CreateFail' => '%s 新建失败',
 
+    'PACKAGEDISTRIBUTION' => '套餐分配',
+
+    'Fail' => '失败',
+    'Success' => '成功',
+    'PackageContinue' => '套餐延期',
+
 ];

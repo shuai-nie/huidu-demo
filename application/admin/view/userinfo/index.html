@@ -1,14 +1,15 @@
 {include file="moban/bone_header"}
 
 <div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
+<!--    <button class="layui-btn" data-type="create">添加</button>-->
 </div>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="change">变更套餐</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="continue">延期套餐</a>
 </script>
 
 <script>
@@ -16,34 +17,22 @@
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'name', title: 'banner名称'}
-            ,{field: 'url', title: '图片', templet:function (d) {
-                    if(d.url != '' || d.url != null){
-                        return '<img src="'+d.url+'" />';
-                    }
-                    return '-';
-                }}
-            ,{field: 'link_type', title: '跳转方式',templet:function(d){
-                    switch (d['link_type']*1){
-                        case 0:return '无跳转';break;
-                        case 1:return '跳转链接';break;
-                        case 2:return '跳转资源';break;
-                    }
-                }}
-            ,{field: 'link_url', title: '链接'}
-
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{field: 'uid', title: '用户ID',width:120}
+            ,{field: 'username', title: '用户名',width:120}
+            ,{field: 'title', title: '套餐',width:120}
+            ,{field: 'used_flush', title: '刷新次数',width:100}
+            ,{field: 'used_publish', title: '发布次数',width:100}
+            ,{field: 'start_time', title: '开始时间',width:170,templet: "<div>{{layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+            ,{field: 'end_time', title: '结束时间',width:170,templet: "<div>{{layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+            ,{fixed: 'right',title:'操作',width:210, align:'center', toolbar: '#barDemo'}
         ]);
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
+            if(obj.event==="change"){
+                UI.openLayer("{:url('change')}?id="+data['id'], 750, 600, '#submit');
+            }else if(obj.event==="continue"){
+                UI.openLayer("{:url('continues')}?id="+data['id'], 750, 600, '#submit');
             }
         });
         var $ = layui.$, active = {

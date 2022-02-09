@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class UserRecharge extends Model
+class UserConsume extends Model
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
