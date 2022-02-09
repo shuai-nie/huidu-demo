@@ -15,7 +15,7 @@ class Config extends Base
 
     public function index()
     {
-        if ($this->page != null) {
+        if (request()->isPost()) {
             $page = $this->page;
             $limit = $this->limit;
             $limit = ($page - 1) * $limit . ",$limit";
