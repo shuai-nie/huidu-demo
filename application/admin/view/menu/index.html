@@ -1,7 +1,7 @@
 {include file="moban/bone_header"}
 
 <div class="layui-btn-container">
-  {if condition="checkAuth('menuadd')"}
+  {if condition="checkAuth('MenuCreate')"}
   <button class="layui-btn" data-type="addMenu">添加菜单</button>
   {/if}
   <button class="layui-btn layui-btn-primary layui-btn-sm open-all" id="btn-expand">全部展开</button>
@@ -18,7 +18,7 @@
   {if condition="checkAuth('MenuDelete')"}
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
   {/if}
-  {if condition="!checkAuth('menuedit') and !checkAuth('del_menu')"}
+  {if condition="!checkAuth('MenuEdit') and !checkAuth('MenuDelete')"}
     暂无任何权限
   {/if}
 </script>

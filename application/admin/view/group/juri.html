@@ -55,19 +55,16 @@ layui.use(['form','tree','util','jquery'], function(){
         var treecheckdata  = tree.getChecked('demoId');
         var nodeIds = new Array();
         nodeIds = getCheckedId(treecheckdata);
-        console.log("permList:"+nodeIds);
-        return false;
-        Api.add(data.field, function(res){
-            console.log(res);
+        data.field.nodeIds = nodeIds
+        Api.edit(data.field, function(res){
+
         });
     });
 
     // 获取选中节点的id
     function getCheckedId(jsonObj) {
         var id = _i = "";
-        console.log(jsonObj);
         $.each(jsonObj, function (index, item) {
-            console.log(item)
             if (id != "") {
                 id = id + "," + item.id;
             }else {

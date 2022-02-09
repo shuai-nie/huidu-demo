@@ -15,6 +15,8 @@ class Config extends Base
 
     public function index()
     {
+//        var_dump(checkAuth('adminedit'));
+//        exit();
         if (request()->isPost()) {
             $page  = $this->page;
             $limit = $this->limit;

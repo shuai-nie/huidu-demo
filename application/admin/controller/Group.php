@@ -68,9 +68,12 @@ class Group extends Base
     public function juri($id)
     {
         if (request()->isPost()) {
-            $_post = request()->param();
-            var_dump($_post);
-            exit();
+            $nodeIds = request()->param('nodeIds');
+            $state = model('Group')->save(['rules'=>$nodeIds], ['id'=>$id]);
+            if ($state !== false) {
+                return success_json();
+            }
+            return error_json();
         }
         $AuthMenu = model('AuthMenu');
         $data = $AuthMenu->where(['show'=>1])->field('id,pid,title')->select();

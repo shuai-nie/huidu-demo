@@ -101,7 +101,6 @@ class Jurisdiction extends Controller
             $uid = getLoginUserId();
         }
         $addAuthMenu = $this->getrule($uid);
-        //dump($addAuthMenu);exit;
         $authMenuList = [];
         foreach ($addAuthMenu as $k => $v) {
             $authMenuList[$k] = strtolower($v['link']);
