@@ -4,6 +4,8 @@
   {if condition="checkAuth('menuadd')"}
   <button class="layui-btn" data-type="addMenu">添加菜单</button>
   {/if}
+  <button class="layui-btn layui-btn-primary layui-btn-sm open-all" id="btn-expand">全部展开</button>
+  <button class="layui-btn layui-btn-primary layui-btn-sm close-all" id="btn-fold">全部折叠</button>
 </div>
 
 <!--<table class="layui-table layui-form" id="think-table" lay-filter="think-table" lay-size="sm"></table>-->
@@ -34,8 +36,7 @@
               treetable = layui.treetable,
           $ = layui.jquery;
 
-      layer.load(2);
-      treetable.render({
+      var re = treetable.render({
         treeColIndex: 1,
         treeSpid: 0,
         treeIdName: 'id',
@@ -55,13 +56,12 @@
       });
 
       $('#btn-expand').click(function () {
-        treetable.expandAll('#munu-table');
+        treetable.expandAll('#think-table');
       });
 
       $('#btn-fold').click(function () {
-        treetable.foldAll('#munu-table');
+        treetable.foldAll('#think-table');
       });
-
 
 
 
