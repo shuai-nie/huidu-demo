@@ -23,6 +23,7 @@ class Group extends Base
     public function index()
     {
         if (Request()->isPost()) {
+            $map = [];
             $data = model("Group")->where($map)->select();
             $count = model("Group")->where($map)->count();
             $data  = [

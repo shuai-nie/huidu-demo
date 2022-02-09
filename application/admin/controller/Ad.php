@@ -23,15 +23,6 @@ class Ad extends Controller
      */
     public function index()
     {
-//        if(Request()->isPost()) {
-//
-//            $page = Request()->param('page');
-//            $limit = Request()->param('limit');
-//            $offset = ($page - 1) * $limit;
-//            $data = model("Ad")->where($map)->limit($offset, $limit)->select();
-//            $count = model("Ad")->where($map)->count();
-//            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
-//        }
         $map = ['status'=>1];
         $data = model("Ad")->where($map)->field('id,name,sort,page,category,load1,pic1,url1,begin1,end1')->order('end1 desc,id desc')->select();
         if($data) {
