@@ -16,30 +16,21 @@
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'uname', title: '用户名称'}
-            ,{field: 'uid', title: '投递者id'}
-            ,{field: 'fuid', title: '接收者id'}
-            ,{field: 'username', title: '接收者名称'}
-            ,{field: 'type', title: '方式',templet:function(d){
-                    switch (d['type']*1){
-                        case 1:return '投递名片';break;
-                        case 2:return '查看联系方式';break;
-                    }
-                }}
-            ,{field: 'time', title: '动态时间'}
-            ,{field: 'type_status', title: '添加方式',templet:function(d){
-                    switch (d['type_status']*1){
-                        case 1:return '后台添加';break;
-                        case 2:return '前台添加';break;
-                    }
-                }}
-            ,{field: 'remarks', title: '备注'}
-            // ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{field: 'data_type_name', title: '类型'}
+            ,{field: 'data_icon', title: 'icon',templet:function(d){
+                if(d.data_icon){
+                    return "<img src='"+d.data_icon+"' height='30' width='30' />";
+                }
+                return '-';
+                },}
+            ,{field: 'data_name', title: '名称'}
+            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
         ]);
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -48,6 +39,7 @@
                 });
             }
         });
+
         var $ = layui.$, active = {
             create:function(){
                 UI.openLayer("{:url('create')}");

@@ -7,6 +7,12 @@ use think\Request;
 
 class Diction extends Controller
 {
+    public $data = [
+        'CONTACT_TYPE'     => ['type' => 'CONTACT_TYPE', 'title' => '联系方式'],
+        'RESOURCES_TYPE'   => ['type' => 'RESOURCES_TYPE', 'title' => '资源·业务类型'],
+        'RESOURCES_REGION' => ['type' => 'RESOURCES_REGION', 'title' => '资源·合作领域'],
+    ];
+
     /**
      * 显示资源列表
      *
@@ -33,29 +39,24 @@ class Diction extends Controller
      */
     public function create()
     {
-        //
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
+        if(request()->isPost()){
+            $_post = request()->param();
+            $DataDic = model('DataDic');
+            $count = $DataDic->where(['data_type_no'=>$_post['data_type_no']])->count();
+            $state = $DataDic->save([
+                'data_type_no' => $_post['data_type_no'],
+                'data_type_name' => $this->data[$_post['data_type_no']]['title'],
+                'data_no' => $count,
+                'data_name' => $_post['data_name'],
+                'data_icon' => $_post['data_icon'],
+                'sort' => $_post['sort'],
+            ]);
+            if($state !== false) {
+                return success_json(lang('CreateSuccess', [lang('Dictionaries')] ));
+            }
+            return error_json(lang('CreateFail', [lang('Dictionaries')]) );
+        }
+        return view('', ['typeData'=>$this->data]);
     }
 
     /**
@@ -66,7 +67,24 @@ class Diction extends Controller
      */
     public function edit($id)
     {
-        //
+        $DataDic = model('DataDic');
+        if(request()->isPost()) {
+            $_post   = request()->param();
+            $state = $DataDic->save([
+                'data_type_no'   => $_post['data_type_no'],
+                'data_type_name' => $this->data[$_post['data_type_no']]['title'],
+                'data_name'      => $_post['data_name'],
+                'data_icon'      => $_post['data_icon'],
+                'sort'           => $_post['sort'],
+            ], ['id' => $id]);
+            if($state !== false) {
+                return success_json(lang('EditSuccess', [lang('Dictionaries')] ));
+            }
+            return error_json(lang('EditFail', [lang('Dictionaries')]) );
+
+        }
+        $data = $DataDic->find($id);
+        return view('', ['data'=>$data,'typeData'=>$this->data]);
     }
 
     /**
@@ -78,7 +96,8 @@ class Diction extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+
     }
 
     /**

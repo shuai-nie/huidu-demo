@@ -23,5 +23,6 @@ return [
     'Fail' => '失败',
     'Success' => '成功',
     'PackageContinue' => '套餐延期',
+    'Dictionaries' => '字典',
 
 ];
