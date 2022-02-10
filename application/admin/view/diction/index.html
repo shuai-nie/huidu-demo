@@ -4,6 +4,39 @@
     <button class="layui-btn" data-type="create">添加</button>
 </div>
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="data_name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="data_type_no" lay-filter="data_type_no" lay-search="" >
+                            <option value=""></option>
+                            {volist name='data_type' id='vo'}
+                            <option value="{$vo['type']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -12,19 +45,21 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'data_type_name', title: '类型'}
-            ,{field: 'data_icon', title: 'icon',templet:function(d){
+            ,{field: 'data_type_name', width:180,title: '类型'}
+            ,{field: 'data_icon', width:80,title: 'icon',templet:function(d){
                 if(d.data_icon){
                     return "<img src='"+d.data_icon+"' height='30' width='30' />";
                 }
                 return '-';
                 },}
-            ,{field: 'data_name', title: '名称'}
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{field: 'data_name',  width:180,title: '名称'}
+            ,{field: 'sort',  width:80,title: '排序'}
+            ,{fixed: 'right',title:'操作', width:120,align:'center', toolbar: '#barDemo'}
         ]);
 
         table.on('tool(think-table)', function(obj){
@@ -50,6 +85,18 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : {
+                    data_name: data.field.data_name,
+                    data_type_no: data.field.data_type_no
+                }
+            });
+            return false;
+        })
     });
 </script>
 {include file="moban/bone_footer"}

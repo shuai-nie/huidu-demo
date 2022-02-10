@@ -25,11 +25,19 @@ class Diction extends Controller
             $page = Request()->param('page');
             $limit = Request()->param('limit');
             $offset = ($page - 1) * $limit;
+            $data_name = request()->param('data_name');
+            $data_type_no = request()->param('data_type_no');
+            if (!empty($data_name)) {
+                $map['data_name'] = array('like', '%'.$data_name.'%');
+            }
+            if (!empty($data_type_no)) {
+                $map['data_type_no'] = $data_type_no;
+            }
             $adAll = model("DataDic")->where($map)->limit($offset, $limit)->select();
             $count = model("DataDic")->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
         }
-        return view();
+        return view('', ['data_type'=>$this->data]);
     }
 
     /**
