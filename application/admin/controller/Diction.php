@@ -89,23 +89,9 @@ class Diction extends Controller
                 return success_json(lang('EditSuccess', [lang('Dictionaries')] ));
             }
             return error_json(lang('EditFail', [lang('Dictionaries')]) );
-
         }
         $data = $DataDic->find($id);
         return view('', ['data'=>$data,'typeData'=>$this->data]);
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-
-
     }
 
     /**
@@ -116,6 +102,13 @@ class Diction extends Controller
      */
     public function delete($id)
     {
-        //
+        if($id != '') {
+            $state = model('DataDic')->save(['status'=>0], ['id'=>$id]);
+            if($state !== false) {
+                return success_json(lang('DeleteSuccess', [lang('Dictionaries')] ));
+            }
+            return error_json(lang('DeleteFail', [lang('Dictionaries')]) );
+        }
     }
+
 }

@@ -189,26 +189,20 @@ return [
     // | 缓存设置
     // +----------------------------------------------------------------------
 
-    'cache'                  => [
+    'cache' => [
         'default'   =>  [
-
             // 驱动方式
-
             'type'   => 'File',
-
             // 缓存保存目录
-
             'path'   => CACHE_PATH,
-
         ],
-        'user' =>[
-            'type'   => 'redis',
-            'host'   => '127.0.0.1',
-            'port'   => '6379',
-            'password' => '',
-        ]
+//        'user' =>[
+//            'type'   => 'redis',
+//            'host'   => '127.0.0.1',
+//            'port'   => '6379',
+//            'password' => '',
+//        ]
         // 驱动方式
-        
         // 缓存保存目录
         
     ],
@@ -217,22 +211,22 @@ return [
     // | 会话设置
     // +----------------------------------------------------------------------
 
-    'session'                => [
-        'id'             => '',
+    'session' => [
+        'id' => '',
         // SESSION_ID的提交变量,解决flash上传跨域
         'var_session_id' => '',
         // SESSION 前缀
-        'prefix'         => 'think',
+        'prefix' => 'think',
         // 驱动方式 支持redis memcache memcached
-        'type'           => '',
+        'type' => '',
         // 是否自动开启 SESSION
-        'auto_start'     => true,
+        'auto_start' => true,
     ],
 
     // +----------------------------------------------------------------------
     // | Cookie设置
     // +----------------------------------------------------------------------
-    'cookie'                 => [
+    'cookie' => [
         // cookie 名称前缀
         'prefix'    => '',
         // cookie 保存时间
@@ -250,7 +244,7 @@ return [
     ],
 
     //分页配置
-    'paginate'               => [
+    'paginate' => [
         'type'      => 'bootstrap',
         'var_page'  => 'page',
         'list_rows' => 15,
@@ -263,4 +257,56 @@ return [
         'endpoint'        => 'http://oss-ap-southeast-1.aliyuncs.com',
         'accessDomain'    => 'https://guanggao.bn.live/',
     ),
+
+    "db2" => [
+        'type'            => 'mysql',
+        // 服务器地址
+        'hostname'        => '47.56.58.172',
+        // // 数据库名
+        'database'        => 'discuz',
+        // 用户名
+        'username'        => 'bn_admin',
+        // // 密码
+        'password'        => 'Tony996755',
+        // 端口
+        'hostport'        => '3306',
+        // 连接dsn
+        'dsn'             => '',
+        // 数据库连接参数
+        'params'          => [],
+        // 数据库编码默认采用utf8
+        'charset'         => 'utf8',
+        // 数据库表前缀
+        'prefix'          => 'pre_',
+        // 数据库调试模式
+        'debug'           => false,
+        // 数据库部署方式:0 集中式(单一服务器),1 分布式(主从服务器)
+        'deploy'          => 0,
+        // 数据库读写是否分离 主从式有效
+        'rw_separate'     => false,
+        // 读写分离后 主服务器数量
+        'master_num'      => 1,
+        // 指定从服务器序号
+        'slave_no'        => '',
+        // 自动读取主库数据
+        'read_master'     => false,
+        // 是否严格检查字段是否存在
+        'fields_strict'   => true,
+        // 数据集返回类型
+        'resultset_type'  => 'array',
+        // 自动写入时间戳字段
+        'auto_timestamp'  => false,
+        // 时间字段取出后的默认时间格式
+        'datetime_format' => 'Y-m-d H:i:s',
+        // 是否需要进行SQL性能分析
+        'sql_explain'     => false,
+        // Builder类
+        'builder'         => '',
+        // Query类
+        'query'           => '\think\db\Query',
+        // 是否需要断线重连
+        'break_reconnect' => false,
+        // 断线标识字符串
+        'break_match_str' => [],
+    ]
 ];

@@ -1,6 +1,39 @@
 <?php
 
+use think\Cache;
+use think\Db;
+
 //error_reporting(E_ERROR | E_PARSE );
+/**
+ * [获取论团用户信息]
+ * @param $uid
+ * @return array
+ * @author Lucius yesheng35@126.com
+ */
+function CacheMember($uid) {
+    $key = 'CommonMember' . $uid;
+    if($CacheMember = Cache::get($key)) {
+        return $CacheMember;
+    } else {
+        $db2 = Db::connect(config('db2'));
+        $result = $db2->name('common_member')->where(['uid'=>$uid])->field('uid,username')->find();
+        Cache::set($key, $result, 3600);
+        return $result;
+    }
+}
+
+function CacheResource($id) {
+    $key = 'CacheResource' . $id;
+    if($CacheMember = Cache::get($key)) {
+        return $CacheMember;
+    } else {
+        $result = model('Resource')->where(['id'=>$id])->find();
+        Cache::set($key, $result, 60);
+        return $result;
+    }
+}
+
+
 // 获取公共参数
 function getConfig($key){
     $res =  \think\Db::query("select `value` from cg_config where `key` = '$key'");
@@ -207,3 +240,5 @@ function request_post($postUrl = '', $param = '')
 
     return $data;
 }
+
+
