@@ -39,41 +39,54 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+layui.use(['table','form'], function(){
+    var table = layui.table,
+        form = layui.form;
 
-        UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'resources_title', title: '资源ID', width:130}
-            ,{field: 'views', title: '浏览量', width:130}
-            ,{field: 'card_cnt', title: '投递数量', width:130}
-            // ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
-        ]);
+    UI.getPageTable(table, "{:url('')}", [
+        {field: 'id', title: 'ID', width:80, fixed: 'left'}
+        ,{field: 'resources_title', title: '资源ID', width:130}
+        ,{field: 'views', title: '浏览量', width:130}
+        ,{field: 'card_cnt', title: '投递数量', width:130}
+        // ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
+    ]);
 
-        table.on('tool(think-table)', function(obj){
-            var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
-            }
-        });
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-
+    table.on('tool(think-table)', function(obj){
+        var data=obj.data;
+        if(obj.event==="edit"){
+            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+        }else if(obj.event==='del'){
+            UI.delete(data['id'], function(res){
+                if(res.code==200){
+                    table.reload("table");
+                }
+            });
+        }
     });
+
+    var $ = layui.$, active = {
+        create:function(){
+            UI.openLayer("{:url('create')}");
+        }
+    };
+
+    form.on('submit(data-search-btn)', function(data){
+        table.reload('table', {
+            url: "{:url('')}",
+            method:'post',
+            where : {
+                resources_id: data.field.resources_id,
+                resources_title: data.field.resources_title,
+            }
+        });
+        return false;
+    })
+
+    $('.layui-btn-container .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+
+});
 </script>
 {include file="moban/bone_footer"}

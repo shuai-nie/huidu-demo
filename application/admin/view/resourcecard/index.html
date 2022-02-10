@@ -1,8 +1,8 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
+<!--<div class="layui-btn-container">-->
+<!--    <button class="layui-btn" data-type="create">添加</button>-->
+<!--</div>-->
 
 <fieldset class="table-search-fieldset">
     <legend>搜索信息</legend>
@@ -12,28 +12,28 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">资源ID</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="uid" autocomplete="off" class="layui-input">
+                        <input type="text" name="resources_id" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">投递UID</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                        <input type="text" name="to_uid" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">接收UID</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                        <input type="text" name="from_uid" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">类型</label>
                     <div class="layui-input-inline">
-                        <select name="auth" lay-filter="data_type_no" lay-search="" >
+                        <select name="read_status" lay-filter="data_type_no" lay-search="" >
                             <option value="">请选择</option>
                             <option value="0">未读</option>
                             <option value="1">已读</option>
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="layui-inline">
-                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
         </form>
@@ -57,8 +57,9 @@
 </script>
 
 <script>
-layui.use('table', function(){
-    var table = layui.table;
+layui.use(['table','form'], function(){
+    var table = layui.table,
+        form = layui.form;
 
     UI.getPageTable(table, "{:url('')}", [
         {field: 'id', title: 'ID', width:80, fixed: 'left'}
@@ -97,6 +98,20 @@ layui.use('table', function(){
             UI.openLayer("{:url('create')}");
         }
     };
+
+    form.on('submit(data-search-btn)', function(data){
+        table.reload('table', {
+            url: "{:url('')}",
+            method:'post',
+            where : {
+                resources_id: data.field.resources_id,
+                to_uid: data.field.to_uid,
+                from_uid: data.field.from_uid,
+                read_status: data.field.read_status,
+            }
+        });
+        return false;
+    })
 
     $('.layui-btn-container .layui-btn').on('click', function(){
         var type = $(this).data('type');
