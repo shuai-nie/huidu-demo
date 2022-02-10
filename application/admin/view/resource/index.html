@@ -4,6 +4,47 @@
     <button class="layui-btn" data-type="create">添加</button>
 </div>
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户ID</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="uid" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="auth" lay-filter="data_type_no" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="1">通过</option>
+                            <option value="2">审核中</option>
+                            <option value="3">未通过</option>
+                            <option value="4">草稿</option>
+                            <option value="5">已关闭</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -12,50 +53,66 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
-        UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'name', title: 'banner名称'}
-            ,{field: 'url', title: '图片', templet:function (d) {
-                    if(d.url != '' || d.url != null){
-                        return '<img src="'+d.url+'" />';
-                    }
-                    return '-';
-                }}
-            ,{field: 'link_type', title: '跳转方式',templet:function(d){
-                    switch (d['link_type']*1){
-                        case 0:return '无跳转';break;
-                        case 1:return '跳转链接';break;
-                        case 2:return '跳转资源';break;
-                    }
-                }}
-            ,{field: 'link_url', title: '链接'}
-
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
-        ]);
-        table.on('tool(think-table)', function(obj){
-            var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
+layui.use('table', function(){
+    var table = layui.table;
+    UI.getPageTable(table, "{:url('')}", [
+        {field: 'id', title: 'ID', width:80, fixed: 'left'}
+        ,{field: 'uid', title: '用户ID', width:80}
+        ,{field: 'title', title: '标题', width:120}
+        ,{field: 'types', title: '来源',width:60,templet:function(d){
+            switch (d.types*1) {
+                case 1: return '<span class="label pull-right layui-bg-blue">前台</span>';break;
+                case 2: return '<span class="label pull-right layui-bg-red">后台</span>';break;
+                default:return '-';break;
             }
-        });
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
+            }}
+        ,{field: 'ty', title: '类型',width:80,templet:function(d){
+                switch (d.ty*1) {
+                    case 1: return '<span class="label pull-right layui-bg-orange">我提供</span>';break;
+                    case 2: return '<span class="label pull-right layui-bg-green">我需求</span>';break;
+                    default:return '-';break;
+                }
+            }}
 
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+        ,{field: 'type', title: '业务类型',width:110}
+        ,{field: 'region', title: '合作区域',width:110}
+        ,{field: 'feedback', title: '反馈信息',width:140}
+        ,{field: 'top_start_time', title: '置顶开始时间',width:170,templet: "<div>{{layui.util.toDateString(d.top_start_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+        ,{field: 'top_end_time', title: '结束时间',width:170,templet: "<div>{{layui.util.toDateString(d.top_end_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+        ,{field: 'auth', title: '状态',width:70,templet:function (d) {
+                switch (d.auth*1){
+                    case 1:return '<span class="label pull-right layui-bg-orange">通过</span>';break;
+                    case 2:return '<span class="label pull-right layui-bg-green">审核中</span>';break;
+                    case 3:return '<span class="label pull-right layui-bg-cyan">未通过</span>';break;
+                    case 4:return '<span class="label pull-right layui-bg-blue">草稿</span>';break;
+                    case 5:return '<span class="label pull-right layui-bg-black">已关闭</span>';break;
+                    default:return '<span class="label pull-right layui-bg-gray">-</span>';break;
+                }
+            }}
+        ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
+    ]);
+    table.on('tool(think-table)', function(obj){
+        var data=obj.data;
+        if(obj.event==="edit"){
+            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+        }else if(obj.event==='del'){
+            UI.delete(data['id'], function(res){
+                if(res.code==200){
+                    table.reload("table");
+                }
+            });
+        }
     });
+    var $ = layui.$, active = {
+        create:function(){
+            UI.openLayer("{:url('create')}");
+        }
+    };
+
+    $('.layui-btn-container .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+});
 </script>
 {include file="moban/bone_footer"}

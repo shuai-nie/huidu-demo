@@ -1,52 +1,106 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
-        <label class="layui-form-label">banner名称</label>
+        <label class="layui-form-label">用户ID</label>
         <div class="layui-input-block">
-            <input type="text" name="name" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="uid" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
         </div>
     </div>
 
-    <div id="url" {if condition="empty($data['url'])"}style="display: none;"{/if}>
-        <label class="layui-form-label"></label>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <img src="{$data['url']}" height="100" width="100" />
+            <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="ty" value="1" title="我提供" checked>
+            <input type="radio" name="ty" value="2" title="我需要">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            {volist name='resourcesType' id='vo'}
+            <input type="checkbox" name="type[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">合作区域</label>
+        <div class="layui-input-block">
+            {volist name='resourcesRegion' id='vo'}
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <script id="container" name="intro" type="text/plain">{$resource['intro']}</script>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label"></label>
-        <input type="hidden" name="url">
-        <button type="button" class="layui-btn" id="test1">
-            <i class="layui-icon">&#xe67c;</i>上传图片
-        </button>
-    </div>
-
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">跳转方式</label>
-        <div class="layui-input-block">
-            <input type="radio" name="link_type" value="0" title="无跳转" checked>
-            <input type="radio" name="link_type" value="1" title="跳转链接">
-            <input type="radio" name="link_type" value="2" title="跳转资源">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="test2">多图片上传</button>
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">
+                预览图：
+                <div class="layui-upload-list" id="demo2">
+                    {volist name="$resource['img']" id="vo" key="k"}
+                    <div style="width:100px;float:left;position:relative;margin:10px;">
+                        <i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>
+                        <img width="100" height="100" src="{$vo}"  class="layui-upload-img">
+                        <input type="hidden" name="img[{$k-1}]" value="{$vo}" />
+                    </div>
+                    {/volist}
+                </div>
+                <div style="clear:both;"></div>
+            </blockquote>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">跳转链接</label>
+        <label class="layui-form-label">反馈信息</label>
         <div class="layui-input-block">
-            <input type="text" name="link_url" placeholder="跳转链接" autocomplete="off" class="layui-input">
-            <div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>
+            <input type="text" name="feedback" placeholder="" autocomplete="off" class="layui-input">
         </div>
-
     </div>
+
     <div class="layui-form-item">
-        <label class="layui-form-label">排序</label>
+        <label class="layui-form-label">置顶开始时间</label>
         <div class="layui-input-block">
-            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+            <input type="text" name="top_start_time" id="top_start_time" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">置顶结束时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="top_end_time" id="top_end_time" placeholder="" autocomplete="off" class="layui-input">
+            <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="auth" value="1" title="通过" checked >
+            <input type="radio" name="auth" value="2" title="审核中">
+            <input type="radio" name="auth" value="3" title="未通过">
+            <input type="radio" name="auth" value="4" title="草稿">
+            <input type="radio" name="auth" value="5" title="已关闭">
         </div>
     </div>
 
@@ -54,6 +108,7 @@
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
+
     <!-- <div class="layui-form-item">
       <div class="layui-input-block">
         <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
@@ -63,27 +118,47 @@
 </form>
 <!--</div>-->
 
+<script type="text/javascript" src="/static/ueditor1433/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.all.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.parse.js"></script>
+
 <script>
     //Demo
-    layui.use(['form','upload'], function () {
+    layui.use(['form','upload','laydate'], function () {
         var form = layui.form,
-            upload = layui.upload;
+            upload = layui.upload,
+            laydate = layui.laydate;
+
+        var ue = UE.getEditor('container', {
+            initialFrameHeight:400,
+            autoHeightEnabled:false,
+            autoFloatEnabled:false,
+        });
+
+        laydate.render({elem: '#top_start_time',type: 'datetime'});
+        laydate.render({elem: '#top_end_time',type: 'datetime'});
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept='images';
         var upload_acceptMime='image/*';
         var upload_size=3145728;
+        var imgKey = 0 + "<?php echo count($resource['img']); ?>"*1;
         var uploadInst = upload.render({
-            elem: '#test1'
+            elem: '#test2'
             ,url: upload_url
             ,accept: upload_accept
             ,acceptMime:upload_acceptMime
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
-                    $("input[name='url']").val(res.url);
+
+                    $('#demo2').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                        +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
+                        +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                        + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
+                        +'</div>');
+                    imgKey++;
+
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
@@ -94,16 +169,35 @@
             }
         });
 
+        $("#demo2").on('click', '.img-delete', function(){
+            var _this = $(this);
+            _this.parent().remove();
+        })
+
         form.val('first', {
-            'name': "{$data['name']}",
-            'url': "{$data['url']}",
-            'link_type': "{$data['link_type']}",
-            'link_url': "{$data['link_url']}",
-            'sort': "{$data['sort']}",
+            'uid' : "{$resource['uid']}",
+            'title' : "{$resource['title']}",
+            'ty' : "{$resource['ty']}",
+            'feedback':"{$resource['feedback']}",
+            'top_start_time':"{$resource['top_start_time']}",
+            'top_end_time':"{$resource['top_end_time']}",
+            'auth':"{$resource['auth']}",
+            {volist name="$resource['type']" id="vo"}
+                "type[{$vo}]":true,
+            {/volist}
+
+            {volist name="$resource['region']" id="vo"}
+            "region[{$vo}]":true,
+            {/volist}
+
         });
 
+        //监听提交
         form.on('submit(submit)', function (data) {
-            Api.edit(data.field, function (res) {});
+            data.field.intro = ue.getContent();
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
         });
 
 

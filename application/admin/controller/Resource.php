@@ -19,9 +19,33 @@ class Resource extends Controller
             $page = Request()->param('page');
             $limit = Request()->param('limit');
             $offset = ($page - 1) * $limit;
-            $adAll = model("Resource")->where($map)->limit($offset, $limit)->select();
+            $data = model("Resource")->where($map)->order('id desc')->limit($offset, $limit)->select();
             $count = model("Resource")->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+            $DataDic = model('DataDic');
+            foreach ($data as $key=>$value) {
+                $type = explode('|', $value['type']);
+                $valueType = [];
+                foreach ($type as $val){
+                    if (is_numeric($val) ) {
+                        $ValuesType = $DataDic->field('id,data_name')->where(['data_type_no'=>'RESOURCES_TYPE','data_no'=>$val])->find();
+                        array_push($valueType, !empty($ValuesType) ? $ValuesType['data_name'] : '');
+                    }
+                }
+                $value['type'] = implode('|', $valueType);
+
+                $region = explode('|', $value['region']);
+                $valueRegion = [];
+                foreach ($region as $val){
+                    if (is_numeric($val) ) {
+                        $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no'=>'RESOURCES_REGION','data_no'=>$val])->find();
+                        array_push($valueRegion, !empty($ResourcesType) ? $ResourcesType['data_name'] : '');
+                    }
+                }
+                $value['region'] = implode('|', $valueRegion);
+
+                $data[$key] = $value;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
     }
@@ -33,29 +57,26 @@ class Resource extends Controller
      */
     public function create()
     {
-        //
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
+        if(request()->isPost()){
+            $_post = request()->param();
+            $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
+            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
+            $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
+            $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+            $_post['types'] = 2;
+            $state = model('Resource')->save($_post);
+            if($state !== false){
+                return success_json(lang('CreateSuccess', [lang('Resource')]));
+            }
+            return error_json(lang('CreateFail', [lang('Resource')]));
+        }
+        $resourcesType = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
+        $resourcesRegion = model('DataDic')->where(['data_type_no'=>'RESOURCES_REGION'])->select();
+        return view('', [
+            'resourcesType' => $resourcesType,
+            'resourcesRegion' => $resourcesRegion,
+        ]);
     }
 
     /**
@@ -66,19 +87,33 @@ class Resource extends Controller
      */
     public function edit($id)
     {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        if(request()->isPost()){
+            $_post = request()->param();
+            $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
+            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
+            $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
+            $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+            $state = model('Resource')->save($_post, ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', [lang('Resource')]));
+            }
+            return error_json(lang('EditFail', [lang('Resource')]));
+        }
+        $Resource = model('Resource');
+        $resourceInfo = $Resource->find($id);
+        $resourcesType = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
+        $resourcesRegion = model('DataDic')->where(['data_type_no'=>'RESOURCES_REGION'])->select();
+        $resourceInfo['img'] = explode('|', $resourceInfo['img']);
+        $resourceInfo['type'] = explode('|', $resourceInfo['type']);
+        $resourceInfo['region'] = explode('|', $resourceInfo['region']);
+        $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
+        $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
+        return view('', [
+            'resource'        => $resourceInfo,
+            'resourcesType'   => $resourcesType,
+            'resourcesRegion' => $resourcesRegion,
+        ]);
     }
 
     /**
@@ -89,6 +124,12 @@ class Resource extends Controller
      */
     public function delete($id)
     {
-        //
+        if($id != '') {
+            $state = model('Resource')->save(['status'=>0], ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('DeleteSuccess', [lang('Resource')]));
+            }
+            return error_json(lang('DeleteFail', [lang('Resource')]));
+        }
     }
 }

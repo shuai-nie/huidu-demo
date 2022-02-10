@@ -29,5 +29,6 @@ return [
     'LoginFail' => '登录失败',
 
     'UserGroup' => '用户组',
+    'Resource' => '资源',
 
 ];

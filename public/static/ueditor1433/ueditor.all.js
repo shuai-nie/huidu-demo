@@ -24553,7 +24553,8 @@ UE.plugin.register('simpleupload', function (){
 
                 /* 判断后端配置是否没有加载成功 */
                 if (!me.getOpt('imageActionName')) {
-                    errorHandler(me.getLang('autoupload.errorLoadConfig'));
+                    //errorHandler(me.getLang('autoupload.errorLoadConfig'));
+                    showErrorLoader(me.getLang('autoupload.errorLoadConfig'));
                     return;
                 }
                 // 判断文件格式是否错误
