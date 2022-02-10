@@ -24,5 +24,10 @@ return [
     'Success' => '成功',
     'PackageContinue' => '套餐延期',
     'Dictionaries' => '字典',
+    'User' => '用户',
+    'LoginSuccess' => '登录成功',
+    'LoginFail' => '登录失败',
+
+    'UserGroup' => '用户组',
 
 ];

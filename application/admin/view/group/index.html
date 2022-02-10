@@ -1,60 +1,60 @@
 {include file="moban/bone_header"}
 <div class="layui-btn-container">
-  {if condition="checkAuth('groupadd')"}
-  <button class="layui-btn" data-type="addGroup">添加用户组</button>
-  {/if}
+    {if condition="checkAuth('groupadd')"}
+    <button class="layui-btn" data-type="addGroup">添加用户组</button>
+    {/if}
 </div>
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 <script type="text/html" id="barDemo">
-  {{# if(d['id']!=1){ }}
-  {if condition="checkAuth('groupedit')"}
-  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  {/if}
-  <a class="layui-btn layui-btn-xs" lay-event="juri">权限</a>
-  {if condition="checkAuth('del_group')"}
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-  {/if}
-  {if condition="!checkAuth('del_group') and !checkAuth('groupedit')"}
+    {{# if(d['id']!=1){ }}
+    {if condition="checkAuth('groupedit')"}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    {/if}
+    <a class="layui-btn layui-btn-xs" lay-event="juri">权限</a>
+    {if condition="checkAuth('del_group')"}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {/if}
+    {if condition="!checkAuth('del_group') and !checkAuth('groupedit')"}
     暂无任何权限
-  {/if}
-  {{# }else{
+    {/if}
+    {{# }else{
     return "禁止修改";
-} }}
+    } }}
 </script>
 <script>
-	layui.use('table', function(){
-          var table = layui.table;
-          UI.getPageTable(table,"{:url('')}",[
-          	{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-          	,{field: 'group_name', title: '用户组名称'}
-          	,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
-          ]);
-           table.on('tool(think-table)', function(obj){
-              var data=obj.data;
-              if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', function(){
-                  table.reload("table");
-                });
-              }else if(obj.event==='del'){
-                UI.delete(data['id'],function(res){
-                  if(res.code==200){
+    layui.use('table', function () {
+        var table = layui.table;
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+            , {field: 'group_name', title: '用户组名称'}
+            , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barDemo'}
+        ]);
+        table.on('tool(think-table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === "edit") {
+                UI.openLayer("{:url('edit')}?id=" + data['id'], 500, 260, '#submit', function () {
                     table.reload("table");
-                  }
                 });
-              }else if(obj.event === 'juri') {
-                UI.openLayer("{:url('juri')}?id="+data['id']);
-              }
-          });
-        var $ = layui.$, active = {
-            addGroup:function(){
-               UI.openLayer("{:url('add')}");
+            } else if (obj.event === 'del') {
+                UI.delete(data['id'], function (res) {
+                    if (res.code == 200) {
+                        table.reload("table");
+                    }
+                });
+            } else if (obj.event === 'juri') {
+                UI.openLayer("{:url('juri')}?id=" + data['id']);
             }
-          };
-          
-          $('.layui-btn-container .layui-btn').on('click', function(){
+        });
+        var $ = layui.$, active = {
+            addGroup: function () {
+                UI.openLayer("{:url('add')}", 500, 260);
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
-          });
-      });
+        });
+    });
 </script>
 {include file="moban/bone_footer"}

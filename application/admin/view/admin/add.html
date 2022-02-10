@@ -55,10 +55,10 @@ layui.use('form', function(){
   
   //监听提交
   form.on('submit(submit)', function(data){
-    // layer.msg(JSON.stringify(data.field));
     Api.add(data.field,function(res){
-    	console.log(res);
-      
+      if (res.code == 400) {
+        layer.msg(res.msg, {icon:5})
+      }
     });
   });
 });

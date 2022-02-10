@@ -42,27 +42,30 @@ class Group extends Base
     public function edit($id)
     {
         if (request()->isPost()) {
-            $this->logic->save_one(input('post.'));
+            $_post = request()->param();
+            $state = model('Group')->save(['group_name'=>$_post['group_name']], ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', [lang('UserGroup')]));
+            }
+            return error_json(lang('EditFail', [lang('UserGroup')]));
         }
-        $Jurisdiction = new Jurisdiction();
-        $menuList     = $Jurisdiction->getAuthMenu(getLoginUserId(), 0);
-        $info         = $this->logic->get_find($id);
+        $info = $this->logic->get_find($id);
         return view('', [
-            'info'     => $info,
-            'menuList' => $menuList,
+            'info' => $info,
         ]);
     }
 
     public function add()
     {
         if (request()->isPost()) {
-            $this->logic->insert_one(input('post.'));
+            $_post = request()->param();
+            $state = model('Group')->save(['group_name'=>$_post['group_name']]);
+            if($state !== false){
+                return success_json(lang('CreateSuccess', [lang('UserGroup')]));
+            }
+            return error_json(lang('CreateFail', [lang('UserGroup')]));
         }
-        $Jurisdiction = new Jurisdiction();
-//        $menuList = $Jurisdiction->getAuthMenu(getLoginUserId(), 0);
-        return view('', [
-//            'menuList' => $menuList,
-        ]);
+        return view('');
     }
 
     public function juri($id)
@@ -76,7 +79,7 @@ class Group extends Base
             return error_json();
         }
         $AuthMenu = model('AuthMenu');
-        $data = $AuthMenu->where(['show'=>1])->field('id,pid,title')->select();
+        $data = $AuthMenu->where([])->field('id,pid,title')->select();
         if($data) {
             $data = collection($data)->toArray();
         }
@@ -123,7 +126,11 @@ class Group extends Base
     public function delete($id = "")
     {
         if ($id != "") {
-            $this->logic->delete($id);
+            $state = model('Group')->where(['id'=>$id])->delete();
+            if($state !== false){
+                return success_json(lang('DeleteSuccess', [lang('UserGroup')]));
+            }
+            return error_json(lang('DeleteFail', [lang('UserGroup')]));
         }
     }
 }

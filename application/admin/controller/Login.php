@@ -11,18 +11,25 @@ class Login extends Controller
 
     public function login()
     {
-        $model  = Loader::model('Admin');
-        $data   = input('post.');
-        $isUser = $model->where(['username' => $data['username'], 'password' => $data['password']])->find();
-    	if(!empty($isUser)){
-    		//设置登陆str
-    		$number = GetRandStr(12);
-		    setLoginStr($number);
-		    $model->where(array('id'=>$isUser['id']))->update(array('str'=>$number));
-    		setLoginUserId($isUser['id']);
-    		success_callback("登陆成功",['href'=>'http://'.$_SERVER['HTTP_HOST']]);
-    	}else{
-    		error_callback("登录失败");
-    	}
+        if (request()->isPost()) {
+            $model  = model('Admin');
+            $data   = request()->param();
+            $isUser = $model->where(['username' => $data['username'], 'status'=>1])->find();
+            if(!empty($isUser)){
+                if($isUser['password'] !== md5(md5($data['password']).$isUser['str'])){
+                    return error_json(lang('LoginFail'));
+                }
+
+                //设置登陆str
+//                $number = GetRandStr(12);
+//                setLoginStr($number);
+//                $model->where(array('id'=>$isUser['id']))->update(array('str'=>$number));
+                setLoginUserId($isUser['id']);
+                return success_json(lang("LoginSuccess"), ['href'=>'http://'.$_SERVER['HTTP_HOST']]);
+            }else{
+                return error_json(lang('LoginFail'));
+            }
+        }
+
     }
 }
