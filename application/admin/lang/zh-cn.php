@@ -30,5 +30,6 @@ return [
 
     'UserGroup' => '用户组',
     'Resource' => '资源',
+    'Counselor' => '顾问',
 
 ];

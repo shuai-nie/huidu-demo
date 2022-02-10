@@ -1,0 +1,90 @@
+{include file="moban/bone_header"}
+
+<div class="layui-btn-container">
+    <button class="layui-btn" data-type="create">添加</button>
+</div>
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'head_url', title: '头像', width:130, templet:function (d) {
+                if(d.head_url) {
+                    return "<img height='30' width='30' src='"+d.head_url+"' />";
+                }
+                return '-';
+                }}
+            ,{field: 'name', title: '名称', width:130}
+            ,{field: 'intro', title: '简介', width:130}
+            ,{field: 'link_url', title: '跳转链接', width:130}
+            ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
+        ]);
+
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 550, '#submit');
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : {
+                    name: data.field.name
+                }
+            });
+            return false;
+        })
+
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}",750, 550);
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+</script>
+{include file="moban/bone_footer"}

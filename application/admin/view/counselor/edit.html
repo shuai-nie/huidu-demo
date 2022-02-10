@@ -1,0 +1,104 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div id="url" {if condition="empty($data['head_url'])"}style="display: none;"{/if} >
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <img src="{$data['head_url']}" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <input type="hidden" name="head_url">
+        <button type="button" class="layui-btn" id="test1">
+            <i class="layui-icon">&#xe67c;</i>上传头像
+        </button>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">简介</label>
+        <div class="layui-input-block">
+            <textarea name="intro" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">跳转链接</label>
+        <div class="layui-input-block">
+            <input type="text" name="link_url" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+    <!-- <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div> -->
+</form>
+<!--</div>-->
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='head_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        form.val('first', {
+            "head_url" : "{$data['head_url']}",
+            "name" : "{$data['name']}",
+            "intro" : "{$data['intro']}",
+            "link_url" : "{$data['link_url']}",
+
+        })
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+
+
+    });
+</script>
