@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Card extends Model
+class Card extends Base
 {
     //
 }

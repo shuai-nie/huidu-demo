@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class DataDic extends Model
+class DataDic extends Base
 {
     //
 }

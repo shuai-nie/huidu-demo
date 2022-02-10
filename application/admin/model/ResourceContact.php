@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class ResourceContact extends Model
+class ResourceContact extends Base
 {
     //
 }

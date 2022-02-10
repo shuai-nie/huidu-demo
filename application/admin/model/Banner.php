@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Banner extends Model
+class Banner extends Base
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';

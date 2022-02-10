@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Advertisement extends Model
+class Advertisement extends Base
 {
     //
 }
