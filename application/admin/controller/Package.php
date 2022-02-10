@@ -33,30 +33,18 @@ class Package extends Controller
      */
     public function create()
     {
-        //
+        if(\request()->isPost()){
+            $_post = \request()->param();
+            $state = model("Package")->save($_post);
+            if($state !== false){
+                return success_json(lang('CreateSuccess', [lang('RESOURCE')]));
+            }
+            return error_json(lang('CreateFail', [lang('RESOURCE')]));
+        }
+        return view('');
     }
 
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
 
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
 
     /**
      * 显示编辑资源表单页.
@@ -66,20 +54,20 @@ class Package extends Controller
      */
     public function edit($id)
     {
-        //
+        $Package = model("Package");
+        if(\request()->isPost()){
+            $_post = \request()->param();
+            $state = $Package->save($_post, ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', [lang('RESOURCE')]));
+            }
+            return error_json(lang('EditFail', [lang('RESOURCE')]));
+        }
+        $data = $Package->find($id);
+        return view('', ['data'=>$data]);
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * 删除指定资源
@@ -89,6 +77,14 @@ class Package extends Controller
      */
     public function delete($id)
     {
-        //
+        $Package = model("Package");
+        if($id != ''){
+            $_post = \request()->param();
+            $state = $Package->save(['status'=>0], ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('DeleteSuccess', [lang('RESOURCE')]));
+            }
+            return error_json(lang('DeleteFail', [lang('RESOURCE')]));
+        }
     }
 }

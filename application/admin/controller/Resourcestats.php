@@ -16,6 +16,12 @@ class Resourcestats extends Controller
     {
         if(request()->isPost()) {
             $map = array();
+            $resources_id = request()->param('resources_id');
+            $resources_title = request()->param('resources_title');
+            if(!empty($resources_id)) {
+                $map['resources_id'] = $resources_id;
+            }
+
             $page = request()->param('page');
             $limit = request()->param('limit');
             $offset = ($page - 1) * $limit;

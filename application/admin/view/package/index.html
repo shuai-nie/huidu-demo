@@ -21,13 +21,19 @@
             ,{field: 'title', title: '套餐标题'}
             ,{field: 'publish', title: '发布资源次数'}
             ,{field: 'flush', title: '刷新资源次数'}
-            ,{field: 'level', title: '等级'}
+            ,{field: 'level', title: '等级',templet:function(d){
+                switch (d.level*1){
+                    case 0:return '基础套餐';break;
+                    case 1:return '钻石套餐';break;
+                    default:return '-';break;
+                }
+                }}
             ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 350, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -38,7 +44,7 @@
         });
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}");
+                UI.openLayer("{:url('create')}", 600, 350);
             }
         };
 
