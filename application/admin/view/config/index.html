@@ -8,17 +8,23 @@
 
 <script id="barDemo" type="text/html">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 
 <script>
     layui_function = layui.use('table', function () {
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+            {field: 'id', title: 'ID', width: 80, fixed: 'left'}
             , {field: 'key', title: '键'}
             , {field: 'remarks', title: '备注'}
-            , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barDemo'}
+            , {field: 'value', title: '内容',templet:function (d) {
+                    if (d.key == 'tg_picture') {
+                        return "<img src='"+d.value+"' height=30 width=30 ";
+                    }
+                    return d.value;
+                }}
+            , {fixed: 'right', title: '操作', width:80,align: 'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function (obj) {
             var data = obj.data;
@@ -29,17 +35,16 @@
             }
             //删除
             if (obj.event === 'del') {
-                // alert(123);
                 UI.delete(data['id'], function (res) {
                     if (res.code == 200) {
-                        table.reload("think-table");
+                        table.reload("table");
                     }
                 });
             }
         });
         var $ = layui.$, active = {
             addGroup: function () {
-                UI.openLayer("{:url('add')}");
+                UI.openLayer("{:url('add')}", 700, 400);
             }
         };
 

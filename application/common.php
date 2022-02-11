@@ -241,4 +241,64 @@ function request_post($postUrl = '', $param = '')
     return $data;
 }
 
+/**
+ * 删除目录及文件
+ * @param  deletefile //删除文件夹及里面的所有数据
+ * @param  dirName  // 基于 ./Public/Uploads/ 下面的路径
+ * @param  is_dir  //判断是否是目录
+ * @param  opendir  // 打开文件夹
+ * @param  readdir // 读取文件夹
+ */
+function deletefile($dirName)
+{
+    $dir = $dirName;
+    if (is_dir(iconv('utf-8', 'gb2312', $dir)) == true) {
+        if ($handle = opendir(iconv('utf-8', 'gb2312', $dir))) {//打开文件内容
+            while (false !== ($files = readdir($handle))) {//读取文件内容
+                $files = iconv('gb2312', 'utf-8', $files);
+                if ($files != "." && $files != "..") {
+                    $files   = iconv('utf-8', 'utf-8', $files);//字符转义
+                    $dir     = iconv('utf-8', 'utf-8', $dir);
+                    $new_dir = $dir . "/" . $files;
+                    if (is_dir(iconv('utf-8', 'gb2312', $new_dir))) {
+                        deletefile($new_dir);//递归调用
+                    } else {
+                        //删除pdf 里面的转换文件
+                        $zip_type = substr(strrchr(iconv('utf-8', 'gb2312', $files), '.'), 1);
+                        if ($zip_type == 'xls' || $zip_type == 'xlsx' || $zip_type == 'docx' || $zip_type == 'doc') {
+                            $filename_file = $files;
+                            $houzhui_file  = substr(strrchr($filename_file, '.'), 1);
+                            $wei_file      = mb_strlen($houzhui_file, 'utf-8') + 1;//获取后缀名的长度
+                            $zong_file     = mb_strlen($filename_file, 'utf-8');//获取总的长度
+                            $filenams_file = mb_substr($filename_file, 0, $zong_file - $wei_file, 'utf-8');
+                            $pdfname_file  = $filenams_file;//截取文件名前缀
+                            unlink(iconv('utf-8', 'gb2312', './Public/Uploads/pdf/' . $pdfname_file . '.pdf'));
+                        }
+                        unlink(iconv('utf-8', 'gb2312', $new_dir));
+                    }
+                }
+            }
+
+            closeDir($handle);
+
+            if (rmdir(iconv('utf-8', 'GBK', $dir))) {
+                $value['file']    = '成功删除目录';
+                $value['success'] = 'success';
+                //echo "成功删除目录";
+            }
+        } else {
+            // echo '打开不了目录';
+            $value['file'] = '打开不了目录';
+            $value['fail'] = 'fail';
+        }
+    } else {
+        if (is_file(iconv('utf-8', 'gb2312', $dir)) == false) {
+            //echo '没有找到目录';
+            $value['file'] = '没有找到目录';
+            $value['fail'] = 'fail';
+        }
+    }
+    return $value;
+}
+
 
