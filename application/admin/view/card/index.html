@@ -6,34 +6,34 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
-<!--<script type="text/html" id="barDemo">-->
-<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
-<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
-<!--</script>-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
 
 <script>
     layui.use('table', function(){
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'uid', title: '用户uid'}
-            ,{field: 'firm_id', title: '企业uid'}
-            ,{field: 'logo', title: 'logo', templet:function (d) {
+            ,{field: 'uid', title: '用户uid', width:100}
+            ,{field: 'name', title: '名字',width:130}
+            ,{field: 'logo', title: 'logo',width:100, templet:function (d) {
                 if(d.logo) {
-                    return '<img src="'+d.logo+'" height="10" width="40" />';
+                    return '<img src="'+d.logo+'" height="30" width="30" />';
                 }
                 return '-';
             }}
-            ,{field: 'logo_watermark', title: 'logo水印', templet:function (d) {
+            ,{field: 'logo_watermark', width:100,title: 'logo水印', templet:function (d) {
                     if(d.logo_watermark) {
                         return '<img src="'+d.logo_watermark+'" height="10" width="40" />';
                     }
                     return '-';
                 }}
-            ,{field: 'position', title: '职位'}
+            ,{field: 'position', title: '职位',width: 170}
             ,{field: 'greet', title: '默认打招呼语'}
 
-            // ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function(obj){
             var data=obj.data;

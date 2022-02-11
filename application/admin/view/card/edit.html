@@ -1,0 +1,245 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名字</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" disabled placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div id="url" {if condition="empty($data['logo'])"}style="display: none;"{/if}>
+    <label class="layui-form-label"></label>
+    <div class="layui-input-block">
+        <img src="{$data['logo']}" height="100" width="100" />
+    </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <input type="hidden" name="logo">
+        <button type="button" class="layui-btn" id="test1">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+        </button>
+    </div>
+
+    <div id="logo_watermark" {if condition="empty($data['logo_watermark'])"}style="display: none;"{/if}>
+    <label class="layui-form-label"></label>
+    <div class="layui-input-block">
+        <img src="{$data['logo_watermark']}" height="100" width="100" />
+    </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <input type="hidden" name="logo_watermark">
+        <button type="button" class="layui-btn" id="test1_logo_watermark">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+        </button>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">职位</label>
+        <div class="layui-input-block">
+            <input type="text" name="position" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">打招呼语</label>
+        <div class="layui-input-block">
+            <input type="text" name="greet" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+
+    {if condition="!empty($CardContact)" }
+    {volist name="CardContact" id="vo" key="k" }
+    <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">
+
+        <div class="layui-form-item contact ">
+            <div class="layui-inline">
+                <label class="layui-form-label" >联系方式</label>
+                <div class="layui-input-inline">
+                    <select name="contact[{$k-1}]" lay-filter="aihao">
+                        <option value="" >请选择</option>
+                        {volist name="DataDicData" id="vo1"}
+                        <option value="{$vo1['data_no']}" {if condition="$vo1['data_no'] eq $vo['contact_type']"}selected{/if} >{$vo1['data_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="tel[{$k-1}]" value="{$vo['contact_number']}" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                {if condition="$k gt 1"}
+                <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>
+                {/if}
+                {if condition="$k eq 1"}
+                <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>
+                {/if}
+            </div>
+        </div>
+
+    </div>
+    {/volist}
+
+    {else/}
+
+    <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;margin-left:30px;">
+
+        <div class="layui-form-item contact">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="" >联系方式</label>
+                <div class="layui-input-inline">
+                    <select name="contact[][]" lay-filter="aihao">
+                        <option value="" >请选择</option>
+                        {volist name="DataDicData" id="vo"}
+                        <option value="{$vo['data_no']}" >{$vo['data_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="tel[][]" value="" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>
+            </div>
+        </div>
+    </div>
+    {/if}
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+    <!-- <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div> -->
+</form>
+<!--</div>-->
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='logo']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#test1_logo_watermark'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#logo_watermark").show();
+                    $("#logo_watermark img").attr('src', res.url);
+                    $("input[name='logo_watermark']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        form.val('first', {
+            'name': "{$data['name']}",
+            "logo":"{$data['logo']}",
+            "logo_watermark":"{$data['logo_watermark']}",
+            "position" : "{$data['position']}",
+            "greet":"{$data['greet']}"
+        });
+
+        $(".layui-form").on('click', '.contact-add', function(){
+            var _this = $(this);
+            var contactLength = _this.parent().parent().parent().children('.contact').length;
+            var contactName = _this.parent().parent().parent().attr('contactNameLength');
+
+            var _html = '<div class="layui-form-item contact ">\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
+                '                        <div class="layui-input-inline">\n' +
+                '                            <select name="contact['+contactLength+']" lay-filter="aihao">\n' +
+                ' <option value="" >请选择</option>'+
+                {volist name="DataDicData" id="vo"}
+            ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
+            {/volist}
+            '                                </select>\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                    <div class="layui-inline">\n' +
+            '                        <div class="layui-input-inline">\n' +
+            '                            <input type="text" name="tel['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                    <div class="layui-inline">\n' +
+            '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
+
+            '\n' +
+            '                    </div>\n' +
+            '\n' +
+            '                </div>';
+            _this.parent().parent().after(_html);
+            form.render();
+        })
+
+        $(".layui-form").on("click", ".contactNameDel", function(){
+            var _this = $(this);
+            _this.parent().parent().parent().remove();
+        })
+
+        $(".layui-form").on("click", ".contactDel", function(){
+            var _this = $(this);
+            _this.parent().parent().remove();
+        })
+
+
+
+
+
+        form.on('submit(submit)', function (data) {
+
+            Api.edit(data.field, function (res) {});
+        });
+
+
+    });
+</script>
