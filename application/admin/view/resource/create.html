@@ -6,14 +6,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户ID</label>
         <div class="layui-input-block">
-            <input type="text" name="uid" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="uid" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="title" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -54,7 +54,7 @@
         <label class="layui-form-label"></label>
         <div class="layui-upload">
             <button type="button" class="layui-btn" id="test2">多图片上传</button>
-            <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;margin-left:30px;">
                 预览图：
                 <div class="layui-upload-list" id="demo2"></div>
                 <div style="clear:both;"></div>
@@ -62,11 +62,46 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="" >联系人</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="contactName[]"  placeholder="请输入" autocomplete="off" class="layui-input" >
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>
+            </div>
+        </div>
+
+        <div class="layui-form-item contact">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="" >联系方式</label>
+                <div class="layui-input-inline">
+                    <select name="contact[][]" lay-filter="aihao">
+                        <option value="" >请选择</option>
+                        {volist name="DataDicData" id="vo"}
+                        <option value="{$vo['data_no']}" >{$vo['data_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" name="tel[][]" value="" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button type="button" class="layui-btn contact-add "  ><i class="layui-icon layui-icon-add-1"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="padding-top:10px;">
         <label class="layui-form-label">反馈信息</label>
         <div class="layui-input-block">
             <input type="text" name="feedback" placeholder="" autocomplete="off" class="layui-input">
-            <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
         </div>
     </div>
 
@@ -74,7 +109,6 @@
         <label class="layui-form-label">置顶开始时间</label>
         <div class="layui-input-block">
             <input type="text" name="top_start_time" id="top_start_time" placeholder="" autocomplete="off" class="layui-input">
-            <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
         </div>
     </div>
 
@@ -85,7 +119,6 @@
             <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
         </div>
     </div>
-
 
     <div class="layui-form-item">
         <label class="layui-form-label">审核状态</label>
@@ -145,11 +178,6 @@
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    // $("#url").show();
-                    // $("#url img").attr('src', res.url);
-                    // $("input[name='url']").val(res.url);
-                    // $('#demo2').append('<img src="'+ res.url +'" alt="" height="50" width="50" class="layui-upload-img">')
-
                     $('#demo2').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
                         +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
                         +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
@@ -177,8 +205,101 @@
             data.field.intro = ue.getContent();
             Api.add(data.field, function (res) {
                 console.log(res);
+                if(res.code == 200) {
+                    layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 50000});
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 50000});
+                }
             });
         });
+
+
+        $(".layui-form").on("click", ".contactNameAdd", function(){
+            var _this = $(this);
+            var contactName = _this.parent().parent().parent().parent().children('.contactName').length;
+            var contactLength = 0;//_this.parent().parent().parent().children('.contactName').length;
+            var _html = '<div class="contactName" contactNameLength="'+contactName+'" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">'+
+                '<div class="layui-form-item">'+
+                '    <div class="layui-inline">'+
+                '        <label class="layui-form-label" style="">联系人</label>'+
+                '        <div class="layui-input-inline">'+
+                '            <input type="text" name="contactName['+contactName+']" placeholder="请输入" autoComplete="off" class="layui-input">'+
+                '        </div>'+
+                '    </div>'+
+                '    <div class="layui-inline">'+
+                '        <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>'+
+                '        <button type="button" class="layui-btn contactNameDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>'+
+                '    </div>'+
+                '</div>'+
+                '<div class="layui-form-item contact ">\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
+                '                        <div class="layui-input-inline">\n' +
+                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
+                ' <option value="" >请选择</option>'+
+                {volist name="DataDicData" id="vo"}
+                    ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
+                {/volist}
+                '                            </select>' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <div class="layui-input-inline">\n' +
+                '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
+                '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>' +
+                '                    </div>' +
+                '                </div>'+
+                '</div>';
+            _this.parent().parent().parent().after(_html);
+            form.render();
+        })
+
+        $(".layui-form").on('click', '.contact-add', function(){
+            var _this = $(this);
+            var contactLength = _this.parent().parent().parent().children('.contact').length;
+            var contactName = _this.parent().parent().parent().attr('contactNameLength');
+
+            var _html = '<div class="layui-form-item contact ">\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
+                '                        <div class="layui-input-inline">\n' +
+                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
+                ' <option value="" >请选择</option>'+
+                {volist name="DataDicData" id="vo"}
+                ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
+                {/volist}
+                '                                </select>\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <div class="layui-input-inline">\n' +
+                '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                    <div class="layui-inline">\n' +
+                '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
+                '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>\n' +
+                '\n' +
+                '                    </div>\n' +
+                '\n' +
+                '                </div>';
+            _this.parent().parent().after(_html);
+            form.render();
+        })
+
+        $(".layui-form").on("click", ".contactNameDel", function(){
+            var _this = $(this);
+            _this.parent().parent().parent().remove();
+        })
+
+        $(".layui-form").on("click", ".contactDel", function(){
+            var _this = $(this);
+            _this.parent().parent().remove();
+        })
 
 
     });
