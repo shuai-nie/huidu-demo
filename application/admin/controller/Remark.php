@@ -6,8 +6,10 @@ use think\Loader;
 use think\View;
 
 class Remark extends Base{
+
     public function index()
     {
-        return view('');
+        $list = model('AdminLog')->order('id desc')->limit(10)->select();
+        return view('', ['list' => $list]);
     }
 }

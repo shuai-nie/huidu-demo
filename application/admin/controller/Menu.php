@@ -64,9 +64,9 @@ class Menu extends Base
     function edit($id = "")
     {
         if (request()->isPost()) {
-            $data = input('post.');
+            $data = request()->param();
             $id = request()->get('id');
-            $state = model('AuthMenu')->update($data, ["id"=>$id]);
+            $state = model('AuthMenu')->save($data, ["id"=>$id]);
             if($state !== false ) {
                return success_json();
             }

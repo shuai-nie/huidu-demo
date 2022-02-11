@@ -105,30 +105,12 @@ h1{margin:0;padding:0;font-size: 2em;}
                         <div class="layui-card">
                             <div class="layui-card-header"><i class="layui-icon layui-icon-notice" style="color:#1aa094;margin-right:4px;"></i>操作日志</div>
                             <div class="layui-card-body layui-text">
+                                {volist name="list" id="vo" }
                                 <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">修改选项卡样式</div>
-                                    <div class="layuimini-notice-extra">2019-07-11 23:06</div>
+                                    <div class="layuimini-notice-title">{$vo['text']}</div>
+                                    <div class="layuimini-notice-extra">{$vo['create_time']}</div>
                                 </div>
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">新增系统404模板</div>
-                                    <div class="layuimini-notice-extra">2019-07-11 12:57</div>
-                                </div>
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">新增treetable插件和菜单管理样式</div>
-                                    <div class="layuimini-notice-extra">2019-07-05 14:28</div>
-                                </div>
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">修改logo缩放问题</div>
-                                    <div class="layuimini-notice-extra">2019-07-04 11:02</div>
-                                </div>
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">修复左侧菜单缩放tab无法移动</div>
-                                    <div class="layuimini-notice-extra">2019-06-17 11:55</div>
-                                </div>
-                                <div class="layuimini-notice">
-                                    <div class="layuimini-notice-title">修复多模块菜单栏展开有问题</div>
-                                    <div class="layuimini-notice-extra">2019-06-13 14:53</div>
-                                </div>
+                                {/volist}
                             </div>
                         </div>
 
