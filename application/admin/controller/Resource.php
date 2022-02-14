@@ -16,22 +16,22 @@ class Resource extends Controller
     {
         if(Request()->isPost()) {
             $map = ['status'=>1];
-            $page = Request()->param('page');
-            $limit = Request()->param('limit');
+            $page = Request()->post('page');
+            $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
-            $uid = \request()->param('uid');
+            $uid = \request()->post('uid');
             if(!empty($uid)) {
                 $map['uid'] = $uid;
             }
-            $title = \request()->param('title');
+            $title = \request()->post('title');
             if(!empty($title)) {
                 $map['title'] = ['like', "%{$title}%"];
             }
-            $auth = \request()->param('auth');
+            $auth = \request()->post('auth');
             if(!empty($auth)) {
                 $map['auth'] = $auth;
             }
-            $ty = \request()->param('ty');
+            $ty = \request()->post('ty');
             if(!empty($ty)) {
                 $map['ty'] = $ty;
             }
@@ -74,7 +74,7 @@ class Resource extends Controller
     public function create()
     {
         if(request()->isPost()){
-            $_post = request()->param();
+            $_post = request()->post();
             $contact = [];
 
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
@@ -125,7 +125,7 @@ class Resource extends Controller
     public function edit($id)
     {
         if(request()->isPost()){
-            $_post = request()->param();
+            $_post = request()->post();
 
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
             $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';

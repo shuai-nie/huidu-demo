@@ -18,13 +18,13 @@ class Resourcecard extends Controller
     {
         if(request()->isPost()) {
             $map = array();
-            $page = request()->param('page');
-            $limit = request()->param('limit');
+            $page = request()->post('page');
+            $limit = request()->post('limit');
             $offset = ($page - 1) * $limit;
-            $resources_id = request()->param('resources_id');
-            $to_uid = request()->param('to_uid');
-            $from_uid = request()->param('from_uid');
-            $read_status = request()->param('read_status');
+            $resources_id = request()->post('resources_id');
+            $to_uid = request()->post('to_uid');
+            $from_uid = request()->post('from_uid');
+            $read_status = request()->post('read_status');
             if(!empty($resources_id)) {
                 $map['resources_id'] = $resources_id;
             }
@@ -41,10 +41,6 @@ class Resourcecard extends Controller
             $data = $ResourceCard->where($map)->limit($offset, $limit)->select();
             $count = $ResourceCard->where($map)->count();
             foreach ($data as $k => $val) {
-                if(is_numeric($val['to_uid'])) {
-                    $CacheMember = CacheMember($val['to_uid']);
-                    $val['to_username'] = $CacheMember['username'];
-                }
 
                 if(is_numeric($val['from_uid'])) {
                     $CacheMember = CacheMember($val['from_uid']);

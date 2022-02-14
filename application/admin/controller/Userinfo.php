@@ -15,22 +15,38 @@ class Userinfo extends Controller
     public function index()
     {
         if(Request()->isPost()) {
-            $map = [];
+            $map = ['E.status'=>1];
             $page = Request()->param('page');
             $limit = Request()->param('limit');
+            $username = Request()->param('username');
+            if(!empty($username)) {
+                $map['E.username'] = ['like', "%{$username}%"];
+            }
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
+                ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
                 ->where($map)->field('A.*,B.start_time,B.end_time,C.title,D.used_flush,D.used_publish')
                 ->limit($offset, $limit)->select();
-            $count =model("UserInfo")->alias('A')
+            $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')
-                ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
+                ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id')
+                ->join(model('User')->getTable(). ' E', 'A.uid=E.id', 'left')
                 ->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+
+            foreach ($data as $k=> $v) {
+                if(!empty($v['uid'])) {
+                    $userInfo = CacheUser($v['uid']);
+                    $v['username'] = $userInfo['username'];
+                    $v['nickname'] = $userInfo['nickname'];
+                }
+                $data[$k] = $v;
+            }
+
+            return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         return view();
     }
@@ -104,6 +120,72 @@ class Userinfo extends Controller
 
         $package = model('Package')->where(['status'=>1])->select();
         return view('', ['userInfo'=>$userInfo, 'package'=>$package]);
+    }
+
+    public function create()
+    {
+        if(request()->isPost()) {
+            $data = request()->post();
+            $number = GetRandStr(16);
+            $data['pwd'] = md5(md5($data['pwd']). $number);
+            $data['salt'] = $number;
+            $userModel = model('User');
+            $state = $userModel->save($data);
+            $uid = $userModel->id;
+            if($state !== false){
+                $packageInfo = model('Package')->find(1);
+                $UserRechargeModel = model('UserRecharge');
+                $UserRechargeModel->save([
+                    'uid' => $uid,
+                    'package_id' => 1,
+                    'start_time' => time(),
+                    'end_time' => time(),
+                ]);
+                $UserRechargeId = $UserRechargeModel->id;
+                model('UserConsume')->save([
+                    'uid' => $uid,
+                    'user_recharge_id' => $UserRechargeId,
+                    'used_flush' => $packageInfo['flush'],
+                    'used_publish' => $packageInfo['publish'],
+                    'create_time' => time(),
+                    'update_time' => time(),
+                ]);
+
+                model('UserInfo')->save([
+                    'uid' => $uid,
+                    'user_recharge_id' => $UserRechargeId
+                ]);
+                return success_json();
+            }
+            return error_json();
+        }
+        return view();
+    }
+    //
+
+    public function edit($id)
+    {
+        $UserModel = model("User");
+        $UserInfo = model('UserInfo')->find($id);
+        $UserArr = $UserModel->find($UserInfo->uid);
+        if(request()->isPost()) {
+            $data = request()->post();
+
+            if(!empty($data['pwd'])) {
+                $data['pwd'] = md5(md5($data['pwd']). $UserArr->salt);
+            } else {
+                unset($data['pwd']);
+            }
+            $state = $UserModel->allowField(true)->save($data, ['id'=>$UserInfo->uid]);
+            Cache::rm("User_" . $UserInfo->uid);
+            if($state !== false){
+                return success_json();
+            }
+            return error_json();
+        }
+        return view('', [
+            'UserInfo' => $UserArr
+        ]);
     }
 
 }

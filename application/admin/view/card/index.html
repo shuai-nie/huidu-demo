@@ -1,8 +1,28 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-<!--    <button class="layui-btn" data-type="create">添加</button>-->
-</div>
+<!--<div class="layui-btn-container">
+    <button class="layui-btn" data-type="create">添加</button>
+</div>-->
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
@@ -12,8 +32,10 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'uid', title: '用户uid', width:100}
@@ -35,6 +57,16 @@
 
             ,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
         ]);
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field
+            });
+            return false;
+        })
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){

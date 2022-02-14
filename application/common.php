@@ -22,6 +22,23 @@ function CacheMember($uid) {
     }
 }
 
+/**
+ * [获取用户信息]
+ * @param $uid
+ * @return array
+ * @author Lucius yesheng35@126.com
+ */
+function CacheUser($uid) {
+    $key = "User_". $uid;
+    if($CacheUser = Cache::get($key)) {
+        return $CacheUser;
+    } else {
+        $result = model('User')->find($uid);
+        Cache::set($key, $result, 3600);
+        return $result;
+    }
+}
+
 function CacheResource($id) {
     $key = 'CacheResource' . $id;
     if($CacheMember = Cache::get($key)) {
