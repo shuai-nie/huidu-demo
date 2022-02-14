@@ -29,7 +29,7 @@ class Userinfo extends Controller
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
                 ->where($map)->field('A.*,B.start_time,B.end_time,C.title,D.used_flush,D.used_publish,E.username,E.nickname,E.head_url')
-                ->limit($offset, $limit)->select();
+                ->limit($offset, $limit)->order('E.id desc')->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')

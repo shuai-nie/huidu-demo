@@ -38,7 +38,7 @@ class Resourcecard extends Controller
                 $map['read_status'] = $read_status;
             }
             $ResourceCard = model('ResourceCard');
-            $data = $ResourceCard->where($map)->limit($offset, $limit)->select();
+            $data = $ResourceCard->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $ResourceCard->where($map)->count();
             foreach ($data as $k => $val) {
 

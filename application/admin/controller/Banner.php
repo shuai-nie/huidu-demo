@@ -16,7 +16,7 @@ class Banner extends Controller
     {
         if(Request()->isPost()) {
             $map = ['status'=>1];
-            $adAll = model("Banner")->where($map)->select();
+            $adAll = model("Banner")->where($map)->order('id desc')->select();
             $count = model("Banner")->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
         }

@@ -33,7 +33,7 @@ class Diction extends Controller
             if (!empty($data_type_no)) {
                 $map['data_type_no'] = $data_type_no;
             }
-            $adAll = model("DataDic")->where($map)->limit($offset, $limit)->select();
+            $adAll = model("DataDic")->where($map)->limit($offset, $limit)->order('data_type_no desc,sort desc,id desc')->select();
             $count = model("DataDic")->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
         }

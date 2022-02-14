@@ -24,7 +24,7 @@ class Counselor extends Controller
             }
             $offset = ($page - 1) * $limit;
             $Counselor = model('Counselor');
-            $data= $Counselor->where($map)->limit($offset, $limit)->select();
+            $data= $Counselor->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $Counselor->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }

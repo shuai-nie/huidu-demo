@@ -49,7 +49,16 @@
             form = layui.form;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'data_type_name', width:180,title: '类型'}
+            ,{field: 'data_type_name', width:180,title: '类型', templet:function (d) {
+                switch (d.data_type_no){
+                    case "CONTACT_TYPE": return "<span class=\"label pull-right layui-bg-orange\">"+d.data_type_name+"</span>";
+                    case "RESOURCES_TYPE": return "<span class=\"label pull-right layui-bg-red\">"+d.data_type_name+"</span>";
+                    case "RESOURCES_REGION": return "<span class=\"label pull-right layui-bg-black\">"+d.data_type_name+"</span>";
+                    default : return '-';
+                }
+
+                    
+                }}
             ,{field: 'data_icon', width:80,title: 'icon',templet:function(d){
                 if(d.data_icon){
                     return "<img src='"+d.data_icon+"' height='30' width='30' />";

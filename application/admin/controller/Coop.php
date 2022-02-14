@@ -16,10 +16,14 @@ class Coop extends Controller
     {
         if(Request()->isPost()) {
             $map = ['status'=>1];
-            $page = Request()->param('page');
-            $limit = Request()->param('limit');
+            $page = Request()->post('page');
+            $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
-            $data = model("Cooperation")->where($map)->limit($offset, $limit)->select();
+            $uname = \request()->post('uname');
+            if(!empty($uname)) {
+                $map['uname'] = ['like', "%{$uname}%"];
+            }
+            $data = model("Cooperation")->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = model("Cooperation")->where($map)->count();
             foreach ($data as $k => $v) {
                 if (!empty( $v['uid'])) {

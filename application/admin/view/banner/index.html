@@ -19,7 +19,7 @@
             ,{field: 'name', title: 'banner名称'}
             ,{field: 'url', title: '图片', templet:function (d) {
                 if(d.url != '' || d.url != null){
-                    return '<img src="'+d.url+'" />';
+                    return '<img src="'+d.url+'" height="30" width="100" />';
                 }
                 return '-';
                 }}
