@@ -7,6 +7,11 @@ use think\Request;
 
 class Card extends Controller
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+    }
+
     /**
      * 显示资源列表
      *
@@ -15,12 +20,23 @@ class Card extends Controller
     public function index()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1];
-            $page = Request()->param('page');
-            $limit = Request()->param('limit');
+            $map = ['A.status'=>1];
+            $page = Request()->post('page');
+            $limit = Request()->post('limit');
+            $name = \request()->post('name');
+            if(!empty($name)) {
+                $map['B.username'] = ['like', "%{$name}%"];
+            }
             $offset = ($page - 1) * $limit;
-            $CardAll = model("Card")->where($map)->limit($offset, $limit)->select();
-            $count = model("Card")->where($map)->count();
+            $CardModel = model("Card");
+            $UserModel = model("User");
+            $CardAll = $CardModel->alias('A')
+                ->join($UserModel->getTable().' B', "A.uid=B.id")
+                ->field('A.*,B.username,B.nickname')
+                ->where($map)->limit($offset, $limit)->select();
+            $count = $CardModel->alias('A')
+                ->join($UserModel->getTable().' B', "A.uid=B.id")
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$CardAll]], 200);
         }
         return view('');
@@ -71,7 +87,11 @@ class Card extends Controller
             return error_json(lang('EditSuccess', [lang('CARD')]) );
 
         }
-        $data = model('Card')->find($id);
+        $UserModel = model('User');
+        $data = model('Card')->alias('A')
+            ->join($UserModel->getTable().' B', 'A.uid=B.id')
+            ->field('A.*,B.username,B.nickname')
+            ->where(['A.id'=>$id])->find();
         $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
         $CardContact = model('CardContact')->where(['card_id'=>$data['id']])->select();
         return view('', [

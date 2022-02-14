@@ -38,8 +38,9 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'uid', title: '用户uid', width:100}
-            ,{field: 'name', title: '名字',width:130}
+            ,{field: 'name', title: '账号/昵称',width:130,templet:function (d) {
+                    return d.username + '/' +d.nickname ;
+                }}
             ,{field: 'logo', title: 'logo',width:100, templet:function (d) {
                 if(d.logo) {
                     return '<img src="'+d.logo+'" height="30" width="30" />';
