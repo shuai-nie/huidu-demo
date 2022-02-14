@@ -24,6 +24,18 @@ class Ad extends Controller
     public function index()
     {
         $map = ['status'=>1];
+        $name = \request()->param('name');
+        $page = \request()->param('page');
+        $category = \request()->param('category');
+        if(!empty($name)) {
+            $map['name'] = ['like', "%{$name}%"];
+        }
+        if(is_numeric($page)) {
+            $map['page'] = $page;
+        }
+        if(!empty($category)) {
+            $map['category'] = $category;
+        }
         $data = model("Ad")->where($map)->field('id,name,sort,page,category,load1,pic1,url1,begin1,end1')->order('end1 desc,id desc')->select();
         if($data) {
             $data = collection($data)->toArray();
@@ -60,14 +72,23 @@ class Ad extends Controller
         {
             $data[$key]['begin1'] = $row['begin1'] >10000 ? date('Y-m-d H:i:s', $row['begin1']) : '';
             $data[$key]['end1'] = $row['end1'] >10000 ? date('Y-m-d H:i:s', $row['end1']) : '';
-            $data[$key]['pages'] = $this->page[$row['page']] . $row['id'];
-            $data[$key]['categorys'] = $this->category[$row['category']] . $row['id'];
+            $data[$key]['pages'] = $this->page[$row['page']] . '_' . $row['id'];
+            $data[$key]['categorys'] = $this->category[$row['category']] . '_' .$row['id'];
 
             $num1[$key] = $row['id'];
             $num2[$key] = $row['category'];
         }
-        array_multisort( $num1, SORT_DESC, $num2, SORT_DESC, $data);
-        return view('', ['data'=>$data]);
+        if($data) {
+            array_multisort( $num1, SORT_DESC, $num2, SORT_DESC, $data);
+        }
+        return view('', [
+            'data'            => $data,
+            'page'            => $this->page,
+            'category'        => $this->category,
+            'search_name'     => $name,
+            'search_page'     => $page,
+            'search_category' => $category,
+        ]);
     }
 
     /**

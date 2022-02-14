@@ -4,6 +4,50 @@
     <button class="layui-btn" data-type="create">添加</button>
 </div>
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input" value="{$search_name}" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">位置</label>
+                    <div class="layui-input-inline">
+                        <select name="page" lay-filter="page" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name='page' id='vo' k='key'}
+                            <option value="{$key}" {if condition="$key eq $search_page"}selected{/if} >{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">分栏</label>
+                    <div class="layui-input-inline">
+                        <select name="category" lay-filter="category" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name='category' id='vo' k='key'}
+                            <option value="{$key}" {if condition="$key eq $search_category"}selected{/if} >{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
 <!--<table class="layui-hide" id="think-table" lay-filter="think-table"></table>-->
 
 <table class="layui-table" id="test" lay-data="{page:true,limit:50,width:1400,defaultToolbar: ['exports']}" id="think-table" lay-filter="think-table">
@@ -26,7 +70,7 @@
         {volist name="data" id="vo"}
         <tr>
             <td>{$vo.id}</td>
-            <td>{$vo.id}:{$vo.name}</td>
+            <td>{$vo.id}_[{$vo.name}]</td>
             <td>{$vo.sort}</td>
             <td>{$vo.pages}</td>
             <td>{$vo.categorys}</td>
@@ -53,38 +97,19 @@
 </script>
 
 <script>
-    layui.use(['table','jquery'], function(){
+    layui.use(['table','jquery','form'], function(){
         var table = layui.table,
-            $ = layui.jquery;
-        /*UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-            ,{field: 'name', title: '广告位名称'}
-            ,{field: 'sort', title: '排序'}
-            ,{field: 'page', title: '位置',templet:function(d){
-                    switch (d.page*1){
-                        case 0:return '首页顶部';
-                        case 1:return '首页左侧';
-                        case 2:return '首页右侧';
-                        default:return '';
-                    }
-                }}
-            ,{field: 'category', title: '分栏',templet:function(d){
-                switch (d.category*1){
-                    case 1:return '一栏';
-                    case 2:return '二栏';
-                    case 3:return '三栏';
-                    default:return '';
-                }
+            $ = layui.jquery,
+            form = layui.form;
 
-                }}
-            ,{field: 'pic1', title: '图片'}
-            ,{field: 'load1', title: '预加载'}
-            ,{field: 'url1', title: '地址'}
-            ,{field: 'begin1', title: '上架时间',templet:function(d){
-                return "<div>"+d.id+'|'+d.begin1+""+d.end1+"</div>";
-                }}
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
-        ]);*/
+        form.on('submit(data-search-btn)', function(data){
+            // table.reload('table', {
+            //     url: "{:url('')}",
+            //     method:'post',
+            //     where : data.field
+            // });
+            // return false;
+        })
 
 
         var execRowspan = function (fieldName, index, flag) {

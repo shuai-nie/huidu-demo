@@ -19,6 +19,22 @@ class Resource extends Controller
             $page = Request()->param('page');
             $limit = Request()->param('limit');
             $offset = ($page - 1) * $limit;
+            $uid = \request()->param('uid');
+            if(!empty($uid)) {
+                $map['uid'] = $uid;
+            }
+            $title = \request()->param('title');
+            if(!empty($title)) {
+                $map['title'] = ['like', "%{$title}%"];
+            }
+            $auth = \request()->param('auth');
+            if(!empty($auth)) {
+                $map['auth'] = $auth;
+            }
+            $ty = \request()->param('ty');
+            if(!empty($ty)) {
+                $map['ty'] = $ty;
+            }
             $data = model("Resource")->where($map)->order('id desc')->limit($offset, $limit)->select();
             $count = model("Resource")->where($map)->count();
             $DataDic = model('DataDic');
