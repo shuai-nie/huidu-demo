@@ -19,9 +19,20 @@ class Coop extends Controller
             $page = Request()->param('page');
             $limit = Request()->param('limit');
             $offset = ($page - 1) * $limit;
-            $adAll = model("Cooperation")->where($map)->limit($offset, $limit)->select();
+            $data = model("Cooperation")->where($map)->limit($offset, $limit)->select();
             $count = model("Cooperation")->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+            foreach ($data as $k => $v) {
+                if (!empty( $v['uid'])) {
+                    $CacheUser = CacheUser($v['uid']);
+                    $v['u_username'] = $CacheUser['username'];
+                }
+                if (!empty( $v['uid'])) {
+                    $CacheUser = CacheUser($v['fuid']);
+                    $v['f_username'] = $CacheUser['username'];
+                }
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view('');
     }

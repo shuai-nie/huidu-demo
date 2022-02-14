@@ -17,8 +17,20 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'uname', title: '用户名称'}
-            ,{field: 'uid', title: '投递者id'}
-            ,{field: 'fuid', title: '接收者id'}
+            ,{field: 'u_username', title: 'uid/投递者',templet:function (d) {
+                if(d.uid > 0) {
+                    return d.uid + '/' + d.u_username;
+                } else {
+                    return '-';
+                }
+                }}
+            ,{field: 'f_username', title: 'uid/接收者', templet:function (d) {
+                    if (d.fuid > 0) {
+                        return d.fuid + '/' + d.f_username;
+                    } else {
+                        return '-';
+                    }
+                }}
             ,{field: 'username', title: '接收者名称'}
             ,{field: 'type', title: '方式',templet:function(d){
                     switch (d['type']*1){

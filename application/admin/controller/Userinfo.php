@@ -28,7 +28,7 @@ class Userinfo extends Controller
                 ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,D.used_flush,D.used_publish')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,D.used_flush,D.used_publish,E.username,E.nickname,E.head_url')
                 ->limit($offset, $limit)->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
@@ -36,15 +36,6 @@ class Userinfo extends Controller
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id', 'left')
                 ->where($map)->count();
-
-            foreach ($data as $k=> $v) {
-                if(!empty($v['uid'])) {
-                    $userInfo = CacheUser($v['uid']);
-                    $v['username'] = $userInfo['username'];
-                    $v['nickname'] = $userInfo['nickname'];
-                }
-                $data[$k] = $v;
-            }
 
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
@@ -177,7 +168,6 @@ class Userinfo extends Controller
                 unset($data['pwd']);
             }
             $state = $UserModel->allowField(true)->save($data, ['id'=>$UserInfo->uid]);
-            Cache::rm("User_" . $UserInfo->uid);
             if($state !== false){
                 return success_json();
             }
