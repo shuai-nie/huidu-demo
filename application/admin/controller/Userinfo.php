@@ -45,18 +45,23 @@ class Userinfo extends Controller
     // 变更套餐
     public function change($id)
     {
+        $UserRecharge = model('UserRecharge');
+        $UserConsume = model('UserConsume');
+        $UserInfo = model('UserInfo');
+        $User = model('User');
         if(Request()->isPost()) {
             $_post = Request()->param();
             $time = time();
-            model('UserRecharge')->save([
+            $UserRecharge->save([
                 'uid'        => $_post['uid'],
                 'package_id' => $_post['package_id'],
                 'start_time' => $time,
                 'end_time'   => $time,
+                'remarks' => '变更套餐',
             ]);
-            $recharge_id = model('UserRecharge')->getLastInsID();
+            $recharge_id = $UserRecharge->id;
             $Package = model('Package')->find($_post['package_id']);
-            model('UserConsume')->save([
+            $UserConsume->save([
                 'uid'              => $_post['uid'],
                 'user_recharge_id' => $recharge_id,
                 'used_flush'       => $Package['flush'],
@@ -70,7 +75,8 @@ class Userinfo extends Controller
         }
         $userInfo = model("UserInfo")->alias('A')
             ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
-            ->field('A.*,B.package_id')
+            ->join(model('User')->getTable()." C", 'C.id=A.uid')
+            ->field('A.*,B.package_id,C.username,C.nickname')
             ->find(['A.id'=>$id]);
         $package = model('Package')->where(['status'=>1])->select();
         return view('', ['userInfo'=>$userInfo, 'package'=>$package]);
@@ -79,23 +85,28 @@ class Userinfo extends Controller
     // 延期套餐
     public function continues($id)
     {
-        $userInfo = model("UserInfo")->alias('A')
-            ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
-            ->join(model('UserConsume')->getTable().' C', 'A.user_recharge_id=C.user_recharge_id', 'left')
-            ->field('A.*,B.package_id,B.start_time,B.end_time,C.used_flush,C.used_publish')
+        $UserRecharge = model('UserRecharge');
+        $UserConsume = model('UserConsume');
+        $UserInfo = model('UserInfo');
+        $User = model('User');
+        $userInfo = $UserInfo->alias('A')
+            ->join($UserRecharge->getTable().' B', 'A.user_recharge_id=B.id', 'left')
+            ->join($UserConsume->getTable().' C', 'A.user_recharge_id=C.user_recharge_id', 'left')
+            ->join($User->getTable()." D", 'D.id=A.uid')
+            ->field('A.*,B.package_id,B.start_time,B.end_time,C.used_flush,C.used_publish,D.username,D.nickname')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
             $endtime = $userInfo['end_time'] + 30*24*60*60*$_post['time'];
 
-            model('UserRecharge')->save([
+            $UserRecharge->save([
                 'uid'        => $_post['uid'],
                 'package_id' => $_post['package_id'],
                 'start_time' => $userInfo['start_time'],
                 'end_time'   => $endtime,
+                'remarks' => '延期套餐'
             ]);
-            $recharge_id = model('UserRecharge')->getLastInsID();
-            $Package = model('Package')->find($_post['package_id']);
+            $recharge_id = $UserRecharge->id;
             model('UserConsume')->save([
                 'uid'              => $_post['uid'],
                 'user_recharge_id' => $recharge_id,

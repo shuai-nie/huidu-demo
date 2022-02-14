@@ -185,6 +185,26 @@ class Resource extends Controller
 
     }
 
+    public function topping($id)
+    {
+        $Resource = model('Resource');
+        if(\request()->isPost()) {
+            $_post = \request()->post();
+            $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : '';
+            $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : '';
+            $state = $Resource->save($_post, ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', [lang('Resource')]));
+            }
+            return error_json(lang('EditFail', [lang('Resource')]));
+        }
+
+        $data = $Resource->find($id);
+        $data['top_start_time'] = $data['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $data['top_start_time']) : '';
+        $data['top_end_time'] = $data['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $data['top_end_time']) : '';
+        return view('', ['data'=>$data]);
+    }
+
 
 
 

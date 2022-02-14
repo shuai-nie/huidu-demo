@@ -50,8 +50,18 @@
             ,{field: 'title', title: '套餐',width:120}
             ,{field: 'used_flush', title: '刷新次数',width:100}
             ,{field: 'used_publish', title: '发布次数',width:100}
-            ,{field: 'start_time', title: '开始时间',width:170,templet: "<div>{{layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-            ,{field: 'end_time', title: '结束时间',width:170,templet: "<div>{{layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
+            ,{field: 'start_time', title: '开始时间',width:170,templet:function (d){
+                if(d.start_time > 10000) {
+                    return "<div>" + layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                }
+                return '-'
+                }}
+            ,{field: 'end_time', title: '结束时间',width:170,templet: function (d){
+                    if(d.end_time > 10000) {
+                        return "<div>" + layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                    }
+                    return '-'
+                }}
             ,{fixed: 'right',title:'操作',width:220, align:'center', toolbar: '#barDemo'}
         ]);
 
@@ -68,9 +78,9 @@
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="change"){
-                UI.openLayer("{:url('change')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('change')}?id="+data['id'], 750, 400, '#submit');
             }else if(obj.event==="continue"){
-                UI.openLayer("{:url('continues')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('continues')}?id="+data['id'], 750, 400, '#submit');
             } else if(obj.event ==='edit') {
                 UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
             }

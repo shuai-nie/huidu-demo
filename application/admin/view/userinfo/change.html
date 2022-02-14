@@ -1,12 +1,11 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-block">
-            <input type="text" autocomplete="off" disabled class="layui-input" value="{$userInfo['username']}" >
+            <input type="text" autocomplete="off" disabled class="layui-input" value="{$userInfo['username']}/{$userInfo['nickname']}" >
         </div>
     </div>
 

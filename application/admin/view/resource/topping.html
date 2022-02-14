@@ -1,0 +1,90 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">日期范围</label>
+                <div class="layui-inline" id="test6">
+                    <div class="layui-input-inline">
+                        <input type="text" name="top_start_time" autocomplete="off" id="test-startDate-1" class="layui-input" placeholder="开始日期">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="top_end_time" autocomplete="off" id="test-endDate-1" class="layui-input" placeholder="结束日期">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload','laydate'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            laydate = layui.laydate;
+
+
+        laydate.render({
+            elem: '#test6'
+            ,range: ['#test-startDate-1', '#test-endDate-1']
+        });
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test2'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        $("#demo2").on('click', '.img-delete', function(){
+            var _this = $(this);
+            _this.parent().remove();
+        })
+
+        form.val('first', {
+            'top_start_time' : "{$data['top_end_time']}",
+            'top_end_time' : "{$data['top_end_time']}",
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {
+                if(res.code == 200) {
+                    layer.msg(res.msg, {icon:2,offset: ['100px', '50px'],time: 5000});
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
+                }
+            });
+        });
+
+
+    });
+</script>
