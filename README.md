@@ -6,8 +6,6 @@
 
 #### Installation
 
-1. 安装数据库文件 admin.sql
-2. 修改database.php 库名 密码 等
 
 
 #### 使用包
