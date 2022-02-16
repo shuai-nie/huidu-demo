@@ -15,7 +15,7 @@
             <input autocomplete="off" class="layui-input" disabled placeholder="请输入" required type="text" value="{$info.remarks}">
         </div>
     </div>
-    {if condition="$info['key'] eq 'tg_picture' "}
+    {if condition="$info['key'] eq 'tg_picture' || $info['key'] eq 'package_equities_image' "}
     <div id="url" {if condition="empty($info['value'])"}style="display: none;"{/if}>
         <label class="layui-form-label"></label>
         <div class="layui-input-block">
