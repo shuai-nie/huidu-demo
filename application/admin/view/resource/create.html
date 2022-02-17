@@ -67,7 +67,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="" >联系人</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="contactName[]"  placeholder="请输入" autocomplete="off" class="layui-input" >
+                    <input type="text" name="contactName[]" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" >
                 </div>
             </div>
             <div class="layui-inline">
@@ -79,7 +79,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="" >联系方式</label>
                 <div class="layui-input-inline">
-                    <select name="contact[][]" lay-filter="aihao">
+                    <select name="contact[][]" lay-filter="aihao" required lay-verify="required" >
                         <option value="" >请选择</option>
                         {volist name="DataDicData" id="vo"}
                         <option value="{$vo['data_no']}" >{$vo['data_name']}</option>
@@ -89,7 +89,7 @@
             </div>
             <div class="layui-inline">
                 <div class="layui-input-inline">
-                    <input type="text" name="tel[][]" value="" placeholder="" autocomplete="off" class="layui-input">
+                    <input type="text" name="tel[][]" required lay-verify="required" value="" placeholder="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
