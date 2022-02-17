@@ -83,6 +83,7 @@ class Resource extends Controller
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['types'] = 2;
+            $_post['flush_time'] = time();
             $state = model('Resource')->save($_post);
             $resources_id = model('Resource')->getLastInsID();
             foreach ($_post['contactName'] as $k=>$v){
