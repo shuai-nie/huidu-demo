@@ -167,7 +167,7 @@ class Resource extends Base
         $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 
         $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
-        $ResourceContact = model('ResourceContact')->where(['resources_id'=>$resourceInfo->id])->select();
+        $ResourceContact = model('ResourceContact')->where(['resources_id'=>$resourceInfo->id,'status'=>1])->select();
         if($ResourceContact) {
             $ResourceContact = collection($ResourceContact)->toArray();
         }

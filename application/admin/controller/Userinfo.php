@@ -52,13 +52,23 @@ class Userinfo extends Base
         if(Request()->isPost()) {
             $_post = Request()->param();
             $time = time();
-            $UserRecharge->save([
+            $save = [
                 'uid'        => $_post['uid'],
                 'package_id' => $_post['package_id'],
                 'start_time' => $time,
-                'end_time'   => $time,
                 'remarks' => '变更套餐',
-            ]);
+            ];
+            if($_post['package_id'] == 1){
+                $save['end_time'] = $time + 30*60*60*24;
+            } else {
+                if($_post['time'] > 0){
+                    $save['end_time'] = $time + 30*60*60*24;
+                } else {
+                    $save['end_time'] = $time + $_post['time'] * 30*60*60*24;
+                }
+            }
+
+            $UserRecharge->save($save);
             $recharge_id = $UserRecharge->id;
             $Package = model('Package')->find($_post['package_id']);
             $UserConsume->save([
@@ -98,7 +108,6 @@ class Userinfo extends Base
         if(Request()->isPost()) {
             $_post = Request()->param();
             $endtime = $userInfo['end_time'] + 30*24*60*60*$_post['time'];
-
             $UserRecharge->save([
                 'uid'        => $_post['uid'],
                 'package_id' => $_post['package_id'],
@@ -107,11 +116,12 @@ class Userinfo extends Base
                 'remarks' => '延期套餐'
             ]);
             $recharge_id = $UserRecharge->id;
+
             model('UserConsume')->save([
                 'uid'              => $_post['uid'],
                 'user_recharge_id' => $recharge_id,
-                'used_flush'       => $userInfo['used_flush'],
-                'used_publish'     =>$userInfo['used_publish'],
+                'used_flush'       => (int)$userInfo['used_flush'],
+                'used_publish'     => (int)$userInfo['used_publish'],
             ]);
             $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
@@ -141,7 +151,7 @@ class Userinfo extends Base
                     'uid' => $uid,
                     'package_id' => 1,
                     'start_time' => time(),
-                    'end_time' => time(),
+                    'end_time' => time()+30*60*60*24,
                 ]);
                 $UserRechargeId = $UserRechargeModel->id;
                 model('UserConsume')->save([
