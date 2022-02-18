@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class AdminLog extends Model
+class AdminLog extends Base
 {
     protected $insert = ['ip'];
     protected $autoWriteTimestamp = true;

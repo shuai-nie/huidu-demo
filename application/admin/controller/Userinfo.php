@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Userinfo extends Controller
+class Userinfo extends Base
 {
     /**
      * 显示资源列表

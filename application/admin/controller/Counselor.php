@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Counselor extends Controller
+class Counselor extends Base
 {
     /**
      * 显示资源列表

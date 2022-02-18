@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Diction extends Controller
+class Diction extends Base
 {
     public $data = [
         'CONTACT_TYPE'     => ['type' => 'CONTACT_TYPE', 'title' => '联系方式'],

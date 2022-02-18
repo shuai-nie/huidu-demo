@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Package extends Controller
+class Package extends Base
 {
     /**
      * 显示资源列表

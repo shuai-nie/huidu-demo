@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Card extends Controller
+class Card extends Base
 {
     public function _initialize()
     {

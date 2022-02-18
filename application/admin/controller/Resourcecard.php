@@ -7,7 +7,7 @@ use think\Request;
 use think\Db;
 use think\Cache;
 
-class Resourcecard extends Controller
+class Resourcecard extends Base
 {
     /**
      * 显示资源列表

@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class Ad extends Controller
+class Ad extends Base
 {
     public $page = ['0' => '首页顶部', '1' => '首页左侧', '2' => '首页右侧'];
     public $category = ['1' => '一栏', '2' => '两栏', '3' => '三栏'];
