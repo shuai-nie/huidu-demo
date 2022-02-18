@@ -300,22 +300,7 @@ class Base extends Model
             ]);
         });
 
-        UserConsume::afterUpdate(function($data){
-            model('AdminLog')->save([
-                'uid' => getLoginUserId(),
-                'text' => '编辑 套餐使用信息 ID:' . request()->param('id') ,
-                'url' => (string)url(),
-                'ip' => request()->ip(),
-            ]);
-        });
-        UserConsume::afterInsert(function($data){
-            model('AdminLog')->save([
-                'uid' => getLoginUserId(),
-                'text' => '新建 用户基础表  ID:' . \model('UserConsume')->getLastInsID() ,
-                'url' => (string)url(),
-                'ip' => request()->ip(),
-            ]);
-        });
+
 
         UserInfo::afterUpdate(function($data){
             model('AdminLog')->save([

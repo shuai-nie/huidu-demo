@@ -48,8 +48,10 @@
                 return  d.username + '/' + d.nickname ;
                 }}
             ,{field: 'title', title: '套餐',width:120}
-            ,{field: 'used_flush', title: '刷新次数',width:100}
-            ,{field: 'used_publish', title: '发布次数',width:100}
+            ,{field: 'used_flush', title: '已使用刷新',width:100}
+            ,{field: 'used_publish', title: '已发布次数',width:100}
+            ,{field: 'flush', title: '刷新次数',width:100}
+            ,{field: 'publish', title: '发布次数',width:100}
             ,{field: 'start_time', title: '开始时间',width:170,templet:function (d){
                 if(d.start_time > 10000) {
                     return "<div>" + layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";

@@ -25,14 +25,12 @@ class Userinfo extends Base
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
-                ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,D.used_flush,D.used_publish,E.username,E.nickname,E.head_url')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,E.username,E.nickname,E.head_url')
                 ->limit($offset, $limit)->order('E.id desc')->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
-                ->join(model('UserConsume')->getTable() . ' D', 'A.user_recharge_id=D.user_recharge_id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id', 'left')
                 ->where($map)->count();
@@ -46,16 +44,20 @@ class Userinfo extends Base
     public function change($id)
     {
         $UserRecharge = model('UserRecharge');
-        $UserConsume = model('UserConsume');
         $UserInfo = model('UserInfo');
         $User = model('User');
         if(Request()->isPost()) {
             $_post = Request()->param();
+            $Package = model('Package')->find($_post['package_id']);
             $time = time();
             $save = [
                 'uid'        => $_post['uid'],
                 'package_id' => $_post['package_id'],
                 'start_time' => $time,
+                'flush' => $Package['flush'],
+                'publish' => $Package['publish'],
+                'used_flush' => 0,
+                'used_publish' => 0,
                 'remarks' => '变更套餐',
             ];
             if($_post['package_id'] == 1){
@@ -70,13 +72,8 @@ class Userinfo extends Base
 
             $UserRecharge->save($save);
             $recharge_id = $UserRecharge->id;
-            $Package = model('Package')->find($_post['package_id']);
-            $UserConsume->save([
-                'uid'              => $_post['uid'],
-                'user_recharge_id' => $recharge_id,
-                'used_flush'       => $Package['flush'],
-                'used_publish'     => $Package['publish'],
-            ]);
+
+
             $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
                 return success_json(lang('PACKAGEDISTRIBUTION'). lang('Success'));
@@ -96,33 +93,28 @@ class Userinfo extends Base
     public function continues($id)
     {
         $UserRecharge = model('UserRecharge');
-        $UserConsume = model('UserConsume');
         $UserInfo = model('UserInfo');
         $User = model('User');
         $userInfo = $UserInfo->alias('A')
             ->join($UserRecharge->getTable().' B', 'A.user_recharge_id=B.id', 'left')
-            ->join($UserConsume->getTable().' C', 'A.user_recharge_id=C.user_recharge_id', 'left')
             ->join($User->getTable()." D", 'D.id=A.uid')
-            ->field('A.*,B.package_id,B.start_time,B.end_time,C.used_flush,C.used_publish,D.username,D.nickname')
+            ->field('A.*,B.package_id,B.start_time,B.end_time,B.used_flush,B.used_publish,B.flush,B.publish,D.username,D.nickname')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
             $endtime = $userInfo['end_time'] + 30*24*60*60*$_post['time'];
             $UserRecharge->save([
-                'uid'        => $_post['uid'],
-                'package_id' => $_post['package_id'],
-                'start_time' => $userInfo['start_time'],
-                'end_time'   => $endtime,
-                'remarks' => '延期套餐'
+                'uid'          => $_post['uid'],
+                'package_id'   => $_post['package_id'],
+                'start_time'   => $userInfo['start_time'],
+                'end_time'     => $endtime,
+                'flush'        => $userInfo['flush'],
+                'publish'      => $userInfo['publish'],
+                'used_flush'   => $userInfo['used_flush'],
+                'used_publish' => $userInfo['used_publish'],
+                'remarks'      => '延期套餐',
             ]);
             $recharge_id = $UserRecharge->id;
-
-            model('UserConsume')->save([
-                'uid'              => $_post['uid'],
-                'user_recharge_id' => $recharge_id,
-                'used_flush'       => (int)$userInfo['used_flush'],
-                'used_publish'     => (int)$userInfo['used_publish'],
-            ]);
             $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
                 return success_json(lang('PackageContinue'). lang('Success'));
@@ -148,21 +140,14 @@ class Userinfo extends Base
                 $packageInfo = model('Package')->find(1);
                 $UserRechargeModel = model('UserRecharge');
                 $UserRechargeModel->save([
-                    'uid' => $uid,
+                    'uid'        => $uid,
                     'package_id' => 1,
                     'start_time' => time(),
-                    'end_time' => time()+30*60*60*24,
+                    'flush'      => $packageInfo['flush'],
+                    'publish'    => $packageInfo['publish'],
+                    'end_time'   => time() + 30 * 60 * 60 * 24,
                 ]);
                 $UserRechargeId = $UserRechargeModel->id;
-                model('UserConsume')->save([
-                    'uid' => $uid,
-                    'user_recharge_id' => $UserRechargeId,
-                    'used_flush' => $packageInfo['flush'],
-                    'used_publish' => $packageInfo['publish'],
-                    'create_time' => time(),
-                    'update_time' => time(),
-                ]);
-
                 model('UserInfo')->save([
                     'uid' => $uid,
                     'user_recharge_id' => $UserRechargeId
@@ -182,7 +167,6 @@ class Userinfo extends Base
         $UserArr = $UserModel->find($UserInfo->uid);
         if(request()->isPost()) {
             $data = request()->post();
-
             if(!empty($data['pwd'])) {
                 $data['pwd'] = md5(md5($data['pwd']). $UserArr->salt);
             } else {

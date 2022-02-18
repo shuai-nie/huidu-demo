@@ -23,18 +23,16 @@ class Vipconsume extends Base
             if(!empty($username)) {
                 $map['D.username'] = ['like', "%{$username}%"];
             }
-            $UserConsume = model("UserConsume");
+
             $UserRecharge = model('UserRecharge');
             $User = model('User');
             $Package = model('Package');
             $data = $UserRecharge->alias('A')
-                ->join($UserConsume->getTable() . " B ", 'A.id=B.user_recharge_id')
                 ->join($Package->getTable(). " C", "C.id=A.package_id")
                 ->join($User->getTable()." D", "A.uid=D.id")
-                ->field('A.id,A.uid,A.package_id,A.start_time,A.end_time,B.used_flush,B.used_publish,C.title,A.remarks')
+                ->field('A.id,A.uid,A.package_id,A.start_time,A.end_time,A.used_flush,A.used_publish,A.flush,A.publish,C.title,A.remarks')
                 ->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $UserRecharge->alias('A')
-                ->join($UserConsume->getTable() . " B ", 'A.id=B.user_recharge_id')
                 ->join($Package->getTable(). " C", "C.id=A.package_id")
                 ->join($User->getTable()." D", "A.uid=D.id")
                 ->where($map)->count();
