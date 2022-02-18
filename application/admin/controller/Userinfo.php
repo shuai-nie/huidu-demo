@@ -183,4 +183,17 @@ class Userinfo extends Base
         ]);
     }
 
+    public function username()
+    {
+        if($this->request->isPost()) {
+            $data = $this->request->post();
+            $userInfo = model('User')->where(['username'=>$data['username']])->find();
+            if($userInfo){
+                return error_json('账号存在，请修改');
+            }else{
+                return success_json();
+            }
+        }
+    }
+
 }
