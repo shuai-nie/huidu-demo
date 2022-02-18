@@ -1,8 +1,8 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
+<!--<div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
-</div>
+</div>-->
 
 <fieldset class="table-search-fieldset">
     <legend>搜索信息</legend>
@@ -52,8 +52,8 @@
             ,{field: 'used_publish', title: '发布次数',width:100}
             ,{field: 'start_time', title: '开始时间',width:170,templet: "<div>{{layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
             ,{field: 'end_time', title: '结束时间',width:170,templet: "<div>{{layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
-            ,{field: 'remarks', title: '备注',width:100}
-            ,{fixed: 'right',title:'操作',width:220, align:'center', toolbar: '#barDemo'}
+            ,{field: 'remarks', title: '备注'}
+            /*,{fixed: 'right',title:'操作',width:220, align:'center', toolbar: '#barDemo'}*/
         ]);
 
         form.on('submit(data-search-btn)', function(data){
