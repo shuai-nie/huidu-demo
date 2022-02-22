@@ -76,7 +76,6 @@ class Resource extends Base
         if(request()->isPost()){
             $_post = request()->post();
             $contact = [];
-
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
             $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
@@ -84,6 +83,10 @@ class Resource extends Base
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['types'] = 2;
             $_post['flush_time'] = time();
+            if($_post['auth'] == 1) {
+                $this->userpublish($_post['uid']);
+            }
+
             $state = model('Resource')->save($_post);
             $resources_id = model('Resource')->getLastInsID();
             foreach ($_post['contactName'] as $k=>$v){
@@ -117,6 +120,21 @@ class Resource extends Base
         ]);
     }
 
+    private function userpublish($uid)
+    {
+        $UserRecharge = model('UserRecharge');
+        $UserCount = $UserRecharge->alias('A')->join(model('UserInfo')->getTable() . " B", "A.id=B.user_recharge_id")
+            ->where(['B.uid'=>$uid])->field("A.publish,A.used_publish")->find();
+
+        if($UserCount['publish'] <= $UserCount['used_publish']) {
+            echo json_encode([
+                'msg' => '用户发布次数已用完',
+                'code' => 400,
+            ], JSON_UNESCAPED_UNICODE);exit();
+        }
+        return true;
+    }
+
     /**
      * 显示编辑资源表单页.
      *
@@ -133,6 +151,11 @@ class Resource extends Base
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+
+            if($_post['auth'] == 1){
+                $this->userpublish($_post['uid']);
+            }
+
             $state = model('Resource')->save($_post, ['id'=>$id]);
             $contact = [];
             foreach ($_post['contactName'] as $k=>$v){
