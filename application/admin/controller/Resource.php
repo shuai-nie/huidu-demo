@@ -88,6 +88,7 @@ class Resource extends Base
             }
 
             $state = model('Resource')->save($_post);
+
             $resources_id = model('Resource')->getLastInsID();
             foreach ($_post['contactName'] as $k=>$v){
                 foreach ($_post['contact'][$k] as $k1=>$v1) {
@@ -106,6 +107,8 @@ class Resource extends Base
                 $state1 = model('ResourceContact')->saveAll($contact);
             }
             if($state !== false){
+                $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
+                model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
                 return success_json(lang('CreateSuccess', [lang('Resource')]));
             }
             return error_json(lang('CreateFail', [lang('Resource')]));
@@ -143,6 +146,8 @@ class Resource extends Base
      */
     public function edit($id)
     {
+        $Resource = model('Resource');
+        $resourceInfo = $Resource->find($id);
         if(request()->isPost()){
             $_post = request()->post();
 
@@ -156,7 +161,7 @@ class Resource extends Base
                 $this->userpublish($_post['uid']);
             }
 
-            $state = model('Resource')->save($_post, ['id'=>$id]);
+            $state = $Resource->save($_post, ['id'=>$id]);
             $contact = [];
             foreach ($_post['contactName'] as $k=>$v){
                 foreach ($_post['contact'][$k] as $k1=>$v1) {
@@ -175,12 +180,16 @@ class Resource extends Base
                 $state1 = model('ResourceContact')->saveAll($contact);
             }
             if($state !== false){
+                if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 ){
+                    $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
+                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                }
+
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
             return error_json(lang('EditFail', [lang('Resource')]));
         }
-        $Resource = model('Resource');
-        $resourceInfo = $Resource->find($id);
+
         $resourcesType = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
         $resourcesRegion = model('DataDic')->where(['data_type_no'=>'RESOURCES_REGION'])->select();
         $resourceInfo['img'] = explode('|', $resourceInfo['img']);
