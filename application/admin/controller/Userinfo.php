@@ -46,19 +46,24 @@ class Userinfo extends Base
         $UserRecharge = model('UserRecharge');
         $UserInfo = model('UserInfo');
         $User = model('User');
+        $userInfo = model("UserInfo")->alias('A')
+            ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
+            ->join(model('User')->getTable()." C", 'C.id=A.uid')
+            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish')
+            ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
             $Package = model('Package')->find($_post['package_id']);
             $time = time();
             $save = [
-                'uid'        => $_post['uid'],
-                'package_id' => $_post['package_id'],
-                'start_time' => $time,
-                'flush' => $Package['flush'],
-                'publish' => $Package['publish'],
-                'used_flush' => 0,
-                'used_publish' => 0,
-                'remarks' => '变更套餐',
+                'uid'          => $_post['uid'],
+                'package_id'   => $_post['package_id'],
+                'start_time'   => $time,
+                'flush'        => $Package['flush'],
+                'publish'      => $Package['publish'],
+                'used_flush'   => $userInfo['used_flush'],
+                'used_publish' => $userInfo['used_publish'],
+                'remarks'      => '变更套餐',
             ];
             if($_post['package_id'] == 1){
                 $save['end_time'] = $time + 30*60*60*24;
@@ -80,11 +85,6 @@ class Userinfo extends Base
             }
             return error_json(lang('PACKAGEDISTRIBUTION'). lang('Fail'));
         }
-        $userInfo = model("UserInfo")->alias('A')
-            ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
-            ->join(model('User')->getTable()." C", 'C.id=A.uid')
-            ->field('A.*,B.package_id,C.username,C.nickname')
-            ->find(['A.id'=>$id]);
         $package = model('Package')->where(['status'=>1])->select();
         return view('', ['userInfo'=>$userInfo, 'package'=>$package]);
     }
