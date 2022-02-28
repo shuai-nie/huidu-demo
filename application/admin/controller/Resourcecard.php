@@ -41,12 +41,6 @@ class Resourcecard extends Base
             $data = $ResourceCard->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $ResourceCard->where($map)->count();
             foreach ($data as $k => $val) {
-
-                if(is_numeric($val['from_uid'])) {
-                    $CacheMember = CacheMember($val['from_uid']);
-                    $val['form_username'] = $CacheMember['username'];
-                }
-
                 if(is_numeric($val['resources_id'])) {
                     $CacheResource = CacheResource($val['resources_id']);
                     $val['resources_title'] = $CacheResource['title'];

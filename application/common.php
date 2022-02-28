@@ -10,17 +10,17 @@ use think\Db;
  * @return array
  * @author Lucius yesheng35@126.com
  */
-function CacheMember($uid) {
-    $key = 'CommonMember' . $uid;
-    if($CacheMember = Cache::get($key)) {
-        return $CacheMember;
-    } else {
-        $db2 = Db::connect(config('db2'));
-        $result = $db2->name('common_member')->where(['uid'=>$uid])->field('uid,username')->find();
-        Cache::set($key, $result, 3600);
-        return $result;
-    }
-}
+//function CacheMember($uid) {
+//    $key = 'CommonMember' . $uid;
+//    if($CacheMember = Cache::get($key)) {
+//        return $CacheMember;
+//    } else {
+//        $db2 = Db::connect(config('db2'));
+//        $result = $db2->name('common_member')->where(['uid'=>$uid])->field('uid,username')->find();
+//        Cache::set($key, $result, 3600);
+//        return $result;
+//    }
+//}
 
 /**
  * [获取用户信息]

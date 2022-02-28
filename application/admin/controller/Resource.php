@@ -238,13 +238,8 @@ class Resource extends Base
         return view('', ['data'=>$data]);
     }
 
-
-
-
-
-        /**
+    /**
      * 删除指定资源
-     *
      * @param  int  $id
      * @return \think\Response
      */
@@ -257,5 +252,35 @@ class Resource extends Base
             }
             return error_json(lang('DeleteFail', [lang('Resource')]));
         }
+    }
+
+    public function toplist()
+    {
+        if(Request()->isPost()) {
+            $map = ['status'=>1];
+            $page = Request()->post('page');
+            $limit = Request()->post('limit');
+            $offset = ($page - 1) * $limit;
+            $uid = \request()->post('uid');
+            if(!empty($uid)) {
+                $map['uid'] = $uid;
+            }
+            $title = \request()->post('title');
+            if(!empty($title)) {
+                $map['title'] = ['like', "%{$title}%"];
+            }
+            $auth = \request()->post('auth');
+            if(!empty($auth)) {
+                $map['auth'] = $auth;
+            }
+            $ty = \request()->post('ty');
+            if(!empty($ty)) {
+                $map['ty'] = $ty;
+            }
+            $data = model("Resource")->where($map)->order('top_end_time desc,id desc')->limit($offset, $limit)->select();
+            $count = model("Resource")->where($map)->count();
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+        return view();
     }
 }
