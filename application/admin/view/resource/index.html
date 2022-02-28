@@ -72,6 +72,7 @@ layui.use(['table','form'], function(){
     UI.getPageTable(table, "{:url('')}", [
         {field: 'id', title: 'ID', width:80, fixed: 'left'}
         ,{field: 'uid', title: '用户ID', width:80}
+        ,{field: 'username', title: '用户账号', width:80}
         ,{field: 'title', title: '标题', width:120}
         ,{field: 'types', title: '来源',width:60,templet:function(d){
             switch (d.types*1) {

@@ -42,7 +42,8 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'uid', title: '用户ID', width:80}
-            ,{field: 'title', title: '标题', width:320}
+            ,{field: 'username', title: '用户账号', width:80}
+            ,{field: 'title', title: '标题'}
             ,{field: 'top_start_time', title: '置顶开始时间',width:170,sort:'true',templet: function (d) {
                     if(d.top_start_time > 10000) {
                         return layui.util.toDateString(d.top_start_time*1000, 'yyyy-MM-dd');

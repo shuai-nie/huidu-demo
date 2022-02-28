@@ -15,28 +15,33 @@ class Resource extends Base
     public function index()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1];
+            $map = ['A.status'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
             $uid = \request()->post('uid');
             if(!empty($uid)) {
-                $map['uid'] = $uid;
+                $map['A.uid'] = $uid;
             }
             $title = \request()->post('title');
             if(!empty($title)) {
-                $map['title'] = ['like', "%{$title}%"];
+                $map['A.title'] = ['like', "%{$title}%"];
             }
             $auth = \request()->post('auth');
             if(!empty($auth)) {
-                $map['auth'] = $auth;
+                $map['A.auth'] = $auth;
             }
             $ty = \request()->post('ty');
             if(!empty($ty)) {
-                $map['ty'] = $ty;
+                $map['A.ty'] = $ty;
             }
-            $data = model("Resource")->where($map)->order('id desc')->limit($offset, $limit)->select();
-            $count = model("Resource")->where($map)->count();
+            $data = model("Resource")->alias('A')
+                ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
+                ->where($map)->field('A.*,B.username')
+                ->order('A.top_end_time desc,A.id desc')->limit($offset, $limit)->select();
+            $count = model("Resource")->alias('A')
+                ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
+                ->where($map)->count();
             $DataDic = model('DataDic');
             foreach ($data as $key=>$value) {
                 $type = explode('|', $value['type']);
@@ -257,28 +262,25 @@ class Resource extends Base
     public function toplist()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1,'auth'=>1];
+            $map = ['A.status'=>1,'A.auth'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
             $uid = \request()->post('uid');
             if(!empty($uid)) {
-                $map['uid'] = $uid;
+                $map['A.uid'] = $uid;
             }
             $title = \request()->post('title');
             if(!empty($title)) {
-                $map['title'] = ['like', "%{$title}%"];
+                $map['A.title'] = ['like', "%{$title}%"];
             }
-            $auth = \request()->post('auth');
-            if(!empty($auth)) {
-                $map['auth'] = $auth;
-            }
-            $ty = \request()->post('ty');
-            if(!empty($ty)) {
-                $map['ty'] = $ty;
-            }
-            $data = model("Resource")->where($map)->order('top_end_time desc,id desc')->limit($offset, $limit)->select();
-            $count = model("Resource")->where($map)->count();
+            $data = model("Resource")->alias('A')
+                ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
+                ->where($map)->field('A.*,B.username')
+                ->order('A.top_end_time desc,A.id desc')->limit($offset, $limit)->select();
+            $count = model("Resource")->alias('A')
+                ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
