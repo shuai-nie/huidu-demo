@@ -257,7 +257,7 @@ class Resource extends Base
     public function toplist()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1];
+            $map = ['status'=>1,'auth'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
