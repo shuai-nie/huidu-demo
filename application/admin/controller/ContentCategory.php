@@ -23,6 +23,10 @@ class ContentCategory extends Controller
     {
         if(\request()->isPost()){
             $map = ['is_del'=>1];
+            $name = \request()->post('name');
+            if(!empty($name)) {
+                $map['name'] = ['like', "%{$name}%"];
+            }
             $data = $this->model->where($map)->order('id desc')->select();
             $count = $this->model->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
@@ -38,8 +42,6 @@ class ContentCategory extends Controller
     {
         if(Request()->isPost()) {
             $data = Request()->param();
-            $data['create_id'] = getLoginUserId();
-            $data['update_id'] = getLoginUserId();
             $state = $this->model->save($data);
             if($state !== false){
                 return success_json();
@@ -58,7 +60,6 @@ class ContentCategory extends Controller
     {
         if(Request()->isPost()) {
             $data = Request()->param();
-            $data['update_id'] = getLoginUserId();
             $state = $this->model->save($data, ['id'=>$data['id']]);
             if($state !== false){
                 return success_json(lang('EditSuccess', [lang('Bannel')]) );

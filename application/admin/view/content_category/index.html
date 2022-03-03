@@ -10,9 +10,9 @@
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">账号</label>
+                    <label class="layui-form-label">分类名称</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="uname" autocomplete="off" class="layui-input" >
+                        <input type="text" name="name" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
@@ -32,31 +32,21 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'name', title: 'banner名称'}
-            ,{field: 'url', title: '图片', templet:function (d) {
-                    if(d.url != '' || d.url != null){
-                        return '<img src="'+d.url+'" height="30" width="100" />';
-                    }
-                    return '-';
-                }}
-            ,{field: 'link_type', title: '跳转方式',templet:function(d){
-                    switch (d['link_type']*1){
-                        case 0:return '无跳转';break;
-                        case 1:return '跳转链接';break;
-                        case 2:return '跳转资源';break;
-                    }
-                }}
-            ,{field: 'link_url', title: '链接/资源ID'}
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{field: 'name', title: '分类名称'}
+            ,{field: 'sort', title: '排序',width:120}
+            ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
         ]);
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 500, 300, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -65,9 +55,10 @@
                 });
             }
         });
+
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}");
+                UI.openLayer("{:url('create')}", 500, 300);
             }
         };
 
@@ -75,6 +66,16 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field
+            });
+            return false;
+        })
+
     });
 </script>
 {include file="moban/bone_footer"}
