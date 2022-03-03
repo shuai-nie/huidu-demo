@@ -32,4 +32,8 @@ return [
     'Resource' => '资源',
     'Counselor' => '顾问',
 
+    'ContentCategory' => '文章分类',
+    "Content" => "文章"
+
+
 ];

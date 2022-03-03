@@ -12,6 +12,7 @@ class Content extends Controller
     {
         parent::_initialize();
         $this->model = model('Content');
+        $this->assign('meta_title', "文章管理");
     }
 
     /**
@@ -41,9 +42,9 @@ class Content extends Controller
             $data['update_id'] = getLoginUserId();
             $state = $this->model->save($data);
             if($state !== false){
-                return success_json();
+                return success_json(lang('CreateSuccess', [lang('Content')]));
             }
-            return error_json();
+            return error_json(lang('CreateFail', [lang('Content')]));
         }
         return view();
     }
@@ -60,9 +61,9 @@ class Content extends Controller
             $data['update_id'] = getLoginUserId();
             $state = $this->model->save($data, ['id'=>$data['id']]);
             if($state !== false){
-                return success_json(lang('EditSuccess', [lang('Bannel')]) );
+                return success_json(lang('EditSuccess', [lang('Content')]) );
             }
-            return error_json();
+            return error_json(lang('EditFail', [lang('Content')]));
         }
         $data = $this->model->find($id);
         return view('edit', ['data'=>$data]);
@@ -78,8 +79,8 @@ class Content extends Controller
         $id = \request()->param('id');
         $state = $this->model->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('EditSuccess', [lang('Bannel')]) );
+            return success_json(lang('DeleteSuccess', [lang('Content')]) );
         }
-        return error_json();
+        return error_json(lang('DeleteFail', [lang('Content')]));
     }
 }
