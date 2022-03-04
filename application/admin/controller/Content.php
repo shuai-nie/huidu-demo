@@ -23,7 +23,10 @@ class Content extends Controller
     {
         if(\request()->isPost()){
             $map = ['status'=>1];
-            $data = $this->model->where($map)->order('id desc')->select();
+            $limit = \request()->post('limit');
+            $page = \request()->post('page');
+            $offset = ($page - 1) * $limit;
+            $data = $this->model->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $this->model->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
