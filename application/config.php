@@ -253,7 +253,7 @@ return [
     'aliyun_config' => array(
         'accessKeyId'     => 'LTAI5tGtVtBqhGiAGnRRtKhp',
         'accessKeySecret' => 'gTPa1W6QGjNePvxvMNivs90lbAviVp',
-        'bucket'          => 'hudui-bucket',
+        'bucket'          => 'huidu-bucket',
         'endpoint'        => 'http://oss-ap-southeast-1.aliyuncs.com',
         'accessDomain'    => 'https://guanggao.bn.live/',
     ),

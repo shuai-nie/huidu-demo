@@ -36,11 +36,7 @@ class Upload extends Controller
                         'url' => $url,
                     ]);
                 } catch (OssException $e) {
-
                 }
-
-
-
             } else {
                 $file->getError();
             }
@@ -77,7 +73,7 @@ class Upload extends Controller
                     $getFilename = $info->getFilename();
 
                     // 设置文件名称。
-                    $object = 'boniu_ziyuanku/' . $getFilename;
+                    $object = $getFilename;
                     $filePath = ROOT_PATH . 'public/uploads/' . $getSaveName;
 
                     try {
