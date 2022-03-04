@@ -8,8 +8,7 @@ class BannerContent extends Base
 {
 //    protected $table = 'jm_banner_content';
     protected $connection = [
-        // 数据库表前缀
-        'prefix'      => 'jm_',
+        'prefix' => 'jm_',
     ];
 
     protected $autoWriteTimestamp = true;

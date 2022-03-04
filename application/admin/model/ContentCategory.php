@@ -6,7 +6,10 @@ use think\Model;
 
 class ContentCategory extends Base
 {
-    protected $table = 'jm_content_category';
+//    protected $table = 'jm_content_category';
+    protected $connection = [
+        'prefix' => 'jm_',
+    ];
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
