@@ -24,7 +24,7 @@ class Upload extends Controller
                 $bucket = $aliyunConfig['bucket'];
 
                 // 设置文件名称。
-                $object = 'boniu_ziyuanku/' .$info->getFilename();
+                $object = $info->getFilename();
                 $filePath = ROOT_PATH . 'public/uploads/' . $getSaveName;
 
                 try {
