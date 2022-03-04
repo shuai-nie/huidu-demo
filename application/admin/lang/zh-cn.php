@@ -18,6 +18,9 @@ return [
     'CreateSuccess' => '%s 新建成功',
     'CreateFail' => '%s 新建失败',
 
+    'TopSuccess' => '%s 置顶成功',
+    'TopFail' => '%s 置顶失败',
+
     'PACKAGEDISTRIBUTION' => '套餐分配',
 
     'Fail' => '失败',

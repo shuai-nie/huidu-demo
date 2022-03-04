@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\Controller;
 use think\Request;
+use think\Db;
 
 class Content extends Controller
 {
@@ -21,12 +22,13 @@ class Content extends Controller
      */
     public function index()
     {
+        $ContentCategory = model('ContentCategory');
         if(\request()->isPost()){
             $map = ['A.status'=>1];
             $limit = \request()->post('limit');
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
-            $ContentCategory = model('ContentCategory');
+
             $data = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->field("A.*,B.name as category_name")
@@ -36,7 +38,8 @@ class Content extends Controller
                 ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        return view('', ['category'=>$category]);
     }
 
     /**
@@ -45,17 +48,28 @@ class Content extends Controller
      */
     public function create()
     {
+        $ContentCategory = model('ContentCategory');
         if(Request()->isPost()) {
-            $data = Request()->param();
-            $data['create_id'] = getLoginUserId();
-            $data['update_id'] = getLoginUserId();
-            $state = $this->model->save($data);
-            if($state !== false){
+            $data = Request()->post();
+
+            Db::startTrans();
+            try {
+                $state = $this->model->save($data);
+                $cid = $this->model->id;
+                $ContentDetail = model('ContentDetail');
+                $ContentDetail->save([
+                    'cid' => $cid,
+                    'content' => htmlspecialchars_decode($data['content'])
+                ]);
+                Db::commit();
                 return success_json(lang('CreateSuccess', [lang('Content')]));
+            } catch (\Exception $e) {
+                Db::rollback();
+                return error_json(lang('CreateFail', [lang('Content')]));
             }
-            return error_json(lang('CreateFail', [lang('Content')]));
         }
-        return view();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        return view('', ['category'=>$category]);
     }
 
     /**
@@ -65,17 +79,33 @@ class Content extends Controller
      */
     public function edit($id)
     {
+        $ContentCategory = model('ContentCategory');
+        $ContentDetail = model('ContentDetail');
         if(Request()->isPost()) {
-            $data = Request()->param();
-            $data['update_id'] = getLoginUserId();
-            $state = $this->model->save($data, ['id'=>$data['id']]);
-            if($state !== false){
-                return success_json(lang('EditSuccess', [lang('Content')]) );
+            $data = Request()->post();
+
+            Db::startTrans();
+            try {
+                $state = $this->model->save($data, ['id'=>$id]);
+                $ContentDetail = model('ContentDetail');
+                $ContentDetail->save([
+                    'content' => htmlspecialchars_decode($data['content'])
+                ], ['cid' => $id,]);
+                Db::commit();
+                return success_json(lang('EditSuccess', [lang('Content')]));
+            } catch (\Exception $e) {
+                Db::rollback();
+                return error_json(lang('EditFail', [lang('Content')]));
             }
-            return error_json(lang('EditFail', [lang('Content')]));
         }
         $data = $this->model->find($id);
-        return view('edit', ['data'=>$data]);
+        $detail = $ContentDetail->where(['cid'=>$id])->find();
+        $data['content'] = $detail['content'];
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        return view('edit', [
+            'data' => $data,
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -86,10 +116,44 @@ class Content extends Controller
     public function delete($id)
     {
         $id = \request()->param('id');
-        $state = $this->model->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
+        $state = $this->model->save(['status'=>0], ['id'=>$id]);
         if($state !== false){
             return success_json(lang('DeleteSuccess', [lang('Content')]) );
         }
         return error_json(lang('DeleteFail', [lang('Content')]));
+    }
+
+    public function hometop($id)
+    {
+        if(\request()->isPost()){
+            $_post = \request()->post();
+            $state = $this->model->save([
+                'home_top' => $_post['home_top'],
+                'home_sort' => $_post['home_sort'],
+            ]);
+            if($state !== false){
+                return success_json(lang('TopSuccess', [lang('Content')]) );
+            }
+            return error_json(lang('TopFail', [lang('Content')]));
+        }
+        $data = $this->model->find($id);
+        return view('', ['data'=>$data]);
+    }
+
+    public function categorytop($id)
+    {
+        if(\request()->isPost()){
+            $_post = \request()->post();
+            $state = $this->model->save([
+                'category_top' => $_post['category_top'],
+                'category_sort' => $_post['category_sort'],
+            ]);
+            if($state !== false){
+                return success_json(lang('TopSuccess', [lang('Content')]) );
+            }
+            return error_json(lang('TopFail', [lang('Content')]));
+        }
+        $data = $this->model->find($id);
+        return view('', ['data'=>$data]);
     }
 }

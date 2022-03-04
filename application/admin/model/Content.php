@@ -10,6 +10,7 @@ class Content extends Base
     protected $connection = [
         'prefix' => 'jm_',
     ];
+    protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
     protected $insert = ['status' => 1, 'create_id', 'update_id'];

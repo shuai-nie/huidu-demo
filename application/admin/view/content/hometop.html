@@ -24,67 +24,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">简介</label>
         <div class="layui-input-block">
-            <textarea name="intro" required lay-verify="required"  placeholder="请输入内容" class="layui-textarea"></textarea>
+            <input type="text" name="intro" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">关键词</label>
-        <div class="layui-input-block">
-            <input type="text" name="keywords" placeholder="菜单标题" autocomplete="off" class="layui-input">
-        </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">描述</label>
-        <div class="layui-input-block">
-            <input type="text" name="description" placeholder="菜单标题" autocomplete="off" class="layui-input">
-        </div>
-    </div>
 
-    <div id="url" style="display: none;">
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <img src="#" height="100" width="100" />
-        </div>
-    </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <input type="hidden" name="cover_url">
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>封面图
-            </button>
-
-            <div style="width: 100px;margin-top: 10px;">
-                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                    <div class="layui-progress-bar" lay-percent=""></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">内容</label>
-        <div class="layui-input-block">
-            <script id="container" name="value" type="text/plain">{$data['content']}</script>
-        </div>
-        <script type="text/javascript" src="/static/ueditor1433/ueditor.config.js"></script>
-        <script type="text/javascript" src="/static/ueditor1433/ueditor.all.js"></script>
-        <script type="text/javascript" src="/static/ueditor1433/lang/zh-cn/zh-cn.js"></script>
-
-        <script>
-            var ue = UE.getEditor('container', {
-                initialFrameWidth: 600,
-                initialFrameHeight: 300,
-                maximumWords: 1000,
-                autoHeightEnabled: false,
-                autoFloatEnabled: false,
-                zIndex: "0"
-            });
-        </script>
-    </div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
