@@ -2,35 +2,28 @@
 {include file="moban/js"}
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
-    <div class="layui-form-item">
-        <label class="layui-form-label">分类</label>
-        <div class="layui-input-block">
-            <select name="category_id" required lay-verify="required"  lay-filter="category_id" lay-search="">
-                <option value="">请选择</option>
-                {volist name="category" id="vo"}
-                <option value="{$vo['id']}">{$vo['name']}</option>
-                {/volist}
-            </select>
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="title" disabled placeholder="菜单标题" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">简介</label>
+        <label class="layui-form-label">首页置顶</label>
         <div class="layui-input-block">
-            <input type="text" name="intro" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="radio" name="home_top" value="0" title="不置顶" checked="">
+            <input type="radio" name="home_top" value="1" title="置顶">
         </div>
     </div>
 
-
-
-
+    <div class="layui-form-item">
+        <label class="layui-form-label">置顶排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="home_sort" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
@@ -77,11 +70,16 @@
         //监听提交
         form.on('submit(submit)', function (data) {
             data.field.content = ue.getContent();
-            Api.add(data.field, function (res) {
+            Api.edit(data.field, function (res) {
                 console.log(res);
             });
         });
 
+        form.val('first', {
+            'home_top': "{$data['home_top']}",
+            'home_sort': "{$data['home_sort']}",
+            'title': "{$data['title']}",
+        });
 
     });
 </script>

@@ -25,6 +25,25 @@ class Content extends Controller
         $ContentCategory = model('ContentCategory');
         if(\request()->isPost()){
             $map = ['A.status'=>1];
+            $title = \request()->post('title');
+            $category_id = \request()->post('category_id');
+            $home_top = \request()->post('home_top');
+            $category_top = \request()->post('category_top');
+            if(!empty($title)) {
+                $map['A.title'] = ['like', "%{$title}%"];
+            }
+            if(is_numeric($category_id) ){
+                $map['A.category_id'] = $category_id;
+            }
+
+            if(is_numeric($home_top) ){
+                $map['A.home_top'] = $home_top;
+            }
+
+            if(is_numeric($category_top) ){
+                $map['A.category_top'] = $category_top;
+            }
+
             $limit = \request()->post('limit');
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
@@ -33,6 +52,8 @@ class Content extends Controller
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->field("A.*,B.name as category_name")
                 ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+            // echo $this->model->getLastSql();exit();
+
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->where($map)->count();
