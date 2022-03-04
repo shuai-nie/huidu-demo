@@ -1,0 +1,119 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章ID</label>
+        <div class="layui-input-block">
+            <input type="text" name="cid" required lay-verify="required" placeholder="文章ID" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div id="url" style="display: none;">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <img src="#" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <input type="hidden" name="url">
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+
+            <div style="width: 100px;margin-top: 10px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">跳转地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="link_url" required lay-verify="required" placeholder="跳转地址" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">展示位置</label>
+        <div class="layui-input-block">
+            <input type="radio" name="location" value="0" title="轮播图" checked>
+            <input type="radio" name="location" value="1" title="小图">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否为广告</label>
+        <div class="layui-input-block">
+            <input type="radio" name="is_ad" value="0" title="否" checked>
+            <input type="radio" name="is_ad" value="1" title="是">
+            <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload', 'element'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            element = layui.element;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            },progress: function(n, elem, res, index) {
+                var percent = n + '%'
+                element.progress('demo', percent);
+            }
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            // layer.msg(JSON.stringify(data.field));
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+
+
+    });
+</script>

@@ -33,7 +33,8 @@ return [
     'Counselor' => '顾问',
 
     'ContentCategory' => '文章分类',
-    "Content" => "文章"
+    "Content" => "文章",
+    'BannerContent' => '资讯',
 
 
 ];

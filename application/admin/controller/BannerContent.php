@@ -21,9 +21,17 @@ class BannerContent extends Controller
     public function index()
     {
         if(\request()->isPost()){
-            $map = ['status'=>1];
-            $data = $this->model->where($map)->order('id desc')->select();
-            $count = $this->model->where($map)->count();
+            $map = ['A.status'=>1];
+            $title = \request()->post('title');
+            if(!empty($title)){
+                $map['B.title'] = ['like', "%{$title}%"];
+            }
+            $Content = model('Content');
+            $data = $this->model->alias('A')->join($Content->getTable()." B", "A.cid=B.id", "left")
+                ->field("A.*,B.title")
+                ->where($map)->order('A.id desc')->select();
+            $count = $this->model->alias('A')->join($Content->getTable()." B", "A.cid=B.id", "left")
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
@@ -35,15 +43,13 @@ class BannerContent extends Controller
      */
     public function create()
     {
-        if(Request()->isPost()) {
-            $data = Request()->param();
-            $data['create_id'] = getLoginUserId();
-            $data['update_id'] = getLoginUserId();
+        if(\request()->isPost()) {
+            $data = \request()->param();
             $state = $this->model->save($data);
             if($state !== false){
-                return success_json();
+                return success_json(lang('CreateSuccess', [lang('BannerContent')]) );
             }
-            return error_json();
+            return success_json(lang('CreateFail', [lang('BannerContent')]) );
         }
         return view();
     }
@@ -60,9 +66,9 @@ class BannerContent extends Controller
             $data['update_id'] = getLoginUserId();
             $state = $this->model->save($data, ['id'=>$data['id']]);
             if($state !== false){
-                return success_json(lang('EditSuccess', [lang('Bannel')]) );
+                return success_json(lang('EditSuccess', [lang('BannerContent')]) );
             }
-            return error_json();
+            return success_json(lang('EditFail', [lang('BannerContent')]) );
         }
         $data = $this->model->find($id);
         return view('edit', ['data'=>$data]);
@@ -78,8 +84,8 @@ class BannerContent extends Controller
         $id = \request()->param('id');
         $state = $this->model->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('EditSuccess', [lang('Bannel')]) );
+            return success_json(lang('DeleteSuccess', [lang('BannerContent')]) );
         }
-        return error_json();
+        return success_json(lang('DeleteFail', [lang('BannerContent')]) );
     }
 }

@@ -78,8 +78,8 @@ class Banner extends Base
         $id = Request()->param('id');
         $state = model("Banner")->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('EditSuccess', [lang('Bannel')]) );
+            return success_json(lang('DeleteSuccess', [lang('Bannel')]) );
         }
-        return error_json();
+        return success_json(lang('DeleteFail', [lang('Bannel')]) );
     }
 }
