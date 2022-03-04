@@ -36,7 +36,7 @@
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'category_id', title: '分类',width:120}
+            ,{field: 'category_name', title: '分类',width:100}
             ,{field: 'title', title: '标题'}
             ,{field: 'cover_url', title: '封面图',width:80, templet:function (d) {
                     if(d.cover_url != '' || d.cover_url != null){

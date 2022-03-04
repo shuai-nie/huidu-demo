@@ -22,12 +22,18 @@ class Content extends Controller
     public function index()
     {
         if(\request()->isPost()){
-            $map = ['status'=>1];
+            $map = ['A.status'=>1];
             $limit = \request()->post('limit');
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
-            $data = $this->model->where($map)->limit($offset, $limit)->order('id desc')->select();
-            $count = $this->model->where($map)->count();
+            $ContentCategory = model('ContentCategory');
+            $data = $this->model->alias('A')
+                ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
+                ->field("A.*,B.name as category_name")
+                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+            $count = $this->model->alias('A')
+                ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
