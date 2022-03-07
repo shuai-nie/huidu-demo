@@ -7,7 +7,7 @@ use think\Request;
 
 class Ad extends Base
 {
-    public $page = ['0' => '首页顶部', '1' => '首页左侧', '2' => '首页右侧'];
+    public $page = ['0' => '首页顶部', '1' => '咨询右侧', 2=>''];
     public $category = ['1' => '一栏', '2' => '两栏', '3' => '三栏'];
     public $type = ['1' => '1200x80', '2' => '1200x160', '3' => '1200x240', '4' => '1200x60', '5' => '1200x70', 6 => '1200*64'];
 
@@ -112,7 +112,10 @@ class Ad extends Base
             }
             return error_json();
         }
-        return view('create');
+        return view('create', [
+            'page'     => $this->page,
+            'category' => $this->category,
+        ]);
     }
 
     /**
@@ -144,7 +147,11 @@ class Ad extends Base
         $data['end2'] = $data['end2'] >10000 ? date('Y-m-d H:i:s', $data['end2']) : '';
         $data['begin3'] = $data['begin3'] >10000 ? date('Y-m-d H:i:s', $data['begin3']) : '';
         $data['end3'] = $data['end3'] >10000 ? date('Y-m-d H:i:s', $data['end3']) : '';
-        return view('', ['data'=>$data]);
+        return view('', [
+            'data' => $data,
+            'page' => $this->page,
+            'category' => $this->category,
+        ]);
     }
 
 

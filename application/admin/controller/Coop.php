@@ -15,16 +15,21 @@ class Coop extends Base
     public function index()
     {
         if(Request()->isPost()) {
-            $map = ['status'=>1];
+            $map = ['A.status'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
             $uname = \request()->post('uname');
             if(!empty($uname)) {
-                $map['uname'] = ['like', "%{$uname}%"];
+                $map['A.uname'] = ['like', "%{$uname}%"];
             }
-            $data = model("Cooperation")->where($map)->limit($offset, $limit)->order('id desc')->select();
-            $count = model("Cooperation")->where($map)->count();
+            $data = model("Cooperation")->alias('A')
+                ->join(model('Resource')->getTable()." B", "A.rid=B.id", "left")
+                ->field("A.*,B.title")
+                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+            $count = model("Cooperation")->alias('A')
+                ->join(model('Resource')->getTable()." B", "A.rid=B.id", "left")
+                ->where($map)->count();
             foreach ($data as $k => $v) {
                 if (!empty( $v['uid'])) {
                     $CacheUser = CacheUser($v['uid']);

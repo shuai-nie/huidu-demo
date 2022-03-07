@@ -44,6 +44,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block">
+            {volist name='BusinessSubdivide' id='vo'}
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
             <script id="container" name="intro" type="text/plain">{$resource['intro']}</script>
@@ -280,6 +289,14 @@
             {volist name="$resource['region']" id="vo"}
             "region[{$vo}]":true,
             {/volist}
+
+        {volist name="$resource['business_subdivide']" id="vo"}
+        {if condition="$vo"}
+        "region[{$vo}]":true,
+            {/if}
+            {/volist}
+
+
         });
 
 

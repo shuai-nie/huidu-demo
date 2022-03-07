@@ -20,9 +20,11 @@
     <div class="layui-form-item">
         <label class="layui-form-label">位置</label>
         <div class="layui-input-block">
-            <input type="radio" name="page" value="0" title="首页顶部" checked>
-            <input type="radio" name="page" value="1" title="首页左侧">
-            <input type="radio" name="page" value="2" title="首页右侧">
+            {foreach name="page" id='vp' key="k"}
+            {if condition="$vp"}
+            <input type="radio" name="page" value="{$k}" title="{$vp}" {if condition="$k eq 0"}checked{/if} />
+            {/if}
+            {/foreach}
         </div>
     </div>
 

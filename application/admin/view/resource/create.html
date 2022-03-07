@@ -38,6 +38,15 @@
         <label class="layui-form-label">合作区域</label>
         <div class="layui-input-block">
             {volist name='resourcesRegion' id='vo'}
+            <input type="checkbox" name="subdivide[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block">
+            {volist name='BusinessSubdivide' id='vo'}
             <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
             {/volist}
         </div>

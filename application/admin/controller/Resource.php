@@ -84,6 +84,7 @@ class Resource extends Base
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
             $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post['subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['types'] = 2;
@@ -118,13 +119,16 @@ class Resource extends Base
             }
             return error_json(lang('CreateFail', [lang('Resource')]));
         }
-        $resourcesType = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
-        $resourcesRegion = model('DataDic')->where(['data_type_no'=>'RESOURCES_REGION'])->select();
-        $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
+        $DataDic = model('DataDic') ;
+        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
+        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION'])->select();
+        $DataDicData = $DataDic->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
+        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->order('sort desc')->select();
         return view('', [
             'resourcesType' => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
+            'BusinessSubdivide' => $businessSubdivide,
         ]);
     }
 
@@ -195,26 +199,30 @@ class Resource extends Base
             return error_json(lang('EditFail', [lang('Resource')]));
         }
 
-        $resourcesType = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
-        $resourcesRegion = model('DataDic')->where(['data_type_no'=>'RESOURCES_REGION'])->select();
+        $DataDic = model('DataDic');
+        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
+        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION'])->select();
         $resourceInfo['img'] = explode('|', $resourceInfo['img']);
         $resourceInfo['type'] = explode('|', $resourceInfo['type']);
         $resourceInfo['region'] = explode('|', $resourceInfo['region']);
+        $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
         $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
         $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 
-        $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
+        $DataDicData = $DataDic->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
         $ResourceContact = model('ResourceContact')->where(['resources_id'=>$resourceInfo->id,'status'=>1])->select();
         if($ResourceContact) {
             $ResourceContact = collection($ResourceContact)->toArray();
         }
         $ResourceContact = \util\Tree::array_group_by($ResourceContact, 'name');
+        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->order('sort desc')->select();
         return view('', [
             'resource'        => $resourceInfo,
             'resourcesType'   => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
             'ResourceContact' => $ResourceContact,
+            'BusinessSubdivide' => $businessSubdivide,
         ]);
     }
 
