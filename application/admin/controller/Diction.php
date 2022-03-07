@@ -51,11 +51,11 @@ class Diction extends Base
         if(request()->isPost()){
             $_post = request()->param();
             $DataDic = model('DataDic');
-            $count = $DataDic->where(['data_type_no'=>$_post['data_type_no']])->count();
+            $Datafind = $DataDic->where(['data_type_no'=>$_post['data_type_no']])->order('data_no desc')->find();
             $state = $DataDic->save([
                 'data_type_no' => $_post['data_type_no'],
                 'data_type_name' => $this->data[$_post['data_type_no']]['title'],
-                'data_no' => $count,
+                'data_no' => $Datafind['data_no']+1,
                 'data_name' => $_post['data_name'],
                 'data_icon' => $_post['data_icon'],
                 'sort' => $_post['sort'],
