@@ -41,8 +41,6 @@
         <!--  <li class="layui-nav-item" lay-unselect>
            <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
              <i class="layui-icon layui-icon-notice"></i>
-
-
              <span class="layui-badge-dot"></span>
            </a>
          </li> -->
@@ -151,13 +149,12 @@
   function edit_passowrd()
   {
     UI.openLayer("{:url('edit')}");
-    //alert(123);
   }
   layui.config({
     base: '../../static/admin_templete/'//静态资源所在路径
   }).extend({
     index: 'lib/index' //主入口模块
-  }).use('index',function(){
+  }).use(['index'], function () {
     var $ = layui.$, active = {
       logout1:function(){
         console.log("sadasd");
@@ -172,6 +169,7 @@
       var type = $(this).data('type');
       active[type] ? active[type].call(this) : '';
     });
+
   });
 </script>
 
