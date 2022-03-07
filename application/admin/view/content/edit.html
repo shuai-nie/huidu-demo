@@ -42,10 +42,10 @@
         </div>
     </div>
 
-    <div id="url" style="display: none;">
+    <div id="url" {if condition="!$data['cover_url']"}style="display: none;"{/if} >
         <label class="layui-form-label"></label>
         <div class="layui-input-block">
-            <img src="#" height="100" width="100" />
+            <img src="{$data['cover_url']}" height="100" width="100" />
         </div>
     </div>
 
@@ -136,6 +136,14 @@
             });
         });
 
+        form.val('first', {
+            'category_id': "{$data['category_id']}",
+            'title': "{$data['title']}",
+            'intro': "{$data['intro']}",
+            'cover_url': "{$data['cover_url']}",
+            'keywords': "{$data['keywords']}",
+            'description': "{$data['description']}",
+        });
 
     });
 </script>

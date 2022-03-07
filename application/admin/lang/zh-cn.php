@@ -39,5 +39,7 @@ return [
     "Content" => "文章",
     'BannerContent' => '资讯',
 
+    'ContentHot' => '热门/精选',
+
 
 ];

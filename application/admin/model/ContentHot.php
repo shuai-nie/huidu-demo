@@ -6,10 +6,10 @@ use think\Model;
 
 class ContentHot extends Base
 {
-//    protected $table = 'jm_content_hot';
     protected $connection = [
         'prefix' => 'jm_',
     ];
+    protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
     protected $insert = ['status' => 1, 'create_id', 'update_id'];

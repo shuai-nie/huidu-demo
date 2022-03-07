@@ -8,11 +8,16 @@ use think\Request;
 class ContentHot extends Controller
 {
     protected $model;
+    protected $type = [
+        0 => "热门文章",
+        1 => "热门精选",
+    ];
     protected function _initialize()
     {
         parent::_initialize();
         $this->model = model('ContentHot');
         $this->assign('meta_title', "热门文章");
+
     }
 
     /**
@@ -21,17 +26,37 @@ class ContentHot extends Controller
      */
     public function index()
     {
+        $ContentCategory = model('ContentCategory');
         if(\request()->isPost()){
-            $map = ['is_del'=>1];
-            $name = \request()->post('name');
-            if(!empty($name)) {
-                $map['name'] = ['like', "%{$name}%"];
+            $map = ['A.status'=>1];
+            $Content = model('Content');
+            $limit  = \request()->post('limit');
+            $page = \request()->post('page');
+            $category_id = \request()->post('category_id');
+            $type = \request()->post('type');
+            $title = \request()->post('title');
+            if(is_numeric($category_id)){
+                $map['B.category_id'] = $category_id;
             }
-            $data = $this->model->where($map)->order('id desc')->select();
-            $count = $this->model->where($map)->count();
+            if(is_numeric($type)) {
+                $map['A.type'] = $type;
+            }
+            if(!empty($title)) {
+                $map['B.title'] = ['like', "%{$title}%"];
+            }
+            $offset = ($page - 1) * $limit;
+            $data = $this->model
+                ->alias('A')->join($Content->getTable().' B', "A.cid=B.id", "left")
+                ->join($ContentCategory->getTable().' C', "B.category_id=C.id", "left")
+                ->field('A.*,B.title,C.name as category_name')
+                ->where($map)->order('A.id desc')->limit($offset, $limit)->select();
+            $count = $this->model
+                ->alias('A')->join($Content->getTable().' B', "A.cid=B.id", "left")
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        return view('', ['category' => $category, 'type' => $this->type]);
     }
 
     /**
@@ -44,11 +69,16 @@ class ContentHot extends Controller
             $data = Request()->param();
             $state = $this->model->save($data);
             if($state !== false){
-                return success_json(lang('CreateSuccess', [lang('ContentCategory')]));
+                return success_json(lang('CreateSuccess', [lang('ContentHot')]));
             }
-            return error_json(lang('CreateSuccess', [lang('ContentCategory')]));
+            return error_json(lang('CreateSuccess', [lang('ContentHot')]));
         }
-        return view();
+        $Content = model('Content');
+        $ContentAll = $Content->where(['status'=>1])->field('id,title')->order('id desc')->select();
+        return view('', [
+            'content' => $ContentAll,
+            'type' => $this->type
+        ]);
     }
 
     /**
@@ -62,12 +92,18 @@ class ContentHot extends Controller
             $data = Request()->param();
             $state = $this->model->save($data, ['id'=>$data['id']]);
             if($state !== false){
-                return success_json(lang('EditSuccess', [lang('ContentCategory')]) );
+                return success_json(lang('EditSuccess', [lang('ContentHot')]) );
             }
-            return error_json(lang('EditFail', [lang('ContentCategory')]));
+            return error_json(lang('EditFail', [lang('ContentHot')]));
         }
         $data = $this->model->find($id);
-        return view('edit', ['data'=>$data]);
+        $Content = model('Content');
+        $ContentAll = $Content->where(['status'=>1])->field('id,title')->select();
+        return view('edit', [
+            'data' => $data,
+            'content' => $ContentAll,
+            'type' => $this->type
+        ]);
     }
 
     /**
@@ -78,10 +114,10 @@ class ContentHot extends Controller
     public function delete($id)
     {
         $id = \request()->param('id');
-        $state = $this->model->save(['is_del'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
+        $state = $this->model->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('DeleteSuccess', [lang('ContentCategory')]) );
+            return success_json(lang('DeleteSuccess', [lang('ContentHot')]) );
         }
-        return error_json(lang('DeleteFail', [lang('ContentCategory')]) );
+        return error_json(lang('DeleteFail', [lang('ContentHot')]) );
     }
 }
