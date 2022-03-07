@@ -5,7 +5,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">登录账号</label>
         <div class="layui-input-block">
-            <input type="text" name="username" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+            <input type="text" name="username" required lay-verify="username|required" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -76,6 +76,16 @@
             }
         });
 
+        form.verify({
+            username:function(value, item) {
+                console.log(value);
+                var _s = /^[A-Za-z0-9]+$/;
+                if(!_s.test(value)){
+                    return '登录账号只能数字和字母组成';
+                }
+            }
+        })
+
         //监听提交
         form.on('submit(submit)', function (data) {
             $.post("{:url('username')}", data.field, function (obj) {
@@ -84,12 +94,9 @@
                         console.log(res);
                     });
                 }else{
-                    layer.msg(obj.msg, function(){
-
-                    })
+                    layer.msg(obj.msg, function(){})
                 }
             }, 'json')
-
         });
 
 
