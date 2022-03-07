@@ -5,10 +5,13 @@
 </body>
 </html>
 <script>
-$(document).ready(function () { }).keydown(
+$(document).ready(function () {
+
+}).keydown(
   function (e) {
       if (e.which === 27) {
           layer.closeAll();
+      } else if(e.which === 116) {
       }
   });
 </script>
