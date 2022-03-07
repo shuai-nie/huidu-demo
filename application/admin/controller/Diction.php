@@ -11,6 +11,7 @@ class Diction extends Base
         'CONTACT_TYPE'     => ['type' => 'CONTACT_TYPE', 'title' => '联系方式'],
         'RESOURCES_TYPE'   => ['type' => 'RESOURCES_TYPE', 'title' => '资源·业务类型'],
         'RESOURCES_REGION' => ['type' => 'RESOURCES_REGION', 'title' => '资源·合作领域'],
+        'RESOURCES_SUBDIVIDE' => ['type' => 'RESOURCES_SUBDIVIDE', 'title' => '资源·业务细分'],
     ];
 
     /**
