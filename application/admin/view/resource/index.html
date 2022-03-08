@@ -28,8 +28,9 @@
                     <div class="layui-input-inline">
                         <select name="ty" lay-filter="ty" lay-search="" >
                             <option value="">请选择</option>
-                            <option value="1">我提供</option>
-                            <option value="2">我需求</option>
+                            {foreach name='ty' id='vy' key='k'}
+                            <option value="{$k}">{$vy}</option>
+                            {/foreach}
                         </select>
                     </div>
                 </div>
@@ -74,17 +75,18 @@ layui.use(['table','form'], function(){
         ,{field: 'uid', title: '用户ID', width:80}
         ,{field: 'username', title: '用户账号', width:80}
         ,{field: 'title', title: '标题', width:120}
-        ,{field: 'types', title: '来源',width:60,templet:function(d){
+        ,{field: 'types', title: '来源',width:70,templet:function(d){
             switch (d.types*1) {
-                case 1: return '<span class="label pull-right layui-bg-blue">前台</span>';break;
-                case 2: return '<span class="label pull-right layui-bg-red">后台</span>';break;
+                case 1: return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-blue ">前台</span>';break;
+                case 2: return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-red">后台</span>';break;
                 default:return '-';break;
             }
             }}
         ,{field: 'ty', title: '类型',width:80,templet:function(d){
                 switch (d.ty*1) {
-                    case 1: return '<span class="label pull-right layui-bg-orange">我提供</span>';break;
-                    case 2: return '<span class="label pull-right layui-bg-green">我需求</span>';break;
+                    {foreach name='ty' id='vy' key='k'}
+                    case {$k}: return '<span class="">{$vy}</span>';break;
+                    {/foreach}
                     default:return '-';break;
                 }
             }}
@@ -93,12 +95,12 @@ layui.use(['table','form'], function(){
         ,{field: 'feedback', title: '反馈信息',width:140}
         ,{field: 'auth', title: '状态',width:80,align:'center',templet:function (d) {
                 switch (d.auth*1){
-                    case 1:return '<span class="label pull-right layui-bg-orange">通过</span>';break;
-                    case 2:return '<span class="label pull-right layui-bg-green">审核中</span>';break;
-                    case 3:return '<span class="label pull-right layui-bg-cyan">未通过</span>';break;
-                    case 4:return '<span class="label pull-right layui-bg-blue">草稿</span>';break;
-                    case 5:return '<span class="label pull-right layui-bg-black">已关闭</span>';break;
-                    default:return '<span class="label pull-right layui-bg-gray">-</span>';break;
+                    case 1:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-orange">通过</span>';break;
+                    case 2:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-green">审核中</span>';break;
+                    case 3:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-cyan">未通过</span>';break;
+                    case 4:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-blue">草稿</span>';break;
+                    case 5:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-black">已关闭</span>';break;
+                    default:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-gray">-</span>';break;
                 }
             }}
         ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}

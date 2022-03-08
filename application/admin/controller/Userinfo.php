@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use think\Config;
 use think\Controller;
 use think\Request;
 
@@ -14,11 +15,11 @@ class Userinfo extends Base
      */
     public function index()
     {
-        if(Request()->isPost()) {
+        if(\request()->isPost()) {
             $map = ['E.status'=>1];
-            $page = Request()->param('page');
-            $limit = Request()->param('limit');
-            $username = Request()->param('username');
+            $page = \request()->post('page');
+            $limit = \request()->post('limit', Config::get('paginate')['list_rows']);
+            $username = \request()->post('username');
             if(!empty($username)) {
                 $map['E.username'] = ['like', "%{$username}%"];
             }

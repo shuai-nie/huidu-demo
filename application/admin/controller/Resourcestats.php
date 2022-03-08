@@ -16,8 +16,8 @@ class Resourcestats extends Base
     {
         if(request()->isPost()) {
             $map = array();
-            $resources_id = request()->param('resources_id');
-            $resources_title = request()->param('resources_title');
+            $resources_id = request()->post('resources_id');
+            $resources_title = request()->post('resources_title');
             if(!empty($resources_id)) {
                 $map['resources_id'] = $resources_id;
             }

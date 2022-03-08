@@ -19,6 +19,7 @@
                 <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
+
             </div>
         </form>
     </div>
@@ -38,8 +39,6 @@
             form = layui.form;
         UI.getPageTable(table, "{:url('')}", [
 			{field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            , {field: 'mobile', title: '手机号', width: 125}
-            , {field: 'email', title: '邮箱', width: 130}
             ,{field: 'head_url', title: '头像',width:60,templet: function(d){
                 if(d.head_url != null && d.head_url != '') {
                     return "<img src='"+d.head_url+"' height=30 width=30 />";
@@ -49,6 +48,8 @@
             ,{field: 'username', title: '账号/昵称',width:120,templet: function(d){
                 return  d.username + '/' + d.nickname ;
                 }}
+            , {field: 'mobile', title: '手机号', width: 125}
+            , {field: 'email', title: '邮箱', width: 130}
             ,{field: 'title', title: '套餐',width:120}
             ,{field: 'used_flush', title: '已使用刷新',width:100}
             ,{field: 'used_publish', title: '已发布次数',width:100}

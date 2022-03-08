@@ -2,11 +2,16 @@
 
 namespace app\admin\controller;
 
+use think\Config;
 use think\Controller;
 use think\Request;
 
 class Resource extends Base
 {
+    protected $ty = [
+        1 => '甲方',
+        2 => '乙方',
+    ];
     /**
      * 显示资源列表
      *
@@ -17,7 +22,7 @@ class Resource extends Base
         if(Request()->isPost()) {
             $map = ['A.status'=>1];
             $page = Request()->post('page');
-            $limit = Request()->post('limit');
+            $limit = Request()->post('limit', Config::get('paginate')['list_rows']);
             $offset = ($page - 1) * $limit;
             $uid = \request()->post('uid');
             if(!empty($uid)) {
@@ -68,7 +73,7 @@ class Resource extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        return view('', ['ty' => $this->ty]);
     }
 
     /**
@@ -129,6 +134,7 @@ class Resource extends Base
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
             'BusinessSubdivide' => $businessSubdivide,
+            'ty' => $this->ty
         ]);
     }
 
@@ -217,12 +223,13 @@ class Resource extends Base
         $ResourceContact = \util\Tree::array_group_by($ResourceContact, 'name');
         $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->order('sort desc')->select();
         return view('', [
-            'resource'        => $resourceInfo,
-            'resourcesType'   => $resourcesType,
+            'resource' => $resourceInfo,
+            'resourcesType' => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
             'ResourceContact' => $ResourceContact,
             'BusinessSubdivide' => $businessSubdivide,
+            'ty' => $this->ty,
         ]);
     }
 
