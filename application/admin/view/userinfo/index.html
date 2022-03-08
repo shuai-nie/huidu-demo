@@ -38,6 +38,8 @@
             form = layui.form;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            , {field: 'mobile', title: '手机号', width: 125}
+            , {field: 'email', title: '邮箱', width: 130}
             ,{field: 'head_url', title: '头像',width:60,templet: function(d){
                 if(d.head_url != null && d.head_url != '') {
                     return "<img src='"+d.head_url+"' height=30 width=30 />";
