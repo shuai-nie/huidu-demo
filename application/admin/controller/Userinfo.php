@@ -146,6 +146,7 @@ class Userinfo extends Base
                     'flush'      => $packageInfo['flush'],
                     'publish'    => $packageInfo['publish'],
                     'end_time'   => time() + 30 * 60 * 60 * 24,
+                    'remarks' => '注册账户' . $uid,
                 ]);
                 $UserRechargeId = $UserRechargeModel->id;
                 model('UserInfo')->save([

@@ -251,11 +251,11 @@ return [
     ],
     'is_send_sms' => false,
     'aliyun_config' => array(
-        'accessKeyId'     => 'LTAI5tECCV5ePuuWG9SFGr93',
-        'accessKeySecret' => '3MnDlWk7z5ecbhtUh7HKbhnaJuxu2Q',
-        'bucket'          => 'boniu-gg',
+        'accessKeyId'     => 'LTAI5tGtVtBqhGiAGnRRtKhp',
+        'accessKeySecret' => 'gTPa1W6QGjNePvxvMNivs90lbAviVp',
+        'bucket'          => 'huidu-bucket',
         'endpoint'        => 'http://oss-ap-southeast-1.aliyuncs.com',
-        'accessDomain'    => 'https://guanggao.bn.live/',
+        'accessDomain'    => 'http://file.huidu.io/',
     ),
 
 ];

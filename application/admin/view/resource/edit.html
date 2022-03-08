@@ -20,13 +20,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-            <input type="radio" name="ty" value="1" title="我提供" checked>
-            <input type="radio" name="ty" value="2" title="我需要">
+            <input type="radio" name="ty" value="1" title="甲方" checked>
+            <input type="radio" name="ty" value="2" title="乙方">
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">业务类型</label>
+        <label class="layui-form-label">合作领域</label>
         <div class="layui-input-block">
             {volist name='resourcesType' id='vo'}
             <input type="checkbox" name="type[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
