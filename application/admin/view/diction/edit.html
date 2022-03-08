@@ -13,6 +13,18 @@
         </div>
     </div>
 
+    <div class="layui-form-item" style="display:none;" id="data_top_id" >
+        <label class="layui-form-label">上级</label>
+        <div class="layui-input-block">
+            <select name="data_top_id" lay-filter="category_id" lay-search="">
+                <option value="0">顶级</option>
+                {volist name="subdivide" id='vo'}
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
@@ -46,14 +58,8 @@
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-    <!-- <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
-    </div> -->
+
 </form>
-<!--</div>-->
 
 <script>
     //Demo
@@ -79,7 +85,6 @@
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
-
             }
             ,error: function(){
                 //请求异常回调
@@ -87,18 +92,30 @@
         });
 
         form.val('first', {
-            "data_type_no":"{$data['data_type_no']}",
-            "data_name":"{$data['data_name']}",
-            "data_icon":"{$data['data_icon']}",
-            "sort":"{$data['sort']}",
+            "data_type_no": "{$data['data_type_no']}",
+            "data_name": "{$data['data_name']}",
+            "data_icon": "{$data['data_icon']}",
+            "data_top_id": "{$data['data_top_id']}",
+            "sort": "{$data['sort']}",
         })
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
-            Api.add(data.field, function (res) {
+            Api.edit(data.field, function (res) {
                 console.log(res);
             });
+        });
+
+        {if condition="$data['data_type_no'] eq 'RESOURCES_SUBDIVIDE'"}
+            $("#data_top_id").show();
+        {/if}
+
+        form.on('radio(data_type_no)', function(data){
+            if(data.value === 'RESOURCES_SUBDIVIDE'){
+                $("#data_top_id").show();
+            } else {
+                $("#data_top_id").hide();
+            }
         });
 
 

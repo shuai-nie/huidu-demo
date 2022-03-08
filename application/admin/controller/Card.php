@@ -33,7 +33,7 @@ class Card extends Base
             $CardAll = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->field('A.*,B.username,B.nickname')
-                ->where($map)->limit($offset, $limit)->select();
+                ->where($map)->order('A.id desc')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->where($map)->count();

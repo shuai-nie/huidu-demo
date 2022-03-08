@@ -40,7 +40,7 @@ class Menu extends Base
     public function read()
     {
         $map   = [];
-        $Menu  = $this->model->where($map)->field('id,pid,title,link')->select();
+        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort')->select();
         return json(['code'=>0,'count'=>24,'data'=>$Menu], 200);
 
     }
@@ -64,7 +64,7 @@ class Menu extends Base
     function edit($id = "")
     {
         if (request()->isPost()) {
-            $data = request()->param();
+            $data = request()->post();
             $id = request()->get('id');
             $state = model('AuthMenu')->save($data, ["id"=>$id]);
             if($state !== false ) {

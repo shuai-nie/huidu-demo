@@ -37,7 +37,7 @@
             form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            {field: 'uid', title: 'UID', width:80, fixed: 'left'}
             ,{field: 'name', title: '账号/昵称',width:130,templet:function (d) {
                     return d.username + '/' +d.nickname ;
                 }}

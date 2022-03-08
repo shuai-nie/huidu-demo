@@ -8,8 +8,20 @@
         <label class="layui-form-label">字典类型</label>
         <div class="layui-input-block">
             {volist name='typeData' id='vo' key='k'}
-            <input type="radio" name="data_type_no" value="{$vo['type']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
+            <input type="radio" name="data_type_no"  lay-filter="data_type_no" value="{$vo['type']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
             {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="display:none;" id="data_top_id" >
+        <label class="layui-form-label">上级</label>
+        <div class="layui-input-block">
+            <select name="data_top_id" lay-filter="category_id" lay-search="">
+                <option value="0">顶级</option>
+                {volist name="subdivide" id='vo'}
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
 
@@ -46,14 +58,8 @@
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-    <!-- <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
-    </div> -->
+
 </form>
-<!--</div>-->
 
 <script>
     //Demo
@@ -67,11 +73,11 @@
         var upload_size=3145728;
         var uploadInst = upload.render({
             elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
                 if(res.code == 0) {
                     $("#url").show();
                     $("#url img").attr('src', res.url);
@@ -79,19 +85,24 @@
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
-
-            }
-            ,error: function(){
+            }, error: function () {
                 //请求异常回调
             }
         });
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
             Api.add(data.field, function (res) {
                 console.log(res);
             });
+        });
+
+        form.on('radio(data_type_no)', function(data){
+            if(data.value === 'RESOURCES_SUBDIVIDE'){
+                $("#data_top_id").show();
+            } else {
+                $("#data_top_id").hide();
+            }
         });
 
 

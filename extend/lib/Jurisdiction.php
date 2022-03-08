@@ -49,8 +49,7 @@ class Jurisdiction extends Controller
             }
             $menuList[] = $value;
         }
-        $menuList = $this->channelLevel($menuList);
-        return $menuList;
+        return $this->channelLevel($menuList);
     }
 
     /*序列化菜单*/
@@ -75,20 +74,20 @@ class Jurisdiction extends Controller
     public function getrule($uid = "", $show = 0)
     {
         // 如果是超级用户
-        $map = [];
+        $map = $addAuthMenu = [];
         if ($show == 1) {
             $map['show'] = 1;
         }
 
         if (in_array($uid, $this->config["jump"])) {
-            $addAuthMenu = db($this->config["authMenu"])->where($map)->order("sort asc")->select();
+            $addAuthMenu = db($this->config["authMenu"])->where($map)->order("sort desc")->select();
         } else {
             //否则
             $userInfo = db($this->config['authUser'])->where(array("id" => $uid))->find();
             if (!empty($userInfo)) {
-                $rules       = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
-                $map['id']   = ['in', explode(",", $rules)];
-                $addAuthMenu = db($this->config['authMenu'])->where($map)->order("sort asc")->select();
+                $rules = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
+                $map['id'] = ['in', explode(",", $rules)];
+                $addAuthMenu = db($this->config['authMenu'])->where($map)->order("sort desc")->select();
             }
         }
         return $addAuthMenu;
