@@ -62,7 +62,7 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <!--<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="topping">置顶</a>-->
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>
 </script>
 
 <script>
@@ -77,8 +77,8 @@ layui.use(['table','form'], function(){
         ,{field: 'title', title: '标题', width:120}
         ,{field: 'types', title: '来源',width:70,templet:function(d){
             switch (d.types*1) {
-                case 1: return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-blue ">前台</span>';break;
-                case 2: return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-red">后台</span>';break;
+                case 1: return '<span class="layui-btn-xs layui-border-blue ">前台</span>';break;
+                case 2: return '<span class="layui-btn-xs layui-border-red">后台</span>';break;
                 default:return '-';break;
             }
             }}
@@ -95,15 +95,20 @@ layui.use(['table','form'], function(){
         ,{field: 'feedback', title: '反馈信息',width:140}
         ,{field: 'auth', title: '状态',width:80,align:'center',templet:function (d) {
                 switch (d.auth*1){
-                    case 1:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-orange">通过</span>';break;
-                    case 2:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-green">审核中</span>';break;
-                    case 3:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-cyan">未通过</span>';break;
-                    case 4:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-blue">草稿</span>';break;
-                    case 5:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-black">已关闭</span>';break;
-                    default:return '<span class="layui-btn layui-btn-primary layui-btn-xs layui-border-gray">-</span>';break;
+                    case 1:return '<span class="layui-btn-xs layui-border-orange">通过</span>';break;
+                    case 2:return '<span class="layui-btn-xs layui-border-green">审核中</span>';break;
+                    case 3:return '<span class="layui-btn-xs layui-border-cyan">未通过</span>';break;
+                    case 4:return '<span class="layui-btn-xs layui-border-blue">草稿</span>';break;
+                    case 5:return '<span class="layui-btn-xs layui-border-black">已关闭</span>';break;
+                    default:return '<span class="layui-btn-xs layui-border-gray">-</span>';break;
                 }
             }}
-        ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
+        ,{field: 'flush_time', title: '刷新时间',width:140,templet:function(d){
+                if(d.flush_time > 10000) {
+                    return "<div>" + layui.util.toDateString(d.flush_time*1000, 'yyyy-MM-dd HH:mm') + "</div>";
+                }
+            }}
+        ,{fixed: 'right',title:'操作', width:180, align:'center', toolbar: '#barDemo'}
     ]);
 
     form.on('submit(data-search-btn)', function(data){
@@ -125,8 +130,18 @@ layui.use(['table','form'], function(){
                     table.reload("table");
                 }
             });
-        }else if(obj.event === 'topping'){
+        } else if (obj.event === 'topping') {
             UI.openLayer("{:url('topping')}?id="+data['id'],700, 560);
+        } else if (obj.event === 'flush') {
+            $.post("{:url('flush')}?id=" + data['id'], data, function (res) {
+                if(res.code==200){
+                    layer.msg(res.msg, {icon:1},function () {
+                        obj.update({'flush_time': res.data.time});
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:5});
+                }
+            }, 'json');
         }
     });
 

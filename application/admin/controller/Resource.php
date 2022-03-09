@@ -300,4 +300,16 @@ class Resource extends Base
         }
         return view();
     }
+
+    public function flush()
+    {
+        if(\request()->isPost()) {
+            $id = \request()->post('id');
+            $state = model("Resource")->save(['flush_time'=>time()], ['id'=>$id]);
+            if($state !== false) {
+                return success_json('刷新成功', ['time' => time()]);
+            }
+            return error_json('刷新失败');
+        }
+    }
 }
