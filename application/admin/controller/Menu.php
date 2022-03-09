@@ -40,7 +40,7 @@ class Menu extends Base
     public function read()
     {
         $map   = [];
-        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort')->select();
+        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort,show')->select();
         return json(['code'=>0,'count'=>24,'data'=>$Menu], 200);
 
     }

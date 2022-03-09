@@ -10,7 +10,7 @@ class Index extends Base
     {
         $Jurisdiction = new Jurisdiction();
         $menuList = $Jurisdiction->getAuthMenu(getLoginUserId(), 1);
-        $userInfo = Loader::model("Admin", 'logic')->get_find(getLoginUserId());
+        $userInfo = model("Admin")->find(getLoginUserId());
     	return view('', [
     		'menuList'=>$menuList,
     		'userInfo'=>$userInfo

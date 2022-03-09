@@ -33,23 +33,72 @@ class Jurisdiction extends Controller
     */
     public function getAuthMenu($uid = "", $show = 0)
     {
-        $addAuthMenu = $this->getrule($uid, $show);
-        //提取数组id
-        $keys = array_column($addAuthMenu, 'id');
-        //将数组id作为key
-        $menu     = array_combine($keys, $addAuthMenu);
-        $pids     = [];
-        $menuList = [];
-        foreach ($menu as $key => $value) {
-            if ($value['pid'] != 0) {
-                if (!in_array($value['pid'], $pids)) {
-                    $menuList[] = $menu[$value['pid']];
-                    $pids[]     = $value['pid'];
+        $addAuthMenu = $this->getrules($uid, $show);
+//        //提取数组id
+//        $keys = array_column($addAuthMenu, 'id');
+//        //将数组id作为key
+//        $menu     = array_combine($keys, $addAuthMenu);
+//        var_dump($menu);exit();
+//        $pids     = [];
+//        $menuList = [];
+//        foreach ($menu as $key => $value) {
+//            if ($value['pid'] != 0) {
+//                if (!in_array($value['pid'], $pids)) {
+//                    $menuList[] = $menu[$value['pid']];
+//                    $pids[]     = $value['pid'];
+//                }
+//            }
+//            $menuList[] = $value;
+//        }
+//        $data = $this->channelLevel($menuList);
+//        var_dump($data);exit();
+
+        return $addAuthMenu;
+    }
+
+    protected function getrules($uid, $show)
+    {
+        $authMenuModel = db($this->config['authMenu']);
+        $html = "&nbsp;";
+        $level = 1;
+        // 如果是超级用户
+        $map = $addAuthMenu = [];
+        if ($show == 1) {
+            $map['show'] = 1;
+        }
+
+        if (in_array($uid, $this->config["jump"])) {
+            $map['pid'] = 0;
+            $addAuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+            foreach ($addAuthMenu as $k => $v){
+                $map['pid'] = $v['id'];
+                $AuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                if($AuthMenu) {
+                    $v['_html']  = str_repeat($html, $level - 1);
+                    $v['_data'] = $AuthMenu;
+                }
+                $addAuthMenu[$k] = $v;
+            }
+        } else {
+            //否则
+            $userInfo = db($this->config['authUser'])->where(array("id" => $uid))->find();
+            if (!empty($userInfo)) {
+                $rules = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
+                $map['id'] = ['in', explode(",", $rules)];
+                $map['pid'] = 0;
+                $addAuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                foreach ($addAuthMenu as $k => $v) {
+                    $map['pid'] = $v['id'];
+                    $AuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                    if($AuthMenu) {
+                        $v['_html']  = str_repeat($html, $level - 1);
+                        $v['_data'] = $AuthMenu;
+                    }
+                    $addAuthMenu[$k] = $v;
                 }
             }
-            $menuList[] = $value;
         }
-        return $this->channelLevel($menuList);
+        return $addAuthMenu;
     }
 
     /*序列化菜单*/

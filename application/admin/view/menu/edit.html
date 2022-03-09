@@ -38,19 +38,20 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">显示</label>
+        <div class="layui-input-block">
+            <input type="radio" name="show" value="0" title="隐藏">
+            <input type="radio" name="show" value="1" title="显示" checked>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
 
     </form>
-    <!-- <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
-    </div> -->
-<!--</div>-->
 
 <script>
 layui.config({

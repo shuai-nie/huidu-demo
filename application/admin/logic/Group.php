@@ -13,7 +13,6 @@ class Group
 		$Group=Loader::model("Group");
 		$count=$Group->count();
 		$list=$Group->limit(($page-1)*$limit.",$limit")->select();
-		// dump($list);
 		echo success_callback('',['count'=>$count,'list'=>$list]);
 	}
 	public function get_find($id){

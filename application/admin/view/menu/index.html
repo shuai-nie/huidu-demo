@@ -8,7 +8,6 @@
   <button class="layui-btn layui-btn-primary layui-btn-sm close-all" id="btn-fold">全部折叠</button>
 </div>
 
-<!--<table class="layui-table layui-form" id="think-table" lay-filter="think-table" lay-size="sm"></table>-->
 <table id="think-table" class="layui-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -48,7 +47,14 @@
           {type: 'numbers'},
           {field: 'title', width:290, title: '权限名称'},
           {field: 'link', title: '菜单url'},
-          {field: 'sort', title: '排序'},
+          {field: 'sort', title: '排序',width:80},
+          {field: 'show', title: '显示',width:80,templet:function (d) {
+            switch (d.show*1){
+              case 0: return '<span class="layui-btn layui-btn-primary layui-border-black layui-btn-xs">隐藏</span>';
+              case 1: return '<span class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs">显示</span>';
+              default: return '-';
+            }
+          }},
           {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
         done: function () {

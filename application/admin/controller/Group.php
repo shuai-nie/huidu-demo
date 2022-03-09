@@ -2,22 +2,17 @@
 
 namespace app\admin\controller;
 
-use think\App;
-use think\Loader;
-use lib\Jurisdiction;
 use think\Request;
 use util\Tree;
 
 class Group extends Base
 {
     private $model;
-    private $logic;
 
     function _initialize()
     {
         parent::_initialize();
-        $this->model = Loader::model("Group");
-        $this->logic = Loader::model('Group', 'logic');
+        $this->model = model("Group");
     }
 
     public function index()
@@ -49,7 +44,7 @@ class Group extends Base
             }
             return error_json(lang('EditFail', [lang('UserGroup')]));
         }
-        $info = $this->logic->get_find($id);
+        $info = $this->model->find($id);
         return view('', [
             'info' => $info,
         ]);
