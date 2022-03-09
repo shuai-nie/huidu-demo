@@ -43,10 +43,10 @@ class Diction extends Base
                     if($v['data_top_id'] > 0) {
                         $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'data_no'=>$v['data_top_id']])->find();
                         if($DataInfo){
-                            $v['data_name'] = '<span class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
+                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
                         }
                     } else {
-                        $v['data_name'] = '<span class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs">顶级</span>-' . $v['data_name'];
+                        $v['data_name'] = '<span class="layui-border-red layui-btn-xs">顶级</span>-' . $v['data_name'];
                     }
                 }
                 $data[$k] = $v;

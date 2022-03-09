@@ -28,8 +28,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">合作领域</label>
         <div class="layui-input-block">
-            {volist name='resourcesType' id='vo'}
-            <input type="checkbox" name="type[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {volist name='resourcesType' id='vo' key='k'}
+            <input type="radio" name="type" value="{$vo['data_no']}" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} >
             {/volist}
         </div>
     </div>
@@ -38,7 +38,7 @@
         <label class="layui-form-label">合作区域</label>
         <div class="layui-input-block">
             {volist name='resourcesRegion' id='vo'}
-            <input type="checkbox" name="subdivide[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            <input type="checkbox" lay-verify='region' lay-verType="tips" id="region" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
             {/volist}
         </div>
     </div>
@@ -46,8 +46,19 @@
     <div class="layui-form-item">
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <select name="data_no" lay-verify="required" lay-search="" lay-filter="data_no">
+                        {volist name='Subivde' id='vs'}
+                        <option value="{$vs['data_no']}">{$vs['data_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-input-block" id="subdivide">
             {volist name='BusinessSubdivide' id='vo'}
-            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            <input type="checkbox" lay-verify='subdivide' id='subdivides' lay-verType="tips" name="subdivide[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
             {/volist}
         </div>
     </div>
@@ -208,7 +219,6 @@
         form.on('submit(submit)', function (data) {
             data.field.intro = ue.getContent();
             Api.add(data.field, function (res) {
-                console.log(res);
                 if(res.code == 200) {
                     layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 50000});
                 } else {
@@ -305,6 +315,55 @@
             _this.parent().parent().remove();
         })
 
+        form.on('select(data_no)', function(data){
+            $("#subdivide").empty();
+            $.post("{:url('subdivide')}", {data_top_id:data.value}, function (obj) {
+                if(obj.code == 200) {
+                    var _html = '';
+                    $.each(obj.data.data, function (i, v) {
+                        _html += "<input type='checkbox' lay-verify='subdivide' id='subdivide' lay-verType='tips' name='subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                    })
+                    $("#subdivide").append(_html);
+                    form.render();
+                } else {
+                    layer.msg('网络问题，请联系管理员');
+                }
+            })
+        })
+
+        form.verify({
+            region:function () {
+                var checked = document.getElementById("region");
+                if (checked.checked == false) {
+                    return "请至少选择一个合作区域";
+                }
+            },
+            subdivide : function(){
+                var checked = document.getElementById("subdivides");
+                if (checked.checked == false) {
+                    return "请至少选择一个业务细分";
+                }
+            }
+            // otherReq: function (value, item) {
+            //     var $ = layui.$;
+            //     var verifyName = $(item).attr('name')
+            //         , verifyType = $(item).attr('type')
+            //         , formElem = $(item).parents('.layui-form')
+            //         , verifyElem = formElem.find("input[name='region[*]']")
+            //         , isTrue = verifyElem.is(':checked')
+            //         , focusElem = verifyElem.next().find('i.layui-icon');
+            //
+            //         if(!isTrue || !value){
+            //             //定位焦点
+            //             focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
+            //             //对非输入框设置焦点
+            //             focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
+            //                 focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
+            //             }).focus();
+            //              return '必填项不能为空';
+            //         }
+            // }
+        });
 
     });
 </script>

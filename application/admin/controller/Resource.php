@@ -19,10 +19,10 @@ class Resource extends Base
      */
     public function index()
     {
-        if(Request()->isPost()) {
+        if(\request()->isPost()) {
             $map = ['A.status'=>1];
-            $page = Request()->post('page');
-            $limit = Request()->post('limit', Config::get('paginate')['list_rows']);
+            $page = \request()->post('page');
+            $limit = \request()->post('limit', Config::get('paginate')['list_rows']);
             $offset = ($page - 1) * $limit;
             $uid = \request()->post('uid');
             if(!empty($uid)) {
@@ -87,9 +87,9 @@ class Resource extends Base
             $_post = request()->post();
             $contact = [];
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
-            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
+//            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
-            $_post['subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
+            $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['types'] = 2;
@@ -97,9 +97,7 @@ class Resource extends Base
             if($_post['auth'] == 1) {
                 $this->userpublish($_post['uid']);
             }
-
             $state = model('Resource')->save($_post);
-
             $resources_id = model('Resource')->getLastInsID();
             foreach ($_post['contactName'] as $k=>$v){
                 foreach ($_post['contact'][$k] as $k1=>$v1) {
@@ -128,13 +126,15 @@ class Resource extends Base
         $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
         $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION'])->select();
         $DataDicData = $DataDic->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
-        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->order('sort desc')->select();
+        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>0])->order('sort desc')->select();
+        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>$Subivde[0]['data_no']])->order('sort desc')->select();
         return view('', [
             'resourcesType' => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
             'BusinessSubdivide' => $businessSubdivide,
-            'ty' => $this->ty
+            'ty' => $this->ty,
+            'Subivde' => $Subivde
         ]);
     }
 
@@ -167,8 +167,9 @@ class Resource extends Base
             $_post = request()->post();
 
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
-            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
+//            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
 
@@ -199,7 +200,6 @@ class Resource extends Base
                     $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
                 }
-
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
             return error_json(lang('EditFail', [lang('Resource')]));
@@ -209,7 +209,7 @@ class Resource extends Base
         $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
         $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION'])->select();
         $resourceInfo['img'] = explode('|', $resourceInfo['img']);
-        $resourceInfo['type'] = explode('|', $resourceInfo['type']);
+//        $resourceInfo['type'] = explode('|', $resourceInfo['type']);
         $resourceInfo['region'] = explode('|', $resourceInfo['region']);
         $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
         $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
@@ -221,7 +221,20 @@ class Resource extends Base
             $ResourceContact = collection($ResourceContact)->toArray();
         }
         $ResourceContact = \util\Tree::array_group_by($ResourceContact, 'name');
-        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->order('sort desc')->select();
+        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>0])->order('sort desc')->select();
+
+        if($resourceInfo['business_subdivide'][0]){
+            $RESOURCES = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_no'=>$resourceInfo['business_subdivide'][0]])->find();
+            $data_top_id = $RESOURCES['data_top_id'];
+        } else {
+            $data_top_id = $Subivde[0]['data_no'];
+        }
+
+        $businessSubdivide = $DataDic->where([
+            'data_type_no' => 'RESOURCES_SUBDIVIDE',
+            'status' => 1,
+            'data_top_id' => $data_top_id,
+        ])->order('sort desc')->select();
         return view('', [
             'resource' => $resourceInfo,
             'resourcesType' => $resourcesType,
@@ -230,6 +243,8 @@ class Resource extends Base
             'ResourceContact' => $ResourceContact,
             'BusinessSubdivide' => $businessSubdivide,
             'ty' => $this->ty,
+            'Subivde' => $Subivde,
+            'data_top_id' => $data_top_id,
         ]);
     }
 
@@ -310,6 +325,16 @@ class Resource extends Base
                 return success_json('刷新成功', ['time' => time()]);
             }
             return error_json('刷新失败');
+        }
+    }
+
+    public function subdivide()
+    {
+        if(\request()->isPost()){
+            $topId = \request()->post('data_top_id');
+            $DataDic = model('DataDic');
+            $data = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $topId])->field('data_type_no,data_type_name,data_no,data_name')->order('sort desc')->select();
+            return success_json('成功', ['data' => $data]);
         }
     }
 }
