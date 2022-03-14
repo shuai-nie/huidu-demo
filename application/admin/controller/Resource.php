@@ -94,7 +94,7 @@ class Resource extends Base
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['types'] = 2;
             $_post['flush_time'] = time();
-            if($_post['auth'] == 1) {
+            if($_post['auth'] == 1 && $_post['ty'] == 1) {
                 $this->userpublish($_post['uid']);
             }
             $state = model('Resource')->save($_post);
@@ -116,8 +116,10 @@ class Resource extends Base
                 $state1 = model('ResourceContact')->saveAll($contact);
             }
             if($state !== false){
-                $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
-                model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                if(1 == $_post['auth'] && $_post['ty'] == 1 ){
+                    $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
+                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                }
                 return success_json(lang('CreateSuccess', [lang('Resource')]));
             }
             return error_json(lang('CreateFail', [lang('Resource')]));
@@ -173,7 +175,7 @@ class Resource extends Base
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
 
-            if($_post['auth'] == 1){
+            if($_post['auth'] == 1 && $_post['ty'] == 1){
                 $this->userpublish($_post['uid']);
             }
 

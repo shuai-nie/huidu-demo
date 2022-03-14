@@ -62,8 +62,10 @@ class Userinfo extends Base
                 'start_time'   => $time,
                 'flush'        => $Package['flush'],
                 'publish'      => $Package['publish'],
+                'view'      => $Package['publish'],
                 'used_flush'   => $userInfo['used_flush'],
                 'used_publish' => $userInfo['used_publish'],
+                'used_view' => $userInfo['used_view'],
                 'remarks'      => '变更套餐',
             ];
             if($_post['package_id'] == 1){
@@ -113,6 +115,7 @@ class Userinfo extends Base
                 'publish'      => $userInfo['publish'],
                 'used_flush'   => $userInfo['used_flush'],
                 'used_publish' => $userInfo['used_publish'],
+                'used_view' => $userInfo['used_view'],
                 'remarks'      => '延期套餐',
             ]);
             $recharge_id = $UserRecharge->id;
