@@ -255,7 +255,7 @@ return [
         'accessKeySecret' => 'gTPa1W6QGjNePvxvMNivs90lbAviVp',
         'bucket'          => 'huidu-bucket',
         'endpoint'        => 'http://oss-ap-southeast-1.aliyuncs.com',
-        'accessDomain'    => 'https://file.huidu.io/',
+        'accessDomain'    => 'https://huidu-bucket.oss-ap-southeast-1.aliyuncs.com/',//https://file.huidu.io/',
     ),
 
 ];
