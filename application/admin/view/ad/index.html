@@ -82,7 +82,7 @@
             <td>
                 <div class="layui-btn-group" style="overflow:visible;">
                     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
                 </div>
             </td>
         </tr>
@@ -103,12 +103,12 @@
             form = layui.form;
 
         form.on('submit(data-search-btn)', function(data){
-            // table.reload('table', {
-            //     url: "{:url('')}",
-            //     method:'post',
-            //     where : data.field
-            // });
-            // return false;
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field
+            });
+            return false;
         })
 
 
@@ -208,11 +208,11 @@
         });
 
         table.on('tool(think-table)', function(obj){
-            var data=obj.data;
+            var data = obj.data;
             if(obj.event==="edit"){
                 UI.openLayer("{:url('edit')}?id="+data['id']);
             }else if(obj.event==='del'){
-                UI.delete(data['id'],function(res){
+                UI.delete(data['id'], function(res){
                     if(res.code==200){
                         table.reload("think-table");
                     }
