@@ -41,12 +41,10 @@ class Diction extends Base
             foreach ($data as $k => $v) {
                 if($v['data_type_no'] == 'RESOURCES_SUBDIVIDE'){
                     if($v['data_top_id'] > 0) {
-                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'data_no'=>$v['data_top_id']])->find();
+                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE', 'data_no'=>$v['data_top_id']])->find();
                         if($DataInfo){
                             $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
                         }
-                    } else {
-                        $v['data_name'] = '<span class="layui-border-red layui-btn-xs">顶级</span>-' . $v['data_name'];
                     }
                 }
                 $data[$k] = $v;
@@ -83,10 +81,10 @@ class Diction extends Base
             }
             return error_json(lang('CreateFail', [lang('Dictionaries')]) );
         }
-        $subdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'data_top_id'=>0, 'status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
+        $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
         return view('', [
             'typeData' => $this->data,
-            'subdivide' => $subdivide,
+            'resources' => $resources,
         ]);
     }
 
@@ -115,11 +113,11 @@ class Diction extends Base
             return error_json(lang('EditFail', [lang('Dictionaries')]) );
         }
         $data = $DataDic->find($id);
-        $subdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'data_top_id'=>0, 'status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
+        $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
         return view('', [
             'data' => $data,
             'typeData' => $this->data,
-            'subdivide' => $subdivide,
+            'resources' => $resources,
         ]);
     }
 

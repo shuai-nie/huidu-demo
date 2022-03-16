@@ -17,8 +17,8 @@
         <label class="layui-form-label">上级</label>
         <div class="layui-input-block">
             <select name="data_top_id" lay-filter="category_id" lay-search="">
-                <option value="0">顶级</option>
-                {volist name="subdivide" id='vo'}
+                <option value="">请选择</option>
+                {volist name="resources" id='vo'}
                 <option value="{$vo['data_no']}">{$vo['data_name']}</option>
                 {/volist}
             </select>
