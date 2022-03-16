@@ -17,6 +17,28 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">方式</label>
+                    <div class="layui-input-inline">
+                        <select name="type">
+                            <option value="">请选择</option>
+                            <option value="1">投递名片</option>
+                            <option value="2">查看联系方式</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">添加方式</label>
+                    <div class="layui-input-inline">
+                        <select name="type_status">
+                            <option value="">请选择</option>
+                            <option value="1">后台添加</option>
+                            <option value="2">前台添加</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -56,8 +78,8 @@ layui.use(['table', 'form'], function(){
         ,{field: 'username', title: '接收者名称'}
         ,{field: 'type', title: '方式',width:120,templet:function(d){
                 switch (d['type']*1){
-                    case 1:return '投递名片';break;
-                    case 2:return '查看联系方式';break;
+                    case 1:return '<span class="layui-border layui-btn-xs">投递名片</span>';break;
+                    case 2:return '<span class="layui-border-green layui-btn-xs">查看联系方式</span>';break;
                     default: return '-';
                 }
             }}
@@ -67,10 +89,10 @@ layui.use(['table', 'form'], function(){
                 }
                 return '-';
             }}
-        ,{field: 'type_status', title: '添加方式',templet:function(d){
+        ,{field: 'type_status', title: '添加方式',width:100, templet:function(d){
                 switch (d['type_status']*1){
-                    case 1:return '后台添加';break;
-                    case 2:return '前台添加';break;
+                    case 1:return '<span class="layui-border-blue layui-btn-xs">后台添加</span>';break;
+                    case 2:return '<span class="layui-border-orange layui-btn-xs">前台添加</span>';break;
                 }
             }}
         ,{field: 'remarks', title: '备注'}

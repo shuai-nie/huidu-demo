@@ -20,9 +20,18 @@ class Coop extends Base
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
             $uname = \request()->post('uname');
+            $type = \request()->post('type');
+            $type_status = \request()->post('type_status');
             if(!empty($uname)) {
                 $map['A.uname'] = ['like', "%{$uname}%"];
             }
+            if(!empty($type)){
+                $map['A.type'] = $type;
+            }
+            if(!empty($type_status)){
+                $map['A.type_status'] = $type_status;
+            }
+
             $data = model("Cooperation")->alias('A')
                 ->join(model('Resource')->getTable()." B", "A.rid=B.id", "left")
                 ->field("A.*,B.title")
