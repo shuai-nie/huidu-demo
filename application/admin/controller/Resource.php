@@ -123,16 +123,14 @@ class Resource extends Base
             return error_json(lang('CreateFail', [lang('Resource')]));
         }
         $DataDic = model('DataDic') ;
-        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>'1'])->select();
-        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION','status'=>'1'])->select();
+        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>'1'])->order('sort desc')->select();
+        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION','status'=>'1'])->order('sort desc')->select();
         $DataDicData = $DataDic->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
-        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>0])->order('sort desc')->select();
-        $businessSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>$Subivde[0]['data_no']])->order('sort desc')->select();
+        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1, 'data_top_id'=>$resourcesType[0]['data_no']])->order('sort desc')->select();
         return view('', [
             'resourcesType' => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
-            'BusinessSubdivide' => $businessSubdivide,
             'ty' => $this->ty,
             'Subivde' => $Subivde
         ]);
