@@ -53,17 +53,25 @@ class Coop extends Base
      */
     public function create()
     {
+        $userModel = model('user');
         if(Request()->isPost()) {
-            $data = Request()->param();
-            $data['create_id'] = getLoginUserId();
-            $data['update_id'] = getLoginUserId();
+            $data = Request()->post();
+            $userInfo = $userModel->where(['id'=>$data['uid']])->find();
+            $fuserInfo = $userModel->where(['id'=>$data['fuid']])->find();
+            $data['uname'] = $userInfo['username'];
+            $data['username'] = $fuserInfo['username'];
             $state = model("Cooperation")->save($data);
             if($state !== false){
-                return success_json();
+                return success_json(lang('CreateSuccess', [lang('COOPERATION')]));
             }
-            return error_json();
+            return error_json(lang('CreateFail', [lang('COOPERATION')]));
         }
-        return view();
+        $user = model('user')->where(['status'=>1])->field('id,username')->select();
+        $resource = model('resource')->where(['status'=>1,'auth'=>1])->field('id,title')->select();
+        return view('', [
+            'user' => $user,
+            'resource' => $resource,
+        ]);
     }
 
 
@@ -75,34 +83,41 @@ class Coop extends Base
      */
     public function edit($id)
     {
+        $userModel = model('user');
         if(Request()->isPost()) {
-            $data = Request()->param();
-            $data['update_id'] = getLoginUserId();
-            $state = model("Cooperation")->save($data, ['id'=>$data['id']]);
+            $data = Request()->post();
+            $userInfo = $userModel->where(['id'=>$data['uid']])->find();
+            $fuserInfo = $userModel->where(['id'=>$data['fuid']])->find();
+            $data['uname'] = $userInfo['username'];
+            $data['username'] = $fuserInfo['username'];
+            $state = model("Cooperation")->save($data, ['id'=>$id]);
             if($state !== false){
-                return success_json(lang('EditSuccess', [lang('Bannel')]) );
+                return success_json(lang('EditSuccess', [lang('COOPERATION')]) );
             }
-            return error_json();
+            return error_json(lang('EditFail', [lang('COOPERATION')]));
         }
         $data = model("Cooperation")->find($id);
-        return view('edit', ['data'=>$data]);
+        $user = model('user')->where(['status'=>1])->field('id,username')->select();
+        $resource = model('resource')->where(['status'=>1,'auth'=>1])->field('id,title')->select();
+        return view('edit', [
+            'data' => $data,
+            'user' => $user,
+            'resource' => $resource,
+        ]);
     }
-
-
 
     /**
      * 删除指定资源
-     *
      * @param  int  $id
      * @return \think\Response
      */
     public function delete($id)
     {
         $id = Request()->param('id');
-        $state = model("Cooperation")->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
+        $state = model("Cooperation")->save(['status'=>0], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('EditSuccess', [lang('Bannel')]) );
+            return success_json(lang('DeleteSuccess', [lang('COOPERATION')]) );
         }
-        return error_json();
+        return error_json(lang('DeleteFail', [lang('COOPERATION')]) );
     }
 }

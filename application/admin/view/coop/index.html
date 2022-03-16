@@ -1,8 +1,9 @@
 {include file="moban/bone_header"}
 
-<!--<div class="layui-btn-container">
+<div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
-</div>-->
+</div>
+
 <fieldset class="table-search-fieldset">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
@@ -25,10 +26,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
-<!--<script type="text/html" id="barDemo">
+<script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>-->
+</script>
 
 <script>
 layui.use(['table', 'form'], function(){
@@ -53,14 +54,19 @@ layui.use(['table', 'form'], function(){
                 }
             }}
         ,{field: 'username', title: '接收者名称'}
-        ,{field: 'type', title: '方式',templet:function(d){
+        ,{field: 'type', title: '方式',width:120,templet:function(d){
                 switch (d['type']*1){
                     case 1:return '投递名片';break;
                     case 2:return '查看联系方式';break;
                     default: return '-';
                 }
             }}
-        ,{field: 'time', title: '动态时间'}
+        ,{field: 'time', title: '动态时间', width:170, templet: function(d){
+                if(d.time > 10000) {
+                    return "<div>" + layui.util.toDateString(d.time * 1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                }
+                return '-';
+            }}
         ,{field: 'type_status', title: '添加方式',templet:function(d){
                 switch (d['type_status']*1){
                     case 1:return '后台添加';break;
@@ -68,7 +74,7 @@ layui.use(['table', 'form'], function(){
                 }
             }}
         ,{field: 'remarks', title: '备注'}
-        // ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+        ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
     ]);
 
     table.on('tool(think-table)', function(obj){
