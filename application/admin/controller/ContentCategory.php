@@ -22,7 +22,7 @@ class ContentCategory extends Controller
     public function index()
     {
         if(\request()->isPost()){
-            $map = ['is_del'=>1];
+            $map = ['is_del'=>0];
             $name = \request()->post('name');
             if(!empty($name)) {
                 $map['name'] = ['like', "%{$name}%"];

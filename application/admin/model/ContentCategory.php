@@ -13,7 +13,7 @@ class ContentCategory extends Base
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
-    protected $insert = ['is_del' => 1, 'create_id', 'update_id'];
+    protected $insert = ['is_del' => 0, 'create_id', 'update_id'];
     protected $update = ['update_id'];
 
     protected function setCreateIdAttr()
