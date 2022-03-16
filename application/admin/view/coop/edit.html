@@ -92,8 +92,7 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
-            Api.add(data.field, function (res) {
+            Api.edit(data.field, function (res) {
                 console.log(res);
             });
         });
