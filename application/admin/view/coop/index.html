@@ -59,23 +59,23 @@ layui.use(['table', 'form'], function(){
         form = layui.form;
     UI.getPageTable(table, "{:url('')}", [
         {field: 'id', title: 'ID', width:80, fixed: 'left'}
-        ,{field: 'uname', title: '用户名称'}
-        ,{field: 'title', title: '资源'}
-        ,{field: 'u_username', title: 'uid/投递者',templet:function (d) {
+        ,{field: 'uname', title: '用户名称',width:100,}
+        ,{field: 'title', title: '资源',width:120}
+        ,{field: 'u_username', title: 'uid/投递者',width:100,templet:function (d) {
             if(d.uid > 0) {
                 return d.uid + '/' + d.u_username;
             } else {
                 return '-';
             }
             }}
-        ,{field: 'f_username', title: 'uid/接收者', templet:function (d) {
+        ,{field: 'f_username', title: 'uid/接收者',width:100, templet:function (d) {
                 if (d.fuid > 0) {
                     return d.fuid + '/' + d.f_username;
                 } else {
                     return '-';
                 }
             }}
-        ,{field: 'username', title: '接收者名称'}
+        ,{field: 'username', title: '接收者名称',width:120}
         ,{field: 'type', title: '方式',width:120,templet:function(d){
                 switch (d['type']*1){
                     case 1:return '<span class="layui-border layui-btn-xs">投递名片</span>';break;

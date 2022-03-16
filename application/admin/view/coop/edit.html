@@ -44,6 +44,13 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" name="remarks" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -95,6 +102,7 @@
             'uid':"{$data['uid']}",
             'fuid':"{$data['fuid']}",
             'type':"{$data['type']}",
+            'remarks' : "{$data['remarks']}",
         })
 
     });
