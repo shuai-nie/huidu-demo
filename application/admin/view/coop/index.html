@@ -127,7 +127,9 @@ layui.use(['table', 'form'], function(){
         table.reload('table', {
             url: "{:url('')}",
             method:'post',
-            where : data.field
+            where : data.field,
+            page : {curr : 1}
+
         });
         return false;
     })
