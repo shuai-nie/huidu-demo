@@ -10,7 +10,7 @@ class ContentHot extends Controller
     protected $model;
     protected $type = [
         0 => "热门文章",
-        1 => "热门精选",
+//        1 => "热门精选",
     ];
     protected function _initialize()
     {

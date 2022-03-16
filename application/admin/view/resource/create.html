@@ -82,41 +82,7 @@
         </div>
     </div>
 
-    <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label" style="" >联系人</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="contactName[]" required lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" >
-                </div>
-            </div>
-            <div class="layui-inline">
-                <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>
-            </div>
-        </div>
 
-        <div class="layui-form-item contact">
-            <div class="layui-inline">
-                <label class="layui-form-label" style="" >联系方式</label>
-                <div class="layui-input-inline">
-                    <select name="contact[][]" lay-filter="aihao" required lay-verify="required" >
-                        <option value="" >请选择</option>
-                        {volist name="DataDicData" id="vo"}
-                        <option value="{$vo['data_no']}" >{$vo['data_name']}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <div class="layui-input-inline">
-                    <input type="text" name="tel[][]" required lay-verify="required" value="" placeholder="" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <button type="button" class="layui-btn contact-add "  ><i class="layui-icon layui-icon-add-1"></i></button>
-            </div>
-        </div>
-    </div>
 
     <div class="layui-form-item" style="padding-top:10px;">
         <label class="layui-form-label">反馈信息</label>
