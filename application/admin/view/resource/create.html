@@ -47,10 +47,9 @@
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block" id="subdivide">
             {volist name='Subivde' id='vo'}
-            <input type="checkbox" name="subdivide" value="{$vo['data_no']}" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} >
+            <input type="checkbox" name="subdivide[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
             {/volist}
         </div>
-
     </div>
 
     <div class="layui-form-item">
@@ -272,13 +271,12 @@
         })
 
         form.on('radio(type)', function(data){
-            console.log('sssssssss');
             $("#subdivide").empty();
             $.post("{:url('subdivide')}", {data_top_id: data.value}, function (obj) {
                 if(obj.code == 200) {
                     var _html = '';
                     $.each(obj.data.data, function (i, v) {
-                        _html += "<input type='checkbox' lay-verify='subdivide' id='subdivide' lay-verType='tips' name='subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                        _html += "<input type='checkbox' id='subdivide' lay-verType='tips' name='subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
                     })
                     $("#subdivide").append(_html);
                     form.render();

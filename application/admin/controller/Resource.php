@@ -90,6 +90,7 @@ class Resource extends Base
             $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+            unset($_post['subdivide']);
             $_post['types'] = 2;
             $_post['flush_time'] = time();
             if($_post['auth'] == 1 && $_post['ty'] == 1) {
@@ -163,9 +164,7 @@ class Resource extends Base
         $resourceInfo = $Resource->find($id);
         if(request()->isPost()){
             $_post = request()->post();
-
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
-//            $_post['type'] = isset($_post['type']) ? implode('|', $_post['type']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
             $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
@@ -176,23 +175,6 @@ class Resource extends Base
             }
 
             $state = $Resource->save($_post, ['id'=>$id]);
-            $contact = [];
-            foreach ($_post['contactName'] as $k=>$v){
-                foreach ($_post['contact'][$k] as $k1=>$v1) {
-                    if($id && $v && $_post['contact'][$k][$k1] && $_post['tel'][$k][$k1] ) {
-                    array_push($contact, [
-                        'resources_id' => $id,
-                        'name' => $v,
-                        'type'   => $_post['contact'][$k][$k1],
-                        'number' => $_post['tel'][$k][$k1]
-                    ]);
-                    }
-                }
-            }
-//            if($contact){
-//                model('ResourceContact')->where(['resources_id'=>$id])->delete();
-//                $state1 = model('ResourceContact')->saveAll($contact);
-//            }
             if($state !== false){
                 if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 ){
                     $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
@@ -214,32 +196,28 @@ class Resource extends Base
         $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 
         $DataDicData = $DataDic->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
-//        $ResourceContact = model('ResourceContact')->where(['resources_id'=>$resourceInfo->id,'status'=>1])->select();
-//        if($ResourceContact) {
-//            $ResourceContact = collection($ResourceContact)->toArray();
-//        }
-//        $ResourceContact = \util\Tree::array_group_by($ResourceContact, 'name');
-        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>0])->order('sort desc')->select();
+        $Subivde = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_top_id'=>$resourceInfo['type']])->order('sort desc')->select();
+
 
         if($resourceInfo['business_subdivide'][0]){
-            $RESOURCES = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1,'data_no'=>$resourceInfo['business_subdivide'][0]])->find();
+            $RESOURCES = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','status'=>1])->find();
             $data_top_id = $RESOURCES['data_top_id'];
         } else {
             $data_top_id = $Subivde[0]['data_no'];
         }
 
-        $businessSubdivide = $DataDic->where([
-            'data_type_no' => 'RESOURCES_SUBDIVIDE',
-            'status' => 1,
-            'data_top_id' => $data_top_id,
-        ])->order('sort desc')->select();
+//        $businessSubdivide = $DataDic->where([
+//            'data_type_no' => 'RESOURCES_SUBDIVIDE',
+//            'status' => 1,
+//            'data_top_id' => $data_top_id,
+//        ])->order('sort desc')->select();
         return view('', [
             'resource' => $resourceInfo,
             'resourcesType' => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
             'DataDicData' => $DataDicData,
 //            'ResourceContact' => $ResourceContact,
-            'BusinessSubdivide' => $businessSubdivide,
+//            'BusinessSubdivide' => $businessSubdivide,
             'ty' => $this->ty,
             'Subivde' => $Subivde,
             'data_top_id' => $data_top_id,
