@@ -17,6 +17,17 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">优质人脉</label>
+                    <div class="layui-input-inline">
+                        <select name="quality" >
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -58,7 +69,8 @@
                     return '-';
                 }}
             ,{field: 'position', title: '职位',width: 170}
-            ,{field: 'quality', title: '优质人脉',width: 120,templet: '#switchTpl', unresize: true}
+            ,{field: 'business_tag', title: '业务',width: 170}
+            ,{field: 'quality', title: '优质人脉',width: 100,templet: '#switchTpl', unresize: true}
             ,{field: 'greet', title: '默认打招呼语'}
             ,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
         ]);

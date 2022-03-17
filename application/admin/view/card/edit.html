@@ -41,6 +41,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">业务</label>
+        <div class="layui-input-block">
+            {volist name='resources' id='vo'}
+            <input type="checkbox" name="business_tag[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">职位</label>
         <div class="layui-input-block">
             <input type="text" name="position" placeholder="" autocomplete="off" class="layui-input">
@@ -179,7 +188,10 @@
             "logo":"{$data['logo']}",
             "logo_watermark":"{$data['logo_watermark']}",
             "position" : "{$data['position']}",
-            "greet":"{$data['greet']}"
+            "greet":"{$data['greet']}",
+            {volist name='data["business_tag"]' id='vo'}
+            "business_tag[{$vo}]":true,
+            {/volist}
         });
 
         $(".layui-form").on('click', '.contact-add', function(){

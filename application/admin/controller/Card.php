@@ -31,14 +31,32 @@ class Card extends Base
             $offset = ($page - 1) * $limit;
             $CardModel = model("Card");
             $UserModel = model("User");
-            $CardAll = $CardModel->alias('A')
+            $quality = \request()->post('quality');
+            if(is_numeric($quality)) {
+                $map['A.quality'] = $quality;
+            }
+            $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->field('A.*,B.username,B.nickname')
                 ->where($map)->order('A.id desc')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$CardAll]], 200);
+            $dataDic = model('DataDic');
+
+            foreach ($data as $k => $v) {
+                $business_tag = explode('|', $v['business_tag']);
+                $business_arr = [];
+                foreach ($business_tag as $val_tag){
+                    if(is_numeric($val_tag)){
+                        $dataDicInfo = $dataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1,'data_no'=>$val_tag])->field('data_type_no,data_name')->find();
+                        $business_arr[] = $dataDicInfo['data_name'];
+                    }
+                }
+                $v['business_tag'] = implode('|', $business_arr);
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view('');
     }
@@ -69,8 +87,9 @@ class Card extends Base
      */
     public function edit($id)
     {
+        $dataDic = model('DataDic');
         if(\request()->isPost()) {
-            $_post = \request()->param();
+            $_post = \request()->post();
             $contact = [];
             foreach ($_post['contact'] as $k=>$v) {
                 array_push($contact, [
@@ -79,6 +98,7 @@ class Card extends Base
                     'contact_number' => $_post['tel'][$k]
                 ]);
             }
+            $_post['business_tag'] = implode('|', $_post['business_tag']);
             $state = model('Card')->save($_post, ['id'=>$id]);
             model('CardContact')->where(['card_id'=>$id])->delete();
             model('CardContact')->saveAll($contact);
@@ -93,12 +113,15 @@ class Card extends Base
             ->join($UserModel->getTable().' B', 'A.uid=B.id')
             ->field('A.*,B.username,B.nickname')
             ->where(['A.id'=>$id])->find();
+        $data['business_tag'] = explode('|', $data['business_tag']);
         $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
+        $resources = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->order('sort desc')->select();
         $CardContact = model('CardContact')->where(['card_id'=>$data['id']])->select();
         return view('', [
             'data'=>$data,
             'DataDicData' => $DataDicData,
             'CardContact' => $CardContact,
+            'resources' => $resources,
         ]);
     }
 
