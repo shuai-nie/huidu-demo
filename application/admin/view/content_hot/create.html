@@ -17,7 +17,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">文章类型</label>
         <div class="layui-input-block">
-            <select name="type" lay-filter="category_id" lay-search="">
+            <select name="type" lay-filter="category_id" >
                 <option value="">请选择</option>
                 {foreach name="type" id="vt" key="k"}
                 <option value="{$k}">{$vt}</option>
@@ -29,7 +29,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">排序</label>
         <div class="layui-input-block">
-            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+            <input type="text" name="sort" placeholder="排序"  autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -79,9 +79,10 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code == 400){
+                    layer.msg(res.msg, {icon:2});
+                }
             });
         });
 

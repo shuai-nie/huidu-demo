@@ -139,8 +139,6 @@ class Userinfo extends Base
             $data['pwd'] = md5(md5($data['pwd']). $number);
             $data['salt'] = $number;
             $userModel = model('User');
-            $state = $userModel->save($data);
-            $uid = $userModel->id;
             $count = $userModel->where(['mobile'=>$data['mobile'],'status'=>1])->count();
             if($count > 0) {
                 return error_json('手机号已存在,请修改');
@@ -149,6 +147,11 @@ class Userinfo extends Base
             if($count > 0) {
                 return error_json('email已存在,请修改');
             }
+
+
+            $state = $userModel->save($data);
+            $uid = $userModel->id;
+
 
             if($state !== false){
                 $packageInfo = model('Package')->find(1);
