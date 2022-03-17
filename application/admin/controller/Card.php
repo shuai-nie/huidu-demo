@@ -10,6 +10,7 @@ class Card extends Base
     public function _initialize()
     {
         parent::_initialize();
+        $this->assign('meta_title', lang('CARD'));
     }
 
     /**
@@ -122,5 +123,19 @@ class Card extends Base
     public function delete($id)
     {
         //
+    }
+
+    public function quality()
+    {
+        if(\request()->isPost()){
+            $id = \request()->post('id');
+            $name = \request()->post('name');
+            $val = \request()->post('val');
+            $state = model('Card')->save([$name => $val], ['id' => $id]);
+            if($state !== false) {
+                return success_json(lang('EditSuccess', [lang('CARD')] ));
+            }
+            return error_json(lang('EditSuccess', [lang('CARD')]) );
+        }
     }
 }

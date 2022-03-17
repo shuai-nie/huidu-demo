@@ -31,6 +31,10 @@
     <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="quality" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
+</script>
+
 <script>
     layui.use(['table','form'], function(){
         var table = layui.table,
@@ -54,8 +58,8 @@
                     return '-';
                 }}
             ,{field: 'position', title: '职位',width: 170}
+            ,{field: 'quality', title: '优质人脉',width: 120,templet: '#switchTpl', unresize: true}
             ,{field: 'greet', title: '默认打招呼语'}
-
             ,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
         ]);
 
@@ -90,6 +94,16 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
+        form.on('switch(quality)', function(obj){
+            var _val = obj.elem.checked === true ? 1 : 0,
+                _id = this.value;
+            $.post("{:url('quality')}", {id:_id,name:this.name,val:_val}, function(obj){
+                layer.msg(obj.msg, {icon:1});
+            }, 'json');
+            return false;
+        });
+
     });
 </script>
 {include file="moban/bone_footer"}
