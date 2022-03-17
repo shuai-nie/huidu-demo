@@ -78,7 +78,7 @@ class ContentCategory extends Controller
     public function delete($id)
     {
         $id = \request()->param('id');
-        $state = $this->model->save(['is_del'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
+        $state = $this->model->save(['is_del'=>1,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
             return success_json(lang('DeleteSuccess', [lang('ContentCategory')]) );
         }
