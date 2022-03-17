@@ -40,11 +40,11 @@
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'title', title: '文章标题'}
             ,{field: 'url', title: '图片',width:140, templet:function (d) {
-                    if(d.url != '' || d.url != null){
-                        return '<img src="'+d.url+'" height="30" width="100" />';
-                    }
-                    return '-';
-                }}
+                if(d.url != '' || d.url != null){
+                    return '<img src="'+d.url+'" height="30" />';
+                }
+                return '-';
+            }}
             ,{field: 'link_url', title: '跳转地址',width:220}
             ,{field: 'location', title: '跳转方式',width:100,templet:function(d){
                     switch (d['location']*1){

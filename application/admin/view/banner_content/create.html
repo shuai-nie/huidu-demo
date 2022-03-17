@@ -5,7 +5,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">文章ID</label>
         <div class="layui-input-block">
-            <input type="text" name="cid" required lay-verify="required" placeholder="文章ID" autocomplete="off" class="layui-input">
+            <!--<input type="text" name="cid" required lay-verify="required" placeholder="文章ID" autocomplete="off" class="layui-input">-->
+            <select name="cid" lay-verify="required" lay-search="" >
+                <option value="">请选择</option>
+                {volist name='content' id='vo'}
+                <option value="{$vo['id']}">{$vo['title']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
 
@@ -108,7 +114,6 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
             Api.add(data.field, function (res) {
                 console.log(res);
             });

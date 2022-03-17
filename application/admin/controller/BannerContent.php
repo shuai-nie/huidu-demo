@@ -51,7 +51,8 @@ class BannerContent extends Controller
             }
             return success_json(lang('CreateFail', [lang('BannerContent')]) );
         }
-        return view();
+        $content = model('content')->where(['status'=>1])->field('id,title')->select();
+        return view('', ['content'=>$content]);
     }
 
     /**
@@ -71,7 +72,8 @@ class BannerContent extends Controller
             return success_json(lang('EditFail', [lang('BannerContent')]) );
         }
         $data = $this->model->find($id);
-        return view('edit', ['data'=>$data]);
+        $content = model('content')->where(['status'=>1])->field('id,title')->select();
+        return view('edit', ['data'=>$data, 'content'=>$content]);
     }
 
     /**
