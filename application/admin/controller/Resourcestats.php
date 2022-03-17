@@ -19,22 +19,23 @@ class Resourcestats extends Base
             $resources_id = request()->post('resources_id');
             $resources_title = request()->post('resources_title');
             if(!empty($resources_id)) {
-                $map['resources_id'] = $resources_id;
+                $map['A.resources_id'] = $resources_id;
+            }
+            if(!empty($resources_title)) {
+                $map['B.title'] = ['like', "%{$resources_title}%"];
             }
 
             $page = request()->param('page');
             $limit = request()->param('limit');
             $offset = ($page - 1) * $limit;
             $ResourceStats = model('ResourceStats');
-            $data = $ResourceStats->where($map)->limit($offset, $limit)->select();
-            $count = $ResourceStats->where($map)->count();
-            foreach ($data as $k => $val) {
-                if(is_numeric($val['resources_id'])) {
-                    $CacheResource = CacheResource($val['resources_id']);
-                    $val['resources_title'] = $CacheResource['title'];
-                }
-                $data[$k] = $val;
-            }
+            $Resource = model('Resource');
+            $data = $ResourceStats->alias('A')
+                ->join($Resource->getTable().' B', 'A.resources_id=B.id', 'left')
+                ->where($map)->field('A.*,B.title as resource_title')->limit($offset, $limit)->select();
+            $count = $ResourceStats->alias('A')
+                ->join($Resource->getTable().' B', 'A.resources_id=B.id', 'left')
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
