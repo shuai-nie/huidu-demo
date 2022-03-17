@@ -149,6 +149,7 @@ class Userinfo extends Base
                     'start_time' => time(),
                     'flush'      => $packageInfo['flush'],
                     'publish'    => $packageInfo['publish'],
+                    'view'    => $packageInfo['view'],
                     'end_time'   => time() + 30 * 60 * 60 * 24,
                     'remarks' => '注册账户' . $uid,
                 ]);
