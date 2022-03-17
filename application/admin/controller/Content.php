@@ -104,14 +104,21 @@ class Content extends Controller
         $ContentDetail = model('ContentDetail');
         if(Request()->isPost()) {
             $data = Request()->post();
-
             Db::startTrans();
             try {
                 $state = $this->model->save($data, ['id'=>$id]);
                 $ContentDetail = model('ContentDetail');
-                $ContentDetail->save([
-                    'content' => htmlspecialchars_decode($data['content'])
-                ], ['cid' => $id,]);
+                $count = $ContentDetail->where(['cid'=>$id])->count();
+                if($count > 0){
+                    $ContentDetail->save([
+                        'content' => htmlspecialchars_decode($data['content'])
+                    ], ['cid' => $id,]);
+                } else {
+                    $ContentDetail->save([
+                        'content' => htmlspecialchars_decode($data['content']),
+                        'cid' => $id
+                    ]);
+                }
                 Db::commit();
                 return success_json(lang('EditSuccess', [lang('Content')]));
             } catch (\Exception $e) {

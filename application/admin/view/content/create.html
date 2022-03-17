@@ -132,7 +132,11 @@
         form.on('submit(submit)', function (data) {
             data.field.content = ue.getContent();
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code == 200) {
+                    layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
+                }
             });
         });
 
