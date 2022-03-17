@@ -69,7 +69,6 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            data.field.content = ue.getContent();
             Api.edit(data.field, function (res) {
                 console.log(res);
             });
