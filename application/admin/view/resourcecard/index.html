@@ -19,14 +19,14 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">投递UID</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="to_uid" autocomplete="off" class="layui-input">
+                        <input type="text" name="from_uid" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">接收UID</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="from_uid" autocomplete="off" class="layui-input">
+                        <input type="text" name="to_uid" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
@@ -63,12 +63,12 @@ layui.use(['table','form'], function(){
 
     UI.getPageTable(table, "{:url('')}", [
         {field: 'id', title: 'ID', width:80, fixed: 'left'}
-        ,{field: 'resources_title', title: '资源ID', width:130}
-        ,{field: 'to_uid', title: '接收用户ID', width:130}
+        ,{field: 'resources_id', title: '资源ID', width:80}
+        ,{field: 'resource_title', title: '资源title', width:130}
+        ,{field: 'to_uid', title: '接收用户ID', width:120}
         ,{field: 'to_username', title: '接收用户', width:130}
-        ,{field: 'from_uid', title: '投递用户ID', width:130}
-        ,{field: 'form_username', title: '投递用户', width:130}
-        // ,{field: 'card_id', title: '投递名片ID', width:130}
+        ,{field: 'from_uid', title: '投递用户ID', width:120}
+        ,{field: 'from_username', title: '投递用户', width:130}
         ,{field: 'greet', title: '打招呼语', width:130}
         ,{field: 'read_status', title: '状态',width:70,templet:function (d) {
                 switch (d.read_status*1){

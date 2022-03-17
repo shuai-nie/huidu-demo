@@ -26,28 +26,31 @@ class Resourcecard extends Base
             $from_uid = request()->post('from_uid');
             $read_status = request()->post('read_status');
             if(!empty($resources_id)) {
-                $map['resources_id'] = $resources_id;
+                $map['A.resources_id'] = $resources_id;
             }
             if(!empty($to_uid)) {
-                $map['to_uid'] = $to_uid;
+                $map['A.to_uid'] = $to_uid;
             }
             if(!empty($from_uid)) {
-                $map['from_uid'] = $from_uid;
+                $map['A.from_uid'] = $from_uid;
             }
             if(!empty($read_status)) {
-                $map['read_status'] = $read_status;
+                $map['A.read_status'] = $read_status;
             }
             $ResourceCard = model('ResourceCard');
-            $data = $ResourceCard->where($map)->limit($offset, $limit)->order('id desc')->select();
-            $count = $ResourceCard->where($map)->count();
-            foreach ($data as $k => $val) {
-                if(is_numeric($val['resources_id'])) {
-                    $CacheResource = CacheResource($val['resources_id']);
-                    $val['resources_title'] = $CacheResource['title'];
-                }
-
-                $data[$k] = $val;
-            }
+            $User = model('User');
+            $resource = model('resource');
+            $data = $ResourceCard->alias('A')
+                ->join($User->getTable(). ' B', 'A.to_uid=B.id', 'left')
+                ->join($User->getTable(). ' C', 'A.from_uid=C.id', 'left')
+                ->join($resource->getTable(). ' D', 'A.resources_id=D.id', 'left')
+                ->field('A.*,B.username as to_username,C.username as from_username,D.title as resource_title')
+                ->where($map)->limit($offset, $limit)->order('id desc')->select();
+            $count = $ResourceCard->alias('A')
+                ->join($User->getTable(). ' B', 'A.to_uid=B.id', 'left')
+                ->join($User->getTable(). ' C', 'A.from_uid=C.id', 'left')
+                ->join($resource->getTable(). ' D', 'A.resources_id=D.id', 'left')
+                ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
