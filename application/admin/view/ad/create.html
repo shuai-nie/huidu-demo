@@ -225,21 +225,18 @@
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-    <!-- <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
-    </div> -->
+
     </form>
-<!--</div>-->
+
 
 <script>
     //Demo
-    layui.use(['form','upload','laydate'], function () {
+    layui.use(['form','upload','laydate','jquery','layer'], function () {
         var form = layui.form,
             upload = layui.upload,
-            laydate = layui.laydate;
+            laydate = layui.laydate,
+            $ = layui.jquery,
+            layer = layui.layer;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept='images';
@@ -345,12 +342,20 @@
         laydate.render({elem: '#begin3',type: 'datetime'});
         laydate.render({elem: '#end3',type: 'datetime'});
 
+
+
         //监听提交
         form.on('submit(submit)', function (data) {
-            Api.add(data.field, function (res) {
-            });
+            $.post("", data.field, function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg,{icon:1,offset: ['100px', '50px']}, function(){
+                        parent.window.location.href="{:url('index')}";
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px']});
+                }
+            }, 'json');
+            return false;
         });
-
-
     });
 </script>

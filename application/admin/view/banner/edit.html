@@ -109,11 +109,17 @@
         });
 
 
-
-
         form.on('submit(submit)', function (data) {
-
-            Api.edit(data.field, function (res) {});
+            $.post("", data.field, function (res) {
+                if (res.code == 200) {
+                    layer.msg(res.msg,{icon:1,offset: ['100px', '50px']}, function(){
+                        parent.window.location.href="{:url('index')}";
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px']});
+                }
+            }, 'json');
+            return false;
         });
 
 

@@ -40,7 +40,7 @@
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
-                        table.reload("table");
+                        window.location.href="{:url('index')}";
                     }
                 });
             }
