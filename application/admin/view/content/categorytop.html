@@ -6,7 +6,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" disabled placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="title" disabled placeholder="标题" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">置顶排序</label>
         <div class="layui-input-block">
-            <input type="text" name="category_sort" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" name="category_sort" required lay-verify="required" placeholder="置顶排序" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -69,7 +69,6 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            data.field.content = ue.getContent();
             Api.edit(data.field, function (res) {
                 console.log(res);
             });

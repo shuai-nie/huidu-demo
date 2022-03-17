@@ -159,7 +159,7 @@ class Content extends Controller
             $state = $this->model->save([
                 'home_top' => $_post['home_top'],
                 'home_sort' => $_post['home_sort'],
-            ]);
+            ], ['id'=>$id]);
             if($state !== false){
                 return success_json(lang('TopSuccess', [lang('Content')]) );
             }
@@ -176,7 +176,7 @@ class Content extends Controller
             $state = $this->model->save([
                 'category_top' => $_post['category_top'],
                 'category_sort' => $_post['category_sort'],
-            ]);
+            ], ['id'=>$id]);
             if($state !== false){
                 return success_json(lang('TopSuccess', [lang('Content')]) );
             }
