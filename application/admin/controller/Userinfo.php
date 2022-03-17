@@ -140,6 +140,15 @@ class Userinfo extends Base
             $userModel = model('User');
             $state = $userModel->save($data);
             $uid = $userModel->id;
+            $count = $userModel->where(['mobile'=>$data['mobile'],'status'=>1])->count();
+            if($count > 0) {
+                return error_json('手机号已存在,请修改');
+            }
+            $count = $userModel->where(['email'=>$data['email'],'status'=>1])->count();
+            if($count > 0) {
+                return error_json('email已存在,请修改');
+            }
+
             if($state !== false){
                 $packageInfo = model('Package')->find(1);
                 $UserRechargeModel = model('UserRecharge');
@@ -158,9 +167,9 @@ class Userinfo extends Base
                     'uid' => $uid,
                     'user_recharge_id' => $UserRechargeId
                 ]);
-                return success_json();
+                return success_json(lang('CreateSuccess', [ lang('User')]));
             }
-            return error_json();
+            return error_json(lang('CreateFail', [ lang('User')]));
         }
         return view();
     }
@@ -180,9 +189,9 @@ class Userinfo extends Base
             }
             $state = $UserModel->allowField(true)->save($data, ['id'=>$UserInfo->uid]);
             if($state !== false){
-                return success_json();
+                return success_json(lang('EditSuccess', [ lang('User')]));
             }
-            return error_json();
+            return error_json(lang('EditFail', [ lang('User')]));
         }
         return view('', [
             'UserInfo' => $UserArr
