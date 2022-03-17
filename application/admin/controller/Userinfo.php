@@ -50,7 +50,7 @@ class Userinfo extends Base
         $userInfo = model("UserInfo")->alias('A')
             ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
             ->join(model('User')->getTable()." C", 'C.id=A.uid')
-            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish')
+            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish,used_view')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
