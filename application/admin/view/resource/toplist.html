@@ -46,13 +46,13 @@
             ,{field: 'title', title: '标题'}
             ,{field: 'top_start_time', title: '置顶开始时间',width:170,sort:'true',templet: function (d) {
                     if(d.top_start_time > 10000) {
-                        return layui.util.toDateString(d.top_start_time*1000, 'yyyy-MM-dd');
+                        return layui.util.toDateString(d.top_start_time*1000, 'yyyy-MM-dd HH:mm:ss');
                     }
                     return '-';
                 }}
             ,{field: 'top_end_time', title: '结束时间',width:170,sort:'true',templet: function (d) {
                     if(d.top_end_time > 10000) {
-                        return layui.util.toDateString(d.top_end_time*1000, 'yyyy-MM-dd');
+                        return layui.util.toDateString(d.top_end_time*1000, 'yyyy-MM-dd HH:mm:ss');
                     }
                     return '-';
                 }}

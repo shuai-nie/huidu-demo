@@ -38,6 +38,7 @@
 
         laydate.render({
             elem: '#test6'
+            ,type: 'datetime'
             ,range: ['#test-startDate-1', '#test-endDate-1']
         });
 
@@ -78,7 +79,7 @@
         form.on('submit(submit)', function (data) {
             Api.edit(data.field, function (res) {
                 if(res.code == 200) {
-                    layer.msg(res.msg, {icon:2,offset: ['100px', '50px'],time: 5000});
+                    layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
                 } else {
                     layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
                 }
