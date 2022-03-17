@@ -75,6 +75,7 @@ class Content extends Controller
 
             Db::startTrans();
             try {
+                $data['home_sort'] = 0;
                 $state = $this->model->save($data);
                 $cid = $this->model->id;
                 $ContentDetail = model('ContentDetail');
