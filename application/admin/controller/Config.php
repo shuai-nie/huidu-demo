@@ -43,6 +43,10 @@ class Config extends Base
     {
         if (request()->isPost()) {
             $params= request()->param();
+            if($params['key'] == 'disclaimer' || $params['key'] == 'disclaimer_all'){
+                $params['value'] = htmlspecialchars_decode($params['value']);
+            }
+
             $state = model('Config')->save($params, ['id'=>$id]);
             if ($state !== false) {
                 return success_json();
