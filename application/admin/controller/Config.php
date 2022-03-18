@@ -41,9 +41,10 @@ class Config extends Base
 
     public function edit($id)
     {
+        $info = model('Config')->find($id);
         if (request()->isPost()) {
             $params= request()->param();
-            if($params['key'] == 'disclaimer' || $params['key'] == 'disclaimer_all'){
+            if($info['key'] == 'disclaimer' || $info['key'] == 'disclaimer_all'){
                 $params['value'] = htmlspecialchars_decode($params['value']);
             }
 
@@ -53,7 +54,6 @@ class Config extends Base
             }
             return error_json();
         }
-        $info = model('Config')->find($id);
         return view('', [
             'info' => $info,
         ]);
