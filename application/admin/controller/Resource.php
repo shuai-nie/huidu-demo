@@ -174,13 +174,13 @@ class Resource extends Base
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['intro'] = htmlspecialchars_decode($_post['intro']);
-            if($_post['auth'] == 1 && $_post['ty'] == 1){
+            if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 && $_post['ty'] == 1){
                 $this->userpublish($_post['uid']);
             }
 
             $state = $Resource->save($_post, ['id'=>$id]);
             if($state !== false){
-                if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 ){
+                if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 && $_post['ty'] == 1 ){
                     $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
                 }
