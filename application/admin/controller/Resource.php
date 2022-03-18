@@ -43,7 +43,7 @@ class Resource extends Base
             $data = model("Resource")->alias('A')
                 ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
                 ->where($map)->field('A.*,B.username')
-                ->order('A.top_end_time desc,A.id desc')->limit($offset, $limit)->select();
+                ->order('A.id desc')->limit($offset, $limit)->select();
             $count = model("Resource")->alias('A')
                 ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
                 ->where($map)->count();
@@ -59,16 +59,19 @@ class Resource extends Base
                 }
                 $value['type'] = implode('|', $valueType);
 
-                $region = explode('|', $value['region']);
-                $valueRegion = [];
-                foreach ($region as $val){
-                    if (is_numeric($val) ) {
-                        $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no'=>'RESOURCES_REGION','data_no'=>$val])->find();
-                        array_push($valueRegion, !empty($ResourcesType) ? $ResourcesType['data_name'] : '');
+                if($value['region'] == '|'){
+                    $value['region'] = '不限';
+                } else {
+                    $region = explode('|', $value['region']);
+                    $valueRegion = [];
+                    foreach ($region as $val){
+                        if (is_numeric($val) ) {
+                            $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no'=>'RESOURCES_REGION','data_no'=>$val])->find();
+                            array_push($valueRegion, !empty($ResourcesType) ? $ResourcesType['data_name'] : '');
+                        }
                     }
+                    $value['region'] = implode('|', $valueRegion);
                 }
-                $value['region'] = implode('|', $valueRegion);
-
                 $data[$key] = $value;
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
@@ -93,6 +96,7 @@ class Resource extends Base
             unset($_post['subdivide']);
             $_post['types'] = 2;
             $_post['flush_time'] = time();
+            $_post['intro'] = htmlspecialchars_decode($_post['intro']);
             if($_post['auth'] == 1 && $_post['ty'] == 1) {
                 $this->userpublish($_post['uid']);
             }
@@ -169,7 +173,7 @@ class Resource extends Base
             $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
-
+            $_post['intro'] = htmlspecialchars_decode($_post['intro']);
             if($_post['auth'] == 1 && $_post['ty'] == 1){
                 $this->userpublish($_post['uid']);
             }
@@ -186,11 +190,14 @@ class Resource extends Base
         }
 
         $DataDic = model('DataDic');
-        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE'])->select();
-        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION'])->select();
+        $resourcesType = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->select();
+        $resourcesRegion = $DataDic->where(['data_type_no'=>'RESOURCES_REGION','status'=>1])->select();
         $resourceInfo['img'] = explode('|', $resourceInfo['img']);
-//        $resourceInfo['type'] = explode('|', $resourceInfo['type']);
-        $resourceInfo['region'] = explode('|', $resourceInfo['region']);
+        if($resourceInfo['region'] == '|'){
+            $resourceInfo['region'] = array('|');
+        } else {
+            $resourceInfo['region'] = explode('|', $resourceInfo['region']);
+        }
         $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
         $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
         $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
@@ -206,21 +213,14 @@ class Resource extends Base
             $data_top_id = $Subivde[0]['data_no'];
         }
 
-//        $businessSubdivide = $DataDic->where([
-//            'data_type_no' => 'RESOURCES_SUBDIVIDE',
-//            'status' => 1,
-//            'data_top_id' => $data_top_id,
-//        ])->order('sort desc')->select();
         return view('', [
-            'resource' => $resourceInfo,
-            'resourcesType' => $resourcesType,
+            'resource'        => $resourceInfo,
+            'resourcesType'   => $resourcesType,
             'resourcesRegion' => $resourcesRegion,
-            'DataDicData' => $DataDicData,
-//            'ResourceContact' => $ResourceContact,
-//            'BusinessSubdivide' => $businessSubdivide,
-            'ty' => $this->ty,
-            'Subivde' => $Subivde,
-            'data_top_id' => $data_top_id,
+            'DataDicData'     => $DataDicData,
+            'ty'              => $this->ty,
+            'Subivde'         => $Subivde,
+            'data_top_id'     => $data_top_id,
         ]);
     }
 

@@ -28,8 +28,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">合作区域</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="region[|]" value="|" title="不限" lay-filter="region" lay-verType="tips" />
             {volist name='resourcesRegion' id='vo'}
-            <input type="checkbox" id="region" lay-verify="region" lay-verType='tips' name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            <input type="checkbox" id="region" lay-filter="region" lay-verify="region" lay-verType='tips' name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
             {/volist}
         </div>
     </div>
@@ -80,94 +81,6 @@
             </blockquote>
         </div>
     </div>
-
-    {if condition="!empty($ResourceContact)" }
-        {volist name="ResourceContact" id="vo" key="k" }
-            <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">
-            {volist name="$vo" id="v" key="k1" }
-                {if condition="$k1 eq 1"}
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label"  >联系人</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="contactName[{$k-1}]" value="{$v['name']}"  placeholder="请输入" autocomplete="off" class="layui-input" >
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>
-                        <!--<button type="button" class="layui-btn contactNameDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>-->
-                    </div>
-                </div>
-                {/if}
-                <div class="layui-form-item contact ">
-                    <div class="layui-inline">
-                        <label class="layui-form-label" >联系方式</label>
-                        <div class="layui-input-inline">
-                            <select name="contact[{$k-1}][{$k1-1}]" lay-filter="aihao">
-                                <option value="" >请选择</option>
-                                {volist name="DataDicData" id="vo"}
-                                <option value="{$vo['data_no']}" {if condition="$vo['data_no'] eq $v['type']"}selected{/if} >{$vo['data_name']}</option>
-                                {/volist}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <div class="layui-input-inline">
-                            <input type="text" name="tel[{$k-1}][{$k1-1}]" value="{$v['number']}" placeholder="" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        {if condition="$k1 gt 1"}
-                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>
-                        {/if}
-                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>
-                    </div>
-                </div>
-            {/volist}
-            </div>
-        {/volist}
-
-        {else/}
-
-        <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;margin-left:30px;">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="" >联系人</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="contactName[]"  placeholder="请输入" autocomplete="off" class="layui-input" >
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>
-                    <button type="button" class="layui-btn contactNameDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>
-                </div>
-            </div>
-
-            <div class="layui-form-item contact">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="" >联系方式</label>
-                    <div class="layui-input-inline">
-                        <select name="contact[][]" lay-filter="aihao">
-                            <option value="" >请选择</option>
-                            {volist name="DataDicData" id="vo"}
-                            <option value="{$vo['data_no']}" >{$vo['data_name']}</option>
-                            {/volist}
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <div class="layui-input-inline">
-                        <input type="text" name="tel[][]" value="" placeholder="" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>
-                    <button type="button" class="layui-btn contact-add "  ><i class="layui-icon layui-icon-add-1"></i></button>
-                </div>
-            </div>
-        </div>
-
-    {/if}
 
     <div class="layui-form-item" style="margin-top:30px;">
         <label class="layui-form-label">反馈信息</label>
@@ -292,9 +205,7 @@
             {/if}
             {/volist}
 
-
         });
-
 
         $(".layui-form").on("click", ".contactNameAdd", function(){
             var _this = $(this);
@@ -411,6 +322,22 @@
                     layer.msg('网络问题，请联系管理员');
                 }
             })
+        })
+
+        form.on('checkbox(region)', function(data){
+            if(data.value == '|'){
+                form.val('first', {
+                {volist name="resourcesRegion" id="vo"}
+                {if condition="$vo"}
+                "region[{$vo['data_no']}]":false,
+                    {/if}
+                {/volist}
+                });
+            }else {
+                form.val('first', {
+                    "region[|]":false,
+                });
+            }
         })
 
         form.verify({

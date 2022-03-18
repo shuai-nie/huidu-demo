@@ -28,8 +28,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">合作区域</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="region[|]" value="|" title="不限" lay-filter="region" lay-verType="tips" />
             {volist name='resourcesRegion' id='vo'}
-            <input type="checkbox" lay-verify='region' lay-verType="tips" id="region" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
+            <input type="checkbox" lay-verify='region' lay-filter="region" lay-verType="tips" id="region" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
             {/volist}
         </div>
     </div>
@@ -286,19 +287,36 @@
             })
         })
 
-        form.verify({
-            region:function () {
-                var checked = document.getElementById("region");
-                if (checked.checked == false) {
-                    return "请至少选择一个合作区域";
-                }
-            },
-            subdivide : function(){
-                var checked = document.getElementById("subdivides");
-                if (checked.checked == false) {
-                    return "请至少选择一个业务细分";
-                }
+        form.on('checkbox(region)', function(data){
+            if(data.value == '|'){
+                form.val('first', {
+
+                {volist name="resourcesRegion" id="vo"}
+                {if condition="$vo"}
+                "region[{$vo['data_no']}]":false,
+                    {/if}
+                {/volist}
+                });
+            }else {
+                form.val('first', {
+                    "region[|]":false,
+                });
             }
+        })
+
+        form.verify({
+            // region:function () {
+            //     var checked = document.getElementById("region");
+            //     if (checked.checked == false) {
+            //         return "请至少选择一个合作区域";
+            //     }
+            // },
+            // subdivide : function(){
+            //     var checked = document.getElementById("subdivides");
+            //     if (checked.checked == false) {
+            //         return "请至少选择一个业务细分";
+            //     }
+            // }
             // otherReq: function (value, item) {
             //     var $ = layui.$;
             //     var verifyName = $(item).attr('name')
