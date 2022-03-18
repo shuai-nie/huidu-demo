@@ -1,7 +1,6 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">套餐标题</label>
@@ -87,7 +86,6 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
             Api.edit(data.field, function (res) {
                 console.log(res);
             });
