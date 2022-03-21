@@ -174,10 +174,15 @@
         //监听提交
         form.on('submit(submit)', function (data) {
             data.field.intro = ue.getContent();
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
                 if(res.code == 200) {
                     layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 50000});
                 } else {
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
                     layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 50000});
                 }
             });
