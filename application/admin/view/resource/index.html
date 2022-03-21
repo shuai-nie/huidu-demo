@@ -36,6 +36,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">合作领域</label>
+                    <div class="layui-input-inline">
+                        <select name="type" lay-filter="data_type_no" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name="type" id="vt"}
+                            <option value="{$vt['data_no']}">{$vt['data_name']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-inline">
                         <select name="auth" lay-filter="data_type_no" lay-search="" >

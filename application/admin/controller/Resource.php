@@ -20,6 +20,7 @@ class Resource extends Base
      */
     public function index()
     {
+        $DataDic = model('DataDic');
         if(\request()->isPost()) {
             $map = ['A.status'=>1];
             $page = \request()->post('page');
@@ -38,8 +39,12 @@ class Resource extends Base
                 $map['A.auth'] = $auth;
             }
             $ty = \request()->post('ty');
+            $type = \request()->post('type');
             if(!empty($ty)) {
                 $map['A.ty'] = $ty;
+            }
+            if(is_numeric($type)){
+                $map['A.type'] = $type;
             }
             $data = model("Resource")->alias('A')
                 ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
@@ -48,7 +53,7 @@ class Resource extends Base
             $count = model("Resource")->alias('A')
                 ->join(model('User')->getTable()." B", "A.uid=B.id", 'left')
                 ->where($map)->count();
-            $DataDic = model('DataDic');
+
             foreach ($data as $key=>$value) {
                 $type = explode('|', $value['type']);
                 $valueType = [];
@@ -89,8 +94,12 @@ class Resource extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        $this->assign('meta_title', '资源管理');
-        return view('', ['ty' => $this->ty]);
+        $type = $DataDic->field('data_no,data_name')->where(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1])->select();
+        return view('', [
+            'ty' => $this->ty,
+            'type' => $type,
+            'meta_title' => '资源管理'
+        ]);
     }
 
     /**
