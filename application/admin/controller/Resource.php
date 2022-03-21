@@ -9,9 +9,10 @@ use think\Request;
 class Resource extends Base
 {
     protected $ty = [
-        1 => '甲方',
-        2 => '乙方',
+        1 => '我提供',
+        2 => '我需求',
     ];
+
     /**
      * 显示资源列表
      *
@@ -72,10 +73,23 @@ class Resource extends Base
                     }
                     $value['region'] = implode('|', $valueRegion);
                 }
+                if($value['business_subdivide']){
+                    $subdivide = explode('|', $value['business_subdivide']);
+                    $valueSu = array();
+                    foreach ($subdivide as $val) {
+                        if(is_numeric($val)){
+                            $ResourcesSu = $DataDic->field('id,data_name')->where(['data_type_no'=>'RESOURCES_SUBDIVIDE','data_no'=>$val])->find();
+                            array_push($valueSu, !empty($ResourcesSu) ? $ResourcesSu['data_name'] : '');
+                        }
+                    }
+                    $value['business_subdivide'] = implode('|', $valueSu);
+                }
+
                 $data[$key] = $value;
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        $this->assign('meta_title', '资源管理');
         return view('', ['ty' => $this->ty]);
     }
 

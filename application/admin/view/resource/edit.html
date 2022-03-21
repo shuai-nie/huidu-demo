@@ -20,8 +20,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-            <input type="radio" name="ty" value="1" title="甲方" checked>
-            <input type="radio" name="ty" value="2" title="乙方">
+            {foreach name='ty' id='tvo' key='k'}
+            <input type="radio" name="ty" value="{$k}" title="{$tvo}" {if condition="$k eq 1"} checked{/if} >
+            {/foreach}
         </div>
     </div>
 
