@@ -40,7 +40,7 @@
         <label class="layui-form-label">合作领域</label>
         <div class="layui-input-block">
             {volist name='resourcesType' id='vo'}
-            <input type="radio" name="type"  value="{$vo['data_no']}" title="{$vo['data_name']}">
+            <input type="radio" name="type"  value="{$vo['data_no']}" lay-filter="type" title="{$vo['data_name']}">
             {/volist}
         </div>
     </div>
@@ -49,7 +49,7 @@
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block" id="subdivide">
             {volist name='Subivde' id='vo'}
-            <input type="checkbox" name="subdivide[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            <input type="checkbox" name="subdivide[{$vo['data_no']}]"  value="{$vo['data_no']}" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
