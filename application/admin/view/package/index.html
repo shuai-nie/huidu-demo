@@ -18,12 +18,12 @@
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'title', title: '套餐标题'}
-            ,{field: 'publish', title: '发布资源次数'}
-            ,{field: 'flush', title: '刷新资源次数'}
-            ,{field: 'view', title: '查看资源次数'}
-            ,{field: 'level', title: '等级'}
-            ,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+            ,{field: 'title', title: '套餐标题', width:140,}
+            ,{field: 'publish', title: '发布资源次数', width:120}
+            ,{field: 'flush', title: '刷新资源次数', width:120}
+            ,{field: 'view', title: '查看资源次数', width:120}
+            ,{field: 'level', title: '等级', width:120}
+            ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
