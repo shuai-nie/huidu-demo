@@ -58,6 +58,7 @@ class Userinfo extends Base
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
+
             $Package = model('Package')->find($_post['package_id']);
             $time = time();
             $save = [
@@ -72,14 +73,12 @@ class Userinfo extends Base
                 'used_view' => $userInfo['used_view'],
                 'remarks'      => '变更套餐',
             ];
-            if($_post['package_id'] == 1){
-                $save['end_time'] = $time + 30*60*60*24;
+
+            if($_post['time'] > 0){
+                $save['end_time'] = $time + $_post['time'] * 30*60*60*24;
             } else {
-                if($_post['time'] > 0){
-                    $save['end_time'] = $time + 30*60*60*24;
-                } else {
-                    $save['end_time'] = $time + $_post['time'] * 30*60*60*24;
-                }
+                $save['end_time'] = $time + 30*60*60*24;
+
             }
 
             $UserRecharge->save($save);

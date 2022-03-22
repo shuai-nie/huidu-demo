@@ -27,8 +27,12 @@ class Resource extends Base
             $limit = \request()->post('limit', Config::get('paginate')['list_rows']);
             $offset = ($page - 1) * $limit;
             $uid = \request()->post('uid');
+            $username = \request()->post('username');
             if(!empty($uid)) {
                 $map['A.uid'] = $uid;
+            }
+            if(!empty($username)) {
+                $map['B.username'] = ['like', "%{$username}%"];
             }
             $title = \request()->post('title');
             if(!empty($title)) {
@@ -197,16 +201,16 @@ class Resource extends Base
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             $_post['intro'] = htmlspecialchars_decode($_post['intro']);
-            if($resourceInfo['auth'] != $_post['auth'] && $_post['auth'] == 1 && $_post['ty'] == 1){
+            if($resourceInfo['auth'] != $_post['auth'] &&($_post['auth'] == 1 || $_post['auth'] == 2 ) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5) ) {
                 $this->userpublish($_post['uid']);
             }
 
             $state = $Resource->save($_post, ['id'=>$id]);
             if($state !== false){
                 $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
-                if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2 )&& $_post['ty'] == 1 ){
+                if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2 ) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5) ){
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
-                } else if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] != 1 || $_post['auth'] != 2 ) && $_post['ty'] == 1) {
+                } else if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 3 || $_post['auth'] == 4 || $_post['auth'] == 5 ) && $_post['ty'] == 1) {
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setDec('used_publish');
                 }
                 return success_json(lang('EditSuccess', [lang('Resource')]));
