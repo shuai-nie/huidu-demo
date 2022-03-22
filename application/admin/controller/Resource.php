@@ -286,8 +286,13 @@ class Resource extends Base
     public function delete($id)
     {
         if($id != '') {
+            $resourceInfo =  model('Resource')->find($id);
             $state = model('Resource')->save(['status'=>0], ['id'=>$id]);
             if($state !== false){
+                if($resourceInfo['auth'] == 1 || $resourceInfo['auth'] == 2){
+                    $userInfo = model('UserInfo')->where(['uid'=>$resourceInfo['uid']])->find();
+                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                }
                 return success_json(lang('DeleteSuccess', [lang('Resource')]));
             }
             return error_json(lang('DeleteFail', [lang('Resource')]));
