@@ -291,7 +291,7 @@ class Resource extends Base
             if($state !== false){
                 if($resourceInfo['auth'] == 1 || $resourceInfo['auth'] == 2){
                     $userInfo = model('UserInfo')->where(['uid'=>$resourceInfo['uid']])->find();
-                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setDec('used_publish');
                 }
                 return success_json(lang('DeleteSuccess', [lang('Resource')]));
             }
