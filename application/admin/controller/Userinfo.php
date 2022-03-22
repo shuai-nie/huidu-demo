@@ -20,8 +20,12 @@ class Userinfo extends Base
             $page = \request()->post('page');
             $limit = \request()->post('limit', Config::get('paginate')['list_rows']);
             $username = \request()->post('username');
+            $nickname = \request()->post('nickname');
             if(!empty($username)) {
                 $map['E.username'] = ['like', "%{$username}%"];
+            }
+            if(!empty($nickname)) {
+                $map['E.nickname'] = ['like', "%{$nickname}%"];
             }
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')

@@ -51,10 +51,10 @@
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'data_type_name', width:180,title: '类型', templet:function (d) {
                 switch (d.data_type_no){
-                    case "CONTACT_TYPE": return "<span class=\"layui-btn-xs layui-border-orange\">"+d.data_type_name+"</span>";
-                    case "RESOURCES_TYPE": return "<span class=\"layui-btn-xs layui-border-red\">"+d.data_type_name+"</span>";
-                    case "RESOURCES_REGION": return "<span class=\"layui-btn-xs layui-border-black\">"+d.data_type_name+"</span>";
-                    case "RESOURCES_SUBDIVIDE" : return "<span class=\"layui-btn-xs layui-border-blue\">"+d.data_type_name+"</span>";
+                    case "CONTACT_TYPE": return "<span class=\"layui-btn-xs layui-border-orange\">联系方式</span>";
+                    case "RESOURCES_TYPE": return "<span class=\"layui-btn-xs layui-border-red\">资源·合作领域</span>";
+                    case "RESOURCES_REGION": return "<span class=\"layui-btn-xs layui-border-black\">资源·合作区域</span>";
+                    case "RESOURCES_SUBDIVIDE" : return "<span class=\"layui-btn-xs layui-border-blue\">资源·业务细分</span>";
                     default : return '-';
                 }
 

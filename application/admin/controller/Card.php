@@ -28,6 +28,10 @@ class Card extends Base
             if(!empty($name)) {
                 $map['B.username'] = ['like', "%{$name}%"];
             }
+            $nickname = \request()->post('nickname');
+            if(!empty($nickname)) {
+                $map['B.nickname'] = ['like', "%{$nickname}%"];
+            }
             $offset = ($page - 1) * $limit;
             $CardModel = model("Card");
             $UserModel = model("User");

@@ -20,8 +20,12 @@ class Vipconsume extends Base
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
             $username = request()->post('username');
+            $nickname = request()->post('nickname');
             if(!empty($username)) {
                 $map['D.username'] = ['like', "%{$username}%"];
+            }
+            if(!empty($nickname)) {
+                $map['D.nickname'] = ['like', "%{$nickname}%"];
             }
 
             $UserRecharge = model('UserRecharge');

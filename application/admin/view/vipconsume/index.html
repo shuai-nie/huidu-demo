@@ -17,6 +17,13 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="nickname" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -44,7 +51,7 @@
                     }
                     return "-";
                 }}
-            ,{field: 'username', title: '账号/昵称',width:120,templet: function(d){
+            ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
                     return  d.username + '/' + d.nickname ;
                 }}
             ,{field: 'title', title: '套餐',width:120}

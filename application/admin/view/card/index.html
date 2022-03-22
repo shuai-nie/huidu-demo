@@ -10,9 +10,16 @@
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">名称</label>
+                    <label class="layui-form-label">账号</label>
                     <div class="layui-input-inline">
                         <input type="text" name="name" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="nickname" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
@@ -53,7 +60,7 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            ,{field: 'name', title: '账号/昵称',width:130,templet:function (d) {
+            ,{field: 'name', title: '账号/昵称',width:180,templet:function (d) {
                     return d.username + '/' +d.nickname ;
                 }}
             ,{field: 'logo', title: 'logo',width:100, templet:function (d) {
