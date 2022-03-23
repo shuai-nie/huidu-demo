@@ -106,8 +106,8 @@ class Menu extends Base
             $value['open'] = true;
             $data[$key] = $value;
         }
-
         $data = Tree::toLayer($data);
+        array_unshift($data, ['id' => 0, 'pid' => 0, 'name' => '顶级']);
         return json($data, 200);
     }
 }
