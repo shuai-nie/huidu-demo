@@ -34,7 +34,7 @@ class Vipconsume extends Base
             $data = $UserRecharge->alias('A')
                 ->join($Package->getTable(). " C", "C.id=A.package_id")
                 ->join($User->getTable()." D", "A.uid=D.id")
-                ->field('A.id,A.uid,A.package_id,A.start_time,A.end_time,A.used_flush,A.used_publish,A.flush,A.publish,C.title,A.remarks')
+                ->field('A.id,A.uid,A.package_id,A.start_time,A.end_time,A.used_flush,A.used_publish,A.flush,A.publish,C.title,A.remarks,A.view,A.used_view')
                 ->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $UserRecharge->alias('A')
                 ->join($Package->getTable(). " C", "C.id=A.package_id")

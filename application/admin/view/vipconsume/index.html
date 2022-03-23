@@ -55,10 +55,15 @@
                     return  d.username + '/' + d.nickname ;
                 }}
             ,{field: 'title', title: '套餐',width:120}
-            ,{field: 'used_flush', title: '已使用刷新',width:100}
-            ,{field: 'used_publish', title: '已使用发布',width:100}
-            ,{field: 'flush', title: '刷新次数',width:100}
-            ,{field: 'publish', title: '发布次数',width:100}
+            ,{field: 'used_flush', title: '(总/已)刷新',width:140,templet:function(d){
+                return d.flush +'/'+ d.used_flush;
+                }}
+            ,{field: 'used_publish', title: '发布',width:140,templet:function(d){
+                    return d.publish +'/'+ d.used_publish;
+                }}
+            ,{field: 'used_view', title: '查看',width:140,templet:function(d){
+                    return d.view +'/'+ d.used_view;
+                }}
             ,{field: 'start_time', title: '开始时间',width:170,templet: "<div>{{layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
             ,{field: 'end_time', title: '结束时间',width:170,templet: "<div>{{layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss')}}</div>"}
             ,{field: 'remarks', title: '备注'}
