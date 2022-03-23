@@ -96,11 +96,10 @@ class Menu extends Base
             'step'  => 4,
         ]);
 
-        $data = $this->model->where([])->select();
+        $data = $this->model->where([])->field('id,pid,title')->select();
         if($data) {
             $data = collection($data)->toArray();
         }
-
         foreach ($data as  $key => $value) {
             $value['name'] = $value['title'];
             $value['open'] = true;

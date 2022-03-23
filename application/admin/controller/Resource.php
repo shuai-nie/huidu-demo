@@ -128,27 +128,21 @@ class Resource extends Base
                 $this->userpublish($_post['uid']);
             }
             $state = model('Resource')->save($_post);
-            $resources_id = model('Resource')->getLastInsID();
-//            foreach ($_post['contactName'] as $k=>$v){
-//                foreach ($_post['contact'][$k] as $k1=>$v1) {
-//                    if($resources_id && $v && $_post['contact'][$k][$k1] && $_post['tel'][$k][$k1] ) {
-//                    array_push($contact, [
-//                        'resources_id' => $resources_id,
-//                        'name' => $v,
-//                        'type'   => $_post['contact'][$k][$k1],
-//                        'number' => $_post['tel'][$k][$k1]
-//                    ]);
-//                    }
-//                }
-//            }
-//
-//            if($contact){
-//                $state1 = model('ResourceContact')->saveAll($contact);
-//            }
             if($state !== false){
                 if(($_post['auth'] == 1 || $_post['auth'] == 2 ) && $_post['ty'] == 1 ){
                     $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
-                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                    $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
+                    // 加
+                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setInc('used_publish');
+                    model('PackageLog')->save([
+                        'uid' => $_post['uid'],
+                        'type' => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id' => $UserRechargeFind['package_id'],
+                        'resource_id' => model('Resource')->id,
+                        'remarks' => '新建',
+                        'state' => 1,
+                    ]);
                 }
                 return success_json(lang('CreateSuccess', [lang('Resource')]));
             }
@@ -208,10 +202,32 @@ class Resource extends Base
             $state = $Resource->save($_post, ['id'=>$id]);
             if($state !== false){
                 $userInfo = model('UserInfo')->where(['uid'=>$_post['uid']])->find();
+                $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
                 if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2 ) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5) ){
+                    // 加
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setInc('used_publish');
+                    model('PackageLog')->save([
+                        'uid' => $_post['uid'],
+                        'type' => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id' => $UserRechargeFind['package_id'],
+                        'resource_id' => $id,
+                        'remarks' => '编辑',
+                        'state' => 1,
+                    ]);
+
                 } else if($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 3 || $_post['auth'] == 4 || $_post['auth'] == 5 ) && $_post['ty'] == 1) {
+                    // 减
                     model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setDec('used_publish');
+                    model('PackageLog')->save([
+                        'uid' => $_post['uid'],
+                        'type' => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id' => $UserRechargeFind['package_id'],
+                        'resource_id' => $id,
+                        'remarks' => '编辑',
+                        'state' => 2,
+                    ]);
                 }
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
@@ -291,7 +307,18 @@ class Resource extends Base
             if($state !== false){
                 if($resourceInfo['auth'] == 1 || $resourceInfo['auth'] == 2){
                     $userInfo = model('UserInfo')->where(['uid'=>$resourceInfo['uid']])->find();
-                    model('UserRecharge')->where(['id'=>$userInfo['user_recharge_id']])->setDec('used_publish');
+                    $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
+                    // 加
+                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setInc('used_publish');
+                    model('PackageLog')->save([
+                        'uid' =>$resourceInfo['uid'],
+                        'type' => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id' => $UserRechargeFind['package_id'],
+                        'resource_id' => $id,
+                        'remarks' => '删除',
+                        'state' => 1,
+                    ]);
                 }
                 return success_json(lang('DeleteSuccess', [lang('Resource')]));
             }

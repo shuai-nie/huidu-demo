@@ -1,0 +1,121 @@
+{include file="moban/bone_header"}
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="type" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="1">资源</option>
+                            <option value="2">刷新</option>
+                            <option value="3">查看</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="state" lay-filter="data_type_no" lay-search="" >
+                            <option value="">请选择</option>
+                            {foreach name="state" id="vo" key="k"}
+                            <option value="{$k}">{$vo}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script>
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'username', title: '账号', width:140,}
+            ,{field: 'type', title: '类型', width:140,templet(d){
+                switch (d.type * 1) {
+                    case 1: return '<span class="layui-border-green layui-btn-xs">资源</span>';break;
+                    case 2: return '<span class="layui-border-black layui-btn-xs">刷新</span>';break;
+                    case 2: return '<span class="layui-border-blue layui-btn-xs">查看</span>';break;
+                    default: return '-';break;
+                }
+            }}
+            ,{field: 'package_title', title: '套餐', width:140,}
+            ,{field: 'state', title: '状态', width:60,templet(d){
+                switch (d.state * 1) {
+                    case 1: return '<span class="layui-border-green layui-btn-xs">増</span>';break;
+                    case 2: return '<span class="layui-border-red layui-btn-xs">减</span>';break;
+                    default: return '-';break;
+                }
+            }}
+            ,{field: 'web', title: '端', width:80,templet(d){
+                switch (d.web * 1) {
+                    case 1: return '<span class="layui-border-black layui-btn-xs">后端</span>';break;
+                    case 2: return '<span class="layui-border-green layui-btn-xs">前端</span>';break;
+                    default: return '-';break;
+                }
+            }}
+            ,{field: 'remarks', title: '备注', width:140,}
+            ,{field: 'create_time', title: '备注', width: 170}
+        ]);
+
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}", 600, 450);
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
+
+    });
+</script>
+{include file="moban/bone_footer"}

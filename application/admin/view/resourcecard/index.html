@@ -108,7 +108,8 @@ layui.use(['table','form'], function(){
                 to_uid: data.field.to_uid,
                 from_uid: data.field.from_uid,
                 read_status: data.field.read_status,
-            }
+            },
+            page : {curr : 1}
         });
         return false;
     })

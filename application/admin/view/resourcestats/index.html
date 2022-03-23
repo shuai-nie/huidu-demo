@@ -78,7 +78,8 @@ layui.use(['table','form'], function(){
             where : {
                 resources_id: data.field.resources_id,
                 resources_title: data.field.resources_title,
-            }
+            },
+            page : {curr : 1}
         });
         return false;
     })

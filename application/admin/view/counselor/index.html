@@ -69,7 +69,8 @@
                 method:'post',
                 where : {
                     name: data.field.name
-                }
+                },
+                page : {curr : 1}
             });
             return false;
         })
