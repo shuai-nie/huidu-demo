@@ -42,7 +42,8 @@ class Userinfo extends Base
 
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
-        return view();
+        $id = \request()->get('id', 0);
+        return view('', ['id' => $id]);
     }
 
     // 变更套餐
@@ -215,6 +216,17 @@ class Userinfo extends Base
             }else{
                 return success_json();
             }
+        }
+    }
+
+    public function delete($id)
+    {
+        if($id > 0 ){
+            $state = model('User')->save(['status' => 0], ['id' => $id]);
+            if($state !== false) {
+                return success_json(lang('DeleteSuccess', [lang('User')] ));
+            }
+            return error_json(lang('DeleteFail', [lang('User')]) );
         }
     }
 
