@@ -126,7 +126,7 @@
             } else if(obj.event ==='edit') {
                 UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
             } else if(obj.event ==='del') {
-                UI.delete(data['id'], function(res){
+                UI.delete(data['uid'], function(res){
                     if(res.code==200){
                         table.reload("table");
                     }
