@@ -120,7 +120,7 @@ class Card extends Base
         $data['business_tag'] = explode('|', $data['business_tag']);
         $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
         $resources = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->order('sort desc')->select();
-        $CardContact = model('CardContact')->where(['card_id'=>$data['id']])->select();
+        $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
         return view('', [
             'data'=>$data,
             'DataDicData' => $DataDicData,
