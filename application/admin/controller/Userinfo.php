@@ -21,11 +21,15 @@ class Userinfo extends Base
             $limit = \request()->post('limit', Config::get('paginate')['list_rows']);
             $username = \request()->post('username');
             $nickname = \request()->post('nickname');
+            $package_id = \request()->post('package_id');
             if(!empty($username)) {
                 $map['E.username'] = ['like', "%{$username}%"];
             }
             if(!empty($nickname)) {
                 $map['E.nickname'] = ['like', "%{$nickname}%"];
+            }
+            if(!empty($package_id)) {
+                $map['B.package_id'] = $package_id;
             }
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')
@@ -43,7 +47,11 @@ class Userinfo extends Base
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         $id = \request()->get('id', 0);
-        return view('', ['id' => $id]);
+        $packageAll = model('Package')->where(['status'=>1])->field('id,title')->select();
+        return view('', [
+            'id' => $id,
+            'packageAll' => $packageAll
+        ]);
     }
 
     // 变更套餐

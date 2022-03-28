@@ -24,6 +24,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">套餐</label>
+                    <div class="layui-input-inline">
+                        <select name="package_id" lay-filter="package_id" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name="packageAll" id='vo'}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
 
