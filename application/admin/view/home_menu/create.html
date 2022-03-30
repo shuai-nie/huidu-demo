@@ -1,0 +1,75 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务</label>
+        <div class="layui-input-block">
+            <select name="business_type" lay-verify="required" lay-search="" >
+                <option value="">请选择</option>
+                {volist name='ResourceType' id='vo'}
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='logo']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+
+        form.val('first', {});
+
+
+
+
+        form.on('submit(submit)', function (data) {
+
+            Api.add(data.field, function (res) {});
+        });
+
+
+    });
+</script>
