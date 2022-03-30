@@ -1,0 +1,105 @@
+{include file="moban/bone_header"}
+
+<!--<div class="layui-btn-container">
+    <button class="layui-btn" data-type="create">添加</button>
+</div>-->
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="nickname" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="quality" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
+</script>
+
+<script>
+    layui.use(['table','form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'uid', title: '账号/昵称',width:180, templet:function (d) {
+                    return d.username + '/' + d.nickname;
+                }}
+            ,{field: 'name', title: '名片名', width:140}
+            ,{field: 'title', title: '资源名', width:140}
+            ,{field: 'create_time', title: '时间', width:170}
+            //,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
+        ]);
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
+
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}");
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('switch(quality)', function(obj){
+            var _val = obj.elem.checked === true ? 1 : 0,
+                _id = this.value;
+            $.post("{:url('quality')}", {id:_id,name:this.name,val:_val}, function(obj){
+                layer.msg(obj.msg, {icon:1});
+            }, 'json');
+            return false;
+        });
+
+    });
+</script>
+{include file="moban/bone_footer"}
