@@ -69,6 +69,17 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">是否滚动</label>
+                    <div class="layui-input-inline">
+                        <select name="home_roll" lay-filter="data_type_no" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -82,6 +93,11 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>
+</script>
+
+<script type="text/html" id="home_roll">
+    <!-- 这里的 checked 的状态只是演示 -->
+    <input type="checkbox" name="home_roll" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="home_roll" {{ d.home_roll == 1 ? 'checked' : '' }}>
 </script>
 
 <script>
@@ -113,6 +129,7 @@ layui.use(['table','form'], function(){
         ,{field: 'region', title: '合作区域',width:110}
         ,{field: 'business_subdivide', title: '业务细分',width:140}
         ,{field: 'feedback', title: '反馈信息',width:140}
+        ,{field: 'home_roll', title: '首页滚动',width:120,templet:'#home_roll'}
         ,{field: 'auth', title: '状态',width:80,align:'center',templet:function (d) {
                 switch (d.auth*1){
                     case 1:return '<span class="layui-btn-xs layui-border-orange">通过</span>';break;
@@ -176,6 +193,18 @@ layui.use(['table','form'], function(){
         var type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
+
+    form.on('switch(home_roll)', function(obj){
+        var _val = obj.elem.checked ? 1 : 0;
+        $.post("{:url('roll')}?id="+this.value, {value:_val, name:this.name}, function(obj){
+            if(obj.code == 200){
+                layer.msg(obj.msg, {icon:1})
+            }else {
+                layer.msg(obj.msg, {icon:5})
+            }
+        }, 'json');
+    });
+
 });
 </script>
 {include file="moban/bone_footer"}
