@@ -25,6 +25,18 @@
         </div>
     </div>
 
+    <div class="layui-form-item" style="display:none;" id="data_top_id_REPORT_DETAIL_CAUSE" >
+        <label class="layui-form-label">上级</label>
+        <div class="layui-input-block">
+            <select name="data_top_id" lay-filter="category_id" lay-search="">
+                <option value="">请选择</option>
+                {volist name="reportDetailCauseAll" id='vo'}
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
@@ -98,10 +110,20 @@
         });
 
         form.on('radio(data_type_no)', function(data){
-            if(data.value === 'RESOURCES_SUBDIVIDE'){
-                $("#data_top_id").show();
-            } else {
-                $("#data_top_id").hide();
+            $("#data_top_id").hide();
+            $("#data_top_id_REPORT_TYPE").hide();
+            switch (data.value) {
+                case 'RESOURCES_SUBDIVIDE':
+                    $("#data_top_id").show();
+                    break;
+                case 'REPORT_TYPE':
+                    //$("#data_top_id_REPORT_TYPE").show();
+                    break;
+                case 'REPORT_DETAIL_CAUSE':
+                    $("#data_top_id_REPORT_DETAIL_CAUSE").show();
+                    break;
+                default:
+                    break;
             }
         });
 

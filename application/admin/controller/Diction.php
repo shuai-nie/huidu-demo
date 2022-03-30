@@ -12,6 +12,10 @@ class Diction extends Base
         'RESOURCES_TYPE'   => ['type' => 'RESOURCES_TYPE', 'title' => '资源·合作领域'],
         'RESOURCES_REGION' => ['type' => 'RESOURCES_REGION', 'title' => '资源·合作区域'],
         'RESOURCES_SUBDIVIDE' => ['type' => 'RESOURCES_SUBDIVIDE', 'title' => '资源·业务细分'],
+        'REPORT_TYPE' => ['type'=>'REPORT_TYPE', 'title'=>'举报类型'],
+        'REPORT_DETAIL_CAUSE' => ['type'=>'REPORT_DETAIL_CAUSE', 'title'=>'举报详细原因'],
+        'RESOURCE_INDUSTRY' => ['type'=>'RESOURCE_INDUSTRY', 'title'=>'资源·行业类型'],
+        'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'title'=>'资源·行业细分'],
 
     ];
 
@@ -82,9 +86,11 @@ class Diction extends Base
             return error_json(lang('CreateFail', [lang('Dictionaries')]) );
         }
         $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
+        $reportDetailCauseAll = $DataDic->where(['data_type_no'=>'REPORT_DETAIL_CAUSE','status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
         return view('', [
             'typeData' => $this->data,
             'resources' => $resources,
+            'reportDetailCauseAll' => $reportDetailCauseAll
         ]);
     }
 
