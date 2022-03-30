@@ -41,6 +41,7 @@ return [
 
     'ContentHot' => '热门/精选',
     'HomeMenu' => '菜单·资源类型',
+    'ResourceFormTemplate' => '资源·表单模板',
 
 
 ];

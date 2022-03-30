@@ -8,7 +8,7 @@ use think\Request;
 
 class Resource extends Base
 {
-    protected $ty = [
+    public $ty = [
         1 => '我提供',
         2 => '我需求',
     ];

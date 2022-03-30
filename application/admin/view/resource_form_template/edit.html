@@ -4,14 +4,35 @@
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
     <div class="layui-form-item">
-        <label class="layui-form-label">业务</label>
+        <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-            <select name="business_type" lay-verify="required" lay-search="" >
-                <option value="">请选择</option>
-                {volist name='ResourceType' id='vo'}
-                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
-                {/volist}
-            </select>
+            {foreach name='ty' id='vo' key='k'}
+            <input type="radio" name="ty" value="{$k}" title="{$vo}" {if condition="$k eq 1"}checked{/if}>
+            {/foreach}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">表单类型</label>
+        <div class="layui-input-block">
+            {volist name='form_type' id='vo' key='k'}
+            <input type="radio" name="form_type" value="{$k}" title="{$vo}" checked>
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">表单标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="form_title" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">必填</label>
+        <div class="layui-input-block">
+            <input type="radio" name="fill_flag" value="0" title="否" checked>
+            <input type="radio" name="fill_flag" value="1" title="是">
         </div>
     </div>
 
@@ -60,10 +81,10 @@
         });
 
 
-        form.val('first', {
-            "business_type":"{$HomeMenuInfo['business_type']}",
-            "sort":"{$HomeMenuInfo['sort']}",
-        });
+        form.val('first', {});
+
+
+
 
         form.on('submit(submit)', function (data) {
 
