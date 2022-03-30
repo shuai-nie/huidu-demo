@@ -105,6 +105,13 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">首页滚动</label>
+        <div class="layui-input-block">
+            <input type="radio" name="home_roll" value="0" title="否" checked >
+            <input type="radio" name="home_roll" value="1" title="是">
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">审核状态</label>
@@ -192,6 +199,7 @@
             'auth':"{$resource['auth']}",
             "type":"{$resource['type']}",
             "data_no":"{$data_top_id}",
+            "home_roll":"{$resource['home_roll']}",
             {volist name="$resource['region']" id="vo"}
             "region[{$vo}]":true,
             {/volist}
