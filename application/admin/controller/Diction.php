@@ -44,19 +44,46 @@ class Diction extends Base
             $count = $DataDic->where($map)->count();
             foreach ($data as $k => $v) {
                 if($v['data_type_no'] == 'RESOURCES_SUBDIVIDE'){
-                    if($v['data_top_id'] > 0) {
+                    if(is_numeric($v['data_top_id'])) {
                         $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE', 'data_no'=>$v['data_top_id']])->find();
                         if($DataInfo){
                             $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
                         }
                     }
                 }
+
+                if($v['data_type_no'] == 'REPORT_DETAIL_CAUSE'){
+                    if(is_numeric($v['data_top_id'])) {
+                        $DataInfo = $DataDic->where(['data_type_no'=>'REPORT_TYPE', 'data_no'=>$v['data_top_id']])->find();
+                        if($DataInfo){
+                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
+                        }
+                    }
+                }
+                if($v['data_type_no'] == 'RESOURCE_INDUSTRY') {
+                    if(is_numeric($v['data_top_id'])) {
+                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'id'=>$v['data_top_id']])->find();
+                        if($DataInfo){
+                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
+                        }
+                    }
+                }
+                if($v['data_type_no'] == 'RESOURCE_INDUSTRY_SUBDIVIDE') {
+                    if(is_numeric($v['data_top_id'])) {
+                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCE_INDUSTRY', 'data_no'=>$v['data_top_id']])->find();
+                        if($DataInfo){
+                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
+                        }
+                    }
+                }
+
                 $data[$k] = $v;
             }
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         return view('', [
             'data_type' => $this->data,
+            'meta_title' => '字典',
         ]);
     }
 
@@ -119,11 +146,9 @@ class Diction extends Base
             return error_json(lang('EditFail', [lang('Dictionaries')]) );
         }
         $data = $DataDic->find($id);
-        $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->field('data_type_no,data_top_id,data_no,data_name')->select();
         return view('', [
             'data' => $data,
             'typeData' => $this->data,
-            'resources' => $resources,
         ]);
     }
 
@@ -142,6 +167,14 @@ class Diction extends Base
             }
             return error_json(lang('DeleteFail', [lang('Dictionaries')]) );
         }
+    }
+
+    public function data_top_id()
+    {
+        $param = \request()->param();
+        $DataDic = model('DataDic');
+        $data = $DataDic->where(['data_type_no' => $param['data_type'], 'status' => 1])->select();
+        return success_json('成功', $data);
     }
 
 }

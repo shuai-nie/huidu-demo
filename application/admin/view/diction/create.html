@@ -16,26 +16,12 @@
     <div class="layui-form-item" style="display:none;" id="data_top_id" >
         <label class="layui-form-label">上级</label>
         <div class="layui-input-block">
-            <select name="data_top_id" lay-filter="category_id" lay-search="">
+            <select name="data_top_id" id="data_top_id_option" lay-filter="category_id" lay-search="">
                 <option value="">请选择</option>
-                {volist name="resources" id='vo'}
-                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
-                {/volist}
             </select>
         </div>
     </div>
 
-    <div class="layui-form-item" style="display:none;" id="data_top_id_REPORT_DETAIL_CAUSE" >
-        <label class="layui-form-label">上级</label>
-        <div class="layui-input-block">
-            <select name="data_top_id" lay-filter="category_id" lay-search="">
-                <option value="">请选择</option>
-                {volist name="reportDetailCauseAll" id='vo'}
-                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
-                {/volist}
-            </select>
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">名称</label>
@@ -111,22 +97,52 @@
 
         form.on('radio(data_type_no)', function(data){
             $("#data_top_id").hide();
-            $("#data_top_id_REPORT_TYPE").hide();
-            switch (data.value) {
+            $('#data_top_id_option').html("<option value=''>请选择</option>");
+            form.render('select');
+            switch (data.value){
                 case 'RESOURCES_SUBDIVIDE':
+                    getDataPicList("{:url('data_top_id')}?data_type=RESOURCES_TYPE", $('#data_top_id_option'), 1);
                     $("#data_top_id").show();
                     break;
-                case 'REPORT_TYPE':
-                    //$("#data_top_id_REPORT_TYPE").show();
-                    break;
                 case 'REPORT_DETAIL_CAUSE':
-                    $("#data_top_id_REPORT_DETAIL_CAUSE").show();
+                    getDataPicList("{:url('data_top_id')}?data_type=REPORT_TYPE", $('#data_top_id_option'), 1);
+                    $("#data_top_id").show();
+                    break;
+                case 'RESOURCE_INDUSTRY':
+                    getDataPicList("{:url('data_top_id')}?data_type=RESOURCES_SUBDIVIDE", $('#data_top_id_option'), 2);
+                    $("#data_top_id").show();
+                    break;
+                case 'RESOURCE_INDUSTRY_SUBDIVIDE':
+                    getDataPicList("{:url('data_top_id')}?data_type=RESOURCE_INDUSTRY", $('#data_top_id_option'), 1);
+                    $("#data_top_id").show();
                     break;
                 default:
                     break;
             }
         });
 
+        function getDataPicList(urlValue, node, type=1) {
+            $.ajax({
+                url: urlValue,
+                dataType:'json',
+                async: true,
+                success:function(data) {
+                    console.log(data.length);
+                    // $("#city")
+                    node.html("<option value=''>请选择</option>");
+                    $.each(data.data, function(index, item){
+                        if(type == 1){
+                        // $("#city")
+                            node.append(new Option(item.data_name, item.data_no));
+                        } else if(type == 2){
+                            node.append(new Option(item.data_name, item.id));
+                        }
+                        form.render('select');
+
+                    })
+                }
+            })
+        }
 
     });
 </script>
