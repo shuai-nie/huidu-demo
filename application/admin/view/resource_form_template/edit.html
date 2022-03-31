@@ -4,10 +4,24 @@
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
     <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block">
+            <select name="business_subdivide"  lay-verify="required" lay-filter="business_subdivide" lay-search="" >
+                <option value="">请选择</option>
+                {volist name='resourcesSubdivide' id='vo' }
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
+            <input type="radio" name="ty" value="0" title="全部" checked >
             {foreach name='ty' id='vo' key='k'}
-            <input type="radio" name="ty" value="{$k}" title="{$vo}" {if condition="$k eq 1"}checked{/if}>
+            <input type="radio" name="ty" value="{$k}" title="{$vo}" >
             {/foreach}
         </div>
     </div>
@@ -15,9 +29,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">表单类型</label>
         <div class="layui-input-block">
-            {volist name='form_type' id='vo' key='k'}
-            <input type="radio" name="form_type" value="{$k}" title="{$vo}" checked>
-            {/volist}
+            {foreach name='form_type' id='vo' key='k'}
+            <input type="radio" name="form_type" value="{$k}" title="{$vo}" {if condition="$k eq 0"} checked{/if} >
+            {/foreach}
         </div>
     </div>
 
@@ -81,16 +95,18 @@
         });
 
 
-        form.val('first', {});
-
-
-
-
-        form.on('submit(submit)', function (data) {
-
-            Api.edit(data.field, function (res) {});
+        form.val('first', {
+            'business_subdivide':"{$ResourceFormTemplateInfo['business_subdivide']}",
+            'ty':"{$ResourceFormTemplateInfo['ty']}",
+            'form_type':"{$ResourceFormTemplateInfo['form_type']}",
+            'form_title':"{$ResourceFormTemplateInfo['form_title']}",
+            'fill_flag':"{$ResourceFormTemplateInfo['fill_flag']}",
+            'sort':"{$ResourceFormTemplateInfo['sort']}",
         });
 
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {});
+        });
 
     });
 </script>

@@ -10,9 +10,57 @@
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">资源类型</label>
+                    <label class="layui-form-label">表单标题</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="data_name" autocomplete="off" class="layui-input" >
+                        <input type="text" name="form_title" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">业务细分</label>
+                    <div class="layui-input-inline">
+                        <select name="business_subdivide" lay-filter="business_subdivide" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name='resourcesSubdivide' id='vo' }
+                            <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-inline">
+                        <select name="ty" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">全部</option>
+                            {foreach name='ty' id='vo' key='k' }
+                            <option value="{$k}">{$vo}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">表单类型</label>
+                    <div class="layui-input-inline">
+                        <select name="form_type" lay-filter="form_type" lay-search="" >
+                            <option value="">请选择</option>
+                            {foreach name='form_type' id='vo' key='k' }
+                            <option value="{$k}">{$vo}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">必填</label>
+                    <div class="layui-input-inline">
+                        <select name="fill_flag" lay-filter="fill_flag" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">否</option>
+                            <option value="1">是</option>
+                        </select>
                     </div>
                 </div>
 
@@ -41,10 +89,38 @@
             form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'data_name', title: '资源类型', width:140}
-            ,{field: 'sort', title: '排序', width:140}
-            ,{field: 'create_time', title: '时间', width:170}
+            {field: 'id', title: 'ID', width:80, fixed: 'left',align:'center'}
+            ,{field: 'form_title', title: '表单标题', width:140}
+            ,{field: 'type_name', title: '业务类型', width:140}
+            ,{field: 'business_subdivide_name', title: '业务细分', width:140}
+            ,{field: 'sort', title: '排序', width:80,align:'center'}
+            ,{field: 'ty', title: '类型', width:80, templet:function(d){
+                switch (d.ty*1){
+                    case 0: return '全部'; break;
+                    {foreach name='ty' id='vo' key='k'}
+                    case {$k}: return "{$vo}"; break;
+                    {/foreach}
+                    default: return '-'; break;
+                }
+            }}
+            ,{field: 'form_type', title: '表单类型', width:100,align:'center',templet:function(d){
+                switch (d.form_type*1){
+                    {foreach name='form_type' id='vo' key='k'}
+                    case {$k}: return "{$vo}"; break;
+                    {/foreach}
+                    default: return '-'; break;
+                }
+
+            }}
+            ,{field: 'fill_flag', title: '必填', width:80,align:'center',templet:function(d){
+                switch (d.fill_flag*1){
+                    case 0: return '<span class="layui-border-blue layui-btn-xs">否</span>'; break;
+                    case 1: return '<span class="layui-border-orange layui-btn-xs">是</span>'; break;
+                    default:
+                        break;
+                }
+            }}
+            ,{field: 'create_time', title: '创建时间', width:170,align:'center'}
             ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
         ]);
 
