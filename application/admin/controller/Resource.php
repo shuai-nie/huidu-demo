@@ -117,22 +117,31 @@ class Resource extends Base
      */
     public function create()
     {
+
         if (request()->isPost()) {
-            $_post                       = request()->post();
-            $_post['img']                = isset($_post['img']) ? implode('|', $_post['img']) : '';
-            $_post['region']             = isset($_post['region']) ? implode('|', $_post['region']) : '';
-            $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
-            $_post['top_start_time']     = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
-            $_post['top_end_time']       = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+            $_post = request()->post();
+
+            $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
+            $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post['industry_subdivide'] = isset($_post['industry_subdivide']) ? implode('|', $_post['industry_subdivide']) : '';
+            $_post['business_subdivide'] = $_post['subdivide'];
+            $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
+            $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
             unset($_post['subdivide']);
             $_post['types']      = 2;
             $_post['flush_time'] = time();
-            $_post['intro']      = htmlspecialchars_decode($_post['intro']);
+            $_post['intro'] = isset($_post['intro']) ? htmlspecialchars_decode($_post['intro']) : '';
             if (($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 1) {
                 $this->userpublish($_post['uid']);
             }
-            $state = model('Resource')->save($_post);
+
+            $Resource = model('Resource');
+            $temp = $_post;
+            unset($_post['temp']);
+            $state = $Resource->save($_post);
             if ($state !== false) {
+                $ResourceId = $Resource->id;
+                $this->resource_from_table($temp, $ResourceId);
                 if (($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 1) {
                     $userInfo         = model('UserInfo')->where(['uid' => $_post['uid']])->find();
                     $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
@@ -143,7 +152,7 @@ class Resource extends Base
                         'type'        => 1,
                         'recharge_id' => $userInfo['user_recharge_id'],
                         'package_id'  => $UserRechargeFind['package_id'],
-                        'resource_id' => model('Resource')->id,
+                        'resource_id' => $ResourceId,
                         'remarks'     => '新建',
                         'state'       => 1,
                     ]);
@@ -152,18 +161,54 @@ class Resource extends Base
             }
             return error_json(lang('CreateFail', [lang('Resource')]));
         }
+        $this->DataDicAssign();
+        return view('');
+    }
+
+    protected function DataDicAssign()
+    {
         $DataDic         = model('DataDic');
         $resourcesType   = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'status' => '1'])->order('sort desc')->select();
         $resourcesRegion = $DataDic->where(['data_type_no' => 'RESOURCES_REGION', 'status' => '1'])->order('sort desc')->select();
         $DataDicData     = $DataDic->where(['data_type_no' => 'CONTACT_TYPE', 'status' => 1])->order('sort desc')->select();
         $Subivde         = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourcesType[0]['data_no']])->order('sort desc')->select();
-        return view('', [
-            'resourcesType'   => $resourcesType,
-            'resourcesRegion' => $resourcesRegion,
-            'DataDicData'     => $DataDicData,
-            'ty'              => $this->ty,
-            'Subivde'         => $Subivde
-        ]);
+        $resourceIndustry = $DataDic->where(['data_type_no'=> 'RESOURCE_INDUSTRY', 'status' => 1])->select();
+        $resourceIndustrySubdivide = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourceIndustry[0]['data_no']])->order('sort desc')->select();
+        $this->assign('resourcesType', $resourcesType);
+        $this->assign('resourcesRegion', $resourcesRegion);
+        $this->assign('DataDicData', $DataDicData);
+        $this->assign('ty', $this->ty);
+        $this->assign('Subivde', $Subivde);
+        $this->assign('resourceIndustry', $resourceIndustry);
+        $this->assign('resourceIndustrySubdivide', $resourceIndustrySubdivide);
+    }
+
+    protected function resource_from_table($_post, $resource_id)
+    {
+        $ResourceFormTemplate = model('ResourceFormTemplate');
+        $ResourceForm = model('ResourceForm');
+        if(isset($_post['temp'])){
+            $temp = $_post['temp'];
+            $k = 0;
+            foreach ($temp as $key => $value){
+                $template = $ResourceFormTemplate->field('form_type,fill_flag')->find($key);
+                if($template['form_type'] == 4){
+                    $timeArr = $value['time'];
+                    $arr[$k]['content'] = implode('|', $timeArr);
+                } elseif ($template['form_type'] == 0 || $template['form_type'] == 1 || $template['form_type'] == 2 || $template['form_type'] == 3 ){
+                    $arr[$k]['content'] = $value;
+                } elseif ($template['form_type'] == 5){
+                    $arr[$k]['currency_type'] = $_post['currency_type'];
+                    $arr[$k]['content'] = $value;
+                }
+                $arr[$k]['resource_id'] = $resource_id;
+                $arr[$k]['form_template_id'] = $key;
+                $k++;
+            }
+            $ResourceForm->where(['resource_id'=>$resource_id])->delete();
+            $ResourceForm->saveAll($arr);
+        }
+        return true;
     }
 
     private function userpublish($uid)
@@ -193,13 +238,15 @@ class Resource extends Base
         $Resource     = model('Resource');
         $resourceInfo = $Resource->find($id);
         if (request()->isPost()) {
-            $_post                       = request()->post();
-            $_post['img']                = isset($_post['img']) ? implode('|', $_post['img']) : '';
-            $_post['region']             = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            $_post = request()->post();
+
+            $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
+            $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
             $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
-            $_post['top_start_time']     = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
-            $_post['top_end_time']       = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
-            $_post['intro']              = htmlspecialchars_decode($_post['intro']);
+            $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
+            $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+
+            $_post['intro'] = isset($_post['intro']) ? htmlspecialchars_decode($_post['intro']) : '';
             if ($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5)) {
                 $this->userpublish($_post['uid']);
             }
@@ -239,9 +286,6 @@ class Resource extends Base
             return error_json(lang('EditFail', [lang('Resource')]));
         }
 
-        $DataDic             = model('DataDic');
-        $resourcesType       = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1])->select();
-        $resourcesRegion     = $DataDic->where(['data_type_no' => 'RESOURCES_REGION', 'status' => 1])->select();
         $resourceInfo['img'] = explode('|', $resourceInfo['img']);
         if ($resourceInfo['region'] == '|') {
             $resourceInfo['region'] = array('|');
@@ -252,9 +296,8 @@ class Resource extends Base
         $resourceInfo['top_start_time']     = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
         $resourceInfo['top_end_time']       = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 
-        $DataDicData = $DataDic->where(['data_type_no' => 'CONTACT_TYPE', 'status' => 1])->order('sort desc')->select();
+        $DataDic = model('DataDic');
         $Subivde     = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourceInfo['type']])->order('sort desc')->select();
-
 
         if ($resourceInfo['business_subdivide'][0]) {
             $RESOURCES   = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1])->find();
@@ -262,12 +305,9 @@ class Resource extends Base
         } else {
             $data_top_id = $Subivde[0]['data_no'];
         }
-
+        $this->DataDicAssign();
         return view('', [
             'resource'        => $resourceInfo,
-            'resourcesType'   => $resourcesType,
-            'resourcesRegion' => $resourcesRegion,
-            'DataDicData'     => $DataDicData,
             'ty'              => $this->ty,
             'Subivde'         => $Subivde,
             'data_top_id'     => $data_top_id,
@@ -391,5 +431,151 @@ class Resource extends Base
             }
             return error_json('修改失败');
         }
+    }
+
+    public function fromhtml()
+    {
+        $subId = 11;
+        $ResourceFormTemplate = model('ResourceFormTemplate');
+        $DataDic = model('DataDic');
+
+        $template = $ResourceFormTemplate->where(['status'=>1, 'business_subdivide'=>$subId])->order('sort desc')->select();
+        $html = "";
+        $container = false;
+        if($template){
+            foreach ($template as $key => $value) {
+
+                $html .= "<div class=\"layui-form-item\">\n".
+                    "        <label class=\"layui-form-label\">" . $value['form_title'] . "</label>\n";
+                switch ($value['form_type']){
+                    case 0:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 1:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' class=\"layui-textarea\"></textarea>";
+                        }else {
+                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' lay-verify=\"required\" class=\"layui-textarea\"></textarea>";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 2:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 3:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 4:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $html .= "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;'>:</div>"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;'>-</div>"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;'>"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;'>:</div>"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;' >:</div>\n"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;' >-</div>\n"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"请输入\" placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='margin-top:10px;' >:</div>\n"
+                                . "<div class=\"layui-input-inline\" style='margin-top:10px;width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"请输入\" placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>";
+                        }
+                        $html .= "</div>";
+                        $html .= "   </div>";
+                        break;
+                    case 5:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $html .= "<div class=\"layui-input-inline\" style='' >";
+                        $html .= "<select name=\"currency_type\">";
+                        $html .= "<option value=\"currency_type\">请选择</option>";
+                        $DataDicInfo = $DataDic->where(['data_type_no'=>'RESOURCE_CURRENCY', 'status'=>1])->field('data_no,data_name,data_icon')->select();
+                        foreach ($DataDicInfo as $k2 => $v2){
+                            $html .= "<option value=\"{$v2['data_no']}\">{$v2['data_name']}</option>";
+                        }
+                        $html .= "</select>";
+                        $html .= "</div>";
+                        $html .= "<div class=\"layui-input-inline\" style='' >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "</div>";
+                        $html .= "</div>";
+//                        $html .= "</div>";
+//                        $html .= "   </div>";
+                        break;
+                    case 6:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $container = true;
+                        $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\"></script>";
+                        $html .= "   </div>";;
+                        break;
+                    case 7:
+                        $html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
+                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
+                            . '预览图：'
+                            . '<div class="layui-upload-list" id="demo7"></div>'
+                            . '<div style="clear:both;"></div>'
+                            . '</blockquote>';
+                        break;
+                    case 8:
+                        $html .= '<button type="button" class="layui-btn" id="test8submit">logo</button>'
+                            . '<input type="hidden" name="logo" />'
+                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
+                            . '预览图：'
+                            . '<div class="layui-upload-list" id="demo8"></div>'
+                            . '<div style="clear:both;"></div>'
+                            . '</blockquote>';
+                        break;
+                    default:
+                        break;
+                }
+                $html .= "   </div>";
+            }
+            return success_json('成功', ['html'=>$html,'container'=>$container]);
+        } else {
+            return error_json('沒有模板');
+        }
+        exit();
+
     }
 }
