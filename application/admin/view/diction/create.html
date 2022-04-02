@@ -22,7 +22,6 @@
         </div>
     </div>
 
-
     <div class="layui-form-item">
         <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
@@ -38,11 +37,13 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label"></label>
-        <input type="hidden" name="data_icon">
-        <button type="button" class="layui-btn" id="test1">
-            <i class="layui-icon">&#xe67c;</i>上传icon
-        </button>
+        <label class="layui-form-label" id="data_icon_label">图片</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="data_icon" class="layui-input" />
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传icon
+            </button>
+        </div>
     </div>
 
     <div class="layui-form-item">
@@ -98,6 +99,11 @@
         form.on('radio(data_type_no)', function(data){
             $("#data_top_id").hide();
             $('#data_top_id_option').html("<option value=''>请选择</option>");
+
+            $("#test1").show();
+            $("#data_icon_label").text('图片');
+            $("input[name='data_icon']").attr('type', 'hidden');
+
             form.render('select');
             switch (data.value){
                 case 'RESOURCES_SUBDIVIDE':
@@ -115,6 +121,11 @@
                 case 'RESOURCE_INDUSTRY_SUBDIVIDE':
                     getDataPicList("{:url('data_top_id')}?data_type=RESOURCE_INDUSTRY", $('#data_top_id_option'), 1);
                     $("#data_top_id").show();
+                    break;
+                case 'RESOURCE_CURRENCY':
+                    $("#test1").hide();
+                    $("#data_icon_label").text('图标');
+                    $("input[name='data_icon']").attr('type', 'text');
                     break;
                 default:
                     break;

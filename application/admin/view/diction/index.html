@@ -58,6 +58,9 @@
                 }
                 }}
             ,{field: 'data_icon', width:80,title: 'icon',templet:function(d){
+                if(d.data_type_no =='RESOURCE_CURRENCY'){
+                    return d.data_icon;
+                }
                 if(d.data_icon){
                     return "<img src='"+d.data_icon+"' height='30' width='30' />";
                 }

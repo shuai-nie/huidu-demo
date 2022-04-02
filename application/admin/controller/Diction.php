@@ -16,6 +16,7 @@ class Diction extends Base
         'REPORT_DETAIL_CAUSE' => ['type'=>'REPORT_DETAIL_CAUSE', 'title'=>'举报详细原因'],
         'RESOURCE_INDUSTRY' => ['type'=>'RESOURCE_INDUSTRY', 'title'=>'资源·行业类型'],
         'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'title'=>'资源·行业细分'],
+        'RESOURCE_CURRENCY' => ['type'=>'RESOURCE_CURRENCY', 'title'=>'资源·货币'],
 
     ];
 
