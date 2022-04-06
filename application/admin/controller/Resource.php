@@ -242,18 +242,21 @@ class Resource extends Base
 
             $_post['img'] = isset($_post['img']) ? implode('|', $_post['img']) : '';
             $_post['region'] = isset($_post['region']) ? implode('|', $_post['region']) : '';
-            $_post['business_subdivide'] = isset($_post['subdivide']) ? implode('|', $_post['subdivide']) : '';
+            $_post['business_subdivide'] = isset($_post['subdivide']) ? $_post['subdivide'] : '';
             $_post['top_start_time'] = !empty($_post['top_start_time']) ? strtotime($_post['top_start_time']) : 0;
             $_post['top_end_time'] = !empty($_post['top_end_time']) ? strtotime($_post['top_end_time']) : 0;
+            $_post['industry_subdivide'] = isset($_post['industry_subdivide']) ? implode('|', $_post['industry_subdivide']) : '';
 
             $_post['intro'] = isset($_post['intro']) ? htmlspecialchars_decode($_post['intro']) : '';
             if ($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5)) {
                 $this->userpublish($_post['uid']);
             }
-
+            $temp = $_post;
+            unset($_post['temp']);
             $state = $Resource->save($_post, ['id' => $id]);
             if ($state !== false) {
-                $userInfo         = model('UserInfo')->where(['uid' => $_post['uid']])->find();
+                $this->resource_from_table($temp, $id);
+                $userInfo = model('UserInfo')->where(['uid' => $_post['uid']])->find();
                 $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
                 if ($resourceInfo['auth'] != $_post['auth'] && ($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 1 && ($resourceInfo['auth'] == 3 || $resourceInfo['auth'] == 4 || $resourceInfo['auth'] == 5)) {
                     // 加
@@ -292,7 +295,6 @@ class Resource extends Base
         } else {
             $resourceInfo['region'] = explode('|', $resourceInfo['region']);
         }
-//        $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
         $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
         $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 

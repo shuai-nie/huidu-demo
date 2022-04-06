@@ -189,7 +189,10 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            data.field.intro = ue.getContent();
+            var _intro = document.getElementById('container');
+            if(_intro){
+                data.field.intro = ue.getContent();
+            }
             Api.edit(data.field, function (res) {
                 if(res.code == 200) {
                     layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
