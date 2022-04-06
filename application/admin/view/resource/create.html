@@ -171,84 +171,6 @@
             });
         });
 
-
-        $(".layui-form").on("click", ".contactNameAdd", function(){
-            var _this = $(this);
-            var contactName = _this.parent().parent().parent().parent().children('.contactName').length;
-            var contactLength = 0;//_this.parent().parent().parent().children('.contactName').length;
-            var _html = '<div class="contactName" contactNameLength="'+contactName+'" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">'+
-                '<div class="layui-form-item">'+
-                '    <div class="layui-inline">'+
-                '        <label class="layui-form-label" style="">联系人</label>'+
-                '        <div class="layui-input-inline">'+
-                '            <input type="text" name="contactName['+contactName+']" placeholder="请输入" autoComplete="off" class="layui-input">'+
-                '        </div>'+
-                '    </div>'+
-                '    <div class="layui-inline">'+
-                '        <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>'+
-                '        <button type="button" class="layui-btn contactNameDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>'+
-                '    </div>'+
-                '</div>'+
-                '<div class="layui-form-item contact ">\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
-                ' <option value="" >请选择</option>'+
-                {volist name="DataDicData" id="vo"}
-                    ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
-                {/volist}
-                '                            </select>' +
-                '                        </div>\n' +
-                '                    </div>\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
-                '                        </div>\n' +
-                '                    </div>\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
-                '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>' +
-                '                    </div>' +
-                '                </div>'+
-                '</div>';
-            _this.parent().parent().parent().after(_html);
-            form.render();
-        })
-
-        $(".layui-form").on('click', '.contact-add', function(){
-            var _this = $(this);
-            var contactLength = _this.parent().parent().parent().children('.contact').length;
-            var contactName = _this.parent().parent().parent().attr('contactNameLength');
-
-            var _html = '<div class="layui-form-item contact ">\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
-                ' <option value="" >请选择</option>'+
-                {volist name="DataDicData" id="vo"}
-                ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
-                {/volist}
-                '                                </select>\n' +
-                '                        </div>\n' +
-                '                    </div>\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
-                '                        </div>\n' +
-                '                    </div>\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
-                '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>\n' +
-                '\n' +
-                '                    </div>\n' +
-                '\n' +
-                '                </div>';
-            _this.parent().parent().after(_html);
-            form.render();
-        })
-
         $(".layui-form").on("click", ".contactNameDel", function(){
             var _this = $(this);
             _this.parent().parent().parent().remove();
@@ -277,9 +199,9 @@
 
         form.on('radio(subdivide)', function(data){
             var _val = data.value;
-            console.log(_val);
+            var _ty = $("input[name='ty']").val();
             $("#form_html").empty();
-            $.post("{:url('fromHtml')}", {fromId:_val}, function (obj) {
+            $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
                     if(obj.data.container){
@@ -345,6 +267,20 @@
         form.on('radio(industry)', function(data){
             if(data.value == '|') {
                 $("#industry_subdivide").empty();
+            }else{
+                $("#industry_subdivide").empty();
+                $.post("{:url('industry_subdivide')}", {data_top_id: data.value}, function(obj){
+                    if(obj.code == 200) {
+                        var _html = '';
+                        $.each(obj.data.sub, function (i, v) {
+                            _html += "<input type='checkbox' name='industry_subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                        })
+                        $("#industry_subdivide").append(_html);
+                        form.render();
+                    } else {
+                        layer.msg('网络问题，请联系管理员');
+                    }
+                }, 'json');
             }
         })
 

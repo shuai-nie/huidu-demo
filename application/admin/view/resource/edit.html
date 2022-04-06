@@ -49,39 +49,31 @@
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block" id="subdivide">
             {volist name='Subivde' id='vo'}
-            <input type="checkbox" name="subdivide[{$vo['data_no']}]"  value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            <input type="radio" name="subdivide" lay-filter="subdivide" value="{$vo['data_no']}" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">描述</label>
+        <label class="layui-form-label">对应行业</label>
         <div class="layui-input-block">
-            <script id="container" name="intro" type="text/plain">{$resource['intro']}</script>
+            <input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />
+            {volist name='resourceIndustry' id='vo' key='k' }
+            <input type="radio" name="industry" value="{$vo['data_no']}" lay-filter="industry" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} />
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label"></label>
-        <div class="layui-upload">
-            <button type="button" class="layui-btn" id="test2">多图片上传</button>
-            <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;margin-left:30px;">
-                预览图：
-                <div class="layui-upload-list" id="demo2">
-                    {volist name="$resource['img']" id="vo" key="k"}
-                    {if condition="!empty($vo)"}
-                    <div style="width:100px;float:left;position:relative;margin:10px;">
-                        <i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>
-                        <img width="100" height="100" src="{$vo}"  class="layui-upload-img">
-                        <input type="hidden" name="img[{$k-1}]" value="{$vo}" />
-                    </div>
-                    {/if}
-                    {/volist}
-                </div>
-                <div style="clear:both;"></div>
-            </blockquote>
+        <label class="layui-form-label">行业细分</label>
+        <div class="layui-input-block" id="industry_subdivide">
+            {volist name='resourceIndustrySubdivide' id='vo'}
+            <input type="checkbox" name="industry_subdivide[{$vo['data_no']}]" class="industry_subdivide" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {/volist}
         </div>
     </div>
+
+    <div id="form_html"></div>
 
     <div class="layui-form-item" style="margin-top:30px;">
         <label class="layui-form-label">反馈信息</label>
@@ -91,16 +83,16 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">置顶开始时间</label>
-        <div class="layui-input-block">
-            <input type="text" name="top_start_time" id="top_start_time" placeholder="" autocomplete="off" class="layui-input">
-        </div>
-    </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">置顶</label>
+            <div class="layui-input-inline">
+                <input type="text" name="top_start_time" id="top_start_time" placeholder="开始时间" autocomplete="off" class="layui-input">
+            </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">置顶结束时间</label>
-        <div class="layui-input-block">
-            <input type="text" name="top_end_time" id="top_end_time" placeholder="" autocomplete="off" class="layui-input">
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline">
+                <input type="text" name="top_end_time" id="top_end_time" placeholder="结束时间" autocomplete="off" class="layui-input">
+            </div>
             <!--<div class="layui-form-mid layui-word-aux">跳转链接/资源ID</div>-->
         </div>
     </div>
@@ -143,12 +135,8 @@
             upload = layui.upload,
             laydate = layui.laydate;
 
-        var ue = UE.getEditor('container', {
-            initialFrameHeight:400,
-            autoHeightEnabled:false,
-            autoFloatEnabled:false,
-            zIndex:"0"
-        });
+        var ue;
+
 
         laydate.render({elem: '#top_start_time',type: 'datetime'});
         laydate.render({elem: '#top_end_time',type: 'datetime'});
@@ -166,7 +154,6 @@
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-
                     $('#demo2').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
                         +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
                         +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
@@ -184,113 +171,9 @@
             }
         });
 
-        $("#demo2").on('click', '.img-delete', function(){
+        $("#form_html").on('click', '.img-delete', function(){
             var _this = $(this);
             _this.parent().remove();
-        })
-
-        form.val('first', {
-            'uid' : "{$resource['uid']}",
-            'title' : "{$resource['title']}",
-            'ty' : "{$resource['ty']}",
-            'feedback':"{$resource['feedback']}",
-            'top_start_time':"{$resource['top_start_time']}",
-            'top_end_time':"{$resource['top_end_time']}",
-            'auth':"{$resource['auth']}",
-            "type":"{$resource['type']}",
-            "data_no":"{$data_top_id}",
-            "home_roll":"{$resource['home_roll']}",
-            {volist name="$resource['region']" id="vo"}
-            "region[{$vo}]":true,
-            {/volist}
-
-            {volist name="$resource['business_subdivide']" id="vo"}
-            "subdivide[{$vo}]" : true,
-            {/volist}
-
-            {volist name="$resource['region']" id="vo"}
-            {if condition="$vo"}
-            "region[{$vo}]":true,
-            {/if}
-            {/volist}
-
-        });
-
-        $(".layui-form").on("click", ".contactNameAdd", function(){
-            var _this = $(this);
-            var contactName = _this.parent().parent().parent().parent().children('.contactName').length;
-            var contactLength = 0;//_this.parent().parent().parent().children('.contactName').length;
-            var _html = '<div class="contactName" contactNameLength="'+contactName+'" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">'+
-                '<div class="layui-form-item">'+
-                '    <div class="layui-inline">'+
-                '        <label class="layui-form-label" style="">联系人</label>'+
-                '        <div class="layui-input-inline">'+
-                '            <input type="text" name="contactName['+contactName+']" placeholder="请输入" autoComplete="off" class="layui-input">'+
-                '        </div>'+
-                '    </div>'+
-                '    <div class="layui-inline">'+
-                '        <button type="button" class="layui-btn contactNameAdd "><i class="layui-icon layui-icon-add-1"></i></button>'+
-                '        <button type="button" class="layui-btn contactNameDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>'+
-                '    </div>'+
-                '</div>'+
-                '<div class="layui-form-item contact ">\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
-                ' <option value="" >请选择</option>'+
-                {volist name="DataDicData" id="vo"}
-            ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
-            {/volist}
-            '                            </select>' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                    <div class="layui-inline">\n' +
-            '                        <div class="layui-input-inline">\n' +
-            '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                    <div class="layui-inline">\n' +
-            '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
-            '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>' +
-            '                    </div>' +
-            '                </div>'+
-            '</div>';
-            _this.parent().parent().parent().after(_html);
-            form.render();
-        })
-
-        $(".layui-form").on('click', '.contact-add', function(){
-            var _this = $(this);
-            var contactLength = _this.parent().parent().parent().children('.contact').length;
-            var contactName = _this.parent().parent().parent().attr('contactNameLength');
-
-            var _html = '<div class="layui-form-item contact ">\n' +
-                '                    <div class="layui-inline">\n' +
-                '                        <label class="layui-form-label" style="">联系方式</label>\n' +
-                '                        <div class="layui-input-inline">\n' +
-                '                            <select name="contact['+contactName+']['+contactLength+']" lay-filter="aihao">\n' +
-                ' <option value="" >请选择</option>'+
-                {volist name="DataDicData" id="vo"}
-            ' <option value="{$vo['data_no']}" >{$vo['data_name']}</option>'+
-            {/volist}
-            '                                </select>\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                    <div class="layui-inline">\n' +
-            '                        <div class="layui-input-inline">\n' +
-            '                            <input type="text" name="tel['+contactName+']['+contactLength+']" placeholder="" autocomplete="off" class="layui-input">\n' +
-            '                        </div>\n' +
-            '                    </div>\n' +
-            '                    <div class="layui-inline">\n' +
-            '                        <button type="button" class="layui-btn contactDel layui-btn-danger"><i class="layui-icon layui-icon-delete"></i></button>' +
-            '                        <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>\n' +
-            '\n' +
-            '                    </div>\n' +
-            '\n' +
-            '                </div>';
-            _this.parent().parent().after(_html);
-            form.render();
         })
 
         $(".layui-form").on("click", ".contactNameDel", function(){
@@ -302,7 +185,6 @@
             var _this = $(this);
             _this.parent().parent().remove();
         })
-
 
 
         //监听提交
@@ -323,7 +205,7 @@
                 if(obj.code == 200) {
                     var _html = '';
                     $.each(obj.data.data, function (i, v) {
-                        _html += "<input type='checkbox' id='subdivide' lay-verType='tips' name='subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                        _html += "<input type='radio' id='subdivide' lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
                     })
                     $("#subdivide").append(_html);
                     form.render();
@@ -349,6 +231,110 @@
             }
         })
 
+        form.on('radio(industry)', function(data){
+            if(data.value == '|') {
+                $("#industry_subdivide").empty();
+            }else{
+                $("#industry_subdivide").empty();
+                $.post("{:url('industry_subdivide')}", {data_top_id: data.value}, function(obj){
+                    if(obj.code == 200) {
+                        var _html = '';
+                        $.each(obj.data.sub, function (i, v) {
+                            _html += "<input type='checkbox' name='industry_subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                        })
+                        $("#industry_subdivide").append(_html);
+                        form.render();
+                    } else {
+                        layer.msg('网络问题，请联系管理员');
+                    }
+                }, 'json');
+            }
+        })
+
+        form.on('checkbox(region)', function(data){
+            if(data.value == '|'){
+                form.val('first', {
+
+                {volist name="resourcesRegion" id="vo"}
+                {if condition="$vo"}
+                "region[{$vo['data_no']}]":false,
+                    {/if}
+                {/volist}
+                });
+            }else {
+                form.val('first', {
+                    "region[|]":false,
+                });
+            }
+        })
+
+        form.on('radio(subdivide)', function(data){
+            var _val = data.value;
+            $("#form_html").empty();
+            $.post("{:url('fromHtml')}", {fromId:_val}, function (obj) {
+                if(obj.code == 200){
+                    $("#form_html").append(obj.data.html)
+                    if(obj.data.container){
+                        ue = UE.getEditor('container', {
+                            initialFrameHeight:400,
+                            autoHeightEnabled:false,
+                            autoFloatEnabled:false,
+                            zIndex:"0"
+                        });
+                    }
+
+                    upload.render({
+                        elem: '#test7submit'
+                        ,url: upload_url
+                        ,accept: upload_accept
+                        ,acceptMime:upload_acceptMime
+                        ,size: upload_size
+                        ,done: function(res){
+                            if(res.code == 0) {
+                                $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                                    +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
+                                    +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                                    + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
+                                    +'</div>');
+                                imgKey++;
+                            } else {
+                                layui.msg('网络问题稍后再试');
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                        }
+                    });
+
+                    upload.render({
+                        elem: '#test8submit'
+                        ,url: upload_url
+                        ,accept: upload_accept
+                        ,acceptMime:upload_acceptMime
+                        ,size: upload_size
+                        ,done: function(res){
+                            if(res.code == 0) {
+                                $('#demo8').html('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                                    +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                                    +'</div>');
+                                $("input[name='logo']").val(res.url);
+                            } else {
+                                layui.msg('网络问题稍后再试');
+                            }
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                        }
+                    });
+                    form.render();
+                    formVal();
+                } else {
+                    layer.msg(obj.msg);
+                }
+            }, 'json');
+
+        });
+
         form.verify({
             // region:function () {
             //     var checked = document.getElementById("region");
@@ -363,6 +349,105 @@
             //     }
             // }
         })
+
+        $("#form_html").empty();
+        $.post("{:url('fromhtmlvalue')}", {resourceId:"{$resource['id']}"}, function (obj) {
+            if(obj.code == 200){
+                $("#form_html").append(obj.data.html)
+                if(obj.data.container){
+                    ue = UE.getEditor('container', {
+                        initialFrameHeight:400,
+                        autoHeightEnabled:false,
+                        autoFloatEnabled:false,
+                        zIndex:"0"
+                    });
+                }
+
+                upload.render({
+                    elem: '#test7submit'
+                    ,url: upload_url
+                    ,accept: upload_accept
+                    ,acceptMime:upload_acceptMime
+                    ,size: upload_size
+                    ,done: function(res){
+                        if(res.code == 0) {
+                            $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                                +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
+                                +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                                + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
+                                +'</div>');
+                            imgKey++;
+                        } else {
+                            layui.msg('网络问题稍后再试');
+                        }
+                    }
+                    ,error: function(){
+                        //请求异常回调
+                    }
+                });
+
+                upload.render({
+                    elem: '#test8submit'
+                    ,url: upload_url
+                    ,accept: upload_accept
+                    ,acceptMime:upload_acceptMime
+                    ,size: upload_size
+                    ,done: function(res){
+                        if(res.code == 0) {
+                            $('#demo8').html('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                                +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                                +'</div>');
+                            $("input[name='logo']").val(res.url);
+                        } else {
+                            layui.msg('网络问题稍后再试');
+                        }
+                    }
+                    ,error: function(){
+                        //请求异常回调
+                    }
+                });
+                form.render();
+                formVal();
+            } else {
+                layer.msg(obj.msg);
+            }
+        }, 'json');
+
+        formVal();
+
+        function formVal(){
+            form.val('first', {
+                'uid' : "{$resource['uid']}",
+                'title' : "{$resource['title']}",
+                'ty' : "{$resource['ty']}",
+                'feedback':"{$resource['feedback']}",
+                'top_start_time':"{$resource['top_start_time']}",
+                'top_end_time':"{$resource['top_end_time']}",
+                'auth':"{$resource['auth']}",
+                "type":"{$resource['type']}",
+                "data_no":"{$data_top_id}",
+                "home_roll":"{$resource['home_roll']}",
+            {volist name="$resource['region']" id="vo"}
+            "region[{$vo}]":true,
+                {/volist}
+
+            "subdivide" : "{$resource['business_subdivide']}",
+
+            {volist name="$resource['region']" id="vo"}
+            {if condition="$vo"}
+            "region[{$vo}]":true,
+                {/if}
+            {/volist}
+
+            "industry":"{$resource['industry']}",
+            {volist name="$resource['industry_subdivide']" id="vo"}
+                "industry_subdivide[{$vo}]":true,
+            {/volist}
+
+
+            });
+        }
+
 
     });
 </script>

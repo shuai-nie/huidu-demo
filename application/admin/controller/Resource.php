@@ -292,9 +292,9 @@ class Resource extends Base
         } else {
             $resourceInfo['region'] = explode('|', $resourceInfo['region']);
         }
-        $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
-        $resourceInfo['top_start_time']     = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
-        $resourceInfo['top_end_time']       = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
+//        $resourceInfo['business_subdivide'] = explode('|', $resourceInfo['business_subdivide']);
+        $resourceInfo['top_start_time'] = $resourceInfo['top_start_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_start_time']) : '';
+        $resourceInfo['top_end_time'] = $resourceInfo['top_end_time'] > 10000 ? date('Y-m-d H:i:s', $resourceInfo['top_end_time']) : '';
 
         $DataDic = model('DataDic');
         $Subivde     = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourceInfo['type']])->order('sort desc')->select();
@@ -305,6 +305,7 @@ class Resource extends Base
         } else {
             $data_top_id = $Subivde[0]['data_no'];
         }
+        $resourceInfo['industry_subdivide'] = explode('|', $resourceInfo['industry_subdivide']);
         $this->DataDicAssign();
         return view('', [
             'resource'        => $resourceInfo,
@@ -433,13 +434,189 @@ class Resource extends Base
         }
     }
 
-    public function fromhtml()
+    public function fromhtmlvalue()
     {
-        $subId = 11;
+        $resourceId = \request()->post('resourceId');
+        $Resource = model('Resource');
+        $ResourceForm = model('ResourceForm');
         $ResourceFormTemplate = model('ResourceFormTemplate');
         $DataDic = model('DataDic');
+        $ResourceInfo = $Resource->find($resourceId);
 
-        $template = $ResourceFormTemplate->where(['status'=>1, 'business_subdivide'=>$subId])->order('sort desc')->select();
+        $count = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => $ResourceInfo['ty']])->count();
+        if($count > 0) {
+            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => $ResourceInfo['ty']])->order('sort desc')->select();
+        }else {
+            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => 0])->order('sort desc')->select();
+        }
+
+        $html = "";
+        $container = false;
+        if($template){
+            foreach ($template as $key => $value) {
+
+                $html .= "<div class=\"layui-form-item\">\n".
+                    "        <label class=\"layui-form-label\">" . $value['form_title'] . "</label>\n";
+                $ResourceFormInfo = $ResourceForm->where(['resource_id' => $ResourceInfo['id'], 'form_template_id' => $value['id']])->find();
+                switch ($value['form_type']){
+                    case 0:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 1:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' class=\"layui-textarea\">{$ResourceFormInfo['content']}</textarea>";
+                        }else {
+                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' lay-verify=\"required\" class=\"layui-textarea\">{$ResourceFormInfo['content']}</textarea>";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 2:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 3:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' 1 lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "   </div>";;
+                        break;
+                    case 4:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $html .= "<div class=\"layui-input-inline\" style='width:80px;' >";
+                        $content = explode('|',  $ResourceFormInfo['content']);
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' value='{$content[0]}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style=''>:</div>"
+                                . "<div class=\"layui-input-inline\" style='width:80px;' >"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\" value='{$content[1]}' autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>"
+                                . "<div class=\"layui-form-mid\" style=''>-</div>"
+                                . "<div class=\"layui-input-inline\" style='width:80px;'>"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"\"  value='{$content[2]}' autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>"
+                                . "<div class=\"layui-form-mid\" style=''>:</div>"
+                                . "<div class=\"layui-input-inline\" style='width:80px;' >"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"\"  value='{$content[3]}' autocomplete=\"off\" class=\"layui-input\" />"
+                                . "</div>";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}'  value='{$content[0]}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='' >:</div>\n"
+                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\"  value='{$content[1]}' autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='' >-</div>\n"
+                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"请输入\" value='{$content[2]}' placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>\n"
+                                . "<div class=\"layui-form-mid\" style='' >:</div>\n"
+                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
+                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"请输入\" value='{$content[3]}' placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
+                                . "</div>";
+                        }
+                        $html .= "</div>";
+                        $html .= "   </div>";
+                        break;
+                    case 5:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $html .= "<div class=\"layui-input-inline\" style='' >";
+                        $html .= "<select name=\"currency_type\">";
+                        $html .= "<option value=\"currency_type\">请选择</option>";
+                        $DataDicInfo = $DataDic->where(['data_type_no'=>'RESOURCE_CURRENCY', 'status'=>1])->field('data_no,data_name,data_icon')->select();
+                        foreach ($DataDicInfo as $k2 => $v2){
+                            if($ResourceFormInfo['currency_type'] == $v2['data_no']){
+                                $html .= "<option value=\"{$v2['data_no']}\" selected >{$v2['data_name']}</option>";
+                            }else {
+                                $html .= "<option value=\"{$v2['data_no']}\" >{$v2['data_name']}</option>";
+                            }
+
+                        }
+                        $html .= "</select>";
+                        $html .= "</div>";
+                        $html .= "<div class=\"layui-input-inline\" style='' >";
+                        if($value['fill_flag'] == 0){
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }else {
+                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
+                        }
+                        $html .= "</div>";
+                        $html .= "</div>";
+                        break;
+                    case 6:
+                        $html .= "<div class=\"layui-input-block\" >";
+                        $container = true;
+                        $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\">{$ResourceInfo['intro']}</script>";
+                        $html .= "   </div>";;
+                        break;
+                    case 7:
+                        $html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
+                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
+                            . '预览图：'
+                            . '<div class="layui-upload-list" id="demo7">'
+                            . '';
+                        if(!empty($ResourceInfo['img'])){
+                            $img = explode('|', $ResourceInfo['img']);
+                            foreach ($img as $kl =>$vl){
+                                $html .= "<div style=\"width:100px;float:left;position:relative;margin:10px;\">"
+                                ."<i class=\"layui-icon layui-icon-close img-delete\" style=\"color:red;border:1px solid red;position:absolute;right:0px;top:-20px;\"></i>"
+                                ."<img width=\"100\" height=\"100\" src=\"{$vl}\" class=\"layui-upload-img\">"
+                                ."<input type=\"hidden\" name=\"img[{$kl}]\" value=\"{$vl}\"></div>";
+                            }
+                        }
+                        $html .= '</div><div style="clear:both;"></div>' . '</blockquote>';
+                        break;
+                    case 8:
+                        $html .= '<button type="button" class="layui-btn" id="test8submit">logo</button>'
+                            . '<input type="hidden" name="logo" />'
+                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
+                            . '预览图：'
+                            . '<div class="layui-upload-list" id="demo8">';
+                        if(!empty($ResourceInfo['logo'])){
+                            $html .= "<img src='{$ResourceInfo['logo']}' height='100' width='100' />";
+                        }
+                            $html .= '</div><div style="clear:both;"></div></blockquote>';
+                        break;
+                    default:
+                        break;
+                }
+                $html .= "   </div>";
+            }
+            return success_json('成功', ['html'=>$html,'container'=>$container]);
+        } else {
+            return error_json('沒有模板');
+        }
+        exit();
+    }
+
+    public function fromhtml()
+    {
+        $tyId = \request()->post('tyId');
+        $fromId = \request()->post('fromId');
+        $ResourceFormTemplate = model('ResourceFormTemplate');
+        $DataDic = model('DataDic');
+        $count = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => $tyId])->count();
+        if($count > 0) {
+            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => $tyId])->order('sort desc')->select();
+        }else {
+            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => 0])->order('sort desc')->select();
+        }
+
         $html = "";
         $container = false;
         if($template){
@@ -576,6 +753,13 @@ class Resource extends Base
             return error_json('沒有模板');
         }
         exit();
+    }
 
+    public function industry_subdivide()
+    {
+        $DataDic = model('DataDic');
+        $data_top_id = \request()->param('data_top_id');
+        $subdivide = $DataDic->where(['data_type_no'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'status'=>1,'data_top_id'=>$data_top_id])->select();
+        return success_json('返回成功', ['sub'=>$subdivide]);
     }
 }
