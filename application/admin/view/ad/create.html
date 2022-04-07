@@ -1,7 +1,7 @@
 {include file="moban/css"}
 {include file="moban/js"}
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
-    <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
     <div class="layui-form-item">
         <label class="layui-form-label">广告位名称</label>
@@ -31,13 +31,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">分栏</label>
         <div class="layui-input-block">
-            <input type="radio" name="category" value="1" title="一栏" checked>
-            <input type="radio" name="category" value="2" title="二栏">
-            <input type="radio" name="category" value="3" title="三栏">
+            <input type="radio" name="category" value="1" lay-filter="category" title="一栏" checked>
+            <input type="radio" name="category" value="2" lay-filter="category" title="二栏">
+            <input type="radio" name="category" value="3" lay-filter="category" title="三栏">
         </div>
     </div>
 
-        <div>
+        <div id="category_1">
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                 <legend>一栏</legend>
             </fieldset>
@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <div>
+        <div id="category_2">
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                 <legend>二栏</legend>
             </fieldset>
@@ -159,7 +159,7 @@
             </div>
         </div>
 
-        <div>
+        <div id="category_3">
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                 <legend>三栏</legend>
             </fieldset>
@@ -342,7 +342,24 @@
         laydate.render({elem: '#begin3',type: 'datetime'});
         laydate.render({elem: '#end3',type: 'datetime'});
 
+        $("#category_2, #category_3").hide();
 
+        form.on('radio(category)', function(data){
+            var _val = data.value;
+            $("#category_2, #category_3").hide();
+            switch (_val*1) {
+                case 1:
+                    break;
+                case 2:
+                    $("#category_2").show();
+                    break;
+                case 3:
+                    $("#category_2, #category_3").show();
+                    break;
+                default:
+                    break;
+            }
+        })
 
         //监听提交
         form.on('submit(submit)', function (data) {
