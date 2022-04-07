@@ -41,7 +41,24 @@
         <div class="layui-input-block">
             <input type="hidden" name="data_icon" class="layui-input" />
             <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传icon
+                <i class="layui-icon">&#xe67c;</i>上传
+            </button>
+        </div>
+    </div>
+
+    <div id="data_dark_icon_url" style="display: none;" >
+        <label class="layui-form-label"></label>
+        <div class="layui-input-block">
+            <img src="#" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="display: none;" >
+        <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
+        <div class="layui-input-block">
+            <input type="hidden" name="data_dark_icon" class="layui-input" />
+            <button type="button" class="layui-btn" id="data_dark_icon">
+                <i class="layui-icon">&#xe67c;</i>上传
             </button>
         </div>
     </div>
@@ -89,6 +106,25 @@
             }
         });
 
+        upload.render({
+            elem: '#data_dark_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#data_dark_icon_url").show();
+                    $("#data_dark_icon_url img").attr('src', res.url);
+                    $("input[name='data_dark_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
         //监听提交
         form.on('submit(submit)', function (data) {
             Api.add(data.field, function (res) {
@@ -104,8 +140,15 @@
             $("#data_icon_label").text('图片');
             $("input[name='data_icon']").attr('type', 'hidden');
 
+            $("#data_dark_icon_url").hide();
+            $("#data_dark_icon_label").parents('div').hide();
+
             form.render('select');
             switch (data.value){
+                case 'RESOURCES_TYPE':
+                    // $("#data_dark_icon_url").show();
+                    $("#data_dark_icon_label").parents('div').show();
+                    break;
                 case 'RESOURCES_SUBDIVIDE':
                     getDataPicList("{:url('data_top_id')}?data_type=RESOURCES_TYPE", $('#data_top_id_option'), 1);
                     $("#data_top_id").show();
@@ -113,6 +156,7 @@
                 case 'REPORT_DETAIL_CAUSE':
                     getDataPicList("{:url('data_top_id')}?data_type=REPORT_TYPE", $('#data_top_id_option'), 1);
                     $("#data_top_id").show();
+
                     break;
                 case 'RESOURCE_INDUSTRY':
                     getDataPicList("{:url('data_top_id')}?data_type=RESOURCES_SUBDIVIDE", $('#data_top_id_option'), 2);
