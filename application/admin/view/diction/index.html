@@ -66,6 +66,12 @@
                 }
                 return '-';
                 },}
+            ,{field: 'data_dark_icon', width:80,title: '深色icon',templet:function(d){
+                if(d.data_dark_icon && d.data_type_no == 'RESOURCES_TYPE'){
+                    return "<img src='"+d.data_dark_icon+"' height='30' width='30' />";
+                }
+                return '-';
+            }}
             ,{field: 'data_name',  width:270,title: '名称'}
             ,{field: 'sort',  width:80,title: '排序'}
             ,{fixed: 'right',title:'操作', width:120,align:'center', toolbar: '#barDemo'}
