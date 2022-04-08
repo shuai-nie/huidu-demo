@@ -173,7 +173,11 @@ class Resource extends Base
         $DataDicData     = $DataDic->where(['data_type_no' => 'CONTACT_TYPE', 'status' => 1])->order('sort desc')->select();
         $Subivde         = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourcesType[0]['data_no']])->order('sort desc')->select();
         $resourceIndustry = $DataDic->where(['data_type_no'=> 'RESOURCE_INDUSTRY', 'status' => 1])->select();
+        if(isset($resourceIndustry[0]['data_no'])){
         $resourceIndustrySubdivide = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourceIndustry[0]['data_no']])->order('sort desc')->select();
+        } else {
+            $resourceIndustrySubdivide = array();
+        }
         $this->assign('resourcesType', $resourcesType);
         $this->assign('resourcesRegion', $resourcesRegion);
         $this->assign('DataDicData', $DataDicData);
