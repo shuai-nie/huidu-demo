@@ -96,8 +96,9 @@
 </script>
 
 <script type="text/html" id="home_roll">
-    <!-- 这里的 checked 的状态只是演示 -->
+    {{# if( d.ty*1 == 2){ }}
     <input type="checkbox" name="home_roll" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="home_roll" {{ d.home_roll == 1 ? 'checked' : '' }}>
+    {{# } }}
 </script>
 
 <script>
