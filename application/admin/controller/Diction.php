@@ -107,6 +107,7 @@ class Diction extends Base
                 'data_icon' => $_post['data_icon'],
                 'sort' => $_post['sort'],
                 'data_top_id' => $_post['data_top_id'],
+                'data_dark_icon' => $_post['data_dark_icon'],
             ]);
             if($state !== false) {
                 return success_json(lang('CreateSuccess', [lang('Dictionaries')] ));
@@ -140,6 +141,7 @@ class Diction extends Base
                 'data_icon' => $_post['data_icon'],
                 'sort' => $_post['sort'],
                 'data_top_id' => $_post['data_top_id'],
+                'data_dark_icon' => $_post['data_dark_icon'],
             ], ['id' => $id]);
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('Dictionaries')] ));

@@ -48,7 +48,7 @@
     <div id="data_dark_icon_url" {if condition="empty($data['data_dark_icon'])"}style="display: none;"{/if} >
         <label class="layui-form-label"></label>
         <div class="layui-input-block">
-            <img src="#" height="100" width="100" />
+            <img src="{$data['data_dark_icon']}" height="100" width="100" />
         </div>
     </div>
 
@@ -139,7 +139,6 @@
         $("#data_icon_label").text('图片');
         $("input[name='data_icon']").attr('type', 'hidden');
 
-        $("#data_dark_icon_url").hide();
         $("#data_dark_icon_label").parents('div').hide();
 
         switch ("{$data['data_type_no']}"){
