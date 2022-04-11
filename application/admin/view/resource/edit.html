@@ -21,7 +21,7 @@
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
             {foreach name='ty' id='tvo' key='k'}
-            <input type="radio" name="ty" value="{$k}" title="{$tvo}" {if condition="$k eq 1"} checked{/if} >
+            <input type="radio" name="ty" value="{$k}" lay-filter="ty" title="{$tvo}" {if condition="$k eq 1"} checked{/if} >
             {/foreach}
         </div>
     </div>
@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="home_roll">
         <label class="layui-form-label">首页滚动</label>
         <div class="layui-input-block">
             <input type="radio" name="home_roll" value="0" title="否" checked >
@@ -186,7 +186,6 @@
             _this.parent().parent().remove();
         })
 
-
         //监听提交
         form.on('submit(submit)', function (data) {
             var _intro = document.getElementById('container');
@@ -201,6 +200,25 @@
                 }
             });
         });
+
+        form.on('radio(ty)', function(data){
+            radioTy(data.value)
+        });
+
+        radioTy("{$resource['ty']}")
+
+        function radioTy(value){
+            switch (value * 1) {
+                case 1:
+                    $("#home_roll").hide();
+                    break;
+                case 2:
+                    $("#home_roll").show();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         form.on('radio(type)', function(data){
             $("#subdivide").empty();
