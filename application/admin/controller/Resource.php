@@ -107,7 +107,7 @@ class Resource extends Base
         return view('', [
             'ty'         => $this->ty,
             'type'       => $type,
-            'meta_title' => '资源管理',
+            'meta_title' => $examine == 'examine' ? '资源审核' : '资源管理',
             'examine' => $examine,
         ]);
     }
