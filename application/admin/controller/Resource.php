@@ -357,11 +357,11 @@ class Resource extends Base
             $resourceInfo = model('Resource')->find($id);
             $state        = model('Resource')->save(['status' => 0], ['id' => $id]);
             if ($state !== false) {
-                if ($resourceInfo['auth'] == 1 || $resourceInfo['auth'] == 2) {
+                if (($resourceInfo['auth'] == 1 || $resourceInfo['auth'] == 2) && $resourceInfo['ty'] == 1) {
                     $userInfo         = model('UserInfo')->where(['uid' => $resourceInfo['uid']])->find();
                     $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
-                    // 加
-                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setInc('used_publish');
+                    // 减
+                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setDec('used_publish');
                     model('PackageLog')->save([
                         'uid'         => $resourceInfo['uid'],
                         'type'        => 1,
