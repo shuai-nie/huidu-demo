@@ -1,7 +1,9 @@
 {include file="moban/bone_header"}
 
 <div class="layui-btn-container">
+    {if condition="$examine neq 'examine'"}
     <button class="layui-btn" data-type="create">添加</button>
+    {/if}
 </div>
 
 <fieldset class="table-search-fieldset">
@@ -89,10 +91,15 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
-<script type="text/html" id="barDemo">
+<script type="text/html" id="barDemo" {$examine} 111>
+    {if condition="$examine eq 'examine'"}
+    <a class="layui-btn layui-btn-xs" lay-event="examine">审核</a>
+    {else /}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>
+    {/if}
+
 </script>
 
 <script type="text/html" id="home_roll">
@@ -129,8 +136,10 @@ layui.use(['table','form'], function(){
         ,{field: 'type', title: '合作领域',width:110}
         ,{field: 'region', title: '合作区域',width:110}
         ,{field: 'business_subdivide', title: '业务细分',width:140}
-        ,{field: 'feedback', title: '反馈信息',width:140}
+        // ,{field: 'feedback', title: '反馈信息',width:140}
+        {if condition="$examine neq 'examine'"}
         ,{field: 'home_roll', title: '首页滚动',width:120,templet:'#home_roll'}
+        {/if}
         ,{field: 'auth', title: '状态',width:80,align:'center',templet:function (d) {
                 switch (d.auth*1){
                     case 1:return '<span class="layui-btn-xs layui-border-orange">通过</span>';break;
@@ -141,7 +150,8 @@ layui.use(['table','form'], function(){
                     default:return '<span class="layui-btn-xs layui-border-gray">-</span>';break;
                 }
             }}
-        ,{field: 'flush_time', title: '刷新时间',width:140,templet:function(d){
+        ,{field: 'create_time', title: '创建时间',width:140,sort:true,align:"center"}
+        ,{field: 'flush_time', title: '刷新时间',width:140,sort:true,align:"center",templet:function(d){
                 if(d.flush_time > 10000) {
                     return "<div>" + layui.util.toDateString(d.flush_time*1000, 'yyyy-MM-dd HH:mm') + "</div>";
                 }
@@ -181,6 +191,8 @@ layui.use(['table','form'], function(){
                     layer.msg(res.msg, {icon:5});
                 }
             }, 'json');
+        }else if(obj.event ==='examine'){
+            UI.openLayer("{:url('examine')}?id="+data['id'],700, 560);
         }
     });
 

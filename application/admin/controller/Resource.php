@@ -20,6 +20,7 @@ class Resource extends Base
      */
     public function index()
     {
+        $examine = \request()->get('type');
         $DataDic = model('DataDic');
         if (\request()->isPost()) {
             $map      = ['A.status' => 1];
@@ -106,7 +107,8 @@ class Resource extends Base
         return view('', [
             'ty'         => $this->ty,
             'type'       => $type,
-            'meta_title' => '资源管理'
+            'meta_title' => '资源管理',
+            'examine' => $examine,
         ]);
     }
 
@@ -767,5 +769,52 @@ class Resource extends Base
         $data_top_id = \request()->param('data_top_id');
         $subdivide = $DataDic->where(['data_type_no'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'status'=>1,'data_top_id'=>$data_top_id])->select();
         return success_json('返回成功', ['sub'=>$subdivide]);
+    }
+
+    public function examine($id)
+    {
+        $Resource = model('Resource');
+        $data = $Resource->find($id);
+        if(\request()->isPost()){
+            $auth = \request()->post('auth');
+            $feedback = \request()->post('feedback');
+
+            $state = $Resource->save(['auth' => $auth, 'feedback' => $feedback], ['id' => $id]);
+            if($state !== false) {
+                $userInfo = model('UserInfo')->where(['uid' => $data['uid']])->find();
+                $UserRechargeFind = model('UserRecharge')->find($userInfo['user_recharge_id']);
+                if ($data['auth'] != $auth && ($auth == 1 || $auth == 2) && $data['ty'] == 1 && ($data['auth'] == 3 || $data['auth'] == 4 || $data['auth'] == 5)) {
+                    // 加
+                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setInc('used_publish');
+                    model('PackageLog')->save([
+                        'uid'         => $data['uid'],
+                        'type'        => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id'  => $UserRechargeFind['package_id'],
+                        'resource_id' => $id,
+                        'remarks'     => '编辑',
+                        'state'       => 1,
+                    ]);
+
+                } else if ($auth != $data['auth'] && ($auth == 3 || $auth == 4 || $auth == 5) && $data['ty'] == 1) {
+                    // 减
+                    model('UserRecharge')->where(['id' => $userInfo['user_recharge_id']])->setDec('used_publish');
+                    model('PackageLog')->save([
+                        'uid'         => $data['uid'],
+                        'type'        => 1,
+                        'recharge_id' => $userInfo['user_recharge_id'],
+                        'package_id'  => $UserRechargeFind['package_id'],
+                        'resource_id' => $id,
+                        'remarks'     => '编辑',
+                        'state'       => 2,
+                    ]);
+                }
+                return success_json(lang('EditSuccess', [lang('Resource')]));
+            }
+            return error_json(lang('EditFail', [lang('Resource')]));
+
+
+        }
+        return view('', ['data' => $data]);
     }
 }
