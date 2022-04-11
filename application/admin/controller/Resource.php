@@ -369,7 +369,7 @@ class Resource extends Base
                         'package_id'  => $UserRechargeFind['package_id'],
                         'resource_id' => $id,
                         'remarks'     => '删除',
-                        'state'       => 1,
+                        'state'       => 2,
                     ]);
                 }
                 return success_json(lang('DeleteSuccess', [lang('Resource')]));
