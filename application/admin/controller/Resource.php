@@ -29,6 +29,13 @@ class Resource extends Base
             $offset   = ($page - 1) * $limit;
             $uid      = \request()->post('uid');
             $username = \request()->post('username');
+            $field = \request()->post('field');
+            $order = \request()->post('order');
+            if(!empty($field) && !empty($order)) {
+                $order = 'A.' . $field . ' ' . $order;
+            } else {
+                $order = 'A.id desc';
+            }
             if (!empty($uid)) {
                 $map['A.uid'] = $uid;
             }
@@ -58,7 +65,7 @@ class Resource extends Base
             $data  = model("Resource")->alias('A')
                 ->join(model('User')->getTable() . " B", "A.uid=B.id", 'left')
                 ->where($map)->field('A.*,B.username')
-                ->order('A.id desc')->limit($offset, $limit)->select();
+                ->order($order)->limit($offset, $limit)->select();
             $count = model("Resource")->alias('A')
                 ->join(model('User')->getTable() . " B", "A.uid=B.id", 'left')
                 ->where($map)->count();

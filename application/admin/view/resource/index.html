@@ -224,6 +224,15 @@ layui.use(['table','form'], function(){
         }, 'json');
     });
 
+    table.on('sort(think-table)', function(obj){
+        console.log(obj.field);
+        console.log(obj.type);
+        table.reload('table', {
+            initSort: obj
+            ,where: {field: obj.field,order: obj.type}
+        });
+    })
+
 });
 </script>
 {include file="moban/bone_footer"}
