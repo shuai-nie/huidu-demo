@@ -1,0 +1,84 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="auth" value="1" title="通过" checked >
+            <input type="radio" name="auth" value="2" title="审核中">
+            <input type="radio" name="auth" value="3" title="未通过">
+            <input type="radio" name="auth" value="4" title="草稿">
+            <input type="radio" name="auth" value="5" title="已关闭">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px;">
+        <label class="layui-form-label">反馈信息</label>
+        <div class="layui-input-block">
+            <input type="text" name="feedback" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script type="text/javascript" src="/static/ueditor1433/ueditor.config.js?v=1.1.0"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.all.js?v=1.1.0"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.parse.js?v=1.1.0"></script>
+<script type="text/javascript" src="/static/ueditor1433/lang/zh-cn/zh-cn.js?v=1.1.0"></script>
+
+<script>
+    //Demo
+    layui.use(['form','upload','laydate'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            laydate = layui.laydate;
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {
+                if(res.code == 200) {
+                    layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
+                } else {
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
+                }
+            });
+        });
+
+        form.verify({
+            // region:function () {
+            //     var checked = document.getElementById("region");
+            //     if (checked.checked == false) {
+            //         return "请至少选择一个合作区域";
+            //     }
+            // },
+            // subdivide : function(){
+            //     var checked = document.getElementById("subdivides");
+            //     if (checked.checked == false) {
+            //         return "请至少选择一个业务细分";
+            //     }
+            // }
+        })
+
+        form.val('first', {
+            "title" : "{$data['title']}",
+            "auth" : "{$data['auth']}",
+        })
+
+    });
+</script>
