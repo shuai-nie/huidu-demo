@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use think\Log;
 use think\Request;
 
 class Diction extends Base
@@ -82,6 +83,7 @@ class Diction extends Base
             }
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
+
         return view('', [
             'data_type' => $this->data,
             'meta_title' => '字典',
@@ -163,12 +165,54 @@ class Diction extends Base
      */
     public function delete($id)
     {
+        $DataDic = model('DataDic');
+        $data = $DataDic->find($id);
         if($id != '') {
-            $state = model('DataDic')->save(['status'=>0], ['id'=>$id]);
+            $state = $DataDic->save(['status'=>0], ['id'=>$id]);
             if($state !== false) {
+                switch ($data['data_type_no']) {
+                    case 'RESOURCES_TYPE':
+                        // 资源·业务类型
+                        $this->deleteResourcesSubdivide($DataDic, $data['data_no']);
+
+                        break;
+                }
                 return success_json(lang('DeleteSuccess', [lang('Dictionaries')] ));
             }
             return error_json(lang('DeleteFail', [lang('Dictionaries')]) );
+        }
+    }
+
+    // 删除多条 资源·业务细分
+    public function deleteResourcesSubdivide($DataDic, $id)
+    {
+        $industry = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_top_id' => $id])->field('id,data_no,data_name,data_top_id')->select();
+        foreach ($industry as $k => $v) {
+            $DataDic->where(['id' => $v['id']])->update(['status' => 0]);
+            Log::info($DataDic->getLastSql());
+            $this->deleteResourcesIndustry($DataDic, $v['id']);
+        }
+    }
+
+    // 删除多条 资源·行业类型
+    protected function deleteResourcesIndustry($DataDic, $id)
+    {
+        // 资源·行业类型
+        $industry = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_top_id' => $id])->field('id,data_no,data_name,data_top_id')->select();
+        foreach ($industry as $k => $v) {
+            $DataDic->where(['id' => $v['id']])->update(['status' => 0]);
+            Log::info($DataDic->getLastSql());
+            $this->deleteResourcesIndustrySubdivide($DataDic, $v['data_no']);
+        }
+    }
+
+    // 删除多条 资源·行业细分
+    protected function deleteResourcesIndustrySubdivide($DataDic, $id)
+    {
+        $industry = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'data_top_id' => $id])->field('id,data_no,data_name,data_top_id')->select();
+        foreach ($industry as $k => $v) {
+            $DataDic->where(['id' => $v['id']])->update(['status' => 0]);
+            Log::info($DataDic->getLastSql());
         }
     }
 
@@ -178,6 +222,38 @@ class Diction extends Base
         $DataDic = model('DataDic');
         $data = $DataDic->where(['data_type_no' => $param['data_type'], 'status' => 1])->select();
         return success_json('成功', $data);
+    }
+
+    public function data()
+    {
+        $DataDic = model('DataDic');
+        $data = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_TYPE'])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+
+        echo "<table cellpadding='1' cellspacing='1'>";
+        foreach ($data as $k=> $v) {
+            echo "<tr>";
+            echo "<td>".$v['data_type_name']."</td>";
+            echo "<td>".$v['id'] .'、' .$v['data_name']."Level1</td>";
+            echo "</tr>";
+            $s = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_top_id'=>$v['data_no']])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+            foreach ($s as $k1 => $v1 ) {
+                echo "<tr>";
+                echo "<td>".$v1['data_type_name']."</td>";
+                echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;".$v1['id'] .'、' .$v1['data_name']."Level2</td>";
+                echo "</tr>";
+                $s2 = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_top_id'=>$v1['id']])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+                foreach ($s2 as $k2 => $v2 ) {
+                    echo "<tr>";
+                    echo "<td>".$v2['data_type_name']."</td>";
+                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$v2['data_name']."Level3</td>";
+                    echo "</tr>";
+                }
+            }
+
+
+
+        }
+        echo "</table>";
     }
 
 }

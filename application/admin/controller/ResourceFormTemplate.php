@@ -111,6 +111,38 @@ class ResourceFormTemplate extends Controller
         ]);
     }
 
+    public function dd()
+    {
+        $DataDic = model('DataDic');
+        $data = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_TYPE'])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+
+        echo "<table cellpadding='1' cellspacing='1'>";
+        foreach ($data as $k=> $v) {
+            echo "<tr>";
+            echo "<td>".$v['data_type_name']."</td>";
+            echo "<td>".$v['id'] .'、' .$v['data_name']."Level1</td>";
+            echo "</tr>";
+            $s = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_top_id'=>$v['data_no']])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+            foreach ($s as $k1 => $v1 ) {
+                echo "<tr>";
+                echo "<td>".$v1['data_type_name']."</td>";
+                echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;".$v1['id'] .'、' .$v1['data_name']."Level2</td>";
+                echo "</tr>";
+                $s2 = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_top_id'=>$v1['id']])->field('id,data_no,data_name,data_top_id,data_type_name')->select();
+                foreach ($s2 as $k2 => $v2 ) {
+                    echo "<tr>";
+                    echo "<td>".$v2['data_type_name']."</td>";
+                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$v2['data_name']."Level3</td>";
+                    echo "</tr>";
+                }
+            }
+
+
+
+        }
+        echo "</table>";
+    }
+
     /**
      * 显示编辑资源表单页.
      *
