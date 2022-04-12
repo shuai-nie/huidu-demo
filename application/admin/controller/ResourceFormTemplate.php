@@ -64,6 +64,16 @@ class ResourceFormTemplate extends Controller
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
+        foreach ($resourcesSubdivide as $k => $v) {
+            if(is_numeric($v['data_top_id'])){
+                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->count();
+                if($subdivide == 0) {
+                    unset($resourcesSubdivide[$k]);
+                } else {
+                    $resourcesSubdivide[$k] = $v;
+                }
+            }
+        }
         return view('', [
             'meta_title' => '资源·表单模板',
             'form_type' => $this->form_type,
@@ -166,6 +176,16 @@ class ResourceFormTemplate extends Controller
         $ty = (new Resource())->ty;
         $ResourceFormTemplateInfo = $ResourceFormTemplate->find($id);
         $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
+        foreach ($resourcesSubdivide as $k => $v) {
+            if(is_numeric($v['data_top_id'])){
+                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->count();
+                if($subdivide == 0) {
+                    unset($resourcesSubdivide[$k]);
+                } else {
+                    $resourcesSubdivide[$k] = $v;
+                }
+            }
+        }
         return view('', [
             'ty' => $ty,
             'form_type' => $this->form_type,
