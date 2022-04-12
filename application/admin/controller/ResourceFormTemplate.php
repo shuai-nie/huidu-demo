@@ -63,22 +63,11 @@ class ResourceFormTemplate extends Controller
                 ->where($map)->count();
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
-        $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
-        foreach ($resourcesSubdivide as $k => $v) {
-            if(is_numeric($v['data_top_id'])){
-                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->count();
-                if($subdivide == 0) {
-                    unset($resourcesSubdivide[$k]);
-                } else {
-                    $resourcesSubdivide[$k] = $v;
-                }
-            }
-        }
+        $this->subdivide();
         return view('', [
             'meta_title' => '资源·表单模板',
             'form_type' => $this->form_type,
             'ty' => (new Resource())->ty,
-            'resourcesSubdivide' => $resourcesSubdivide,
         ]);
     }
 
@@ -102,22 +91,10 @@ class ResourceFormTemplate extends Controller
             return error_json(lang('CreateFail', [lang('ResourceFormTemplate')]));
         }
         $ty = (new Resource())->ty;
-        $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
-        foreach ($resourcesSubdivide as $k => $v) {
-            if(is_numeric($v['data_top_id'])){
-                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->count();
-                if($subdivide == 0) {
-                    unset($resourcesSubdivide[$k]);
-                } else {
-                    $resourcesSubdivide[$k] = $v;
-                }
-            }
-        }
-
+        $this->subdivide();
         return view('', [
             'ty' => $ty,
             'form_type' => $this->form_type,
-            'resourcesSubdivide' => $resourcesSubdivide,
         ]);
     }
 
@@ -175,6 +152,19 @@ class ResourceFormTemplate extends Controller
         }
         $ty = (new Resource())->ty;
         $ResourceFormTemplateInfo = $ResourceFormTemplate->find($id);
+
+        $this->subdivide();
+        return view('', [
+            'ty' => $ty,
+            'form_type' => $this->form_type,
+            'ResourceFormTemplateInfo' => $ResourceFormTemplateInfo,
+        ]);
+
+    }
+
+    protected function subdivide()
+    {
+        $DataDic = model('DataDic');
         $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
         foreach ($resourcesSubdivide as $k => $v) {
             if(is_numeric($v['data_top_id'])){
@@ -186,13 +176,7 @@ class ResourceFormTemplate extends Controller
                 }
             }
         }
-        return view('', [
-            'ty' => $ty,
-            'form_type' => $this->form_type,
-            'ResourceFormTemplateInfo' => $ResourceFormTemplateInfo,
-            'resourcesSubdivide' => $resourcesSubdivide,
-        ]);
-
+        $this->assign('resourcesSubdivide' , $resourcesSubdivide);
     }
 
 
