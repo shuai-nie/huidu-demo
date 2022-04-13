@@ -574,27 +574,27 @@ class Resource extends Base
                         $html .= "</div>";
                         break;
                     case 6:
-                        $html .= "<div class=\"layui-input-block\" >";
-                        $container = true;
-                        $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\">{$ResourceInfo['intro']}</script>";
-                        $html .= "   </div>";;
+//                        $html .= "<div class=\"layui-input-block\" >";
+//                        $container = true;
+//                        $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\">{$ResourceInfo['intro']}</script>";
+//                        $html .= "   </div>";;
                         break;
                     case 7:
-                        $html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
-                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
-                            . '预览图：'
-                            . '<div class="layui-upload-list" id="demo7">'
-                            . '';
-                        if(!empty($ResourceInfo['img'])){
-                            $img = explode('|', $ResourceInfo['img']);
-                            foreach ($img as $kl =>$vl){
-                                $html .= "<div style=\"width:100px;float:left;position:relative;margin:10px;\">"
-                                ."<i class=\"layui-icon layui-icon-close img-delete\" style=\"color:red;border:1px solid red;position:absolute;right:0px;top:-20px;\"></i>"
-                                ."<img width=\"100\" height=\"100\" src=\"{$vl}\" class=\"layui-upload-img\">"
-                                ."<input type=\"hidden\" name=\"img[{$kl}]\" value=\"{$vl}\"></div>";
-                            }
-                        }
-                        $html .= '</div><div style="clear:both;"></div>' . '</blockquote>';
+//                        $html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
+//                            . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
+//                            . '预览图：'
+//                            . '<div class="layui-upload-list" id="demo7">'
+//                            . '';
+//                        if(!empty($ResourceInfo['img'])){
+//                            $img = explode('|', $ResourceInfo['img']);
+//                            foreach ($img as $kl =>$vl){
+//                                $html .= "<div style=\"width:100px;float:left;position:relative;margin:10px;\">"
+//                                ."<i class=\"layui-icon layui-icon-close img-delete\" style=\"color:red;border:1px solid red;position:absolute;right:0px;top:-20px;\"></i>"
+//                                ."<img width=\"100\" height=\"100\" src=\"{$vl}\" class=\"layui-upload-img\">"
+//                                ."<input type=\"hidden\" name=\"img[{$kl}]\" value=\"{$vl}\"></div>";
+//                            }
+//                        }
+//                        $html .= '</div><div style="clear:both;"></div>' . '</blockquote>';
                         break;
                     case 8:
                         $html .= '<button type="button" class="layui-btn" id="test8submit">logo</button>'
@@ -612,6 +612,13 @@ class Resource extends Base
                 }
                 $html .= "   </div>";
             }
+//            if($container == false) {
+//                $html .= "<div class=\"layui-input-block\" >";
+//                $container = true;
+//                $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\">{$ResourceInfo['intro']}</script>";
+//                $html .= "   </div>";
+//                $html .= "   </div>";
+//            }
             return success_json('成功', ['html'=>$html,'container'=>$container]);
         } else {
             return error_json('沒有模板');
@@ -736,18 +743,18 @@ class Resource extends Base
 //                        $html .= "   </div>";
                         break;
                     case 6:
-                        $html .= "<div class=\"layui-input-block\" >";
+                        /*$html .= "<div class=\"layui-input-block\" >";
                         $container = true;
                         $html .= "<script id=\"container\" name=\"intro\" type=\"text/plain\"></script>";
-                        $html .= "   </div>";;
+                        $html .= "   </div>";*/
                         break;
                     case 7:
-                        $html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
+                        /*$html .= '<button type="button" class="layui-btn" id="test7submit">产品图片</button>'
                             . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
                             . '预览图：'
                             . '<div class="layui-upload-list" id="demo7"></div>'
                             . '<div style="clear:both;"></div>'
-                            . '</blockquote>';
+                            . '</blockquote>';*/
                         break;
                     case 8:
                         $html .= '<button type="button" class="layui-btn" id="test8submit">logo</button>'

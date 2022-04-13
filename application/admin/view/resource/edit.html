@@ -76,6 +76,33 @@
     <div id="form_html"></div>
 
     <div class="layui-form-item" style="margin-top:30px;">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <script id="container" name="intro" type="text/plain">{$resource['intro']}</script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px;">
+        <label class="layui-form-label"></label>
+        <button type="button" class="layui-btn" id="test7submit">产品图片</button>
+        <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">
+            预览图：
+            <div class="layui-upload-list" id="demo7">
+                {volist name="resource['img']" id='vo' key='k'}
+                {if condition="$vo"}
+                <div style="width:100px;float:left;position:relative;margin:10px;">
+                    <i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;"></i>
+                    <img width="100" height="100" src="{$vo}" class="layui-upload-img">
+                    <input type="hidden" name="img[{$k}]" value="{$vo}">
+                </div>
+                {/if}
+                {/volist}
+            </div>
+            <div style="clear:both;"></div>
+        </blockquote>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px;">
         <label class="layui-form-label">反馈信息</label>
         <div class="layui-input-block">
             <input type="text" name="feedback" placeholder="" autocomplete="off" class="layui-input">
@@ -135,7 +162,12 @@
             upload = layui.upload,
             laydate = layui.laydate;
 
-        var ue;
+        var ue = UE.getEditor('container', {
+            initialFrameHeight:400,
+            autoHeightEnabled:false,
+            autoFloatEnabled:false,
+            zIndex:"0"
+        });
 
 
         laydate.render({elem: '#top_start_time',type: 'datetime'});
@@ -171,7 +203,30 @@
             }
         });
 
-        $("#form_html").on('click', '.img-delete', function(){
+        upload.render({
+            elem: '#test7submit'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                        +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
+                        +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                        + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
+                        +'</div>');
+                    imgKey++;
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        $("form").on('click', '.img-delete', function(){
             var _this = $(this);
             _this.parent().remove();
         })
@@ -304,28 +359,7 @@
                         });
                     }
 
-                    upload.render({
-                        elem: '#test7submit'
-                        ,url: upload_url
-                        ,accept: upload_accept
-                        ,acceptMime:upload_acceptMime
-                        ,size: upload_size
-                        ,done: function(res){
-                            if(res.code == 0) {
-                                $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
-                                    +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
-                                    +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
-                                    + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
-                                    +'</div>');
-                                imgKey++;
-                            } else {
-                                layui.msg('网络问题稍后再试');
-                            }
-                        }
-                        ,error: function(){
-                            //请求异常回调
-                        }
-                    });
+
 
                     upload.render({
                         elem: '#test8submit'
@@ -357,55 +391,13 @@
         });
 
         form.verify({
-            // region:function () {
-            //     var checked = document.getElementById("region");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个合作区域";
-            //     }
-            // },
-            // subdivide : function(){
-            //     var checked = document.getElementById("subdivides");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个业务细分";
-            //     }
-            // }
+
         })
 
         $("#form_html").empty();
         $.post("{:url('fromhtmlvalue')}", {resourceId:"{$resource['id']}"}, function (obj) {
             if(obj.code == 200){
                 $("#form_html").append(obj.data.html)
-                if(obj.data.container){
-                    ue = UE.getEditor('container', {
-                        initialFrameHeight:400,
-                        autoHeightEnabled:false,
-                        autoFloatEnabled:false,
-                        zIndex:"0"
-                    });
-                }
-
-                upload.render({
-                    elem: '#test7submit'
-                    ,url: upload_url
-                    ,accept: upload_accept
-                    ,acceptMime:upload_acceptMime
-                    ,size: upload_size
-                    ,done: function(res){
-                        if(res.code == 0) {
-                            $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
-                                +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
-                                +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
-                                + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
-                                +'</div>');
-                            imgKey++;
-                        } else {
-                            layui.msg('网络问题稍后再试');
-                        }
-                    }
-                    ,error: function(){
-                        //请求异常回调
-                    }
-                });
 
                 upload.render({
                     elem: '#test8submit'

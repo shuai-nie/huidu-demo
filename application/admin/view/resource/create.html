@@ -75,6 +75,23 @@
 
     <div id="form_html"></div>
 
+    <div class="layui-form-item" style="margin-top:30px;">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <script id="container" name="intro" type="text/plain"></script>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top:30px;">
+        <label class="layui-form-label"></label>
+        <button type="button" class="layui-btn" id="test7submit">产品图片</button>
+        <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">
+            预览图：
+            <div class="layui-upload-list" id="demo7"></div>
+            <div style="clear:both;"></div>
+        </blockquote>
+    </div>
+
     <div class="layui-form-item" style="padding-top:10px;">
         <label class="layui-form-label">反馈信息</label>
         <div class="layui-input-block">
@@ -134,7 +151,12 @@
         var form = layui.form,
             upload = layui.upload,
             laydate = layui.laydate;
-        var ue;
+        var ue = UE.getEditor('container', {
+            initialFrameHeight:400,
+            autoHeightEnabled:false,
+            autoFloatEnabled:false,
+            zIndex:"0"
+        });;
 
         laydate.render({elem: '#top_start_time',type: 'datetime'});
         laydate.render({elem: '#top_end_time',type: 'datetime'});
@@ -145,7 +167,30 @@
         var upload_size=3145728;
         var imgKey = 0 + "";
 
-        $("#form_html").on('click', '.img-delete', function(){
+        upload.render({
+            elem: '#test7submit'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
+                        +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
+                        +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
+                        + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
+                        +'</div>');
+                    imgKey++;
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        $("form").on('click', '.img-delete', function(){
             var _this = $(this);
             _this.parent().remove();
         })
@@ -156,17 +201,17 @@
             if(_intro){
                 data.field.intro = ue.getContent();
             }
-            // var DISABLED = 'layui-btn-disabled';
-            // $(':button').addClass(DISABLED);
-            // $(':button').attr('disabled', 'disabled');
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
 
             Api.add(data.field, function (res) {
                 if(res.code == 200) {
-                    // layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 50000});
+                     layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 50000});
                 } else {
-                    // $(':button').removeClass(DISABLED);
-                    // $(':button').removeAttr('disabled');
-                    // layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 50000});
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 50000});
                 }
             });
         });
@@ -217,37 +262,6 @@
             $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
-                    if(obj.data.container){
-                        ue = UE.getEditor('container', {
-                            initialFrameHeight:400,
-                            autoHeightEnabled:false,
-                            autoFloatEnabled:false,
-                            zIndex:"0"
-                        });
-                    }
-
-                    upload.render({
-                        elem: '#test7submit'
-                        ,url: upload_url
-                        ,accept: upload_accept
-                        ,acceptMime:upload_acceptMime
-                        ,size: upload_size
-                        ,done: function(res){
-                            if(res.code == 0) {
-                                $('#demo7').append('<div style="width:100px;float:left;position:relative;margin:10px;">'
-                                    +'<i class="layui-icon layui-icon-close img-delete" style="color:red;border:1px solid red;position:absolute;right:0px;top:-20px;" ></i>'
-                                    +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
-                                    + '<input type="hidden" name="img['+imgKey+']" value="'+res.url+'" />'
-                                    +'</div>');
-                                imgKey++;
-                            } else {
-                                layui.msg('网络问题稍后再试');
-                            }
-                        }
-                        ,error: function(){
-                            //请求异常回调
-                        }
-                    });
 
                     upload.render({
                         elem: '#test8submit'
@@ -315,37 +329,6 @@
         })
 
         form.verify({
-            // region:function () {
-            //     var checked = document.getElementById("region");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个合作区域";
-            //     }
-            // },
-            // subdivide : function(){
-            //     var checked = document.getElementById("subdivides");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个业务细分";
-            //     }
-            // }
-            // otherReq: function (value, item) {
-            //     var $ = layui.$;
-            //     var verifyName = $(item).attr('name')
-            //         , verifyType = $(item).attr('type')
-            //         , formElem = $(item).parents('.layui-form')
-            //         , verifyElem = formElem.find("input[name='region[*]']")
-            //         , isTrue = verifyElem.is(':checked')
-            //         , focusElem = verifyElem.next().find('i.layui-icon');
-            //
-            //         if(!isTrue || !value){
-            //             //定位焦点
-            //             focusElem.css(verifyType=='radio'?{"color":"#FF5722"}:{"border-color":"#FF5722"});
-            //             //对非输入框设置焦点
-            //             focusElem.first().attr("tabIndex","1").css("outline","0").blur(function() {
-            //                 focusElem.css(verifyType=='radio'?{"color":""}:{"border-color":""});
-            //             }).focus();
-            //              return '必填项不能为空';
-            //         }
-            // }
         });
 
     });
