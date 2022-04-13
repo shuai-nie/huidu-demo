@@ -350,18 +350,7 @@
             $.post("{:url('fromHtml')}", {fromId:_val}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
-                    if(obj.data.container){
-                        ue = UE.getEditor('container', {
-                            initialFrameHeight:400,
-                            autoHeightEnabled:false,
-                            autoFloatEnabled:false,
-                            zIndex:"0"
-                        });
-                    }
-
-
-
-                    upload.render({
+                       upload.render({
                         elem: '#test8submit'
                         ,url: upload_url
                         ,accept: upload_accept
@@ -383,8 +372,6 @@
                     });
                     form.render();
                     formVal();
-                } else {
-                    layer.msg(obj.msg);
                 }
             }, 'json');
 
