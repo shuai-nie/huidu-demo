@@ -598,7 +598,7 @@ class Resource extends Base
                         break;
                     case 8:
                         $html .= '<button type="button" class="layui-btn" id="test8submit">logo</button>'
-                            . '<input type="hidden" name="logo" />'
+                            . '<input type="hidden" name="logo" value="'.$ResourceInfo['logo'].'" />'
                             . '<blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">'
                             . '预览图：'
                             . '<div class="layui-upload-list" id="demo8">';
