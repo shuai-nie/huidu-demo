@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\Config;
 use think\Controller;
+use think\Log;
 use think\Request;
 
 class Userinfo extends Base
@@ -23,12 +24,14 @@ class Userinfo extends Base
             $nickname = \request()->post('nickname');
             $package_id = \request()->post('package_id');
             $field = \request()->post('field');
-            $order = \request()->post('desc');
-            if(!empty($field) && !empty($order)) {
-                $order = "A." . $field . ' ' . $order;
+            $type = \request()->post('type');
+            if(!empty($field) && !empty($type)) {
+                $order = "A." . $field . ' ' . $type;
             }else {
                 $order = "E.id desc";
             }
+            Log::info($order);
+
             if(!empty($username)) {
                 $map['E.username'] = ['like', "%{$username}%"];
             }
