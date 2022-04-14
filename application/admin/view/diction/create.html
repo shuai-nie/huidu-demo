@@ -182,12 +182,9 @@
                 dataType:'json',
                 async: true,
                 success:function(data) {
-                    console.log(data.length);
-                    // $("#city")
                     node.html("<option value=''>请选择</option>");
                     $.each(data.data, function(index, item){
                         if(type == 1){
-                        // $("#city")
                             node.append(new Option(item.data_name, item.data_no));
                         } else if(type == 2){
                             node.append(new Option(item.data_name, item.id));

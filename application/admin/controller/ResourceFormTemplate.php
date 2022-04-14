@@ -168,10 +168,11 @@ class ResourceFormTemplate extends Controller
         $resourcesSubdivide = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'status'=>1])->select();
         foreach ($resourcesSubdivide as $k => $v) {
             if(is_numeric($v['data_top_id'])){
-                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->count();
-                if($subdivide == 0) {
+                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $v['data_top_id'], 'status'=>1])->find();
+                if(empty($subdivide)) {
                     unset($resourcesSubdivide[$k]);
                 } else {
+                    $v['data_name'] = $subdivide['data_name'] . '-' . $v['data_name'];
                     $resourcesSubdivide[$k] = $v;
                 }
             }

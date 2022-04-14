@@ -221,6 +221,17 @@ class Diction extends Base
         $param = \request()->param();
         $DataDic = model('DataDic');
         $data = $DataDic->where(['data_type_no' => $param['data_type'], 'status' => 1])->select();
+        if ($param['data_type'] == 'RESOURCE_INDUSTRY') {
+            foreach ($data as $k => $v){
+                $subdivide = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1,'id'=>$v['data_top_id']])->find();
+                if($subdivide) {
+                    $v['data_name'] = $subdivide['data_name'] . '-' . $v['data_name'];
+                    $data[$k] = $v;
+                } else {
+                    unset($data[$k]);
+                }
+            }
+        }
         return success_json('成功', $data);
     }
 
