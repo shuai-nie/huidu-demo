@@ -98,22 +98,28 @@
                     return '-'
                 }}
             ,{fixed: 'right',title:'操作',width:270, align:'center', toolbar: '#barDemo'}
-
             {else/}
 
             {field: 'uid', title: 'UID', width:80, fixed: 'left'}
             ,{field: 'head_url', title: '头像',width:60,templet: function(d){
-                    if(d.head_url != null && d.head_url != '') {
-                        return "<img src='"+d.head_url+"' height=30 width=30 />";
-                    }
-                    return "-";
-                }}
+                if(d.head_url != null && d.head_url != '') {
+                    return "<img src='"+d.head_url+"' height=30 width=30 />";
+                }
+                return "-";
+            }}
             ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
-                    return  d.username + '/' + d.nickname ;
-                }}
+                return  d.username + '/' + d.nickname ;
+            }}
+            ,{field: 'title', title: '套餐',width:120}
             , {field: 'mobile', title: '手机号', width: 125}
             , {field: 'email', title: '邮箱', width: 130}
-            ,{field: 'create_time', title: '注册时间', width:170}
+            ,{field: 'create_time', title: '注册时间',align: 'center', width:170}
+            ,{field: 'lately_login_time', title: '登录时间',width:170,sort:true ,align:'center',templet: function (d){
+                    if(d.lately_login_time > 10000) {
+                        return "<div>" + layui.util.toDateString(d.lately_login_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                    }
+                    return '-'
+                }}
             ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
             {/if}
         ]);
@@ -145,6 +151,15 @@
                 });
             }
         });
+
+        table.on('sort(think-table)', function(obj){
+            table.reload('table', {
+                initSort: obj
+                ,method:'post'
+                ,where: {field: obj.field, order: obj.type}
+            })
+        })
+
         var $ = layui.$, active = {
             create:function(){
                 UI.openLayer("{:url('create')}");
