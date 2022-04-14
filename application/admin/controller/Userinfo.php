@@ -30,7 +30,6 @@ class Userinfo extends Base
             }else {
                 $order = "E.id desc";
             }
-            Log::info($order);
 
             if(!empty($username)) {
                 $map['E.username'] = ['like', "%{$username}%"];
