@@ -48,19 +48,19 @@
     <div class="layui-form-item">
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block" id="subdivide">
-            {volist name='Subivde' id='vo'}
-            <input type="radio" name="subdivide" lay-filter="subdivide" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {volist name='Subivde' id='vo' key='k'}
+            <input type="radio" name="subdivide" lay-filter="subdivide" value="{$vo['data_no']}" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} />
             {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">对应行业</label>
-        <div class="layui-input-block">
+        <div class="layui-input-block" id="resourceIndustry">
             <input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />
-            {volist name='resourceIndustry' id='vo' key='k' }
-            <input type="radio" name="industry" value="{$vo['data_no']}" lay-filter="industry" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} />
-            {/volist}
+<!--            {volist name='resourceIndustry' id='vo' key='k' }-->
+<!--            <input type="radio" name="industry" value="{$vo['data_no']}" lay-filter="industry" title="{$vo['data_name']}" {if condition="$k eq 1"}checked{/if} />-->
+<!--            {/volist}-->
         </div>
     </div>
 
@@ -257,8 +257,15 @@
 
         form.on('radio(subdivide)', function(data){
             var _val = data.value;
-            var _ty = $("input[name='ty']").val();
+            forHtml(_val)
+
+        });
+
+        forHtml("{$Subivde[0]['data_no']}")
+
+        function forHtml(_val){
             $("#form_html").empty();
+            var _ty = $("input[name='ty']").val();
             $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
@@ -289,7 +296,16 @@
                 }
             }, 'json');
 
-        });
+            $("#resourceIndustr").empty();
+            $.post("{:url('industry')}" ,{top_id:_val}, function(obj){
+                var _html = '<input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />';
+                $.each(obj.data.data, function (i, v) {
+                    _html += "<input type='radio' id='subdivide' lay-filter=\"subdivide\" lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                })
+                $("#resourceIndustr").append(_html);
+                form.render();
+            }, 'json');
+        }
 
         form.on('radio(industry)', function(data){
             if(data.value == '|') {
