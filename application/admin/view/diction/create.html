@@ -8,7 +8,7 @@
         <label class="layui-form-label">字典类型</label>
         <div class="layui-input-block">
             {volist name='typeData' id='vo' key='k'}
-            <input type="radio" name="data_type_no"  lay-filter="data_type_no" value="{$vo['type']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
+            <input type="radio" name="data_type_no" lay-filter="data_type_no" value="{$vo['type']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
             {/volist}
         </div>
     </div>

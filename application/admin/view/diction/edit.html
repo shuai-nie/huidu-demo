@@ -7,7 +7,7 @@
         <label class="layui-form-label">字典类型</label>
         <div class="layui-input-block">
             {volist name='typeData' id='vo' key='k'}
-            <input type="radio" name="data_type_no" value="{$vo['type']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
+            <input type="radio" name="data_type_no" value="{$vo['type']}" lay-filter="data_type_no" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} >
             {/volist}
         </div>
     </div>
@@ -145,7 +145,6 @@
 
         switch ("{$data['data_type_no']}"){
             case 'RESOURCES_TYPE':
-                // $("#data_dark_icon_url").show();
                 $("#data_dark_icon_label").parents('div').show();
                 break;
             case 'RESOURCES_SUBDIVIDE':
@@ -185,7 +184,7 @@
             $("#data_dark_icon_url").hide();
             $("#data_dark_icon_label").parents('div').hide();
 
-            form.render('select');
+
             switch (data.value){
                 case 'RESOURCES_TYPE':
                     // $("#data_dark_icon_url").show();
@@ -214,13 +213,13 @@
                 default:
                     break;
             }
+            form.render('select');
         });
 
         form.val('first', {
             "data_type_no": "{$data['data_type_no']}",
             "data_name": "{$data['data_name']}",
             "data_icon": "{$data['data_icon']}",
-
             "sort": "{$data['sort']}",
         })
 
@@ -246,8 +245,8 @@
                                 node.append(new Option(item.data_name, item.id));
                             }
                         }
-                        form.render();
                         form.val('first', {"data_top_id": "{$data['data_top_id']}",});
+                        form.render();
                     })
                 }
             })
