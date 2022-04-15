@@ -385,13 +385,13 @@
             forHtml(_val)
         });
 
-        // forHtml("")
+        forHtml($("input[name='subdivide']").val())
 
         function forHtml(_val){
             $("#form_html").empty();
             $("#industry_subdivide").empty();
             var _ty = $("input[name='ty']").val();
-            $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
+            /*$.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
 
@@ -419,7 +419,7 @@
                 } else {
                     layer.msg(obj.msg);
                 }
-            }, 'json');
+            }, 'json');*/
 
             $("#resourceIndustry").empty();
             $.post("{:url('industry')}" ,{top_id:_val}, function(obj){
@@ -433,11 +433,17 @@
         }
 
         form.on('radio(industry)', function(data){
-            if(data.value == '|') {
+            subdivide(data.value)
+        })
+
+        subdivide("{$resource['industry']}");
+
+        function subdivide(_val) {
+            if(_val == '|') {
                 $("#industry_subdivide").empty();
             }else{
                 $("#industry_subdivide").empty();
-                $.post("{:url('industry_subdivide')}", {data_top_id: data.value}, function(obj){
+                $.post("{:url('industry_subdivide')}", {data_top_id: _val}, function(obj){
                     if(obj.code == 200) {
                         var _html = '';
                         $.each(obj.data.sub, function (i, v) {
@@ -450,7 +456,7 @@
                     }
                 }, 'json');
             }
-        })
+        }
 
         form.on('checkbox(region)', function(data){
             if(data.value == '|'){
