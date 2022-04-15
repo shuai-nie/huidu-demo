@@ -269,19 +269,19 @@ class Diction extends Base
 
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACT_TYPE'])->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
         }
 
         $arrCur = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCE_CURRENCY'])->select();
         foreach ($arrCur as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
-                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name']]);
+                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
             }
         }
 
