@@ -481,9 +481,10 @@ class Resource extends Base
         $container = false;
         if($template){
             foreach ($template as $key => $value) {
-
+                if($value['form_type'] != 6 && $value['form_type'] != 7) {
                 $html .= "<div class=\"layui-form-item\">\n".
                     "        <label class=\"layui-form-label\">" . $value['form_title'] . "</label>\n";
+                }
                 $ResourceFormInfo = $ResourceForm->where(['resource_id' => $ResourceInfo['id'], 'form_template_id' => $value['id']])->find();
                 switch ($value['form_type']){
                     case 0:
@@ -526,6 +527,9 @@ class Resource extends Base
                         $html .= "<div class=\"layui-input-block\" >";
                         $html .= "<div class=\"layui-input-inline\" style='width:80px;' >";
                         $content = explode('|',  $ResourceFormInfo['content']);
+                        if(count($content) != 4) {
+                            $content = ['', '', '', ''];
+                        }
                         if($value['fill_flag'] == 0){
                             $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' value='{$content[0]}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
                                 . "</div>\n"
@@ -655,9 +659,10 @@ class Resource extends Base
         $container = false;
         if($template){
             foreach ($template as $key => $value) {
-
+                if($value['form_type'] != 6 && $value['form_type'] != 7) {
                 $html .= "<div class=\"layui-form-item\">\n".
                     "        <label class=\"layui-form-label\">" . $value['form_title'] . "</label>\n";
+                }
                 switch ($value['form_type']){
                     case 0:
                         $html .= "<div class=\"layui-input-block\" >";

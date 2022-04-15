@@ -239,13 +239,15 @@
             }
         });
 
+        // 合作领域
         form.on('radio(type)', function(data){
             $("#subdivide").empty();
+            $("#resourceIndustry").empty();
             $.post("{:url('subdivide')}", {data_top_id: data.value}, function (obj) {
                 if(obj.code == 200) {
                     var _html = '';
                     $.each(obj.data.data, function (i, v) {
-                        _html += "<input type='radio' id='subdivide' lay-filter=\"subdivide\" lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                        _html += "<input type='radio' lay-filter=\"subdivide\" lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
                     })
                     $("#subdivide").append(_html);
                     form.render();
@@ -255,16 +257,20 @@
             })
         })
 
+        // 对应行业
+        // form.on("radio(resourceIndustry)", function(data){})
+
+        // 业务细分
         form.on('radio(subdivide)', function(data){
             var _val = data.value;
             forHtml(_val)
-
         });
 
         forHtml("{$Subivde[0]['data_no']}")
 
         function forHtml(_val){
             $("#form_html").empty();
+            $("#industry_subdivide").empty();
             var _ty = $("input[name='ty']").val();
             $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
@@ -296,13 +302,13 @@
                 }
             }, 'json');
 
-            $("#resourceIndustr").empty();
+            $("#resourceIndustry").empty();
             $.post("{:url('industry')}" ,{top_id:_val}, function(obj){
                 var _html = '<input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />';
                 $.each(obj.data.data, function (i, v) {
-                    _html += "<input type='radio' id='subdivide' lay-filter=\"subdivide\" lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                    _html += "<input type='radio' id='industry' lay-filter=\"industry\" lay-verType='tips' name='industry' value='" + v.data_no + "' title='" + v.data_name + "'>";
                 })
-                $("#resourceIndustr").append(_html);
+                $("#resourceIndustry").append(_html);
                 form.render();
             }, 'json');
         }
@@ -347,5 +353,5 @@
         form.verify({
         });
 
-    });
+});
 </script>
