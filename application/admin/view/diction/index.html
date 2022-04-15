@@ -2,9 +2,11 @@
 
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm open-all" id="btn-expand">全部展开</button>
+    <button class="layui-btn layui-btn-primary layui-btn-sm close-all" id="btn-fold">全部折叠</button>
 </div>
 
-<fieldset class="table-search-fieldset">
+<!--<fieldset class="table-search-fieldset">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -34,48 +36,69 @@
             </div>
         </form>
     </div>
-</fieldset>
+</fieldset>-->
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
+    {{# if(d.isedit != false ){ }}
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {{# } }}
 </script>
 
 <script>
-    layui.use(['table','form'], function(){
-        var table = layui.table,
-            form = layui.form;
-        UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'data_type_name', width:180,title: '类型', templet:function (d) {
-                switch (d.data_type_no){
-                    {volist name='data_type' id="vo" key="k"}
-                    case "{$vo['type']}": return "{$vo['title']}";
-                    {/volist}
-                    default : return '-';
-                }
-                }}
-            ,{field: 'data_icon', width:80,title: 'icon',templet:function(d){
-                if(d.data_type_no =='RESOURCE_CURRENCY'){
-                    return d.data_icon;
-                }
-                if(d.data_icon){
-                    return "<img src='"+d.data_icon+"' height='30' width='30' />";
+layui.config({
+    base: "/static/admin_templete/lib/",
+    version: true
+}).extend({
+    treetable: 'treetable-lay/treetable',
+});
+layui.use(['table','treetable'], function(){
+    var table = layui.table,
+        treetable = layui.treetable,
+        $ = layui.jquery;
+
+    var re = treetable.render({
+        treeColIndex: 1,
+        treeSpid: 0,
+        treeIdName: 'id',
+        treePidName: 'pid',
+        elem: '#think-table',
+        url: "{:url('read')}",
+        page: false,
+        cols: [[
+            {type: 'numbers'},
+            {field: 'title', title: '权限名称'},
+            {field: 'data_icon', title: 'icon图标',width:120,templet: function(d){
+                if(d.data_icon) {
+                    return "<img src='"+ d.data_icon + "' height='30' />";
                 }
                 return '-';
-                },}
-            ,{field: 'data_dark_icon', width:80,title: '深色icon',templet:function(d){
-                if(d.data_dark_icon && d.data_type_no == 'RESOURCES_TYPE'){
-                    return "<img src='"+d.data_dark_icon+"' height='30' width='30' />";
+            }},
+            {field: 'data_dark_icon', title: '深色icon图标',width:120,templet: function(d){
+                if(d.data_icon) {
+                    return "<img src='"+ d.data_dark_icon + "' height='30' />";
                 }
                 return '-';
-            }}
-            ,{field: 'data_name',  width:270,title: '名称'}
-            ,{field: 'sort',  width:80,title: '排序'}
-            ,{fixed: 'right',title:'操作', width:120,align:'center', toolbar: '#barDemo'}
-        ]);
+            }},
+            {field: 'sort', title: '排序',width:80},
+            {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
+        ]],
+        done: function () {
+            layer.closeAll('loading');
+        }
+    });
+
+    $('#btn-expand').click(function () {
+        treetable.expandAll('#think-table');
+    });
+
+    $('#btn-fold').click(function () {
+        treetable.foldAll('#think-table');
+    });
+
+
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
@@ -101,7 +124,7 @@
             active[type] ? active[type].call(this) : '';
         });
 
-        form.on('submit(data-search-btn)', function(data){
+        /*form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
                 url: "{:url('')}",
                 method:'post',
@@ -112,7 +135,7 @@
                 page : {curr : 1}
             });
             return false;
-        })
+        })*/
     });
 </script>
 {include file="moban/bone_footer"}

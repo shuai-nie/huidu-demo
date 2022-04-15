@@ -128,7 +128,9 @@
         //监听提交
         form.on('submit(submit)', function (data) {
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code == 200){
+                    parent.window.location.href = "{:url('index')}";
+                }
             });
         });
 
@@ -175,11 +177,6 @@
                     break;
             }
         });
-
-/*        $.post({
-            url: '/foo/bar',
-            headers: { 'x-my-custom-header2': '111' }
-        });*/
 
         function getDataPicList(urlValue, node, type=1) {
             $.ajax({
