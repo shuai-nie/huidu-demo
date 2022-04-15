@@ -66,7 +66,6 @@ layui.use(['table','treetable'], function(){
         treePidName: 'pid',
         elem: '#think-table',
         url: "{:url('read')}",
-        page: false,
         cols: [[
             {type: 'numbers'},
             {field: 'title', title: '权限名称'},
@@ -98,44 +97,31 @@ layui.use(['table','treetable'], function(){
         treetable.foldAll('#think-table');
     });
 
-
-
-        table.on('tool(think-table)', function(obj){
-            var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
-            }
-        });
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-
-        /*form.on('submit(data-search-btn)', function(data){
-            table.reload('table', {
-                url: "{:url('')}",
-                method:'post',
-                where : {
-                    data_name: data.field.data_name,
-                    data_type_no: data.field.data_type_no
-                },
-                page : {curr : 1}
+    table.on('tool(think-table)', function(obj){
+        var data=obj.data;
+        if(obj.event==="edit"){
+            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
+        }else if(obj.event==='del'){
+            UI.delete(data['id'], function(res){
+                if(res.code==200){
+                    table.reload("table");
+                }
             });
-            return false;
-        })*/
+        }
+    });
+
+    var $ = layui.$, active = {
+        create:function(){
+            UI.openLayer("{:url('create')}");
+        }
+    };
+
+    $('.layui-btn-container .layui-btn').on('click', function(){
+        var type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+
+
     });
 </script>
 {include file="moban/bone_footer"}

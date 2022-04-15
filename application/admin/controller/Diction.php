@@ -259,14 +259,13 @@ class Diction extends Base
         $data = [
             ['id'=>1,'pid'=>0,'title'=>'资源·合作领域','isedit'=>false],
             ['id'=>2,'pid'=>0,'title'=>'联系方式','isedit'=>false],
-            ['id'=>10,'pid'=>0,'title'=>'资源·货币','isedit'=>false],
-            ['id'=>11,'pid'=>0,'title'=>'举报类型','isedit'=>false],
+            ['id'=>3,'pid'=>0,'title'=>'资源·货币','isedit'=>false],
+            ['id'=>4,'pid'=>0,'title'=>'举报类型','isedit'=>false],
         ];
         $DataDic = model('DataDic');
 
         // 业务类型
         $this->DataDicAllUp($data, 4);
-
 
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACT_TYPE'])->select();
         foreach ($arrType as $k1 => $v1) {
@@ -275,17 +274,18 @@ class Diction extends Base
 
         $arrCur = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCE_CURRENCY'])->select();
         foreach ($arrCur as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>10, 'title'=>$v1['data_name']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name']]);
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>11, 'title'=>$v['data_name']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
                 array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name']]);
             }
         }
-        return json(['code'=>0,'count'=>100,'data'=>$data], 200);
+
+        echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
     }
 
     protected function DataDicAllUp(&$data, $level=0)
@@ -293,19 +293,19 @@ class Diction extends Base
         $DataDic = model('DataDic');
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_TYPE'])->order('sort desc')->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' => $v1['id'], 'pid' => 1, 'title' => '<span style=\'color:#FF5722;border:1px solid #FF5722;font-size:12px;padding: 2px 10px;line-height:30px;\'>资源·合作领域：</span>' . $v1['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
+            array_push($data, ['id' => $v1['id'], 'pid' => 1, 'title' => '资源·合作领域：' . $v1['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
             if($level > 1) {
             $arrSub = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_SUBDIVIDE','data_top_id'=>$v1['data_no']])->order('sort desc')->select();
             foreach ($arrSub as $k2 => $v2) {
-                array_push($data, ['id' => $v2['id'], 'pid' => $v1['id'], 'title' =>"<span style='color:#009688;border:1px solid #009688;font-size:12px;padding: 2px 10px;line-height:30px;'>业务细分：</span>" . $v2['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v2['data_name'], 'data_icon'=>$v2['data_icon'], 'data_dark_icon'=>$v2['data_dark_icon'], 'sort'=>$v2['sort']]);
+                array_push($data, ['id' => $v2['id'], 'pid' => $v1['id'], 'title' =>"业务细分：" . $v2['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v2['data_name'], 'data_icon'=>$v2['data_icon'], 'data_dark_icon'=>$v2['data_dark_icon'], 'sort'=>$v2['sort']]);
                 if($level > 2) {
                     $arrInd = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_top_id' => $v2['id']])->order('sort desc')->select();
                     foreach ($arrInd as $k3 => $v3) {
-                        array_push($data, ['id' => $v3['id'], 'pid' => $v2['id'], 'title' =>"<span style='color:#1E9FFF;border:1px solid #1e9fff;font-size:12px;padding: 0 10px;line-height:30px;'>资源·行业类型</span>：" . $v3['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v3['data_name'], 'data_icon'=>$v3['data_icon'], 'data_dark_icon'=>$v3['data_dark_icon'], 'sort'=>$v3['sort']]);
+                        array_push($data, ['id' => $v3['id'], 'pid' => $v2['id'], 'title' =>"资源·行业类型：" . $v3['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v3['data_name'], 'data_icon'=>$v3['data_icon'], 'data_dark_icon'=>$v3['data_dark_icon'], 'sort'=>$v3['sort']]);
                         if($level > 3) {
                             $arrIndSub = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'data_top_id' => $v3['data_no']])->order('sort desc')->select();
                             foreach ($arrIndSub as $k4 => $v4) {
-                                array_push($data, ['id' => $v4['id'], 'pid' => $v3['id'], 'title' => "<span style='color:#FFB800;border:1px solid #FFB800;font-size:12px;padding: 0 10px;line-height:30px;'>资源·行业细分</span>：" . $v4['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v4['data_name'], 'data_icon'=>$v4['data_icon'], 'data_dark_icon'=>$v4['data_dark_icon'], 'sort'=>$v4['sort']]);
+                                array_push($data, ['id' => $v4['id'], 'pid' => $v3['id'], 'title' => "资源·行业细分：" . $v4['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v4['data_name'], 'data_icon'=>$v4['data_icon'], 'data_dark_icon'=>$v4['data_dark_icon'], 'sort'=>$v4['sort']]);
                             }
                         }
                     }
