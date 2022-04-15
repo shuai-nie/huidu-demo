@@ -489,38 +489,22 @@ class Resource extends Base
                 switch ($value['form_type']){
                     case 0:
                         $html .= "<div class=\"layui-input-block\" >";
-                        if($value['fill_flag'] == 0){
-                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }else {
-                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }
+                        $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
                         $html .= "   </div>";;
                         break;
                     case 1:
                         $html .= "<div class=\"layui-input-block\" >";
-                        if($value['fill_flag'] == 0){
-                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' class=\"layui-textarea\">{$ResourceFormInfo['content']}</textarea>";
-                        }else {
-                            $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' lay-verify=\"required\" class=\"layui-textarea\">{$ResourceFormInfo['content']}</textarea>";
-                        }
+                        $html .= "<textarea placeholder=\"请输入内容\" name='temp[{$value['id']}]' class=\"layui-textarea\">{$ResourceFormInfo['content']}</textarea>";
                         $html .= "   </div>";;
                         break;
                     case 2:
                         $html .= "<div class=\"layui-input-block\" >";
-                        if($value['fill_flag'] == 0){
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }else {
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }
+                        $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
                         $html .= "   </div>";;
                         break;
                     case 3:
                         $html .= "<div class=\"layui-input-block\" >";
-                        if($value['fill_flag'] == 0){
-                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }else {
-                            $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' 1 lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }
+                        $html .= "<input type=\"text\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
                         $html .= "   </div>";;
                         break;
                     case 4:
@@ -530,37 +514,22 @@ class Resource extends Base
                         if(count($content) != 4) {
                             $content = ['', '', '', ''];
                         }
-                        if($value['fill_flag'] == 0){
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' value='{$content[0]}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
-                                . "</div>\n"
-                                . "<div class=\"layui-form-mid\" style=''>:</div>"
-                                . "<div class=\"layui-input-inline\" style='width:80px;' >"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\" value='{$content[1]}' autocomplete=\"off\" class=\"layui-input\" />"
-                                . "</div>"
-                                . "<div class=\"layui-form-mid\" style=''>-</div>"
-                                . "<div class=\"layui-input-inline\" style='width:80px;'>"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"\"  value='{$content[2]}' autocomplete=\"off\" class=\"layui-input\" />"
-                                . "</div>"
-                                . "<div class=\"layui-form-mid\" style=''>:</div>"
-                                . "<div class=\"layui-input-inline\" style='width:80px;' >"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"\"  value='{$content[3]}' autocomplete=\"off\" class=\"layui-input\" />"
-                                . "</div>";
-                        }else {
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}'  value='{$content[0]}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
-                                . "</div>\n"
-                                . "<div class=\"layui-form-mid\" style='' >:</div>\n"
-                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\"  value='{$content[1]}' autocomplete=\"off\" class=\"layui-input\" />\n"
-                                . "</div>\n"
-                                . "<div class=\"layui-form-mid\" style='' >-</div>\n"
-                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"请输入\" value='{$content[2]}' placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
-                                . "</div>\n"
-                                . "<div class=\"layui-form-mid\" style='' >:</div>\n"
-                                . "<div class=\"layui-input-inline\" style='width:80px;' >\n"
-                                . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"请输入\" value='{$content[3]}' placeholder=\"\" autocomplete=\"off\" class=\"layui-input\" />\n"
-                                . "</div>";
-                        }
+
+                        $html .= "<input type=\"number\" name=\"temp[{$value['id']}][time][0]\" id='time_{$value['id']}' value='{$content[0]}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">"
+                            . "</div>\n"
+                            . "<div class=\"layui-form-mid\" style=''>:</div>"
+                            . "<div class=\"layui-input-inline\" style='width:80px;' >"
+                            . "<input type=\"number\" name=\"temp[{$value['id']}][time][1]\" placeholder=\"请输入\" value='{$content[1]}' autocomplete=\"off\" class=\"layui-input\" />"
+                            . "</div>"
+                            . "<div class=\"layui-form-mid\" style=''>-</div>"
+                            . "<div class=\"layui-input-inline\" style='width:80px;'>"
+                            . "<input type=\"number\" name=\"temp[{$value['id']}][time][2]\" placeholder=\"\"  value='{$content[2]}' autocomplete=\"off\" class=\"layui-input\" />"
+                            . "</div>"
+                            . "<div class=\"layui-form-mid\" style=''>:</div>"
+                            . "<div class=\"layui-input-inline\" style='width:80px;' >"
+                            . "<input type=\"number\" name=\"temp[{$value['id']}][time][3]\" placeholder=\"\"  value='{$content[3]}' autocomplete=\"off\" class=\"layui-input\" />"
+                            . "</div>";
+
                         $html .= "</div>";
                         $html .= "   </div>";
                         break;
@@ -576,16 +545,11 @@ class Resource extends Base
                             }else {
                                 $html .= "<option value=\"{$v2['data_no']}\" >{$v2['data_name']}</option>";
                             }
-
                         }
                         $html .= "</select>";
                         $html .= "</div>";
                         $html .= "<div class=\"layui-input-inline\" style='' >";
-                        if($value['fill_flag'] == 0){
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }else {
-                            $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' lay-verify=\"required\" placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
-                        }
+                        $html .= "<input type=\"number\" name=\"temp[{$value['id']}]\" value='{$ResourceFormInfo['content']}' placeholder=\"请输入\" autocomplete=\"off\" class=\"layui-input\">";
                         $html .= "</div>";
                         $html .= "</div>";
                         break;
