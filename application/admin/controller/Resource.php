@@ -441,8 +441,9 @@ class Resource extends Base
         if (\request()->isPost()) {
             $topId   = \request()->post('top_id');
             $DataDic = model('DataDic');
-            $data    = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY', 'status' => 1, 'data_top_id' => $topId])->field('data_type_no,data_type_name,data_no,data_name')->order('sort desc')->select();
-            return success_json('成功', ['data' => $data]);
+            $data = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_no' =>$topId])->find();
+            $dataAll    = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY', 'status' => 1, 'data_top_id' => $data['id']])->field('data_type_no,data_type_name,data_no,data_name')->order('sort desc')->select();
+            return success_json('成功', ['data' => $dataAll]);
         }
     }
 
