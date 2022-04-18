@@ -43,7 +43,11 @@ server {
 	}
 }
 ```
-
+资源·业务类型
+资源·合作领域 ：RESOURCES_REGION
+业务细分 RESOURCES_SUBDIVIDE
+行业类型 RESOURCE_INDUSTRY
+行业细分 
 资源·合作领域-》资源·业务细分-》资源·行业类型-》资源·行业细分
 资源·合作领域-》资源·业务细分-》关联模版
 
