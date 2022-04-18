@@ -800,4 +800,33 @@ class Resource extends Base
         }
         return view('', ['data' => $data]);
     }
+
+    public function Card()
+    {
+        if(\request()->isPost()) {
+            return success_json('');
+        }
+        $uid = \request()->param('uid');
+        $UserModel = model('User');
+        $data = model('Card')->alias('A')
+            ->join($UserModel->getTable().' B', 'A.uid=B.id')
+            ->field('A.*,B.username,B.nickname')
+            ->where(['A.uid'=>$uid])->find();
+        if($data){
+            $data['business_tag'] = explode('|', $data['business_tag']);
+            $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
+            $resources = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->order('sort desc')->select();
+            $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
+        } else {
+            $DataDicData = array();
+            $CardContact = array();
+            $resources = array();
+        }
+        return view('', [
+            'data'=>$data,
+            'DataDicData' => $DataDicData,
+            'CardContact' => $CardContact,
+            'resources' => $resources,
+        ]);
+    }
 }

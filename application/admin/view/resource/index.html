@@ -101,6 +101,7 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>
     {/if}
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="card">名片</a>
 
 </script>
 
@@ -162,7 +163,7 @@ layui.use(['table','form'], function(){
                 }
             }}
         {/if}
-        ,{fixed: 'right',title:'操作', width:180, align:'center', toolbar: '#barDemo'}
+        ,{fixed: 'right',title:'操作', width:220, align:'center', toolbar: '#barDemo'}
     ]);
 
     form.on('submit(data-search-btn)', function(data){
@@ -199,6 +200,8 @@ layui.use(['table','form'], function(){
             }, 'json');
         }else if(obj.event ==='examine'){
             UI.openLayer("{:url('examine')}?id="+data['id'],700, 560);
+        }else if(obj.event === 'card'){
+            UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
         }
     });
 
