@@ -126,7 +126,6 @@ class Resource extends Base
      */
     public function create()
     {
-
         if (request()->isPost()) {
             $_post = request()->post();
 
@@ -469,13 +468,7 @@ class Resource extends Base
         $ResourceFormTemplate = model('ResourceFormTemplate');
         $DataDic = model('DataDic');
         $ResourceInfo = $Resource->find($resourceId);
-
-        $count = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => $ResourceInfo['ty']])->count();
-        if($count > 0) {
-            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => $ResourceInfo['ty']])->order('sort desc')->select();
-        }else {
-            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => 0])->order('sort desc')->select();
-        }
+        $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $ResourceInfo['business_subdivide'], 'ty' => ['in', "0,".$ResourceInfo['ty']] ])->order('sort desc')->select();
 
         $html = "";
         $container = false;
@@ -612,12 +605,7 @@ class Resource extends Base
         $fromId = \request()->post('fromId');
         $ResourceFormTemplate = model('ResourceFormTemplate');
         $DataDic = model('DataDic');
-        $count = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => $tyId])->count();
-        if($count > 0) {
-            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => $tyId])->order('sort desc')->select();
-        }else {
-            $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => 0])->order('sort desc')->select();
-        }
+        $template = $ResourceFormTemplate->where(['status' => 1, 'business_subdivide' => $fromId, 'ty' => ['in', "0,".$tyId]])->order('sort desc')->select();
 
         $html = "";
         $container = false;
