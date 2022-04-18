@@ -314,7 +314,7 @@ class Resource extends Base
         $DataDic = model('DataDic');
         $Subivde     = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $resourceInfo['type']])->order('sort desc')->select();
 
-        if ($resourceInfo['business_subdivide'][0]) {
+        if (isset($resourceInfo['business_subdivide'][0])) {
             $RESOURCES   = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1])->find();
             $data_top_id = $RESOURCES['data_top_id'];
         } else {
