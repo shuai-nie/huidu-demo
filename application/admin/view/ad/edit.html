@@ -22,7 +22,7 @@
         <div class="layui-input-block">
             {foreach name="page" id='vp' key="k"}
             {if condition="$vp"}
-            <input type="radio" name="page" value="{$k}" title="{$vp}" {if condition="$k eq 0"}checked{/if} />
+            <input type="radio" name="page" value="{$k}" title="{$vp}" lay-filter="page" {if condition="$k eq 0"}checked{/if} />
             {/if}
             {/foreach}
         </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="layui-inline">
+    <div class="layui-inline" id="vip_no_show">
         <label class="layui-form-label">vip不展示</label>
         <div class="layui-input-inline">
             <input type="radio" name="vip_no_show" value="0" lay-filter="" title="不展示" checked>
@@ -389,6 +389,21 @@
         laydate.render({elem: '#end2', type: 'datetime'});
         laydate.render({elem: '#begin3', type: 'datetime'});
         laydate.render({elem: '#end3', type: 'datetime'});
+
+        form.on('radio(page)', function (data) {
+            var _val = data.value;
+            vipNoShow(_val *1);
+        })
+
+        function vipNoShow(_val){
+            if(_val == 3) {
+                $("#vip_no_show").show();
+            } else {
+                $("#vip_no_show").hide();
+            }
+        }
+
+        vipNoShow("{$data['page']}"*1);
 
         form.val('first', {
             'name': "{$data['name']}",
