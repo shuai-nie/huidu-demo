@@ -54,3 +54,10 @@ server {
 view == used_view 这就是次数用完
 used_view + 1 就是减一次，使用一次
 used_view - 1 就是加一次，
+
+
+灰度2.1.1数据库更改
+hc_package：view改为view_demand，新增view_provide、view_provide_give
+hc_user_recharge：view改为view_demand，used_view改为used_view_demand，新增view_provide、view_provide_give，used_view_provide
+hc_advertisement：page新增 3首页底部悬浮，新增vip_no_show字段
+hc_package_log：type新增 4:view_provide
