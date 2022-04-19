@@ -37,197 +37,203 @@
         </div>
     </div>
 
-        <div id="category_1">
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>一栏</legend>
-            </fieldset>
+    <div class="layui-inline">
+        <label class="layui-form-label">vip不展示</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="vip_no_show" value="0" lay-filter="" title="不展示" checked>
+            <input type="radio" name="vip_no_show" value="1" lay-filter="" title="展示">
+        </div>
+    </div>
 
-            <div class="layui-form-item test1-pic1" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
+    <div id="category_1">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>一栏</legend>
+        </fieldset>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">图片</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="pic1">
-                    <button type="button" class="layui-btn" id="test1-pic1">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item test1-load1" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">预加载图</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="load1">
-                    <button type="button" class="layui-btn" id="test1-load1">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">链接</label>
-                <div class="layui-input-block">
-                    <input type="text" name="url1" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">上架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="begin1" id="begin1" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">下架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="end1" id="end1" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
+        <div class="layui-form-item test1-pic1" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
             </div>
         </div>
 
-        <div id="category_2">
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>二栏</legend>
-            </fieldset>
-
-            <div class="layui-form-item test1-pic2" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">图片</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="pic2">
-                    <button type="button" class="layui-btn" id="test1-pic2">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item test1-load2" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">预加载图</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="load2">
-                    <button type="button" class="layui-btn" id="test1-load2">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">链接</label>
-                <div class="layui-input-block">
-                    <input type="text" name="url2" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">上架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="begin2" id="begin2" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">下架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="end2" id="end2" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic1">
+                <button type="button" class="layui-btn" id="test1-pic1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
             </div>
         </div>
 
-        <div id="category_3">
-            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>三栏</legend>
-            </fieldset>
-
-            <div class="layui-form-item test1-pic3" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">图片</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="pic3">
-                    <button type="button" class="layui-btn" id="test1-pic3">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item test1-load3" style="display:none;">
-                <label class="layui-form-label"></label>
-                <div class="layui-input-block">
-                    <img src="#" height="100" width="100" />
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">预加载图</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="load3">
-                    <button type="button" class="layui-btn" id="test1-load3">
-                        <i class="layui-icon">&#xe67c;</i>上传图片
-                    </button>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">链接</label>
-                <div class="layui-input-block">
-                    <input type="text" name="url3" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">上架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="begin3" id="begin3" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">下架时间</label>
-                <div class="layui-input-block">
-                    <input type="text" name="end3" id="end3" placeholder="链接" autocomplete="off" class="layui-input">
-                </div>
+        <div class="layui-form-item test1-load1" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
             </div>
         </div>
 
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load1">
+                <button type="button" class="layui-btn" id="test1-load1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
 
-        <div class="layui-form-item layui-hide">
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin1" id="begin1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end1" id="end1" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div id="category_2">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>二栏</legend>
+        </fieldset>
+
+        <div class="layui-form-item test1-pic2" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic2">
+                <button type="button" class="layui-btn" id="test1-pic2">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item test1-load2" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load2">
+                <button type="button" class="layui-btn" id="test1-load2">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin2" id="begin2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end2" id="end2" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div id="category_3">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>三栏</legend>
+        </fieldset>
+
+        <div class="layui-form-item test1-pic3" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pic3">
+                <button type="button" class="layui-btn" id="test1-pic3">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item test1-load3" style="display:none;">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <img src="#" height="100" width="100" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预加载图</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="load3">
+                <button type="button" class="layui-btn" id="test1-load3">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="url3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="begin3" id="begin3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">下架时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end3" id="end3" placeholder="链接" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-
-    </form>
-
+</form>
 
 <script>
     //Demo

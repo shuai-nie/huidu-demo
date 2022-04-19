@@ -1,7 +1,7 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">套餐标题</label>
         <div class="layui-input-block">
@@ -24,9 +24,23 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">查看资源</label>
-        <div class="layui-input-block">
-            <input type="number" name="view" placeholder="" autocomplete="off" class="layui-input">
+        <label class="layui-form-label" style="width:250px;">查看提供资源的名片次数</label>
+        <div class="layui-input-block" style="margin-left: 250px;">
+            <input type="number" name="view_provide" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:250px">查看提供资源的名片次数-赠送</label>
+        <div class="layui-input-block" style="margin-left:250px;">
+            <input type="number" name="view_provide_give" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:250px">查看需求资源的名片次数</label>
+        <div class="layui-input-block" style="margin-left:250px;">
+            <input type="number" name="view_demand" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -80,7 +94,9 @@
             "publish" : "{$data['publish']}",
             "flush" : "{$data['flush']}",
             "level" : "{$data['level']}",
-            "view" : "{$data['view']}",
+            "view_provide" : "{$data['view_provide']}",
+            "view_provide_give" : "{$data['view_provide_give']}",
+            "view_demand" : "{$data['view_demand']}",
         })
 
         //监听提交

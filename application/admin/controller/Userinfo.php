@@ -45,7 +45,7 @@ class Userinfo extends Base
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view,B.used_view,E.username,E.nickname,E.head_url,E.mobile,E.email')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email')
                 ->limit($offset, $limit)->order($order)->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
@@ -73,7 +73,7 @@ class Userinfo extends Base
         $userInfo = model("UserInfo")->alias('A')
             ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
             ->join(model('User')->getTable()." C", 'C.id=A.uid')
-            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish,used_view')
+            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish,B.view_demand,B.view_provide,B.view_provide_give,B.used_view_demand,B.used_view_provide')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
@@ -86,10 +86,14 @@ class Userinfo extends Base
                 'start_time'   => $time,
                 'flush'        => $Package['flush'],
                 'publish'      => $Package['publish'],
-                'view'         => $Package['view'],
+                'view_demand'       => $Package['view_demand'],
+                'view_provide'      => $Package['view_provide'],
+                'view_provide_give' => $Package['view_provide_give'],
+
                 'used_flush'   => $userInfo['used_flush'],
                 'used_publish' => $userInfo['used_publish'],
-                'used_view'    => $userInfo['used_view'],
+                'used_view_demand'  => $userInfo['used_view_demand'],
+                'used_view_provide' => $userInfo['used_view_provide'],
                 'remarks'      => '变更套餐',
             ];
 
@@ -123,7 +127,7 @@ class Userinfo extends Base
         $userInfo = $UserInfo->alias('A')
             ->join($UserRecharge->getTable().' B', 'A.user_recharge_id=B.id', 'left')
             ->join($User->getTable()." D", 'D.id=A.uid')
-            ->field('A.*,B.package_id,B.start_time,B.end_time,B.used_flush,B.used_publish,B.flush,B.publish,D.username,D.nickname,B.used_view,B.view')
+            ->field('A.*,B.package_id,B.start_time,B.end_time,B.used_flush,B.used_publish,B.flush,B.publish,D.username,D.nickname,B.view_demand,B.view_provide,B.view_provide_give,B.used_view_demand,B.used_view_provide')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
@@ -135,11 +139,14 @@ class Userinfo extends Base
                 'end_time'     => $endtime,
                 'flush'        => $userInfo['flush'],
                 'publish'      => $userInfo['publish'],
-                'view' => $userInfo['view'],
-                'used_flush'   => $userInfo['used_flush'],
-                'used_publish' => $userInfo['used_publish'],
-                'used_view' => $userInfo['used_view'],
-                'remarks'      => '延期套餐',
+                'view_demand'       => $userInfo['view_demand'],
+                'view_provide_give' => $userInfo['view_provide_give'],
+                'view'              => $userInfo['view'],
+                'used_flush'        => $userInfo['used_flush'],
+                'used_publish'      => $userInfo['used_publish'],
+                'used_view_demand'  => $userInfo['used_view_demand'],
+                'used_view_provide' => $userInfo['used_view_provide'],
+                'remarks'           => '延期套餐',
             ]);
             $recharge_id = $UserRecharge->id;
             $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);

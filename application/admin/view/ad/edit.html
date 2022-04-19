@@ -37,6 +37,14 @@
         </div>
     </div>
 
+    <div class="layui-inline">
+        <label class="layui-form-label">vip不展示</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="vip_no_show" value="0" lay-filter="" title="不展示" checked>
+            <input type="radio" name="vip_no_show" value="1" lay-filter="" title="展示">
+        </div>
+    </div>
+
     <div>
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
             <legend>一栏</legend>
@@ -225,14 +233,8 @@
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
-    <!-- <div class="layui-form-item">
-      <div class="layui-input-block">
-        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-      </div>
-    </div> -->
+
 </form>
-<!--</div>-->
 
 <script>
     //Demo
@@ -393,6 +395,8 @@
             'sort': "{$data['sort']}",
             'page': "{$data['page']}",
             'category': "{$data['category']}",
+            'vip_no_show': "{$data['vip_no_show']}",
+
             'pic1': "{$data['pic1']}",
             'load1': "{$data['load1']}",
             'url1': "{$data['url1']}",
