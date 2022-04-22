@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use think\Config;
 use think\Controller;
 use think\Request;
+use think\db\Expression;
 
 class Resource extends Base
 {
@@ -32,9 +33,9 @@ class Resource extends Base
             $field = \request()->post('field');
             $order = \request()->post('order');
             if(!empty($field) && !empty($order)) {
-                $order = 'A.' . $field . ' ' . $order;
+                $order = new Expression('A.auth=2 desc ,'.'A.' . $field . ' ' . $order);
             } else {
-                $order = 'A.id desc';
+                $order = new Expression('A.auth=2 desc, A.id desc ');
             }
             if (!empty($uid)) {
                 $map['A.uid'] = $uid;
@@ -66,6 +67,7 @@ class Resource extends Base
                 ->join(model('User')->getTable() . " B", "A.uid=B.id", 'left')
                 ->where($map)->field('A.*,B.username')
                 ->order($order)->limit($offset, $limit)->select();
+
             $count = model("Resource")->alias('A')
                 ->join(model('User')->getTable() . " B", "A.uid=B.id", 'left')
                 ->where($map)->count();
