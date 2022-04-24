@@ -90,10 +90,10 @@ class Userinfo extends Base
                 'view_provide'      => $Package['view_provide'],
                 'view_provide_give' => $Package['view_provide_give'],
 
-                'used_flush'   => $userInfo['used_flush'],
+                'used_flush'   => 0,
                 'used_publish' => $userInfo['used_publish'],
-                'used_view_demand'  => $userInfo['used_view_demand'],
-                'used_view_provide' => $userInfo['used_view_provide'],
+                'used_view_demand'  => 0,
+                'used_view_provide' => 0,
                 'remarks'      => '变更套餐',
             ];
 
