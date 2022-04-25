@@ -46,12 +46,12 @@ class Card extends Base
             }
             $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
-                ->join($CardContact->getTable().' C', 'A.id=C.card_id')
+                ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
                 ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number')
                 ->where($map)->order('A.id desc')->group('A.id')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
-                ->join($CardContact->getTable().' C', 'A.id=C.card_id')
+                ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
                 ->where($map)->group('A.id')->count();
             $dataDic = model('DataDic');
 
