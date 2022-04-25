@@ -32,20 +32,27 @@ class Card extends Base
             if(!empty($nickname)) {
                 $map['B.nickname'] = ['like', "%{$nickname}%"];
             }
+            $number = \request()->post('number');
+            if(!empty($number)) {
+                $map['C.contact_number'] = ['like', '%'.$number.'%'];
+            }
             $offset = ($page - 1) * $limit;
             $CardModel = model("Card");
             $UserModel = model("User");
+            $CardContact = model('CardContact');
             $quality = \request()->post('quality');
             if(is_numeric($quality)) {
                 $map['A.quality'] = $quality;
             }
             $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
-                ->field('A.*,B.username,B.nickname')
-                ->where($map)->order('A.id desc')->limit($offset, $limit)->select();
+                ->join($CardContact->getTable().' C', 'A.id=C.card_id')
+                ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number')
+                ->where($map)->order('A.id desc')->group('A.id')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
-                ->where($map)->count();
+                ->join($CardContact->getTable().' C', 'A.id=C.card_id')
+                ->where($map)->group('A.id')->count();
             $dataDic = model('DataDic');
 
             foreach ($data as $k => $v) {

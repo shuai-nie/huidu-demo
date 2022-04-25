@@ -24,6 +24,13 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">联系号码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="number" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <label class="layui-form-label">优质人脉</label>
                     <div class="layui-input-inline">
                         <select name="quality" >
@@ -80,6 +87,7 @@
             ,{field: 'create_time', title: '创建时间',width: 170}
             ,{field: 'quality', title: '优质人脉',width: 100,templet: '#switchTpl', unresize: true}
             ,{field: 'greet', title: '默认打招呼语'}
+            ,{field: 'number', title: '联系号码',width: 170}
             ,{fixed: 'right',title:'操作',width:80, align:'center', toolbar: '#barDemo'}
         ]);
 
