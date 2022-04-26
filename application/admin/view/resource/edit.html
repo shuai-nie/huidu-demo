@@ -429,6 +429,7 @@
                 })
                 $("#resourceIndustry").append(_html);
                 form.render();
+                formVal();
             }, 'json');
         }
 
@@ -475,7 +476,7 @@
             }
         })
 
-        form.verify({})
+        //form.verify({})
 
         $("#form_html").empty();
         $.post("{:url('fromhtmlvalue')}", {resourceId:"{$resource['id']}"}, function (obj) {
@@ -537,12 +538,60 @@
 
             "industry":"{$resource['industry']}",
             {volist name="$resource['industry_subdivide']" id="vo"}
+                {if condition="$vo"}
                 "industry_subdivide[{$vo}]":true,
+                {/if}
             {/volist}
 
 
             });
         }
+
+        function showMedia(id, type, src) {
+            var idBar = '#' + id;
+            var width = $(idBar).width(),
+                height = $(idBar).height(),
+                scaleWH = width / height,
+                bigH = 500,
+                bigW = scaleWH * scaleWH;
+            if(bigW > 900) {
+                bigW = 900;
+                bigH = bigW / bigH;
+            }
+
+            layer.open({
+                type : 1,
+                title : false,
+                closeBtn : 1,
+                area : [bigW + 'px', bigH + 'px'],
+                content: "<img width='" + bigW + "' height='" + bigH + "' controls=\"controls\" src='" + src + "' /"
+            })
+        }
+
+        $("#demo2 img").each(function(){
+            var _this = $(this);
+            _this.on("click", function(e){
+                var idBar = _this;
+                var src = idBar[0].src,
+                    width = $(idBar).width(),
+                    height = $(idBar).height(),
+                    scaleWH = width / height,
+                    bigH = 500,
+                    bigW = width / height;
+                if(bigW > 900) {
+                    bigW = 900;
+                    bigH = bigW / scaleWH;
+                }
+                layer.open({
+                    type : 1,
+                    title : false,
+                    closeBtn: 1,
+                    shadeClose : true,
+                    area : [bigW + 'px', bigH + 'px'],
+                    content: "<img width='" + bigW + "' height='" + bigH + "' controls=\"controls\" src='" + src + "' />"
+                });
+            })
+        })
 
 
     });
