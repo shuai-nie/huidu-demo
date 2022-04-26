@@ -141,7 +141,7 @@ class Userinfo extends Base
                 'publish'      => $userInfo['publish'],
                 'view_demand'       => $userInfo['view_demand'],
                 'view_provide_give' => $userInfo['view_provide_give'],
-                'view'              => $userInfo['view'],
+                'view_provide'              => $userInfo['view_provide'],
                 'used_flush'        => $userInfo['used_flush'],
                 'used_publish'      => $userInfo['used_publish'],
                 'used_view_demand'  => $userInfo['used_view_demand'],
