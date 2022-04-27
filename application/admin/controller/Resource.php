@@ -77,7 +77,7 @@ class Resource extends Base
                 $valueType = [];
                 foreach ($type as $val) {
                     if (is_numeric($val)) {
-                        $ValuesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $val])->find();
+                        $ValuesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $val, 'status' => 1])->find();
                         array_push($valueType, !empty($ValuesType) ? $ValuesType['data_name'] : '');
                     }
                 }
@@ -90,7 +90,7 @@ class Resource extends Base
                     $valueRegion = [];
                     foreach ($region as $val) {
                         if (is_numeric($val)) {
-                            $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_REGION', 'data_no' => $val])->find();
+                            $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_REGION', 'data_no' => $val, 'status' => 1])->find();
                             array_push($valueRegion, !empty($ResourcesType) ? $ResourcesType['data_name'] : '');
                         }
                     }
@@ -101,7 +101,7 @@ class Resource extends Base
                     $valueSu   = array();
                     foreach ($subdivide as $val) {
                         if (is_numeric($val)) {
-                            $ResourcesSu = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_no' => $val])->find();
+                            $ResourcesSu = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_no' => $val, 'status' => 1])->find();
                             array_push($valueSu, !empty($ResourcesSu) ? $ResourcesSu['data_name'] : '');
                         }
                     }
