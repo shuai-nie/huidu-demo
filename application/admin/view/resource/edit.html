@@ -200,6 +200,30 @@
             }
         });
 
+        $("form").on('click', '.layui-upload-img', function(){
+            var _this = $(this);
+            var idBar = _this;
+            var src = _this.attr('src'),
+                width = _this.width(),
+                height = _this.height(),
+                scaleWH = width / height,
+                bigH = 500,
+                bigW = width / height;
+            if(bigW > 900) {
+                bigW = 900;
+                bigH = bigW / scaleWH;
+            }
+            layer.open({
+                type : 1,
+                title : false,
+                offset: ['240px', '450px'],
+                closeBtn: 1,
+                shadeClose : true,
+                area : ['500px', bigH + 'px'],
+                content: "<img  height='" + bigH + "' controls=\"controls\" src='" + src + "' />"
+            });
+        })
+
         upload.render({
             elem: '#test7submit'
             ,url: upload_url
@@ -567,32 +591,6 @@
                 content: "<img width='" + bigW + "' height='" + bigH + "' controls=\"controls\" src='" + src + "' /"
             })
         }
-
-        $("#demo2 img").each(function(){
-            var _this = $(this);
-            _this.on("click", function(e){
-                var idBar = _this;
-                var src = idBar[0].src,
-                    width = $(idBar).width(),
-                    height = $(idBar).height(),
-                    scaleWH = width / height,
-                    bigH = 500,
-                    bigW = width / height;
-                if(bigW > 900) {
-                    bigW = 900;
-                    bigH = bigW / scaleWH;
-                }
-                layer.open({
-                    type : 1,
-                    title : false,
-                    closeBtn: 1,
-                    shadeClose : true,
-                    area : [bigW + 'px', bigH + 'px'],
-                    content: "<img width='" + bigW + "' height='" + bigH + "' controls=\"controls\" src='" + src + "' />"
-                });
-            })
-        })
-
 
     });
 </script>
