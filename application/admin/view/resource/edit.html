@@ -207,7 +207,7 @@
                 width = _this.width(),
                 height = _this.height(),
                 scaleWH = width / height,
-                bigH = 500,
+                bigH = 400,
                 bigW = width / height;
             if(bigW > 900) {
                 bigW = 900;
@@ -216,10 +216,10 @@
             layer.open({
                 type : 1,
                 title : false,
-                offset: ['240px', '450px'],
+                offset: ['40px', '40px'],
                 closeBtn: 1,
                 shadeClose : true,
-                area : ['500px', bigH + 'px'],
+                area : ['400px', bigH + 'px'],
                 content: "<img  height='" + bigH + "' controls=\"controls\" src='" + src + "' />"
             });
         })
