@@ -24,7 +24,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">简介</label>
         <div class="layui-input-block">
-            <textarea name="intro" required lay-verify="required"  placeholder="请输入内容" class="layui-textarea"></textarea>
+            <textarea name="intro" required lay-verify="required"  placeholder="请输入内容" class="layui-textarea">{$data['intro']}</textarea>
         </div>
     </div>
 
@@ -143,7 +143,6 @@
         form.val('first', {
             'category_id': "{$data['category_id']}",
             'title': "{$data['title']}",
-            'intro': "{$data['intro']}",
             'cover_url': "{$data['cover_url']}",
             'keywords': "{$data['keywords']}",
             'description': "{$data['description']}",
