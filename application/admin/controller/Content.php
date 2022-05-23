@@ -5,6 +5,8 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 use think\Db;
+use util\AliyunOssClient;
+use util\UploadDownload;
 
 class Content extends Controller
 {
@@ -184,5 +186,35 @@ class Content extends Controller
         }
         $data = $this->model->find($id);
         return view('', ['data'=>$data]);
+    }
+
+    public function dd()
+    {
+        $ContentDetail = model('ContentDetail');
+        $data = $ContentDetail->where(['cid'=>32])->find();
+        $content = $data['content'];
+        /****************************************/
+        preg_match_all('/<img.*?src=["|\']?(.*?)["|\']?\s.*?>/i', $content, $match);
+        $UploadDownload = new UploadDownload();
+        $AliyunOssClient = new AliyunOssClient();
+        $YmdPath = '/uploads/' . date('Ymd');
+        $aliyun_config = Config('aliyun_config');//['accessDomain']);
+        foreach ($match[1] as $value) {
+            if(strpos($value, 'file.huidu.io') == false) {
+                $data = $UploadDownload->download($value, '.' . $YmdPath);
+                if($data['error'] == 0) {
+                    dump($value);
+                    dump($data);
+                    dump(ROOT_PATH . 'public' . $YmdPath .'/'. $data['file_name']);
+                    $data = $AliyunOssClient->OssClient($data['file_name'], ROOT_PATH . 'public' . $YmdPath.'/' . $data['file_name']);
+                    dump($data);
+
+                    //dump(str_replace($value, $YmdPath . $data['file_name'], $content));
+                }
+
+            }
+        }
+        /****************************************/
+
     }
 }
