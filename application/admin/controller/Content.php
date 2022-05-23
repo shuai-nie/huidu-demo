@@ -81,6 +81,8 @@ class Content extends Controller
                 $state = $this->model->save($data);
                 $cid = $this->model->id;
                 $ContentDetail = model('ContentDetail');
+                $UploadDownload = new UploadDownload();
+                $data['content'] = $UploadDownload->replaceImg($data['content']);
                 $ContentDetail->save([
                     'cid' => $cid,
                     'content' => htmlspecialchars_decode($data['content'])
@@ -112,6 +114,8 @@ class Content extends Controller
                 $state = $this->model->save($data, ['id'=>$id]);
                 $ContentDetail = model('ContentDetail');
                 $count = $ContentDetail->where(['cid'=>$id])->count();
+                $UploadDownload = new UploadDownload();
+                $data['content'] = $UploadDownload->replaceImg($data['content']);
                 if($count > 0){
                     $ContentDetail->save([
                         'content' => htmlspecialchars_decode($data['content'])
@@ -132,6 +136,7 @@ class Content extends Controller
         $data = $this->model->find($id);
         $detail = $ContentDetail->where(['cid'=>$id])->find();
         $data['content'] = $detail['content'];
+
         $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
         return view('edit', [
             'data' => $data,
@@ -188,33 +193,5 @@ class Content extends Controller
         return view('', ['data'=>$data]);
     }
 
-    public function dd()
-    {
-        $ContentDetail = model('ContentDetail');
-        $data = $ContentDetail->where(['cid'=>32])->find();
-        $content = $data['content'];
-        /****************************************/
-        preg_match_all('/<img.*?src=["|\']?(.*?)["|\']?\s.*?>/i', $content, $match);
-        $UploadDownload = new UploadDownload();
-        $AliyunOssClient = new AliyunOssClient();
-        $YmdPath = '/uploads/' . date('Ymd');
-        $aliyun_config = Config('aliyun_config');//['accessDomain']);
-        foreach ($match[1] as $value) {
-            if(strpos($value, 'file.huidu.io') == false) {
-                $data = $UploadDownload->download($value, '.' . $YmdPath);
-                if($data['error'] == 0) {
-                    dump($value);
-                    dump($data);
-                    dump(ROOT_PATH . 'public' . $YmdPath .'/'. $data['file_name']);
-                    $data = $AliyunOssClient->OssClient($data['file_name'], ROOT_PATH . 'public' . $YmdPath.'/' . $data['file_name']);
-                    dump($data);
 
-                    //dump(str_replace($value, $YmdPath . $data['file_name'], $content));
-                }
-
-            }
-        }
-        /****************************************/
-
-    }
 }

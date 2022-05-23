@@ -1,13 +1,11 @@
 <?php
-
-
 namespace util;
+
 use OSS\Core\OssException;
 use OSS\OssClient;
 
 class AliyunOssClient
 {
-
     public function OssClient($object, $filePath)
     {
         $aliyunConfig    = config('aliyun_config');
