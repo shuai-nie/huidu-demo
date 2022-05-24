@@ -61,7 +61,7 @@ class UploadDownload
                 $data = $this->download($value, './' . $YmdPath);
                 if($data['error'] == 0) {
                     $AliyunOssClient->OssClient($data['file_name'], ROOT_PATH . 'public/' . $YmdPath.'/' . $data['file_name']);
-                    $content = str_replace($value, $aliyun_config['accessDomain']. $YmdPath . $data['file_name'], $content);
+                    $content = str_replace($value, $aliyun_config['accessDomain']. $data['file_name'], $content);
                 }
             }
         }
