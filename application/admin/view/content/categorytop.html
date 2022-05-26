@@ -77,7 +77,7 @@
         form.val('first', {
             'category_top': "{$data['category_top']}",
             'category_sort': "{$data['category_sort']}",
-            'title': "{$data['title']}",
+            'title': "{$data['title']|addslashes}",
         });
 
     });
