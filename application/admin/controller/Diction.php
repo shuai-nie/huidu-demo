@@ -263,6 +263,7 @@ class Diction extends Base
             ['id'=>2,'pid'=>0,'title'=>'联系方式','isedit'=>false],
             ['id'=>3,'pid'=>0,'title'=>'资源·货币','isedit'=>false],
             ['id'=>4,'pid'=>0,'title'=>'举报类型','isedit'=>false],
+            ['id'=>5,'pid'=>0,'title'=>'资源·合作区域','isedit'=>false],
         ];
         $DataDic = model('DataDic');
 
@@ -285,6 +286,11 @@ class Diction extends Base
             foreach ($all as $k1 => $v1) {
                 array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
             }
+        }
+
+        $resourcesAll = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_REGION'])->select();
+        foreach ($resourcesAll as $k => $v) {
+            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
