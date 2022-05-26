@@ -177,7 +177,6 @@ class Userinfo extends Base
                 return error_json('email已存在,请修改');
             }
 
-
             $state = $userModel->save($data);
             $uid = $userModel->id;
 

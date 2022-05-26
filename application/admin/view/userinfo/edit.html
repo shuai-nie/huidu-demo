@@ -37,6 +37,20 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">tg账号</label>
+        <div class="layui-input-block">
+            <input type="text" name="telegram"  placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">tg聊天id</label>
+        <div class="layui-input-block">
+            <input type="text" name="chat_id"  placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
     <div id="url" {if condition="empty($UserInfo['head_url'])"}style="display: none;"{/if}>
         <label class="layui-form-label"></label>
         <div class="layui-input-block">
@@ -105,6 +119,8 @@
             'head_url' : "{$UserInfo['head_url']}",
             'mobile':"{$UserInfo['mobile']}",
             'email':"{$UserInfo['email']}",
+            'telegram':"{$UserInfo['telegram']}",
+            'chat_id':"{$UserInfo['chat_id']}",
         });
 
         //监听提交

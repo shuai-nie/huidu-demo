@@ -31,7 +31,7 @@ class Diction extends Base
     {
         $DataDic = model("DataDic");
         if(Request()->isPost()) {
-            $map = ['status'=>1];
+            /*$map = ['status'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
             $offset = ($page - 1) * $limit;
@@ -82,7 +82,7 @@ class Diction extends Base
 
                 $data[$k] = $v;
             }
-            return json(['data' => ['count' => $count, 'list' => $data]], 200);
+            return json(['data' => ['count' => $count, 'list' => $data]], 200);*/
         }
 
         return view('', [
@@ -111,6 +111,7 @@ class Diction extends Base
                 'sort' => $_post['sort'],
                 'data_top_id' => $_post['data_top_id'],
                 'data_dark_icon' => $_post['data_dark_icon'],
+                'url_keyword' => $_post['url_keyword'],
             ]);
             if($state !== false) {
                 return success_json(lang('CreateSuccess', [lang('Dictionaries')] ));
@@ -145,6 +146,7 @@ class Diction extends Base
                 'sort' => $_post['sort'],
                 'data_top_id' => $_post['data_top_id'],
                 'data_dark_icon' => $_post['data_dark_icon'],
+                'url_keyword' => $_post['url_keyword'],
             ]);
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('Dictionaries')] ));
@@ -269,19 +271,19 @@ class Diction extends Base
 
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACT_TYPE'])->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
 
         $arrCur = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCE_CURRENCY'])->select();
         foreach ($arrCur as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
-                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort']]);
+                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
             }
         }
 
