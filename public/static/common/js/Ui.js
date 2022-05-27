@@ -9,7 +9,10 @@ var UI = {
             ,method:'post'
             , height: height
             , url: url //数据接口
+            , limits : [10,20,50,100,200,500,1000,5000,10000]
             , page: true//开启分页
+            , toolbar: true
+            , defaultToolbar: ['filter','exports']
             , parseData: function (res) {
                 return {
                     "code": 0,
