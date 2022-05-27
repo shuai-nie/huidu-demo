@@ -52,20 +52,32 @@ class UploadDownload
 
     public function replaceImg($content)
     {
-        preg_match_all('/<img.*?src=["|\']?(.*?)["|\']?\s.*?>/i', $content, $match);
-        $AliyunOssClient = new AliyunOssClient();
+        $content = htmlspecialchars_decode($content);
+        preg_match_all('/<img.*?src=["|\']?(.*?)["|\']?\s.*?>/', htmlspecialchars_decode($content), $match);
+/*        $pattern = "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/";*/
+//        preg_match_all($pattern, $content, $match);
+//        $AliyunOssClient = new AliyunOssClient();
         $YmdPath = 'uploads/' . date('Ymd');
-        $aliyun_config = Config('aliyun_config');//['accessDomain']);
+//        $aliyun_config = Config('aliyun_config');
+        $http = $this->get_http();
         foreach ($match[1] as $value) {
-            if(strpos($value, 'file.huidu.io') == false) {
+            if(strpos($value, 'file.huidu.io') > 0) {
+            } elseif(strpos($value, 'super.huidu123.com') > 0) {
+            }else {
                 $data = $this->download($value, './' . $YmdPath);
                 if($data['error'] == 0) {
-                    $AliyunOssClient->OssClient($data['file_name'], ROOT_PATH . 'public/' . $YmdPath.'/' . $data['file_name']);
-                    $content = str_replace($value, $aliyun_config['accessDomain']. $data['file_name'], $content);
+//                    $datas = $AliyunOssClient->OssClient($data['file_name'], ROOT_PATH . 'public/' . $YmdPath.'/' . $data['file_name']);
+                    $content = str_replace($value, $http . '/' . $YmdPath . '/' . $data['file_name'], $content);
                 }
             }
         }
-        return $content;
+        return htmlspecialchars($content);
+    }
+
+    public function get_http()
+    {
+        $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+        return $http_type . $_SERVER['HTTP_HOST'];
     }
 
 }

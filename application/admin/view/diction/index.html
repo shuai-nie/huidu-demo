@@ -70,8 +70,12 @@ layui.use(['table','treetable'], function(){
             {type: 'numbers'},
             {field: 'title', title: '权限名称'},
             {field: 'data_icon', title: 'icon图标',width:120,templet: function(d){
-                if(d.data_icon) {
-                    return "<img src='"+ d.data_icon + "' height='30' />";
+                if(d.pid == 5) {
+                    return d.data_icon;
+                } else {
+                    if(d.data_icon) {
+                        return "<img src='"+ d.data_icon + "' height='30' />";
+                    }
                 }
                 return '-';
             }},
