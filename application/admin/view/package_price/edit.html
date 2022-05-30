@@ -1,0 +1,110 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">套餐</label>
+        <div class="layui-input-inline">
+            <select name="package_id">
+                {volist name="info" id="vo1"}
+                <option value="{$vo1['id']}">{$vo1['title']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            {volist name='type' id='vo' key='k' }
+            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" {if condition="$k eq 1"}checked{/if} />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">原价</label>
+        <div class="layui-input-inline">
+            <input type="number" name="old_amount" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">现价</label>
+        <div class="layui-input-inline">
+            <input type="number" name="new_amount" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">推荐</label>
+        <div class="layui-input-block">
+            <input type="radio" name="recommend" value="0" title="否" checked />
+            <input type="radio" name="recommend" value="1" title="是" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline">
+            <input type="number" name="sort" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        form.val('first', {
+            "package_id" : "{$data['package_id']}",
+            "type" : "{$data['type']}",
+            "old_amount" : "{$data['old_amount']}",
+            "new_amount" : "{$data['new_amount']}",
+            "recommend" : "{$data['recommend']}",
+            "sort" : "{$data['sort']}",
+        })
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {
+                console.log(res);
+            });
+        });
+
+
+    });
+</script>

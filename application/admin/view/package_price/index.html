@@ -8,29 +8,20 @@
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {{# if(d.id !=1 ){ }}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    {{# } }}
 </script>
 
 <script>
     layui.use('table', function(){
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'title', title: '套餐标题', width:140,}
-            ,{field: 'publish', title: '发布资源次数', width:120}
-            ,{field: 'flush', title: '刷新资源次数', width:120}
-            ,{field: 'view_provide', title: '查看提供资源的名片次数', width:200}
-            ,{field: 'view_provide_give', title: '查看提供资源的名片次数-赠送', width:220}
-            ,{field: 'view_demand', title: '查看需求资源的名片次数', width:200}
-            ,{field: 'level', title: '等级', width:120}
-            ,{field: 'image_url', title: '示意图', width:120,templet(d){
-                if(d.image_url){
-                    return "<img src='"+d.image_url+"' width='30' height='30' />";
-                }
-                return '-';
-            }}
+            {field: 'key', title: '', width:80, fixed: 'left'}
+            ,{field: 'package_title', title: '套餐', width:140,}
+            ,{field: 'type', title: '类型', width:140,}
+            ,{field: 'old_amount', title: '原价', width:140,}
+            ,{field: 'new_amount', title: '现价', width:140,}
+            ,{field: 'recommend', title: '推荐', width:140,}
+            ,{field: 'sort', title: '排序', width:140,}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function(obj){

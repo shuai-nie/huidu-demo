@@ -51,6 +51,21 @@
         </div>
     </div>
 
+    <div id="image_url" {if condition="empty($data['image_url'])"}style="display: none;"{/if} >
+        <div class="layui-input-block">
+            <img src="{$data['image_url']}" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="image_url">
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>示意图
+            </button>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -76,9 +91,9 @@
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
-                    $("input[name='url']").val(res.url);
+                    $("#image_url").show();
+                    $("#image_url img").attr('src', res.url);
+                    $("input[name='image_url']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
@@ -97,6 +112,7 @@
             "view_provide" : "{$data['view_provide']}",
             "view_provide_give" : "{$data['view_provide_give']}",
             "view_demand" : "{$data['view_demand']}",
+            "image_url" : "{$data['image_url']}",
         })
 
         //监听提交

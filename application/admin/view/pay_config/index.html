@@ -8,29 +8,21 @@
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {{# if(d.id !=1 ){ }}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    {{# } }}
 </script>
 
 <script>
     layui.use('table', function(){
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'title', title: '套餐标题', width:140,}
-            ,{field: 'publish', title: '发布资源次数', width:120}
-            ,{field: 'flush', title: '刷新资源次数', width:120}
-            ,{field: 'view_provide', title: '查看提供资源的名片次数', width:200}
-            ,{field: 'view_provide_give', title: '查看提供资源的名片次数-赠送', width:220}
-            ,{field: 'view_demand', title: '查看需求资源的名片次数', width:200}
-            ,{field: 'level', title: '等级', width:120}
-            ,{field: 'image_url', title: '示意图', width:120,templet(d){
+            {field: 'key', title: '', width:80, fixed: 'left'}
+            ,{field: 'image_url', title: '支付二维码', width:100,templet:function(d){
                 if(d.image_url){
-                    return "<img src='"+d.image_url+"' width='30' height='30' />";
+                    return "<img src='"+d.image_url+"' height='30' width='40'  >";
                 }
                 return '-';
             }}
+            ,{field: 'secret_key', title: '密钥', width:240,}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ]);
         table.on('tool(think-table)', function(obj){
