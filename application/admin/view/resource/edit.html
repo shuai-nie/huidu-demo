@@ -368,6 +368,9 @@
         form.on('radio(subdivide)', function(data){
             var _val = data.value;
             $("#form_html").empty();
+
+            forHtml(_val);
+
             $.post("{:url('fromHtml')}", {fromId:_val}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
@@ -392,7 +395,7 @@
                         }
                     });
                     form.render();
-                    formVal();
+                    //formVal();
                 }
             }, 'json');
 
@@ -404,12 +407,12 @@
         })
 
         // 业务细分
-        form.on('radio(subdivide)', function(data){
-            var _val = data.value;
-            forHtml(_val)
-        });
+        // form.on('radio(subdivide)', function(data){
+        //     var _val = data.value;
+        //     //forHtml(_val)
+        // });
 
-        forHtml($("input[name='subdivide']").val())
+       // forHtml($("input[name='subdivide']").val())
 
         function forHtml(_val){
             $("#form_html").empty();
@@ -453,7 +456,7 @@
                 })
                 $("#resourceIndustry").append(_html);
                 form.render();
-                formVal();
+                // formVal();
             }, 'json');
         }
 
@@ -461,7 +464,7 @@
             subdivide(data.value)
         })
 
-        subdivide("{$resource['industry']}");
+        //subdivide("{$resource['industry']}");
 
         function subdivide(_val) {
             if(_val == '|') {
@@ -501,6 +504,39 @@
         })
 
         //form.verify({})
+        var _valIndustry = "{$resource['industry']}";
+        if(_valIndustry == '|') {
+            $("#industry_subdivide").empty();
+            formVal();
+        }else{
+            $("#industry_subdivide").empty();
+            $.post("{:url('industry_subdivide')}", {data_top_id: _valIndustry}, function(obj){
+                if(obj.code == 200) {
+                    var _html = '';
+                    $.each(obj.data.sub, function (i, v) {
+                        _html += "<input type='checkbox' name='industry_subdivide[" + v.data_no + "]' value='" + v.data_no + "' title='" + v.data_name + "'>";
+                    })
+                    $("#industry_subdivide").append(_html);
+                    form.render();
+                    formVal();
+                } else {
+                    layer.msg('网络问题，请联系管理员');
+                }
+            }, 'json');
+        }
+
+        var _varIndustry = "{$resource['business_subdivide']}";
+        $("#resourceIndustry").empty();
+        $.post("{:url('industry')}" ,{top_id:_varIndustry}, function(obj){
+            var _html = '<input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />';
+            $.each(obj.data.data, function (i, v) {
+                _html += "<input type='radio' id='industry' lay-filter=\"industry\" lay-verType='tips' name='industry' value='" + v.data_no + "' title='" + v.data_name + "'>";
+            })
+            $("#resourceIndustry").append(_html);
+            form.render();
+            formVal();
+        }, 'json');
+
 
         $("#form_html").empty();
         $.post("{:url('fromhtmlvalue')}", {resourceId:"{$resource['id']}"}, function (obj) {
@@ -550,24 +586,19 @@
                 "home_roll":"{$resource['home_roll']}",
             {volist name="$resource['region']" id="vo"}
             "region[{$vo}]":true,
-                {/volist}
-
+             {/volist}
             "subdivide" : "{$resource['business_subdivide']}",
-
             {volist name="$resource['region']" id="vo"}
             {if condition="$vo"}
             "region[{$vo}]":true,
-                {/if}
+            {/if}
             {/volist}
-
             "industry":"{$resource['industry']}",
             {volist name="$resource['industry_subdivide']" id="vo"}
-                {if condition="$vo"}
-                "industry_subdivide[{$vo}]":true,
-                {/if}
+            {if condition="$vo"}
+            "industry_subdivide[{$vo}]":true,
+            {/if}
             {/volist}
-
-
             });
         }
 
