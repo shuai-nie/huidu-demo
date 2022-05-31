@@ -30,11 +30,11 @@ class ContentLink extends Base
                 $map['keyword'] = ['like', $keyword];
             }
             $data = $contentLink->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $count = $contentLink->where($map)->count();
             foreach ($data as $key => $val) {
-                $val['key'] = $offset + 1 + $key;
+                $val['key'] = $count - $key - $offset;
                 $data[$key] = $val;
             }
-            $count = $contentLink->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
     }
