@@ -27,7 +27,7 @@ class ContentLink extends Base
             $map = ['status'=>1];
             $offset = ($page - 1) * $limit;
             if(!empty($keyword)) {
-                $map['keyword'] = ['like', $keyword];
+                $map['keyword'] = ['like', "%{$keyword}%"];
             }
             $data = $contentLink->where($map)->order('id desc')->limit($offset, $limit)->select();
             $count = $contentLink->where($map)->count();
