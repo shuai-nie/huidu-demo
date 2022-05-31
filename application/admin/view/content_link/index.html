@@ -61,9 +61,7 @@
             table.reload('table', {
                 url: "{:url('data')}",
                 method:'post',
-                where : {
-                    name: data.field.name
-                },
+                where : data.field,
                 page : {curr : 1}
             });
             return false;
