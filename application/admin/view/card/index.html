@@ -1,8 +1,8 @@
 {include file="moban/bone_header"}
 
-<!--<div class="layui-btn-container">
+<div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
-</div>-->
+</div>
 
 <fieldset class="table-search-fieldset">
     <legend>搜索信息</legend>
@@ -67,21 +67,28 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'uid', title: 'UID', width:80, fixed: 'left'}
+            ,{field: 'isweb', title: '端', width:80,templet:function(d){
+                switch (d.isweb*1){
+                    case 1: return '前端';
+                    case 2: return '后台';
+                    default: return '-';
+                }
+            }}
             ,{field: 'name', title: '账号/昵称',width:180,templet:function (d) {
                     return d.username + '/' +d.nickname ;
                 }}
-            ,{field: 'logo', title: 'logo',width:100, templet:function (d) {
+            ,{field: 'logo', title: 'logo',width:80, templet:function (d) {
                 if(d.logo) {
                     return '<img src="'+d.logo+'" height="30" width="30" />';
                 }
                 return '-';
             }}
-            ,{field: 'logo_watermark', width:100,title: 'logo水印', templet:function (d) {
-                    if(d.logo_watermark) {
-                        return '<img src="'+d.logo_watermark+'" height="30" width="30" />';
-                    }
-                    return '-';
-                }}
+            ,{field: 'logo_watermark', width:70,title: '水印', templet:function (d) {
+                if(d.logo_watermark) {
+                    return '<img src="'+d.logo_watermark+'" height="30" width="30" />';
+                }
+                return '-';
+            }}
             ,{field: 'position', title: '职位',width: 170}
             ,{field: 'business_tag', title: '业务',width: 170}
             ,{field: 'create_time', title: '创建时间',width: 170}

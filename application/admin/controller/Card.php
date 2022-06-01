@@ -3,6 +3,8 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use think\Db;
+use think\Exception;
 use think\Request;
 
 class Card extends Base
@@ -80,13 +82,41 @@ class Card extends Base
     public function create()
     {
         if(Request()->isPost()) {
-            $data = Request()->param();
-            $state = true;
+            $_post = Request()->post();
+            $card = model('card');
+            $cardContact = model('cardContact');
+            $uid = \request()->post('uid');
+            $count = $card->where(['uid'=>$uid])->count();
+            if( $count > 0 ) {
+                return error_json('当前用户已创建名片', array(), 400);
+            }
+            $_post['business_tag'] = isset($_post['business_tag']) ? implode('|', $_post['business_tag']) : '';
+
+            $contact = array();
+
+            $state = false;
+            Db::startTrans();
+            try {
+                $addStatus = $card->allowField(true)->save($_post);
+                foreach ($_post['contact'] as $key => $val) {
+                    array_push($contact, array(
+                        'card_id' => $card->id,
+                        'contact_type' => $val,
+                        'contact_number' => $_post['tel'][$key]
+                    ));
+                }
+                $cardContact->isUpdate(false)->saveAll($contact, false);
+                Db::commit();
+                $state = true;
+            }catch (\Exception $e) {
+                Db::rollback();;
+            }
             if($state !== false){
                 return success_json();
             }
             return error_json();
         }
+        $this->getDataDicTypeNo();
         return view();
     }
 
@@ -125,38 +155,21 @@ class Card extends Base
             ->field('A.*,B.username,B.nickname')
             ->where(['A.id'=>$id])->find();
         $data['business_tag'] = explode('|', $data['business_tag']);
-        $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
-        $resources = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->order('sort desc')->select();
+
         $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
+        $this->getDataDicTypeNo();
         return view('', [
             'data'=>$data,
-            'DataDicData' => $DataDicData,
             'CardContact' => $CardContact,
-            'resources' => $resources,
         ]);
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
+    private function getDataDicTypeNo()
     {
-        //
-    }
-
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
+        $contactType = model('DataDic')->selectType(['data_type_no'=>'CONTACT_TYPE','status'=>1]);
+        $resources = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
+        $this->assign('contactType' , $contactType);
+        $this->assign('resources' , $resources);
     }
 
     public function quality()
@@ -170,6 +183,19 @@ class Card extends Base
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
             return error_json(lang('EditSuccess', [lang('CARD')]) );
+        }
+    }
+
+    public function get_card_uid()
+    {
+        if(\request()->isPost()){
+            $card = model('card');
+            $uid = \request()->post('uid');
+            $count = $card->where(['uid'=>$uid])->count();
+            if( $count > 0 ) {
+                return error_json('当前用户已创建名片', array(), 400);
+            }
+            return error_json('当前用户未创建名片', array(), 200);
         }
     }
 }
