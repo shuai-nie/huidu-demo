@@ -281,7 +281,7 @@ class Diction extends Base
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
                 array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
@@ -290,7 +290,7 @@ class Diction extends Base
 
         $resourcesAll = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_REGION'])->select();
         foreach ($resourcesAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
