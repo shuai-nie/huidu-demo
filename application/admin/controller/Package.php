@@ -18,10 +18,24 @@ class Package extends Base
             $map = ['status'=>1];
             $page = Request()->param('page');
             $limit = Request()->param('limit');
+            $PackagePrice = model('PackagePrice');
+            $Package = model("Package");
             $offset = ($page - 1) * $limit;
-            $adAll = model("Package")->where($map)->limit($offset, $limit)->select();
+            $data = model("Package")->where($map)->limit($offset, $limit)->select();
             $count = model("Package")->where($map)->count();
-            return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
+            foreach ($data as $key=>$val) {
+                $price = $PackagePrice->where(['package_id' => $val['id'], 'status' => 1])->select();
+                if(!empty($price)) {
+                    $str = '';
+                    foreach ($price as $k=>$v) {
+                        $str .= $v['old_amount'] .'/'. getPriceType($v['type']) .'('.$v['new_amount'].")<br/>";
+
+                    }
+                    $val['price'] = $str;
+                }
+                $data[$key] = $val;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view();
     }
@@ -67,8 +81,6 @@ class Package extends Base
         return view('', ['data'=>$data]);
     }
 
-
-
     /**
      * 删除指定资源
      *
@@ -86,5 +98,59 @@ class Package extends Base
             }
             return error_json(lang('DeleteFail', [lang('RESOURCE')]));
         }
+    }
+
+    public function price($id)
+    {
+        $PackagePrice = model('PackagePrice');
+        if(\request()->isPost()) {
+            $_post = \request()->post();
+            $add = array();
+            $update = array();
+            foreach ($_post['old_amount'] as $key => $val){
+                if(isset($_post['mid'][$key])){
+                    array_push($update,  array(
+                        'id' => $_post['mid'][$key],
+                        'package_id' => $id,
+                        'type' => $_post['type'][$key],
+                        'old_amount' => $_post['old_amount'][$key],
+                        'new_amount' => $_post['new_amount'][$key],
+                        'sort' => $_post['sort'][$key],
+                        'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
+                        'status' => 1
+                    ));
+                } else {
+                    array_push($add,  array(
+                        'package_id' => $id,
+                        'type' => $_post['type'][$key],
+                        'old_amount' => $_post['old_amount'][$key],
+                        'new_amount' => $_post['new_amount'][$key],
+                        'sort' => $_post['sort'][$key],
+                        'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
+                    ));
+                }
+            }
+            $state = false;
+            $PackagePrice->save(['status' => 0], ['package_id' => $id]);
+            if (!empty($add)) {
+                $state = $PackagePrice->isUpdate(false)->saveAll($add, false);
+            }
+
+            if (!empty($update)) {
+                $state = $PackagePrice->isUpdate(true)->saveAll($update);
+            }
+
+            if($state !== false) {
+                return success_json('修改成功');
+            }
+            return error_json('修改失败');
+        }
+        $info = $PackagePrice->where(['package_id' => $id, 'status' => 1])->select();
+        $count = $PackagePrice->where(['package_id' => $id, 'status' => 1])->count();
+        return view('', [
+            'id' => $id,
+            'info' => $info,
+            'count' => $count,
+        ]);
     }
 }

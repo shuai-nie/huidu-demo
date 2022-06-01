@@ -1,0 +1,189 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 20px 30px" id="form">
+    <input type="hidden" name="package_id" value="{$id}" />
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">原价</label>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">时间单位</label>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">现价</label>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">排序</label>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">推荐</label>
+        </div>
+    </div>
+
+    {if condition="$info"}
+    {volist name="info" id="vo" key='k'}
+        <div class="layui-form-item">
+            <input type="hidden" name="mid[{$k}]" value="{$vo.id}" >
+            <div class="layui-inline" style="width:110px;">
+                <input type="number" name="old_amount[{$k}]" value="{$vo['old_amount']}" class="layui-input" >
+            </div>
+
+            <div class="layui-inline" style="width:110px;">
+                <select name="type[{$k}]">
+                    <option value="1" {if condition="$vo['type'] eq 1"}selected{/if} >月</option>
+                    <option value="2" {if condition="$vo['type'] eq 2"}selected{/if} >季</option>
+                    <option value="3" {if condition="$vo['type'] eq 3"}selected{/if} >年</option>
+                </select>
+            </div>
+
+            <div class="layui-inline" style="width:110px;">
+                <input type="number" name="new_amount[{$k}]" class="layui-input" value="{$vo['new_amount']}" >
+            </div>
+
+            <div class="layui-inline" style="width:110px;">
+                <input type="number" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" >
+            </div>
+
+            <div class="layui-inline" style="width:100px;">
+                <input type="checkbox" name="recommend[{$k}]" value="1" {if condition="$vo['recommend'] eq 1"}checked{/if} title="推荐" >
+            </div>
+
+            <div class="layui-inline">
+                {if condition="$k eq 1"}
+                <button type="button" class="layui-btn layui-btn-sm addition"><i class="layui-icon layui-icon-addition" ></i></button>
+                {else/}
+                <button type="button" class="layui-btn layui-btn-sm layui-btn-danger delete"><i class="layui-icon layui-icon-delete" ></i></button>
+                {/if}
+            </div>
+        </div>
+    {/volist}
+    {else/}
+    <div class="layui-form-item">
+        <div class="layui-inline" style="width:110px;">
+            <input type="number" name="old_amount[0]" class="layui-input" >
+        </div>
+
+        <div class="layui-inline" style="width:110px;">
+            <select name="type[0]">
+                <option value="1">月</option>
+                <option value="2">季</option>
+                <option value="3">年</option>
+            </select>
+        </div>
+
+        <div class="layui-inline" style="width:110px;">
+            <input type="number" name="new_amount[0]" class="layui-input" >
+        </div>
+
+        <div class="layui-inline" style="width:110px;">
+            <input type="number" name="sort[0]" class="layui-input" >
+        </div>
+
+        <div class="layui-inline" style="width:100px;">
+            <input type="checkbox" name="recommend[0]" value="1" checked title="推荐" >
+        </div>
+
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-sm addition"><i class="layui-icon layui-icon-addition" ></i></button>
+        </div>
+    </div>
+    {/if}
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#image_url").show();
+                    $("#image_url img").attr('src', res.url);
+                    $("input[name='image_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        form.val('first', {
+        })
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.edit(data.field, function (res) {
+                console.log(res);
+            });
+        });
+
+        var _key = 1 + "{$count}";
+        $("#form").on('click', '.addition', function(){
+            var _html = "<div class=\"layui-form-item\">\n" +
+                "        <div class=\"layui-inline\" style=\"width:110px;\">\n" +
+                "            <input type=\"number\" name=\"old_amount[" + _key + "]\" class=\"layui-input\">\n" +
+                "        </div>\n" +
+                "\n" +
+                "        <div class=\"layui-inline\" style=\"width:110px;\">\n" +
+                "            <select name=\"type[" + _key + "]\">\n" +
+                "                <option value=\"1\">月</option>\n" +
+                "                <option value=\"2\">季</option>\n" +
+                "                <option value=\"3\">年</option>\n" +
+                "            </select>\n" +
+                "        </div>\n" +
+                "\n" +
+                "        <div class=\"layui-inline\" style=\"width:110px;\">\n" +
+                "            <input type=\"number\" name=\"new_amount[" + _key + "]\" class=\"layui-input\">\n" +
+                "        </div>\n" +
+                "\n" +
+                "        <div class=\"layui-inline\" style=\"width:110px;\">\n" +
+                "            <input type=\"number\" name=\"sort[" + _key + "]\" class=\"layui-input\">\n" +
+                "        </div>\n" +
+                "\n" +
+                "        <div class=\"layui-inline\" style=\"width:100px;\">\n" +
+                "            <input type=\"checkbox\" name=\"recommend[" + _key + "]\" value='1' title=\"推荐\" >\n" +
+                "        </div>\n" +
+                "\n" +
+                "        <div class=\"layui-inline\">\n" +
+                // "            <button type=\"button\" class=\"layui-btn layui-btn-danger layui-btn-sm addition\"><i class=\"layui-icon layui-icon-addition\"></i></button>\n" +
+                "            <button type=\"button\" class=\"layui-btn layui-btn-danger layui-btn-sm delete \"><i class=\"layui-icon layui-icon-delete\"></i></button>\n" +
+                "        </div>\n" +
+                "    </div>", _this = $(this);
+            _this.parent().parent().parent().append(_html)
+            _key++;
+            form.render('checkbox');
+            form.render('select');
+        });
+
+        $("#form").on('click', '.delete', function(){
+            var _this = $(this);
+            _this.parent().parent().remove();
+        });
+
+
+    });
+</script>

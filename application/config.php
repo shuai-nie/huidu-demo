@@ -258,4 +258,10 @@ return [
         'accessDomain'    => 'https://huidu-bucket.oss-ap-southeast-1.aliyuncs.com/',//https://file.huidu.io/',
     ),
 
+    'telegramApi' => array(
+        'httpUrl' => "https://api.telegram.org/bot",
+        'accessKey' => '5143418040:AAF6N352jdLKWGc4klgiJ-Biq0uTsck5FCk',
+        'url' => '/sendMessage',
+    ),
+
 ];

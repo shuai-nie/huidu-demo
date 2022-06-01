@@ -328,3 +328,14 @@ function getRealIP(){
     }
     return $ip;
 }
+
+function getPriceType($t)
+{
+    switch ($t){
+        case 1: return '月';
+        case 2: return '季';
+        case 3: return '年';
+        default: return '-';
+    }
+
+}

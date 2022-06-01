@@ -1,5 +1,6 @@
 <?php
 return [
+    'head_title' => '灰度后台管理',
     'lang' => '语言包',
 
     'AD' => '广告',
