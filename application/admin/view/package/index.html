@@ -22,7 +22,7 @@ td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
     layui.use('table', function(){
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            {field: 'id', title: 'ID', width:80}
             ,{field: 'type', title: '类型', width:90,templet(d){
                 switch (d.type*1){
                     case 0: return 'vip';
