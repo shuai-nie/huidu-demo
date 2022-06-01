@@ -212,12 +212,14 @@
             }, 'json');
         })
 
-
-
-
-
         form.on('submit(submit)', function (data) {
-            Api.edit(data.field, function (res) {});
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
+            Api.add(data.field, function (res) {
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            });
         });
 
 
