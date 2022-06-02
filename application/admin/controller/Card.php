@@ -109,7 +109,7 @@ class Card extends Base
                     'head_url' => $_post['logo'],
                 ]);
                 $_post['uid'] = $userModel->id;
-                $data = $card->allowField(true)->save($_post);
+                $card->allowField(true)->save($_post);
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
                         'card_id' => $card->id,
