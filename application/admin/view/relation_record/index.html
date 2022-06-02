@@ -111,7 +111,7 @@
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 230, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 330, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){

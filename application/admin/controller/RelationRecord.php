@@ -73,12 +73,16 @@ class RelationRecord extends Controller
         $RelationRecord = model('RelationRecord');
         if(\request()->isPost()){
             $_post = \request()->post();
-            var_dump($_post);
-            exit();
-
+            $state = $RelationRecord->isUpdate(true)->allowField(true)->save($_post, ['id'=>$id]);
+            if($state != false) {
+                return success_json('修改成功');
+            }
+            return success_json('修改失败');
         }
+        $info = $RelationRecord->find($id);
         return view('', [
-            'operatAll' => $RelationRecord->operat
+            'operatAll' => $RelationRecord->operat,
+            'info' => $info,
         ]);
     }
 
