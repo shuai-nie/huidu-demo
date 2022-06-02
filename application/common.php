@@ -337,5 +337,4 @@ function getPriceType($t)
         case 3: return '年';
         default: return '-';
     }
-
 }

@@ -264,4 +264,7 @@ return [
         'url' => '/sendMessage',
     ),
 
+    'usernameRand' => 'Hd',
+    'userPwd' => 'hd123456',
+
 ];

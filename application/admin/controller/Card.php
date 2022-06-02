@@ -84,12 +84,16 @@ class Card extends Base
         if(Request()->isPost()) {
             $_post = Request()->post();
             $card = model('card');
+            $userModel = model('user');
             $cardContact = model('cardContact');
-            $uid = \request()->post('uid');
-            $count = $card->where(['uid'=>$uid])->count();
-            if( $count > 0 ) {
-                return error_json('当前用户已创建名片', array(), 400);
-            }
+            $number = GetRandStr(16);
+            $pwd = md5(md5(config('userPwd')) . $number);
+
+//            $uid = \request()->post('uid');
+//            $count = $card->where(['uid'=>$uid])->count();
+//            if( $count > 0 ) {
+//                return error_json('当前用户已创建名片', array(), 400);
+//            }
             $_post['business_tag'] = isset($_post['business_tag']) ? implode('|', $_post['business_tag']) : '';
 
             $contact = array();
@@ -97,7 +101,15 @@ class Card extends Base
             $state = false;
             Db::startTrans();
             try {
-                $addStatus = $card->allowField(true)->save($_post);
+                $userModel->allowField(true)->save([
+                    'username' => $_post['username'],
+                    'pwd' => $pwd,
+                    'salt' => $number,
+                    'nickname' => $_post['name'],
+                    'head_url' => $_post['logo'],
+                ]);
+                $_post['uid'] = $userModel->id;
+                $data = $card->allowField(true)->save($_post);
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
                         'card_id' => $card->id,
@@ -105,7 +117,9 @@ class Card extends Base
                         'contact_number' => $_post['tel'][$key]
                     ));
                 }
-                $cardContact->isUpdate(false)->saveAll($contact, false);
+                if($contact){
+                    $cardContact->isUpdate(false)->saveAll($contact, false);
+                }
                 Db::commit();
                 $state = true;
             }catch (\Exception $e) {
@@ -116,13 +130,15 @@ class Card extends Base
             }
             return error_json();
         }
+        $str_name = config('usernameRand') . date('y') . GetRandStr(6) . date('md');
         $this->getDataDicTypeNo();
-        return view();
+        return view('', [
+            'username' => $str_name,
+        ]);
     }
 
     /**
      * 显示编辑资源表单页.
-     *
      * @param  int  $id
      * @return \think\Response
      */

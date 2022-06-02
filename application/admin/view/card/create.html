@@ -4,11 +4,10 @@
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px;">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">UID</label>
-            <div class="layui-input-inline" style="width:100px">
-                <input type="text" name="uid" autocomplete="off" class="layui-input" />
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="username" disabled value="{$username}" class="layui-input" style="background-color:#eee;" />
             </div>
-            <button type="button" class="layui-btn search-uid layui-btn-normal"><i class="layui-icon layui-icon-search"></i></button>
         </div>
     </div>
 
@@ -16,13 +15,13 @@
         <div class="layui-inline">
             <label class="layui-form-label" >名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" autocomplete="off" class="layui-input" value="" >
+                <input type="text" name="name" required lay-verify="required" autocomplete="off" class="layui-input" value="" >
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label" style="width:30px;">职位</label>
             <div class="layui-input-inline">
-                <input type="text" autocomplete="off" class="layui-input" name="position" value="" >
+                <input type="text" autocomplete="off" required lay-verify="required" class="layui-input" name="position" value="" >
             </div>
         </div>
     </div>
@@ -217,6 +216,9 @@
             $(':button').addClass(DISABLED);
             $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
+                if(res.code == 400){
+                    layer.msg(res.msg)
+                }
                 $(':button').removeClass(DISABLED);
                 $(':button').removeAttr('disabled');
             });
