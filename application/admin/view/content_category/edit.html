@@ -12,7 +12,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">排序</label>
         <div class="layui-input-block">
-            <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
+            <input type="text" name="sort" maxlength="3" placeholder="排序" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">链接关键字</label>
+        <div class="layui-input-block">
+            <input type="text" name="url_keyword" placeholder="页面链接关键字" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -69,6 +76,7 @@
         form.val('first', {
             'name': "{$data['name']}",
             'sort': "{$data['sort']}",
+            'url_keyword': "{$data['url_keyword']}",
         });
 
     });
