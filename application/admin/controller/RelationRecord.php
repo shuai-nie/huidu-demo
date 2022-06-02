@@ -74,7 +74,7 @@ class RelationRecord extends Controller
         if(\request()->isPost()){
             $_post = \request()->post();
             $state = $RelationRecord->isUpdate(true)->allowField(true)->save($_post, ['id'=>$id]);
-            if($state != false) {
+            if($state !== false) {
                 return success_json('修改成功');
             }
             return success_json('修改失败');
