@@ -15,8 +15,8 @@ class RelationRecord extends Controller
     public function index()
     {
         $DataDic = model('DataDic');
+        $RelationRecord = model('RelationRecord');
         if(\request()->isPost()){
-            $RelationRecord = model('RelationRecord');
             $map = array();
             $page = \request()->post('page');
             $limit = \request()->post('limit');
@@ -24,6 +24,7 @@ class RelationRecord extends Controller
             $contact_type = \request()->post('contact_type');
             $ty = \request()->post('ty');
             $resource_type = \request()->post('resource_type');
+            $operat = \request()->post('operat');
             if(!empty($nick_name)) {
                 $map['nick_name'] = ['like', "%{$nick_name}%"];
             }
@@ -35,6 +36,9 @@ class RelationRecord extends Controller
             }
             if(is_numeric($resource_type)) {
                 $map['resource_type'] = $resource_type;
+            }
+            if(!empty($operat)){
+                $map['operat'] = $operat;
             }
             $offset = ($page - 1) * $limit;
             $data = $RelationRecord->where($map)->limit($offset, $limit)->order('id desc')->select();
@@ -54,77 +58,30 @@ class RelationRecord extends Controller
         }
         $contact = $DataDic->where(['data_type_no'=>'CONTACT_TYPE', 'status'=>1])->field('data_name,data_no')->select();
         $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1])->field('data_name,data_no')->select();
+
         return view('', [
             'meta_title' => '沟通记录表',
             'ty' => (new  Resource())->ty,
             'contact' => $contact,
             'resources' => $resources,
+            'operatAll' => $RelationRecord->operat
         ]);
     }
 
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * 保存新建的资源
-     *
-     * @param  \think\Request  $request
-     * @return \think\Response
-     */
-    public function save(Request $request)
-    {
-        //
-    }
-
-    /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function read($id)
-    {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
     public function edit($id)
     {
-        //
+        $RelationRecord = model('RelationRecord');
+        if(\request()->isPost()){
+            $_post = \request()->post();
+            var_dump($_post);
+            exit();
+
+        }
+        return view('', [
+            'operatAll' => $RelationRecord->operat
+        ]);
     }
 
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function delete($id)
-    {
-        //
-    }
+
 }

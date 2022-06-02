@@ -50,6 +50,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">操作</label>
+                    <div class="layui-input-inline">
+                        <select name="operat" lay-filter="data_type_no" lay-search="" >
+                            <option value="">请选择</option>
+                            {volist name='operatAll' id='vo'}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -58,6 +70,10 @@
 </fieldset>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
 
 <script>
     layui.use(['table','form'], function(){
@@ -71,7 +87,7 @@
             ,{field: 'contact_name', title: '联系方式', width:140,}
             ,{field: 'contact_number', title: '联系号码', width:140}
             ,{field: 'ty', title: '需求类型', width:90,templet:function(d){
-                switch (d.ty*1) {
+                switch (d.ty * 1) {
                     {foreach name='ty' id='vy' key='k'}
                     case {$k}: return '<span class="">{$vy}</span>';break;
                     {/foreach}
@@ -79,14 +95,23 @@
                 }
             }}
             ,{field: 'resource_name', title: '资源业务', width:90}
-            // ,{field: 'remarks', title: '备注', width:140,}
+            ,{field: 'operat', title: '操作结果', width:140,templet:function(d){
+                switch (d.operat*1){
+                    {volist name="operatAll" id="vl"}
+                    case {$vl['id']}: return '{$vl["title"]}';
+                    {/volist}
+                    default: return '-';
+                }
+            }}
+            ,{field: 'remarks', title: '备注', width:140,}
             ,{field: 'create_time', title: '提交时间', width: 170}
+            ,{fixed: 'right',title:'操作', width:80, align:'center', toolbar: '#barDemo'}
         ]);
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 230, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
