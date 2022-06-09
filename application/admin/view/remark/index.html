@@ -21,6 +21,10 @@
 .welcome .layuimini-notice-title,.layuimini-notice-label {padding-right:70px !important;text-overflow:ellipsis !important;overflow:hidden !important;white-space:nowrap !important;}
 .welcome .layuimini-notice-title {line-height:28px;font-size:14px;}
 .welcome .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+.class-1{}
+.class-2{margin-left:25px}
+.class-3{margin-left:50px}
+.class-4{display:initial;border: 1px solid #e0e0e0;}
 
 h5{font-size:100%;}
 .pull-right{float:right;}
@@ -30,9 +34,9 @@ h1{margin:0;padding:0;font-size: 2em;}
 <div class="layuimini-container layuimini-page-anim">
     <div class="layuimini-main welcome">
         <div class="layui-row layui-col-space15">
-            <div class="layui-col-md8">
+            <div class="layui-col-xs6">
                 <div class="layui-row layui-col-space15">
-                    <div class="layui-col-md9">
+                    <div class="layui-col-md12">
                         <div class="layui-card">
                             <div class="layui-card-header"><i class="layui-icon layui-icon-console" style="color:#1aa094;margin-right:4px;"></i>数据统计</div>
                             <div class="layui-card-body">
@@ -100,7 +104,7 @@ h1{margin:0;padding:0;font-size: 2em;}
                         </div>
                     </div>
 
-                    <div class="layui-col-md9">
+                    <div class="layui-col-md12">
 
                         <div class="layui-card">
                             <div class="layui-card-header"><i class="layui-icon layui-icon-notice" style="color:#1aa094;margin-right:4px;"></i>操作日志</div>
@@ -114,6 +118,48 @@ h1{margin:0;padding:0;font-size: 2em;}
                             </div>
                         </div>
 
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="layui-card">
+                    <div class="layui-card-header"><i class="layui-icon layui-icon-notice switchData" style="color:#1aa094;margin-right:4px;"></i>操作日志</div>
+                    <div class="layui-card-body layui-text">
+                        {volist name="statistics" id="vo" }
+                            <div class="class-{$vo['level']}"><i class="layui-icon layui-icon-triangle-r switchData" data-level="{$vo['level']}" ></i>[{$vo['data_type_name']}]:{$vo['data_name']}(<font color="#009688">{$vo['count']}</font>)</div>
+                            <div class="class-{$vo['level']}-child" style="display:none;" >
+                            {volist name="vo['child']" id="vo1" key="k1"}
+                                {if condition="$vo1['level'] eq 1"}
+                                <div class="class-{$vo1['level']}"><i class="layui-icon layui-icon-triangle-r switchData" data-level="{$vo1['level']}" ></i>[{$vo1['data_type_name']}]:{$vo1['data_name']}(<font color="#009688">{$vo1['count']}</font>)</div>
+                                <div class="class-{$vo1['level']}-child" style="display:none;" >
+                                {volist name="vo1['child']" id="vo2"}
+                                    <div class="class-{$vo2['level']}" ><i class="layui-icon layui-icon-triangle-r switchData" data-level="{$vo2['level']}" ></i>[{$vo2['data_type_name']}]:{$vo2['data_name']}(<font color="#009688">{$vo2['count']}</font>)</div>
+                                    <div class="class-{$vo2['level']}-child" style="display:none;" >
+                                    {volist name="vo2['child']" id="vo3"}
+                                        <div class="class-{$vo3['level']}" ><i class="layui-icon layui-icon-triangle-r switchData" data-level="{$vo3['level']}" ></i>[{$vo3['data_type_name']}]:{$vo3['data_name']}(<font color="#009688">{$vo3['count']}</font>)</div>
+                                        <div class="class-{$vo3['level']}-child" style="display:none;" >
+                                        {volist name="vo3['child']" id="vo4" key="k"}
+                                            {if condition="$k eq 1"}
+                                                <div class="class-{$vo4['level']}" style="margin-left:75px;" >[{$vo4['data_type_name']}]</div>
+                                            {/if}
+                                            <div class="class-{$vo4['level']}" style="">{$vo4['data_name']}</div>
+                                        {/volist}
+                                        </div>
+                                    {/volist}
+                                    </div>
+                                {/volist}
+                                </div>
+                                {else/}
+                                {if condition="$k1 eq 1"}
+                                <div class="class-{$vo1['level']}" style="margin-left:75px;" >[{$vo1['data_type_name']}]</div>
+                                {/if}
+                                <div class="class-{$vo1['level']}" style="">{$vo1['data_name']}</div>
+
+                                {/if}
+                            {/volist}
+                            </div>
+                        {/volist}
                     </div>
                 </div>
             </div>
@@ -167,6 +213,27 @@ layui.use('table', function(){
         var type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
+
+    $(".switchData").on('click', function(){
+        var _this = $(this);
+        var _level = _this.attr('data-level');
+        console.log(_level*1+1);
+        // _this.parent().attr('ddd', 'sssss');
+        // _this.parent().nextAll().attr('ddd', 'sssss');
+        if(_this.hasClass('layui-icon-triangle-r')){
+            _this.parent().next().show();
+            _this.removeClass('layui-icon-triangle-r');
+            _this.addClass('layui-icon-triangle-d')
+        } else {
+            _this.parent().next().hide();
+            _this.removeClass('layui-icon-triangle-d');
+            _this.addClass('layui-icon-triangle-r')
+        }
+
+        //
+
+    });
+
 });
 </script>
 {include file="moban/bone_footer"}
