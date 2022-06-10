@@ -21,10 +21,11 @@
 .welcome .layuimini-notice-title,.layuimini-notice-label {padding-right:70px !important;text-overflow:ellipsis !important;overflow:hidden !important;white-space:nowrap !important;}
 .welcome .layuimini-notice-title {line-height:28px;font-size:14px;}
 .welcome .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
-.class-1{}
-.class-2{margin-left:25px}
-.class-3{margin-left:50px}
-.class-4{display:initial;border: 1px solid #e0e0e0;}
+.class-0{}
+.class-1{margin-left:25px}
+.class-2{margin-left:50px}
+.class-3{margin-left:70px}
+.class-4{display:inline-block;border: 1px solid #e0e0e0;}
 
 h5{font-size:100%;}
 .pull-right{float:right;}
@@ -141,9 +142,9 @@ h1{margin:0;padding:0;font-size: 2em;}
                                         <div class="class-{$vo3['level']}-child" style="display:none;" >
                                         {volist name="vo3['child']" id="vo4" key="k"}
                                             {if condition="$k eq 1"}
-                                                <div class="class-{$vo4['level']}" style="margin-left:75px;" >[{$vo4['data_type_name']}]</div>
+                                                <div class="class-{$vo4['level']}" style="margin-left:95px;" >[{$vo4['data_type_name']}]</div>
                                             {/if}
-                                            <div class="class-{$vo4['level']}" style="">{$vo4['data_name']}</div>
+                                            <div class="class-{$vo4['level']}" style="">{$vo4['data_name']}({$vo4['count']})</div>
                                         {/volist}
                                         </div>
                                     {/volist}
@@ -154,8 +155,7 @@ h1{margin:0;padding:0;font-size: 2em;}
                                 {if condition="$k1 eq 1"}
                                 <div class="class-{$vo1['level']}" style="margin-left:75px;" >[{$vo1['data_type_name']}]</div>
                                 {/if}
-                                <div class="class-{$vo1['level']}" style="">{$vo1['data_name']}</div>
-
+                                <div class="class-{$vo1['level']}" style="">{$vo1['data_name']}({$vo1['count']})</div>
                                 {/if}
                             {/volist}
                             </div>
