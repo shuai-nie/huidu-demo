@@ -180,7 +180,7 @@ class Card extends Base
         ]);
     }
 
-    private function getDataDicTypeNo()
+    public function getDataDicTypeNo()
     {
         $contactType = model('DataDic')->selectType(['data_type_no'=>'CONTACT_TYPE','status'=>1]);
         $resources = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);

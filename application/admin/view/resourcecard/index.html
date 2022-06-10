@@ -65,10 +65,14 @@ layui.use(['table','form'], function(){
         {field: 'id', title: 'ID', width:80, fixed: 'left'}
         ,{field: 'resources_id', title: '资源ID', width:80}
         ,{field: 'resource_title', title: '资源title', width:130}
-        ,{field: 'to_uid', title: '接收用户ID', width:120}
-        ,{field: 'to_username', title: '接收用户', width:130}
-        ,{field: 'from_uid', title: '投递用户ID', width:120}
-        ,{field: 'from_username', title: '投递用户', width:130}
+        // ,{field: 'to_uid', title: '接收用户ID', width:120}
+        ,{field: 'to_username', title: '接收用户', width:170, templet:function(d){
+            return d.to_username + "<button class='layui-btn layui-btn-xs click-details' style='margin-left:10px;' data-name='"+d.to_username +"' data-id='"+d.to_uid+"' >查看</button>";
+        }}
+        // ,{field: 'from_uid', title: '投递用户ID', width:120}
+        ,{field: 'from_username', title: '投递用户', width:170, templet:function(d){
+                return d.from_username + "<button class='layui-btn layui-btn-xs click-details' style='margin-left:10px;' data-name='"+d.from_username+"' data-id='"+d.from_uid+"' >查看</button>";
+            }}
         ,{field: 'greet', title: '打招呼语', width:130}
         ,{field: 'read_status', title: '状态',width:70,templet:function (d) {
                 switch (d.read_status*1){
@@ -119,6 +123,21 @@ layui.use(['table','form'], function(){
         var type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
+
+
+    $(".layui-card-body").on('click', '.click-details', function(){
+        var _this = $(this);
+        var _id = _this.attr('data-id');
+        var _name = _this.attr('data-name')
+
+        layer.open({
+            type : 2
+            ,title :'用戶名片[' +_name +']'
+            ,area:['750px', '550px']
+            ,content : "{:url('card_user')}?uid=" + _id
+        });
+        
+    })
 
 });
 </script>

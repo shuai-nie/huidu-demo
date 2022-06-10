@@ -56,6 +56,28 @@ class Resourcecard extends Base
         return view();
     }
 
+    public function card_user()
+    {
+        $uid = \request()->param('uid');
+        $UserModel = model('User');
+        $Card = model('Card');
+        $data = $Card->alias('A')
+            ->join($UserModel->getTable().' B', 'A.uid=B.id')
+            ->field('A.*,B.username,B.nickname')
+            ->where(['A.id'=>$uid])->find();
+        if($data){
+        $data['business_tag'] = explode('|', $data['business_tag']);
+        $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
+        (new Card)->getDataDicTypeNo();
+        return view('', [
+            'data'=>$data,
+            'CardContact' => $CardContact,
+        ]);
+        } else {
+            echo '用户名片不存在';
+        }
+    }
+
 
 
 }
