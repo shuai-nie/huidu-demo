@@ -94,14 +94,16 @@
 <script type="text/html" id="barDemo" {$examine} 111>
     {if condition="$examine eq 'examine'"}
     <!--<a class="layui-btn layui-btn-xs" lay-event="examine">审核</a>-->
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
     {else /}
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="flush">刷新</a>-->
     {/if}
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="card">名片</a>
+    <!--<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="card">名片</a>-->
+    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+
 
 </script>
 
@@ -112,9 +114,10 @@
 </script>
 
 <script>
-layui.use(['table','form'], function(){
+layui.use(['table','form','dropdown'], function(){
     var table = layui.table,
-        form = layui.form;
+        form = layui.form,
+        dropdown = layui.dropdown;
 
     UI.getPageTable(table, "{:url('')}", [
         // {field: 'id', title: 'ID', width:80, fixed: 'left'}
@@ -163,7 +166,7 @@ layui.use(['table','form'], function(){
                 }
             }}
         {/if}
-        ,{fixed: 'right',title:'操作', width:220, align:'center', toolbar: '#barDemo'}
+        ,{fixed: 'right',title:'操作', width:90, align:'center', toolbar: '#barDemo'}
     ]);
 
     form.on('submit(data-search-btn)', function(data){
@@ -202,6 +205,27 @@ layui.use(['table','form'], function(){
             UI.openLayer("{:url('examine')}?id="+data['id'],700, 560);
         }else if(obj.event === 'card'){
             UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
+        } else if(obj.event === 'more') {
+            dropdown.render({
+                elem:this
+                ,show:true
+                ,data:[
+                    {title:'编辑',id:'edit'}
+                    ,{title:'删除',id:'del'}
+                ], click:function(menudata){
+                    if(menudata.id === 'del'){
+                        UI.delete(data['id'], function(res){
+                            if(res.code==200){
+                                table.reload("table");
+                            }
+                        });
+                    }else if(menudata.id === 'edit'){
+                        UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                    }
+                },
+                align:'right'
+                ,astyle:'box-shadow:1px 1px 10px rgb(0 0 0 12%);'
+            });
         }
     });
 
