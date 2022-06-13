@@ -142,9 +142,9 @@ h1{margin:0;padding:0;font-size: 2em;}
                                         <div class="class-{$vo3['level']}-child" style="display:none;" >
                                         {volist name="vo3['child']" id="vo4" key="k"}
                                             {if condition="$k eq 1"}
-                                                <div class="class-{$vo4['level']}" style="margin-left:95px;" >[{$vo4['data_type_name']}]</div>
+                                                <div class="class-{$vo4['level']}" style="margin-left:95px;margin-top:10px;" >[{$vo4['data_type_name']}]</div>
                                             {/if}
-                                            <div class="class-{$vo4['level']}" style="">{$vo4['data_name']}({$vo4['count']})</div>
+                                            <div class="class-{$vo4['level']}" style="margin-top:10px;">{$vo4['data_name']}(<font color="#009688">{$vo4['count']}</font>)</div>
                                         {/volist}
                                         </div>
                                     {/volist}
@@ -153,9 +153,9 @@ h1{margin:0;padding:0;font-size: 2em;}
                                 </div>
                                 {else/}
                                 {if condition="$k1 eq 1"}
-                                <div class="class-{$vo1['level']}" style="margin-left:75px;" >[{$vo1['data_type_name']}]</div>
+                                <div class="class-{$vo1['level']}" style="margin-left:75px;margin-top:10px;" >[{$vo1['data_type_name']}]</div>
                                 {/if}
-                                <div class="class-{$vo1['level']}" style="">{$vo1['data_name']}({$vo1['count']})</div>
+                                <div class="class-{$vo1['level']}" style="margin-top:10px;">{$vo1['data_name']}(<font color="#009688">{$vo1['count']}</font>)</div>
                                 {/if}
                             {/volist}
                             </div>
