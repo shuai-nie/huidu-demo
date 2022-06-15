@@ -209,8 +209,12 @@ layui.use(['table','form','dropdown'], function(){
                 elem:this
                 ,show:true
                 ,data:[
-                    {title:'编辑',id:'edit'}
-                    ,{title:'删除',id:'del'}
+                    {title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-warm layui-btn-xs ">\n' +
+                            '  {{d.title}}\n' +
+                            '</button>'}
+                    ,{title:'删除',id:'del',templet:'<button type="button" class="layui-btn layui-btn-danger layui-btn-xs ">\n' +
+                            '  {{d.title}}\n' +
+                            '</button>'}
                     {if condition="$examine neq 'examine'"}
                     ,{title:'刷新',id:'flush'}
                     {/if}
