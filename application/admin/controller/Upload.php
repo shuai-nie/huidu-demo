@@ -227,7 +227,7 @@ class Upload extends Controller
         $source =fopen( ROOT_PATH . 'public/uploads/20220613/'.$file, 'rb');
         $uploader = new MultipartUploader($s3Client, $source, [
             'bucket' => $bucket,
-            'key' => "huidu\\images\\" . date('Y-m-d') . '\\' . date('YmdHis') . '.png',
+            'key' => "huidu/images/" . date('Y-m-d') . '/' . date('YmdHis') . '.png',
             "ContentType" => 'image/png',
             'before_initiate' => function (\Aws\Command $command) {
                 // $command is a CreateMultipartUpload operation
