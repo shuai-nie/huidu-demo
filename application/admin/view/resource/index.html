@@ -212,6 +212,10 @@ layui.use(['table','form','dropdown'], function(){
                 ,data:[
                     {title:'编辑',id:'edit'}
                     ,{title:'删除',id:'del'}
+                    {if condition="$examine neq 'examine'"}
+                    ,{title:'刷新',id:'flush'}
+                    {/if}
+                    ,{title:'名片',id:'card'}
                 ], click:function(menudata){
                     if(menudata.id === 'del'){
                         UI.delete(data['id'], function(res){
@@ -221,6 +225,18 @@ layui.use(['table','form','dropdown'], function(){
                         });
                     }else if(menudata.id === 'edit'){
                         UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                    }else if(menudata.id === 'flush'){
+                        $.post("{:url('flush')}?id=" + data['id'], data, function (res) {
+                            if(res.code==200){
+                                layer.msg(res.msg, {icon:1},function () {
+                                    obj.update({'flush_time': res.data.time});
+                                })
+                            } else {
+                                layer.msg(res.msg, {icon:5});
+                            }
+                        }, 'json');
+                    }else if(menudata.id === 'card'){
+                        UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
                     }
                 },
                 align:'right'
