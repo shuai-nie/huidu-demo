@@ -104,7 +104,7 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-            {if condition="$info['key'] eq 'disclaimer'"}
+            {if condition="$info['key'] eq 'disclaimer' || $info['key'] eq 'disclaimer_all' "}
             data.field.value = ue.getContent();
             {/if}
             Api.edit(data.field, function (res) {

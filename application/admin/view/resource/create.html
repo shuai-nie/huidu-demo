@@ -250,6 +250,7 @@
                         _html += "<input type='radio' lay-filter=\"subdivide\" lay-verType='tips' name='subdivide' value='" + v.data_no + "' title='" + v.data_name + "'>";
                     })
                     $("#subdivide").append(_html);
+                    $("#form_html").html('');
                     form.render();
                 } else {
                     layer.msg('网络问题，请联系管理员');
@@ -266,12 +267,22 @@
             forHtml(_val)
         });
 
+        // 类型 我提供 - 我需求 模版不一样
+        form.on('radio(ty)', function(data){
+            var _val = $("input[name='subdivide']:checked").val();
+            if(_val){
+                forHtml(_val)
+            }else {
+                $("#form_html").empty();
+            }
+        })
+
         forHtml("{$Subivde[0]['data_no']}")
 
         function forHtml(_val){
             $("#form_html").empty();
             $("#industry_subdivide").empty();
-            var _ty = $("input[name='ty']").val();
+            var _ty = $("input[name='ty']:checked").val();
             $.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)

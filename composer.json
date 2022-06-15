@@ -13,6 +13,13 @@
     ],
     "require": {
         "topthink/framework": "5.0",
-        "aliyuncs/oss-sdk-php": "^2.4"
+        "aliyuncs/oss-sdk-php": "^2.4",
+        "aws/aws-sdk-php-resources": "^0.3.0",
+        "aws/aws-sdk-php": "^3.225"
+    },
+    "config": {
+        "allow-plugins": {
+            "topthink/think-installer": true
+        }
     }
 }

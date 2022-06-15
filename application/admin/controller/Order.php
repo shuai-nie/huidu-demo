@@ -17,7 +17,7 @@ class Order extends Base
             $offset = ($page - 1) * $limit;
             $order = model('order');
             $map = [];
-            $data = $order->alias('A')->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $data = $order->alias('A')->where($map)->order('A.id desc')->limit($offset, $limit)->select();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $data[$k] = $v;

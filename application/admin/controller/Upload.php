@@ -2,6 +2,15 @@
 
 namespace app\admin\controller;
 
+
+use Aws\Credentials\Credentials;
+use Aws\DynamoDb\DynamoDbClient;
+use Aws\Exception\MultipartUploadException;
+use Aws\Resource\Aws;
+use Aws\S3\MultipartUploader;
+use Aws\S3\ObjectUploader;
+use Aws\S3\S3Client;
+use Aws\Sts\StsClient;
 use OSS\Core\OssException;
 use think\Controller;
 use think\Request;
@@ -192,5 +201,51 @@ class Upload extends Controller
         }
 
 
+    }
+
+    public function dies()
+    {
+        $this->fileUpload('123.png');
+
+    }
+
+    private function fileUpload($file)
+    {
+        //设置超时
+        set_time_limit(0);
+        $s3Key = "AKIAZC2SXKMXFQO6YQTR";
+        $s3Secret = "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";
+        $bucket = "huidu-bucket";
+        $ENDPOINT = "https://s3.ap-southeast-1.amazonaws.com/";
+        $credentials = new Credentials($s3Key, $s3Secret);
+        $s3Client = new S3Client([
+            'region' => 'ap-southeast-1',
+            'version' => 'latest',
+            'endpoint' => $ENDPOINT,
+            'credentials' =>$credentials
+        ]);
+        $source = ROOT_PATH . 'public/uploads/20220613/'.$file;
+        $uploader = new MultipartUploader($s3Client, $source, [
+            'bucket' => $bucket,
+            'key' => "huidu/images/".  date('YmdHis').'.png',
+            "ContentType" => 'image/png',
+            'before_initiate' => function (\Aws\Command $command) {
+                // $command is a CreateMultipartUpload operation
+                $command['CacheControl'] = 'max-age=3600';
+            },
+            'before_upload' => function (\Aws\Command $command) {
+                // $command is an UploadPart operation
+                $command['RequestPayer'] = 'requester';
+            },
+            'before_complete' => function (\Aws\Command $command) {
+                // $command is a CompleteMultipartUpload operation
+                $command['RequestPayer'] = 'requester';
+            },
+        ]);
+
+        $result = $uploader->upload();
+	    var_dump($result);
+        exit();
+        return $data;
     }
 }

@@ -267,4 +267,7 @@ return [
     'usernameRand' => 'Hd',
     'userPwd' => 'hd123456',
 
+    'AwsAccessKeyId' => 'AKIAZC2SXKMXFQO6YQTR',
+    'AwsSecretAccessKey' => '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',
+
 ];

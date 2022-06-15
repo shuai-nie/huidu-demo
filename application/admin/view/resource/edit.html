@@ -277,8 +277,22 @@
             });
         });
 
+        // 类型 我提供 - 我需求 模版不一样
         form.on('radio(ty)', function(data){
             radioTy(data.value)
+
+            var _val = $("input[name='subdivide']:checked").val();
+            if(_val){
+                forHtml(_val)
+            }else {
+                $("#form_html").empty();
+            }
+        });
+
+        // 业务细分
+        form.on('radio(subdivide)', function(data){
+            var _val = data.value;
+            forHtml(_val)
         });
 
         radioTy("{$resource['ty']}")
@@ -368,9 +382,7 @@
         form.on('radio(subdivide)', function(data){
             var _val = data.value;
             $("#form_html").empty();
-
             forHtml(_val);
-
             $.post("{:url('fromHtml')}", {fromId:_val}, function (obj) {
                 if(obj.code == 200){
                     $("#form_html").append(obj.data.html)
@@ -406,48 +418,10 @@
 
         })
 
-        // 业务细分
-        // form.on('radio(subdivide)', function(data){
-        //     var _val = data.value;
-        //     //forHtml(_val)
-        // });
-
-       // forHtml($("input[name='subdivide']").val())
-
         function forHtml(_val){
             $("#form_html").empty();
             $("#industry_subdivide").empty();
-            var _ty = $("input[name='ty']").val();
-            /*$.post("{:url('fromHtml')}", {fromId:_val, tyId:_ty}, function (obj) {
-                if(obj.code == 200){
-                    $("#form_html").append(obj.data.html)
-
-                    upload.render({
-                        elem: '#test8submit'
-                        ,url: upload_url
-                        ,accept: upload_accept
-                        ,acceptMime:upload_acceptMime
-                        ,size: upload_size
-                        ,done: function(res){
-                            if(res.code == 0) {
-                                $('#demo8').html('<div style="width:100px;float:left;position:relative;margin:10px;">'
-                                    +'<img width="100" height="100" src="'+ res.url +'"  class="layui-upload-img">'
-                                    +'</div>');
-                                $("input[name='logo']").val(res.url);
-                            } else {
-                                layui.msg('网络问题稍后再试');
-                            }
-                        }
-                        ,error: function(){
-                            //请求异常回调
-                        }
-                    });
-                    form.render();
-                } else {
-                    layer.msg(obj.msg);
-                }
-            }, 'json');*/
-
+            var _ty = $("input[name='ty']:checked").val();
             $("#resourceIndustry").empty();
             $.post("{:url('industry')}" ,{top_id:_val}, function(obj){
                 var _html = '<input type="radio" name="industry" value="|" lay-filter="industry" title="不限" />';
@@ -456,7 +430,6 @@
                 })
                 $("#resourceIndustry").append(_html);
                 form.render();
-                // formVal();
             }, 'json');
         }
 
