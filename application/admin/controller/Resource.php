@@ -32,6 +32,7 @@ class Resource extends Base
             $username = \request()->post('username');
             $field = \request()->post('field');
             $order = \request()->post('order');
+            $types = \request()->post('types');
             if(!empty($field) && !empty($order)) {
                 $order = new Expression('A.auth=2 desc ,'.'A.' . $field . ' ' . $order);
             } else {
@@ -63,6 +64,11 @@ class Resource extends Base
             if(is_numeric($home_roll)){
                 $map['A.home_roll'] = $home_roll;
             }
+
+            if(is_numeric($types)){
+                $map['types'] = $types;
+            }
+
             $data  = model("Resource")->alias('A')
                 ->join(model('User')->getTable() . " B", "A.uid=B.id", 'left')
                 ->where($map)->field('A.*,B.username')
