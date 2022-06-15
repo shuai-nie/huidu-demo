@@ -59,20 +59,29 @@ class Resourcecard extends Base
     public function card_user()
     {
         $uid = \request()->param('uid');
+        $card_id = \request()->param('card_id');
         $UserModel = model('User');
         $Card = model('Card');
+        $map = [];
+        if($uid){
+            $map = ['A.uid'=>$uid];
+        }
+        if($card_id){
+            $map = ['A.id'=>$card_id];
+        }
+        $map['A.status'] = 1;
         $data = $Card->alias('A')
-            ->join($UserModel->getTable().' B', 'A.uid=B.id')
+            ->join($UserModel->getTable().' B', 'A.uid=B.id', 'left')
             ->field('A.*,B.username,B.nickname')
-            ->where(['A.id'=>$uid])->find();
+            ->where($map)->find();
         if($data){
-        $data['business_tag'] = explode('|', $data['business_tag']);
-        $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
-        (new Card)->getDataDicTypeNo();
-        return view('', [
-            'data'=>$data,
-            'CardContact' => $CardContact,
-        ]);
+            $data['business_tag'] = explode('|', $data['business_tag']);
+            $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
+            (new Card())->getDataDicTypeNo();
+            return view('', [
+                'data'=>$data,
+                'CardContact' => $CardContact,
+            ]);
         } else {
             echo '用户名片不存在';
         }
