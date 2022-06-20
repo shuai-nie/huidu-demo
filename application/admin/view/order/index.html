@@ -46,11 +46,11 @@
                 ,{field: 'old_package_title', title: '当前套餐', width:100,rowspan:"2",templet:function(d){if(d.old_package_title){return d.old_package_title;}else{return '-';}}}
                 ,{field: 'new_package_title', title: '购买套餐', width:100,rowspan:"2",}
                 ,{field: 'package_price_id', title: '套餐价格表', colspan:3,align:'center'}
-                ,{field: 'pay_picture', title: '付款截图', width:90,rowspan:"2",align:'center', templet: function(d){
+/*                ,{field: 'pay_picture', title: '付款截图', width:90,rowspan:"2",align:'center', templet: function(d){
                     if(d.pay_picture){
                         return '<img class="openImage" src="'+d.pay_picture+'" height="30" width="30" />';
                     }
-                }}
+                }}*/
                 ,{field: 'finally_amount', title: '最终金额', width:120,rowspan:"2",}
                 ,{field: 'status', title: '订单状态', width:90,rowspan:"2", templet: function(d){
                     switch (d.status * 1){

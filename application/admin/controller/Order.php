@@ -57,15 +57,21 @@ class Order extends Base
 
             if($_post['status'] == 0){
                 // 未审核
-                return $this->error('数据未审核');
+                return $this->success('数据未审核');
             }elseif ($_post['status'] == 1){
                 // 审核通过
                 if($info['type'] == 0) {
                     // vip 订单
-                    if($info['']){
-
+                    if($info['buy_type'] == 0){
+                        // 购买
+                        $state = true;
+                    }elseif ($info['buy_type'] == 1) {
+                        // 续费
+                        $state = true;
+                    } elseif ($info['buy_type'] == 2) {
+                        // 升级
+                        $state = true;
                     }
-
                 }elseif ($info['type'] == 1) {
                     // 置顶
                     $state = $this->resourceTop($info);
@@ -131,7 +137,22 @@ class Order extends Base
             return true;
         }
         return false;
+    }
 
+    public function userPackage($uid, $package_id, $type)
+    {
+        $package = model('Package');
+        $userRecharge = model('userRecharge');
+        $userInfo = model('userInfo');
+        $userInfoData = $userInfo->where(['uid'=>$uid])->find();
+        $PackageData = $package->where(['id'=>$package_id])->find();
+
+        if($type == 1){
+        }elseif ($type== 2) {
+        }elseif ($type == 3) {
+        }else {
+            return false;
+        }
 
     }
 

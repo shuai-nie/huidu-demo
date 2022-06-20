@@ -45,7 +45,7 @@ class Userinfo extends Base
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id')
                 ->limit($offset, $limit)->order($order)->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
@@ -252,6 +252,21 @@ class Userinfo extends Base
             }
             return error_json(lang('DeleteFail', [lang('User')]) );
         }
+    }
+
+    public function reset()
+    {
+        if(\request()->isPost()){
+            $user = model('user');
+            $uid = \request()->post('uid');
+            $info = $user->where(['id'=>$uid])->find();
+            $state = $user->allowField(true)->isUpdate(true)->save(['pwd' => md5(md5($info['username']) . $info['salt'])], ['id' => $uid]);
+            if($state !== false) {
+                return success_json('密码重置成功');
+            }
+            return error_json('密码重置失败');
+        }
+
     }
 
 }

@@ -64,15 +64,13 @@
             </div>
         </div>
 
-        <div class="layui-inline">
+<!--        <div class="layui-inline">
             <label class="layui-form-label">付款截图</label>
             <div class="layui-input-block">
                 <img src="{$info['pay_picture']}" height="100" width="100 backDis" />
             </div>
-        </div>
+        </div>-->
     </div>
-
-
 
     <div class="layui-form-item" >
         <label class="layui-form-label">订单状态</label>
@@ -127,8 +125,12 @@
         //监听提交
         form.on('submit(submit)', function (data) {
             Api.add(data.field, function (res) {
-                if(res.code == 200){
-                    parent.window.location.href = "{:url('index')}";
+                if(res.code == 1){
+                    layer.msg(res.msg, function(){
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                        window.parent.location.reload();
+                    })
                 }
             });
         });
