@@ -16,8 +16,19 @@ class Order extends Base
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
             $order = model('order');
+            $user = model('User');
+            $resource = model('Resource');
+            $packagePrice = model('PackagePrice');
+            $package = model('Package');
             $map = [];
-            $data = $order->alias('A')->where($map)->order('A.id desc')->limit($offset, $limit)->select();
+            $data = $order->alias('A')
+                ->join($user->getTable().' B', 'A.uid=B.id', 'left')
+                ->join($resource->getTable().' C', 'A.rid=C.id', 'left')
+                ->join($package->getTable().' D', 'A.old_package_id=D.id', 'left')
+                ->join($package->getTable().' E', 'A.new_package_id=E.id', 'left')
+                ->join($packagePrice->getTable().' F', 'A.package_price_id=F.id', 'left')
+                ->field('A.*,B.username,B.nickname,C.title as resource_title,D.title as old_package_title,E.title as new_package_title,F.type as price_type,F.old_amount as price_old_amount,F.new_amount as price_new_amount')
+                ->where($map)->order('A.status asc, A.id desc')->limit($offset, $limit)->select();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $data[$k] = $v;
@@ -26,7 +37,102 @@ class Order extends Base
                 ->where($map)->count();
             return json(['data' => [ 'count' => $count, 'list' => $data]], 200);
         }
-        return view('', []);
+        return view('', [
+            'meta_title' => '订单管理',
+        ]);
+    }
+
+    public function examine()
+    {
+        $order = model('order');
+        $user = model('User');
+        $resource = model('Resource');
+        $packagePrice = model('PackagePrice');
+        $package = model('Package');
+        $id = request()->param('id');
+        $info = $order->find($id);
+
+        if(request()->isPost()) {
+            $_post = request()->post();
+
+            if($_post['status'] == 0){
+                // 未审核
+                return $this->error('数据未审核');
+            }elseif ($_post['status'] == 1){
+                // 审核通过
+                if($info['type'] == 0) {
+                    // vip 订单
+                    if($info['']){
+
+                    }
+
+                }elseif ($info['type'] == 1) {
+                    // 置顶
+                    $state = $this->resourceTop($info);
+                }
+                if($state !== false){
+                    return $this->success('数据通过');
+                }
+                return $this->error('数据审核失败');
+
+            }elseif ($_post['status'] == 2){
+                // 审核不通过
+                $state = $order->isUpdate(true)->save([
+                    'status' => $_post['status'],
+                    'feedback' => $_post['feedback'],
+                ], ['id' => $id]);
+                if($state !== false) {
+                    return $this->success('数据不通过');
+                } else {
+                    return $this->error('数据修改失败');
+                }
+            }
+        }
+
+        $map = ['A.id' => $id];
+        $orderInfo = $order->alias('A')
+            ->join($user->getTable().' B', 'A.uid=B.id', 'left')
+            ->join($resource->getTable().' C', 'A.rid=C.id', 'left')
+            ->join($package->getTable().' D', 'A.old_package_id=D.id', 'left')
+            ->join($package->getTable().' E', 'A.new_package_id=E.id', 'left')
+            ->join($packagePrice->getTable().' F', 'A.package_price_id=F.id', 'left')
+            ->field('A.*,B.username,B.nickname,C.title as resource_title,D.title as old_package_title,E.title as new_package_title,F.type as price_type,F.old_amount as price_old_amount,F.new_amount as price_new_amount')
+            ->where($map)->find();
+        return view('', [
+            'info' => $orderInfo,
+        ]);
+    }
+
+    // 资源置顶
+    private function resourceTop($info)
+    {
+        $packagePrice = model('PackagePrice');
+        $resource = model('Resource');
+        $packagePriceInfo = $packagePrice->find($info['package_price_id']);
+        $time = time();
+        $endTime = $time;
+        switch ($packagePriceInfo['type']){
+            case 1:
+                $endTime =+ 86400*30;
+                break;
+            case 2:
+                $endTime =+ 86400*90;
+                break;
+            case 3:
+                $endTime =+ 86400*365;
+                break;
+        }
+
+        $state = $resource->isUpdate(true)->allowField(true)->save([
+            'top_start_time' => $time,
+            'top_end_time' => $endTime,
+        ], ['id' => $info['rid']]);
+        if($state !== false){
+            return true;
+        }
+        return false;
+
+
     }
 
 }

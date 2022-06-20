@@ -1,0 +1,139 @@
+{include file="moban/css"}
+<style>
+.backDis{background-color: #eee;}
+</style>
+{include file="moban/js"}
+
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">账号/昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input backDis" value="{$info['username']}/{$info['nickname']}" disabled />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">订单类型</label>
+            <div class="layui-input-inline">
+                <input type="text" disabled value="{switch name="$info['type']"}{case value="0"}Vip订单{/case}{case value="1"}置顶订单{/case}{/switch}" class="layui-input backDis" />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">购买类型</label>
+            <div class="layui-input-inline">
+                <input type="text" title="" value="{switch name="$info['buy_type']"}{case value="0"}购买{/case}{case value="1"}续费{/case}{case value="2"}升级{/case}{/switch}" disabled class="layui-input backDis" />
+            </div>
+        </div>
+
+        {if condition="$info['type'] eq 0"}
+        <div class="layui-inline">
+            <label class="layui-form-label">当前套餐</label>
+            <div class="layui-input-inline">
+                <input type="text" title="" value="{$info['old_package_title']}" disabled class="layui-input backDis" />
+            </div>
+        </div>
+        {/if}
+
+        <div class="layui-inline">
+            <label class="layui-form-label">购买套餐</label>
+            <div class="layui-input-inline">
+                <input type="text" title="" value="{$info['new_package_title']}" disabled class="layui-input backDis" />
+            </div>
+        </div>
+
+    </div>
+
+    {if condition="$info['type'] eq 1"}
+    <div class="layui-form-item">
+        <label class="layui-form-label">资源标题{$info['type']}</label>
+        <div class="layui-input-inline">
+            <input type="text" value="{$info['resource_title']}" disabled class="layui-input backDis">
+        </div>
+    </div>
+    {/if}
+
+    <div class="layui-form-item" >
+        <div class="layui-inline">
+            <label class="layui-form-label">最终金额</label>
+            <div class="layui-input-inline">
+                <input type="text" title="" value="{$info['finally_amount']}" disabled class="layui-input backDis" />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">付款截图</label>
+            <div class="layui-input-block">
+                <img src="{$info['pay_picture']}" height="100" width="100 backDis" />
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label">订单状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="0" title="未审核" {if condition="$info['status'] eq 0"}checked{/if} >
+            <input type="radio" name="status" value="1" title="通过" {if condition="$info['status'] eq 1"}checked{/if} >
+            <input type="radio" name="status" value="2" title="决绝" {if condition="$info['status'] eq 2"}checked{/if} >
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label">反馈信息</label>
+        <div class="layui-input-block">
+            <input name="feedback" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept = 'images';
+        var upload_acceptMime = 'image/*';
+        var upload_size = 3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='data_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {}
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.add(data.field, function (res) {
+                if(res.code == 200){
+                    parent.window.location.href = "{:url('index')}";
+                }
+            });
+        });
+
+
+
+    });
+</script>
