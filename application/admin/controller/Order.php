@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-class Order extends Baseti
+class Order extends Base
 {
 
     public function _initialize()
@@ -103,6 +103,8 @@ class Order extends Baseti
     // 资源置顶
     private function resourceTop($info)
     {
+        $status = request()->post('status');
+        $feedback = request()->post('feedback');
         $packagePrice = model('PackagePrice');
         $resource = model('Resource');
         $packagePriceInfo = $packagePrice->find($info['package_price_id']);
@@ -124,6 +126,11 @@ class Order extends Baseti
             'top_start_time' => $time,
             'top_end_time' => $endTime,
         ], ['id' => $info['rid']]);
+        $order = model('order');
+        $order->allowField(true)->isUpdate(true)->save([
+            'feedback' => $feedback,
+            'status' => $status,
+        ], ['id'=>$info['id']]);
         if($state !== false){
             return true;
         }
@@ -136,10 +143,13 @@ class Order extends Baseti
         $userRecharge = model('userRecharge');
         $userInfo = model('userInfo');
         $packagePrice = model('PackagePrice');
+        $order = model('order');
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
         $userRechargeInfo = $userRecharge->where(['id' => $userInfoData['user_recharge_id']])->find();
         $packagePriceInfo = $packagePrice->find($order['package_price_id']);
+        $status = request()->post('status');
+        $feedback = request()->post('feedback');
         /**
          * 购买/升级
          * 购买套餐结束时间小于结束时间，则升级，添加到期后返回降级套餐id
@@ -165,9 +175,14 @@ class Order extends Baseti
         }
         $end_time = $time + $endTime;
         $recharge_id = 0;
+
+        $order->allowField(true)->isUpdate(true)->save([
+            'feedback' => $feedback,
+            'status' => $status,
+        ], ['id'=>$order['id']]);
+
         if($type == 0){
             // 0 购买
-
             if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
                 $t = $userRechargeInfo['end_time'] - $time;
                 $userRecharge->allowField(true)->isUpdate(false)->save([
@@ -271,6 +286,7 @@ class Order extends Baseti
                 'end_time' => $end_time, // 结束时间
                 'remarks' => '审核-升级套餐 ',
             ]);
+
             $userRecharge_id = $userRecharge->id;
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }else {
