@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-class Order extends Base
+class Order extends Baseti
 {
 
     public function _initialize()
@@ -62,16 +62,7 @@ class Order extends Base
                 // 审核通过
                 if($info['type'] == 0) {
                     // vip 订单
-                    if($info['buy_type'] == 0){
-                        // 购买
-                        $state = true;
-                    }elseif ($info['buy_type'] == 1) {
-                        // 续费
-                        $state = true;
-                    } elseif ($info['buy_type'] == 2) {
-                        // 升级
-                        $state = true;
-                    }
+                    $state = $this->userPackage($info['uid'], $info['new_package_id'], $info['buy_type'], $info);
                 }elseif ($info['type'] == 1) {
                     // 置顶
                     $state = $this->resourceTop($info);
@@ -139,17 +130,149 @@ class Order extends Base
         return false;
     }
 
-    public function userPackage($uid, $package_id, $type)
+    public function userPackage($uid, $package_id, $type, $order)
     {
         $package = model('Package');
         $userRecharge = model('userRecharge');
         $userInfo = model('userInfo');
+        $packagePrice = model('PackagePrice');
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
+        $userRechargeInfo = $userRecharge->where(['id' => $userInfoData['user_recharge_id']])->find();
+        $packagePriceInfo = $packagePrice->find($order['package_price_id']);
+        /**
+         * 购买/升级
+         * 购买套餐结束时间小于结束时间，则升级，添加到期后返回降级套餐id
+         * 购买套餐结束时间大于结束时间，则直接升级，不添加到期返回降级套餐id
+         *
+         * 续费
+         * 直接添加结束时间往后延续
+         */
 
-        if($type == 1){
-        }elseif ($type== 2) {
-        }elseif ($type == 3) {
+        $time = time();
+        $start_time = $time;
+        $endTime = 0;
+        switch ($packagePriceInfo['type']){
+            case 1:
+                $endTime =+ 86400*30;
+                break;
+            case 2:
+                $endTime =+ 86400*90;
+                break;
+            case 3:
+                $endTime =+ 86400*365;
+                break;
+        }
+        $end_time = $time + $endTime;
+        $recharge_id = 0;
+        if($type == 0){
+            // 0 购买
+
+            if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
+                $t = $userRechargeInfo['end_time'] - $time;
+                $userRecharge->allowField(true)->isUpdate(false)->save([
+                    'uid'               => $uid,
+                    'package_id'        => $package_id,
+                    'pay_price'         => $packagePriceInfo['old_amount'],
+                    'flush'             => $PackageData['flush'],
+                    'publish'           => $PackageData['publish'],
+                    'view_demand'       => $PackageData['view_demand'],
+                    'view_provide'      => $PackageData['view_provide'],
+                    'view_provide_give' => $PackageData['view_provide_give'],
+                    'used_flush'        => $userRechargeInfo['used_flush'],
+                    'used_publish'      => $userRechargeInfo['used_publish'],
+                    'used_view_demand'  => $userRechargeInfo['used_view_demand'],
+                    'used_view_provide' => $userRechargeInfo['used_view_provide'],
+                    'start_time'        =>$end_time, // 开始时间
+                    'end_time' => $end_time + $t, // 结束时间
+                    'remarks'           => '审核-购买套餐 ',
+                ]);
+                $recharge_id = $userRecharge->id;
+            }
+            $userRecharge->allowField(true)->isUpdate(false)->save([
+                'uid' => $uid,
+                'package_id' => $package_id,
+                'pay_price' => $packagePriceInfo['old_amount'],
+                'allot_recharge_id' => $recharge_id,
+                'flush' => $PackageData['flush'],
+                'publish' => $PackageData['publish'],
+                'view_demand' => $PackageData['view_demand'],
+                'view_provide' => $PackageData['view_provide'],
+                'view_provide_give' => $PackageData['view_provide_give'],
+                'used_flush' => 0,
+                'used_publish' => $userRechargeInfo['used_publish'],
+                'used_view_demand' => 0,
+                'used_view_provide' => 0,
+                'start_time' => time(), // 开始时间
+                'end_time' => $end_time, // 结束时间
+                'remarks' => '审核-购买套餐 ',
+            ]);
+            $userRecharge_id = $userRecharge->id;
+            return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
+        }elseif ($type== 1) {
+            // 续费
+            $userRecharge->allowField(true)->isUpdate(false)->save([
+                'uid' => $uid,
+                'package_id' => $package_id,
+                'pay_price' => $packagePriceInfo['old_amount'],
+                'flush' => $PackageData['flush'],
+                'publish' => $PackageData['publish'],
+                'view_demand' => $PackageData['view_demand'],
+                'view_provide' => $PackageData['view_provide'],
+                'view_provide_give' => $PackageData['view_provide_give'],
+                'used_flush' => $userRechargeInfo['used_flush'],
+                'used_publish' => $userRechargeInfo['used_publish'],
+                'used_view_demand' => $userRechargeInfo['used_view_demand'],
+                'used_view_provide' => $userRechargeInfo['used_view_provide'],
+                'start_time' => time(), // 开始时间
+                'end_time' => $userRechargeInfo['end_time'] + $endTime, // 结束时间
+                'remarks' => '审核-续费套餐 ',
+            ]);
+            $userRecharge_id = $userRecharge->id;
+            return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
+        }elseif ($type == 2){
+            if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
+                $t = $userRechargeInfo['end_time'] - $time;
+                $userRecharge->allowField(true)->isUpdate(false)->save([
+                    'uid'               => $uid,
+                    'package_id'        => $package_id,
+                    'pay_price'         => $packagePriceInfo['old_amount'],
+                    'flush'             => $PackageData['flush'],
+                    'publish'           => $PackageData['publish'],
+                    'view_demand'       => $PackageData['view_demand'],
+                    'view_provide'      => $PackageData['view_provide'],
+                    'view_provide_give' => $PackageData['view_provide_give'],
+                    'used_flush'        => $userRechargeInfo['used_flush'],
+                    'used_publish'      => $userRechargeInfo['used_publish'],
+                    'used_view_demand'  => $userRechargeInfo['used_view_demand'],
+                    'used_view_provide' => $userRechargeInfo['used_view_provide'],
+                    'start_time'        =>$end_time, // 开始时间
+                    'end_time' => $end_time + $t, // 结束时间
+                    'remarks'           => '审核-购买套餐 ',
+                ]);
+                $recharge_id = $userRecharge->id;
+            }
+            // 2 升级
+            $userRecharge->allowField(true)->isUpdate(false)->save([
+                'uid' => $uid,
+                'package_id' => $package_id,
+                'pay_price' => $packagePriceInfo['old_amount'],
+                'allot_recharge_id' => $recharge_id,
+                'flush' => $PackageData['flush'],
+                'publish' => $PackageData['publish'],
+                'view_demand' => $PackageData['view_demand'],
+                'view_provide' => $PackageData['view_provide'],
+                'view_provide_give' => $PackageData['view_provide_give'],
+                'used_flush' => 0,
+                'used_publish' => $userRechargeInfo['used_publish'],
+                'used_view_demand' => 0,
+                'used_view_provide' => 0,
+                'start_time' => time(), // 开始时间
+                'end_time' => $end_time, // 结束时间
+                'remarks' => '审核-升级套餐 ',
+            ]);
+            $userRecharge_id = $userRecharge->id;
+            return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }else {
             return false;
         }
