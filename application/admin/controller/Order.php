@@ -143,7 +143,7 @@ class Order extends Base
         $userRecharge = model('userRecharge');
         $userInfo = model('userInfo');
         $packagePrice = model('PackagePrice');
-        $order = model('order');
+        $orderModel = model('order');
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
         $userRechargeInfo = $userRecharge->where(['id' => $userInfoData['user_recharge_id']])->find();
@@ -176,7 +176,7 @@ class Order extends Base
         $end_time = $time + $endTime;
         $recharge_id = 0;
 
-        $order->allowField(true)->isUpdate(true)->save([
+        $orderModel->allowField(true)->isUpdate(true)->save([
             'feedback' => $feedback,
             'status' => $status,
         ], ['id'=>$order['id']]);

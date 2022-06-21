@@ -63,7 +63,7 @@
                 ,{field: 'feedback', title: '反馈信息', width:140,rowspan:"2",templet:function(d){
                     switch (d.status * 1){
                         case 0: return '-';
-                        case 1: return '-';
+                        case 1: return d.feedback;
                         case 2: return d.feedback;
                         default : return '-';
                     }
