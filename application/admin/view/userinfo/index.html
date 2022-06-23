@@ -47,14 +47,13 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs layui-btn-primary layui-border-red" lay-event="reset">重置密码</a>
     {if condition="$id eq 0"}
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change">变更套餐</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="continue">延期套餐</a>
-    {else/}
-
+    {elseif condition="$id eq 2"/}
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary layui-border-red" lay-event="reset">重置密码</a>
     {/if}
 </script>
 
