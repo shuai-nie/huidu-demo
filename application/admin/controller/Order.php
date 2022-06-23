@@ -101,6 +101,7 @@ class Order extends Base
                     $state = $this->resourceTop($info);
                 }
             }elseif ($_post['status'] == 2){
+                $content = '';
                 if($info['type'] == 1) {
                     $resourceInfo = model('Resource')->where(['id'=>$info['rid']])->field('id,title')->find();
                     $content = '['.$resourceInfo['title'].'] 置顶失败，操作原因（' . $_post['feedback'] . '）';
@@ -111,7 +112,7 @@ class Order extends Base
 
                 model('message')->allowField(false)->isUpdate(false)->save([
                     'base_type' => '1' ,
-                    'subdivide_type' => '2',
+                    'subdivide_type' => '5',
                     'uid' => $info['uid'],
                     'title' => '订单审核',
                     'content' => $content,
@@ -170,7 +171,7 @@ class Order extends Base
 
         $state = $resource->isUpdate(true)->allowField(true)->save([
             'top_start_time' => $time,
-            'top_end_time' => $endTime+$time,
+            'top_end_time' => $endTime + $time,
         ], ['id' => $info['rid']]);
         $order = model('order');
         $order->allowField(true)->isUpdate(true)->save([
@@ -312,7 +313,7 @@ class Order extends Base
 
             $save3 = [
                 'base_type' => '1' ,
-                'subdivide_type' => '1',
+                'subdivide_type' => '4',
                 'uid' => $order['uid'],
                 'title' => '订单审核',
                 'content' => "您购买了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $end_time),
@@ -345,7 +346,7 @@ class Order extends Base
             $userRecharge_id = $userRecharge->id;
             $save3 = [
                 'base_type' => '1' ,
-                'subdivide_type' => '1',
+                'subdivide_type' => '4',
                 'uid' => $order['uid'],
                 'title' => '订单审核',
                 'content' => "您续费了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $userRechargeInfo['end_time'] + $endTime),
@@ -403,7 +404,7 @@ class Order extends Base
 
             $save3 = [
                 'base_type' => '1' ,
-                'subdivide_type' => '1',
+                'subdivide_type' => '4',
                 'uid' => $order['uid'],
                 'title' => '订单审核',
                 'content' => "您成功升级了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $time + $endTime),
