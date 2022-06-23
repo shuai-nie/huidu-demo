@@ -293,7 +293,7 @@ class Order extends Base
             $userRecharge->allowField(true)->isUpdate(false)->save([
                 'uid' => $uid,
                 'package_id' => $package_id,
-                'pay_price' => $packagePriceInfo['old_amount'],
+                'pay_price' => $packagePriceInfo['new_amount'],
                 'allot_recharge_id' => $recharge_id,
                 'flush' => $PackageData['flush'],
                 'publish' => $PackageData['publish'],
@@ -328,7 +328,7 @@ class Order extends Base
             $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
-                'pay_price' => $packagePriceInfo['old_amount'],
+                'pay_price' => $packagePriceInfo['new_amount'],
                 'flush' => $PackageData['flush'],
                 'publish' => $PackageData['publish'],
                 'view_demand' => $PackageData['view_demand'],
@@ -363,7 +363,7 @@ class Order extends Base
                 $save1 = [
                     'uid'               => $uid,
                     'package_id'        => $package_id,
-                    'pay_price'         => $packagePriceInfo['old_amount'],
+                    'pay_price'         => $packagePriceInfo['new_amount'],
                     'flush'             => $PackageData['flush'],
                     'publish'           => $PackageData['publish'],
                     'view_demand'       => $PackageData['view_demand'],
@@ -374,7 +374,7 @@ class Order extends Base
                     'used_view_demand'  => $userRechargeInfo['used_view_demand'],
                     'used_view_provide' => $userRechargeInfo['used_view_provide'],
                     'start_time'        => $userRechargeInfo['start_time'], // 开始时间
-                    'end_time' => $userRechargeInfo['end_time']+$endTime, // 结束时间
+                    'end_time' => $userRechargeInfo['end_time'] + $endTime, // 结束时间
                     'remarks'           => '审核-购买套餐 ',
                 ];
                 $userRecharge->allowField(true)->isUpdate(false)->save($save1);
@@ -384,7 +384,7 @@ class Order extends Base
             $save2 = [
                 'uid'               => $uid,
                 'package_id'        => $package_id,
-                'pay_price'         => $packagePriceInfo['old_amount'],
+                'pay_price'         => $packagePriceInfo['new_amount'],
                 'allot_recharge_id' => $recharge_id,
                 'flush'             => $PackageData['flush'],
                 'publish'           => $PackageData['publish'],
