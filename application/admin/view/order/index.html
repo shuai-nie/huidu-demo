@@ -4,6 +4,63 @@
 <!--    <button class="layui-btn" data-type="create">添加</button>-->
 <!--</div>-->
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:125px">用户账号/昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单类型</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="type" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+                            {volist name="type" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">购买套餐</label>
+                    <div class="layui-input-inline" style="width:110px;">
+                        <select name="new_package_id" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+                            {volist name="packageAll" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单状态</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="status" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+                            {volist name="status" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search"><i class="layui-icon"></i>搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -13,8 +70,10 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
+    layui.use(['table', 'form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
         var $ = layui.$, active = {
             create:function(){
                 UI.openLayer("{:url('create')}", 600, 450);
@@ -46,11 +105,6 @@
                 ,{field: 'old_package_title', title: '当前套餐', width:100,rowspan:"2",templet:function(d){if(d.old_package_title){return d.old_package_title;}else{return '-';}}}
                 ,{field: 'new_package_title', title: '购买套餐', width:100,rowspan:"2",}
                 ,{field: 'package_price_id', title: '套餐价格表', colspan:3,align:'center'}
-/*                ,{field: 'pay_picture', title: '付款截图', width:90,rowspan:"2",align:'center', templet: function(d){
-                    if(d.pay_picture){
-                        return '<img class="openImage" src="'+d.pay_picture+'" height="30" width="30" />';
-                    }
-                }}*/
                 ,{field: 'finally_amount', title: '最终金额', width:120,rowspan:"2",}
                 ,{field: 'status', title: '订单状态', width:90,rowspan:"2", templet: function(d){
                     switch (d.status * 1){
@@ -88,7 +142,7 @@
             elem: "#think-table"
             ,id : 'table'
             ,method:'post'
-            , height: "700"
+            , height: "561"
             , url: "{:url('')}"
             , limits : [10,20,50,100,200,500,1000,5000,10000]
             , page: true
@@ -111,6 +165,16 @@
                 UI.openLayer("{:url('examine')}?id="+data['id'], 700, 550, '#submit');
             }
         });
+
+        form.on('submit(data-search)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
 
         $('table').on('click', '.openImage', function(){
             var _this = $(this);

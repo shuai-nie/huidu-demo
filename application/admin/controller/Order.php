@@ -11,16 +11,35 @@ class Order extends Base
 
     public function index()
     {
+        $order = model('order');
+        $user = model('User');
+        $resource = model('Resource');
+        $packagePrice = model('PackagePrice');
+        $package = model('Package');
+
         if(request()->isPost()) {
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
-            $offset = ($page - 1) * $limit;
-            $order = model('order');
-            $user = model('User');
-            $resource = model('Resource');
-            $packagePrice = model('PackagePrice');
-            $package = model('Package');
+            $username = request()->post('username');
+            $type = request()->post('type');
+            $new_package_id = request()->post('new_package_id');
+            $status = request()->post('status');
             $map = [];
+            if(!empty($username)) {
+                $map['A.username'] = ['like', "%{$username}%"];
+            }
+            if(is_numeric($type)) {
+                $map['A.type'] = $type;
+            }
+            if(is_numeric($new_package_id)) {
+                $map['A.new_package_id'] = $new_package_id;
+            }
+            if(is_numeric($status)) {
+                $map['A.status'] = $status;
+            }
+
+            $offset = ($page - 1) * $limit;
+
             $data = $order->alias('A')
                 ->join($user->getTable().' B', 'A.uid=B.id', 'left')
                 ->join($resource->getTable().' C', 'A.rid=C.id', 'left')
@@ -37,8 +56,13 @@ class Order extends Base
                 ->where($map)->count();
             return json(['data' => [ 'count' => $count, 'list' => $data]], 200);
         }
+
+        $packageAll = model('Package')->where(['status'=>1])->field('id,title')->select();
         return view('', [
             'meta_title' => '订单管理',
+            'type' => $order->type,
+            'status' => $order->status,
+            'packageAll' => $packageAll
         ]);
     }
 
@@ -50,7 +74,7 @@ class Order extends Base
         $packagePrice = model('PackagePrice');
         $package = model('Package');
         $id = request()->param('id');
-        $info = $order->find($id);
+        $info = $order->where(['id'=>$id])->find();
 
         if(request()->isPost()) {
             $_post = request()->post();
@@ -73,15 +97,35 @@ class Order extends Base
                 return $this->error('数据审核失败');
 
             }elseif ($_post['status'] == 2){
+
+                if($info['type'] == 1) {
+                    $resourceInfo = model('Resource')->where(['id'=>$info['rid']])->field('id,title')->find();
+                    $content = '['.$resourceInfo['title'].'] 置顶失败，操作原因（' . $_post['feedback'] . '）';
+                }elseif ($info['type'] == 0){
+                    $package = model('Package')->where(['id'=>$info['new_package_id']])->find();
+                    $content = '购买[' . $package['title'] . '] 失败,操作原因（' . $_post['feedback'] . '）';
+                }
+
+                model('message')->allowField(false)->isUpdate(false)->save([
+                    'base_type' => '1' ,
+                    'subdivide_type' => '2',
+                    'uid' => $info['uid'],
+                    'title' => '订单审核',
+                    'content' => $content,
+                    'outer_id' => $info['id'],
+                    'source_type' => 1,
+                    'is_permanent' => 1,
+                ]);
                 // 审核不通过
                 $state = $order->isUpdate(true)->save([
                     'status' => $_post['status'],
                     'feedback' => $_post['feedback'],
                 ], ['id' => $id]);
+
                 if($state !== false) {
-                    return $this->success('数据不通过');
+                    return $this->success('数据提交成功');
                 } else {
-                    return $this->error('数据修改失败');
+                    return $this->error('数据提交失败');
                 }
             }
         }
@@ -109,28 +153,42 @@ class Order extends Base
         $resource = model('Resource');
         $packagePriceInfo = $packagePrice->find($info['package_price_id']);
         $time = time();
-        $endTime = $time;
+        $endTime = 0;
         switch ($packagePriceInfo['type']){
             case 1:
-                $endTime =+ 86400*30;
+                $endTime = 86400*30;
                 break;
             case 2:
-                $endTime =+ 86400*90;
+                $endTime = 86400*90;
                 break;
             case 3:
-                $endTime =+ 86400*365;
+                $endTime = 86400*365;
                 break;
         }
 
         $state = $resource->isUpdate(true)->allowField(true)->save([
             'top_start_time' => $time,
-            'top_end_time' => $endTime,
+            'top_end_time' => $endTime+$time,
         ], ['id' => $info['rid']]);
         $order = model('order');
         $order->allowField(true)->isUpdate(true)->save([
             'feedback' => $feedback,
             'status' => $status,
-        ], ['id'=>$info['id']]);
+        ], ['id' => $info['id']]);
+
+        $resourceInfo = model('Resource')->where(['id'=>$info['rid']])->field('id,title')->find();
+        $content = '[' . $resourceInfo['title'] . '] 置顶成功，结束时间 ' . date('Y-m-d H:i:s', $endTime + $time);
+        model('message')->allowField(false)->isUpdate(false)->save([
+            'base_type' => '1' ,
+            'subdivide_type' => '1',
+            'uid' => $info['uid'],
+            'title' => '订单审核',
+            'content' => $content,
+            'outer_id' => $info['id'],
+            'source_type' => 1,
+            'is_permanent' => 1,
+        ]);
+
         if($state !== false){
             return true;
         }

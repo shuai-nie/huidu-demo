@@ -1,19 +1,8 @@
 <?php
 namespace app\admin\model;
 
-class Order extends Base
+class Message extends Base
 {
-    public $type = [
-        ['id' => 0, 'title' => 'Vip订单'],
-        ['id' => 1, 'title' => '置顶订单'],
-    ];
-
-    public $status = [
-        ['id' => 0, 'title' => '未审核'],
-        ['id' => 1, 'title' => '通过'],
-        ['id' => 2, 'title' => '拒绝'],
-    ];
-
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
     protected $updateTime = 'update_time';
