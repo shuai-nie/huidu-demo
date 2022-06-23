@@ -339,5 +339,16 @@ class Base extends Model
     }
 
 
+    public function saveId($save)
+    {
+        $create = $this->allowField(true)->isUpdate(false)->save($save);
+        if($create){
+            return $this->id;
+        }else {
+            return 0;
+        }
+    }
+
+
 
 }

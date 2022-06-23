@@ -26,7 +26,7 @@ class Order extends Base
             $status = request()->post('status');
             $map = [];
             if(!empty($username)) {
-                $map['A.username'] = ['like', "%{$username}%"];
+                $map['B.username|B.nickname'] = ['like', "%{$username}%"];
             }
             if(is_numeric($type)) {
                 $map['A.type'] = $type;
@@ -50,9 +50,18 @@ class Order extends Base
                 ->where($map)->order('A.status asc, A.id desc')->limit($offset, $limit)->select();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
+                if(!empty($username)) {
+                    $v['username'] = str_replace($username, "<font color='red'>".$username."</font>", $v['username']);
+                    $v['nickname'] = str_replace($username, "<font color='red'>".$username."</font>", $v['nickname']);
+                }
                 $data[$k] = $v;
             }
             $count = $order->alias('A')
+                ->join($user->getTable().' B', 'A.uid=B.id', 'left')
+                ->join($resource->getTable().' C', 'A.rid=C.id', 'left')
+                ->join($package->getTable().' D', 'A.old_package_id=D.id', 'left')
+                ->join($package->getTable().' E', 'A.new_package_id=E.id', 'left')
+                ->join($packagePrice->getTable().' F', 'A.package_price_id=F.id', 'left')
                 ->where($map)->count();
             return json(['data' => [ 'count' => $count, 'list' => $data]], 200);
         }
@@ -91,13 +100,7 @@ class Order extends Base
                     // 置顶
                     $state = $this->resourceTop($info);
                 }
-                if($state !== false){
-                    return $this->success('数据通过');
-                }
-                return $this->error('数据审核失败');
-
             }elseif ($_post['status'] == 2){
-
                 if($info['type'] == 1) {
                     $resourceInfo = model('Resource')->where(['id'=>$info['rid']])->field('id,title')->find();
                     $content = '['.$resourceInfo['title'].'] 置顶失败，操作原因（' . $_post['feedback'] . '）';
@@ -121,12 +124,11 @@ class Order extends Base
                     'status' => $_post['status'],
                     'feedback' => $_post['feedback'],
                 ], ['id' => $id]);
-
-                if($state !== false) {
-                    return $this->success('数据提交成功');
-                } else {
-                    return $this->error('数据提交失败');
-                }
+            }
+            if($state !== false) {
+                return $this->success('数据提交成功');
+            } else {
+                return $this->error('数据提交失败');
             }
         }
 
@@ -215,23 +217,48 @@ class Order extends Base
          *
          * 续费
          * 直接添加结束时间往后延续
+         *
+         ***********************************************************************************
+         * 套餐开通正常开通就好
+         * 套餐续费
+         * start_time取上一条记录的start_time
+         * pay_price=购买的套餐价格+上一条记录的pay_price
+
+         * 套餐升级
+         * start_time也取上一条记录的start_time
+         * end_time根据购买的升级套餐时间是一个月还是一个季度，以start_time为开始时间加30天或90天
+         * pay_price=购买的套餐价格
+
+         * 套餐补加
+         * 举例：一个用户开通了三个月初级vip后，又购买了一个月的高级vip
+         * 新的高级套餐正常开通allot_recharge_id记录新生成的三个月初级vip的记录
+         * 新生成的初级vip套餐信息如下:
+         * 套餐开通时间=旧初级套餐开通时间
+         * 套餐结束时间=旧初级套餐结束时间+一个月时间(不一定是30天，如果补加的套餐是一个季度就加90天)
+         * pay_price=旧初级套餐的pay_price
+         * 如果新的高级套餐进行续费，则在审核时 新生成的初级vip的结束时间也要对应的增加
+         ***********************************************************************************
          */
 
         $time = time();
         $start_time = $time;
         $endTime = 0;
+        $title = '';
         switch ($packagePriceInfo['type']){
             case 1:
                 $endTime =+ 86400*30;
+                $title = '1个月';
                 break;
             case 2:
                 $endTime =+ 86400*90;
+                $title = '1个季度';
                 break;
             case 3:
                 $endTime =+ 86400*365;
+                $title = '1年';
                 break;
         }
-        $end_time = $time + $endTime;
+
         $recharge_id = 0;
 
         $orderModel->allowField(true)->isUpdate(true)->save([
@@ -241,7 +268,8 @@ class Order extends Base
 
         if($type == 0){
             // 0 购买
-            if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
+            $end_time = $time + $endTime;
+            /*if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
                 $t = $userRechargeInfo['end_time'] - $time;
                 $userRecharge->allowField(true)->isUpdate(false)->save([
                     'uid'               => $uid,
@@ -261,7 +289,7 @@ class Order extends Base
                     'remarks'           => '审核-购买套餐 ',
                 ]);
                 $recharge_id = $userRecharge->id;
-            }
+            }*/
             $userRecharge->allowField(true)->isUpdate(false)->save([
                 'uid' => $uid,
                 'package_id' => $package_id,
@@ -277,14 +305,27 @@ class Order extends Base
                 'used_view_demand' => 0,
                 'used_view_provide' => 0,
                 'start_time' => time(), // 开始时间
-                'end_time' => $end_time, // 结束时间
+                'end_time' => $end_time , // 结束时间
                 'remarks' => '审核-购买套餐 ',
             ]);
             $userRecharge_id = $userRecharge->id;
+
+            $save3 = [
+                'base_type' => '1' ,
+                'subdivide_type' => '1',
+                'uid' => $order['uid'],
+                'title' => '订单审核',
+                'content' => "您购买了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $end_time),
+                'outer_id' => $order['id'],
+                'source_type' => 1,
+                'is_permanent' => 1,
+            ];
+            model('message')->saveId($save3);
+
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }elseif ($type== 1) {
             // 续费
-            $userRecharge->allowField(true)->isUpdate(false)->save([
+            $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
                 'pay_price' => $packagePriceInfo['old_amount'],
@@ -297,16 +338,29 @@ class Order extends Base
                 'used_publish' => $userRechargeInfo['used_publish'],
                 'used_view_demand' => $userRechargeInfo['used_view_demand'],
                 'used_view_provide' => $userRechargeInfo['used_view_provide'],
-                'start_time' => time(), // 开始时间
+                'start_time' => $userRechargeInfo['start_time'], // 开始时间
                 'end_time' => $userRechargeInfo['end_time'] + $endTime, // 结束时间
                 'remarks' => '审核-续费套餐 ',
             ]);
             $userRecharge_id = $userRecharge->id;
+            $save3 = [
+                'base_type' => '1' ,
+                'subdivide_type' => '1',
+                'uid' => $order['uid'],
+                'title' => '订单审核',
+                'content' => "您续费了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $userRechargeInfo['end_time'] + $endTime),
+                'outer_id' => $order['id'],
+                'source_type' => 1,
+                'is_permanent' => 1,
+            ];
+            model('message')->saveId($save3);
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }elseif ($type == 2){
+            // 2 升级
+            //$end_time = $time + $endTime;
             if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
                 $t = $userRechargeInfo['end_time'] - $time;
-                $userRecharge->allowField(true)->isUpdate(false)->save([
+                $save1 = [
                     'uid'               => $uid,
                     'package_id'        => $package_id,
                     'pay_price'         => $packagePriceInfo['old_amount'],
@@ -319,31 +373,45 @@ class Order extends Base
                     'used_publish'      => $userRechargeInfo['used_publish'],
                     'used_view_demand'  => $userRechargeInfo['used_view_demand'],
                     'used_view_provide' => $userRechargeInfo['used_view_provide'],
-                    'start_time'        =>$end_time, // 开始时间
-                    'end_time' => $end_time + $t, // 结束时间
+                    'start_time'        => $userRechargeInfo['start_time'], // 开始时间
+                    'end_time' => $userRechargeInfo['end_time']+$endTime, // 结束时间
                     'remarks'           => '审核-购买套餐 ',
-                ]);
+                ];
+                $userRecharge->allowField(true)->isUpdate(false)->save($save1);
                 $recharge_id = $userRecharge->id;
             }
-            // 2 升级
-            $userRecharge->allowField(true)->isUpdate(false)->save([
-                'uid' => $uid,
-                'package_id' => $package_id,
-                'pay_price' => $packagePriceInfo['old_amount'],
+
+            $save2 = [
+                'uid'               => $uid,
+                'package_id'        => $package_id,
+                'pay_price'         => $packagePriceInfo['old_amount'],
                 'allot_recharge_id' => $recharge_id,
-                'flush' => $PackageData['flush'],
-                'publish' => $PackageData['publish'],
-                'view_demand' => $PackageData['view_demand'],
-                'view_provide' => $PackageData['view_provide'],
+                'flush'             => $PackageData['flush'],
+                'publish'           => $PackageData['publish'],
+                'view_demand'       => $PackageData['view_demand'],
+                'view_provide'      => $PackageData['view_provide'],
                 'view_provide_give' => $PackageData['view_provide_give'],
-                'used_flush' => 0,
-                'used_publish' => $userRechargeInfo['used_publish'],
-                'used_view_demand' => 0,
+                'used_flush'        => 0,
+                'used_publish'      => $userRechargeInfo['used_publish'],
+                'used_view_demand'  => 0,
                 'used_view_provide' => 0,
-                'start_time' => time(), // 开始时间
-                'end_time' => $end_time, // 结束时间
-                'remarks' => '审核-升级套餐 ',
-            ]);
+                'start_time'        => $time, // 开始时间
+                'end_time'          => $time + $endTime, // 结束时间
+                'remarks'           => '审核-升级套餐 ',
+            ];
+            $userRecharge->allowField(true)->isUpdate(false)->save($save2);
+
+            $save3 = [
+                'base_type' => '1' ,
+                'subdivide_type' => '1',
+                'uid' => $order['uid'],
+                'title' => '订单审核',
+                'content' => "您成功升级了".$title."灰度[" . $PackageData['title'] . "]，当前[" . $PackageData['title'] . "]到期时间" . date('Y-m-d H:i:s', $time + $endTime),
+                'outer_id' => $order['id'],
+                'source_type' => 1,
+                'is_permanent' => 1,
+            ];
+            model('message')->saveId($save3);
 
             $userRecharge_id = $userRecharge->id;
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);

@@ -18,4 +18,7 @@ class Message extends Base
     {
         return getLoginUserId();
     }
+
+
+
 }
