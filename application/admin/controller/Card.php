@@ -96,14 +96,15 @@ class Card extends Base
             $userRecharge = model('userRecharge');
             Db::startTrans();
             $time = time();
+            $head_url = !isset($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
             try {
                 $packageInfo = $package->find(1);
                 $userModel->allowField(true)->isUpdate(false)->save([
                     'username' => $_post['username'],
+                    'head_url' => $head_url,
                     'pwd' => $pwd,
                     'salt' => $number,
                     'nickname' => $_post['name'],
-                    'head_url' => $_post['logo'],
                 ]);
                 $_post['uid'] = $userModel->id;
                 $userRecharge->isUpdate(false)->allowField(true)->save([
