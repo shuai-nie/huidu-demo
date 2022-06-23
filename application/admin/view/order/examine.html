@@ -124,6 +124,9 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
                 if(res.code == 1){
                     layer.msg(res.msg, function(){
@@ -131,6 +134,9 @@
                         parent.layer.close(index);
                         window.parent.location.reload();
                     })
+                }else{
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
                 }
             });
         });
