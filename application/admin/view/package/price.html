@@ -54,11 +54,8 @@
             </div>
 
             <div class="layui-inline">
-                {if condition="$k eq 1"}
                 <button type="button" class="layui-btn layui-btn-sm addition"><i class="layui-icon layui-icon-addition" ></i></button>
-                {else/}
                 <button type="button" class="layui-btn layui-btn-sm layui-btn-danger delete"><i class="layui-icon layui-icon-delete" ></i></button>
-                {/if}
             </div>
         </div>
     {/volist}
@@ -90,6 +87,7 @@
 
         <div class="layui-inline">
             <button type="button" class="layui-btn layui-btn-sm addition"><i class="layui-icon layui-icon-addition" ></i></button>
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger delete"><i class="layui-icon layui-icon-delete" ></i></button>
         </div>
     </div>
     {/if}

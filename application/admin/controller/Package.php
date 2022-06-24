@@ -138,37 +138,41 @@ class Package extends Base
             $_post = \request()->post();
             $add = array();
             $update = array();
-            foreach ($_post['old_amount'] as $key => $val){
-                if(isset($_post['mid'][$key])){
-                    array_push($update,  array(
-                        'id' => $_post['mid'][$key],
-                        'package_id' => $id,
-                        'type' => $_post['type'][$key],
-                        'old_amount' => $_post['old_amount'][$key],
-                        'new_amount' => $_post['new_amount'][$key],
-                        'sort' => $_post['sort'][$key],
-                        'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
-                        'status' => 1
-                    ));
-                } else {
-                    array_push($add,  array(
-                        'package_id' => $id,
-                        'type' => $_post['type'][$key],
-                        'old_amount' => $_post['old_amount'][$key],
-                        'new_amount' => $_post['new_amount'][$key],
-                        'sort' => $_post['sort'][$key],
-                        'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
-                    ));
+            if(isset($_post['old_amount'])){
+                foreach ($_post['old_amount'] as $key => $val){
+                    if(isset($_post['mid'][$key])){
+                        array_push($update,  array(
+                            'id' => $_post['mid'][$key],
+                            'package_id' => $id,
+                            'type' => $_post['type'][$key],
+                            'old_amount' => $_post['old_amount'][$key],
+                            'new_amount' => $_post['new_amount'][$key],
+                            'sort' => $_post['sort'][$key],
+                            'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
+                            'status' => 1
+                        ));
+                    } else {
+                        array_push($add,  array(
+                            'package_id' => $id,
+                            'type' => $_post['type'][$key],
+                            'old_amount' => $_post['old_amount'][$key],
+                            'new_amount' => $_post['new_amount'][$key],
+                            'sort' => $_post['sort'][$key],
+                            'recommend' => isset($_post['recommend'][$key]) ? 1 : 0,
+                        ));
+                    }
                 }
-            }
-            $state = false;
-            $PackagePrice->save(['status' => 0], ['package_id' => $id]);
-            if (!empty($add)) {
-                $state = $PackagePrice->isUpdate(false)->saveAll($add, false);
-            }
+                $state = false;
+                $PackagePrice->save(['status' => 0], ['package_id' => $id]);
+                if (!empty($add)) {
+                    $state = $PackagePrice->isUpdate(false)->saveAll($add, false);
+                }
 
-            if (!empty($update)) {
-                $state = $PackagePrice->isUpdate(true)->saveAll($update);
+                if (!empty($update)) {
+                    $state = $PackagePrice->isUpdate(true)->saveAll($update);
+                }
+            }else {
+                $state = $PackagePrice->isUpdate(true)->save(['status' => 0], ['package_id' => $id]);
             }
 
             if($state !== false) {
