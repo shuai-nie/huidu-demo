@@ -1,0 +1,196 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<style>
+.layui-upload-img{width:100px;height:100px;}
+</style>
+
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">基础类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="base_type" value="1" title="系统消息" checked />
+            <input type="radio" name="base_type" value="2" title="活动消息" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息内容</label>
+        <div class="layui-input-block">
+            <input type="number" name="content" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">结束时间</label>
+        <div class="layui-input-block">
+            <input type="text" name="end_time" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息类型</label>
+        <div class="layui-input-block">
+            {volist name="link_type" id="vo" key="k"}
+            <input type="radio" name="link_type"  lay-filter="link_type" value="{$vo['id']}" title="{$vo['title']}" {if condition="$k == 1"}checked{/if}  />
+            {/volist}
+        </div>
+    </div>
+
+
+    {volist name="link_type" id="vo"}
+        {if condition="$vo['id'] eq 1"}
+    <div class="layui-form-item" id="url1">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="test1">上传封面</button>
+            <input type="hidden" name="url1" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1">
+                <p id="demoText1"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo1">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        {elseif condition="$vo['id'] eq 2"}
+    <div class="layui-form-item" style="display:none;" id="url2">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="test2">上传icon</button>
+            <input type="hidden" name="url2" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo2">
+                <p id="demoText2"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo2">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+        {elseif condition="$vo['id'] eq 3"}
+    <div class="layui-form-item" style="display:none;" id="url3">
+        <label class="layui-form-label">详情链接</label>
+        <div class="layui-input-block">
+            <input type="text" name="url{$vo['id']}" class="layui-input" >
+        </div>
+    </div>
+        {elseif condition="$vo['id'] eq 4"}
+    <div class="layui-form-item" style="display:none;" id="url4" >
+        <label class="layui-form-label">客服链接</label>
+        <div class="layui-input-block">
+            <input type="text" name="url{$vo['id']}" class="layui-input" >
+        </div>
+    </div>
+        {/if}
+    {/volist}
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload','element'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            element = layui.element;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#demo1").attr('src', res.url);
+                    $("input[name='url1']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){}
+            ,progress: function(n, elem, e){
+                element.progress('demo1', n + '%');
+                if(n == 100){
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+        upload.render({
+            elem: '#test2'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#demo2").attr('src', res.url);
+                    $("input[name='url2']").val(res.url);
+                    element.progress('demo2', '0%'); //进度条复位
+                    layer.msg('上传中', {icon: 16, time: 0});
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){}
+            ,progress: function(n, elem, e){
+                element.progress('demo2', n + '%');
+                if(n == 100){
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+
+
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+
+        form.on('radio(link_type)', function(data){
+            var _val = data.value;
+            switch (_val *1){
+                case 1:
+                    $("#url1").show();$("#url2").hide();$("#url3").hide();$("#url4").hide();
+                    break;
+                case 2:
+                    $("#url1").hide();$("#url2").show();$("#url3").hide();$("#url4").hide();
+                    break;
+                case 3:
+                    $("#url1").hide();$("#url2").hide();$("#url3").show();$("#url4").hide();
+                    break;
+                case 4:
+                    $("#url1").hide();$("#url2").hide();$("#url3").hide();$("#url4").show();
+                    break;
+                default:
+                    break;
+            }
+        })
+
+
+
+
+    });
+</script>

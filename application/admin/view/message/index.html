@@ -1,0 +1,160 @@
+{include file="moban/bone_header"}
+
+
+
+<!--<div class="layui-btn-container">-->
+<!--    <button class="layui-btn" data-type="create">添加</button>-->
+<!--</div>-->
+
+<fieldset class="table-search-fieldset" style="display:none;">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:125px">用户账号/昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单类型</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="type" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">购买套餐</label>
+                    <div class="layui-input-inline" style="width:110px;">
+                        <select name="new_package_id" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">订单状态</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="status" lay-filter="data_type_no" lay-search="" >
+                            <option value="">全部</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search"><i class="layui-icon"></i>搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+    <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" >删除</button>
+    <button class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit" >编辑</button>
+</script>
+
+<script type="text/html" id="toolbarDemo">
+<div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="create"><i class="layui-icon layui-icon-add-1"></i></button>
+</div>
+</script>
+
+<script>
+    layui.use(['table', 'form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}", 600, 650);
+            }
+        };
+
+        var _cols = [            [
+                {field: 'key', title: '', width:80, fixed: 'left'}
+                ,{field: 'base_type', title: '类型', width:120, templet:function(d){
+                    switch (d.base_type*1){
+                        {volist name="base_type" id="vo"}
+                        case {$vo['id']}: return "{$vo['title']}";
+                        {/volist}
+                        default:return '-';
+                    }
+                }}
+                ,{field: 'title', title: '标题', width:170}
+                ,{field: 'content', title: '内容', width:470}
+                ,{field: 'end_time', title: '结束时间', width:170, templet:function(d){
+                    if(d.end_time > 10000){
+                        return d.end_time;
+                    }
+                    return '-';
+                }}
+                ,{field: 'create_time', title: '创建时间', width:170, align:'center'}
+                ,{fixed: 'right',title:'操作', width:140,toolbar: '#barDemo'}
+            ]
+        ];
+
+        table.render({
+            elem: "#think-table"
+            ,id : 'table'
+            ,method:'post'
+            , height: "561"
+            , url: "{:url('')}"
+            , limits : [10,20,50,100,200,500,1000,5000,10000]
+            , page: true
+            , toolbar: '#toolbarDemo'
+            , defaultToolbar: ['filter','exports']
+            , parseData: function (res) {
+                return {
+                    "code": 0,
+                    "msg": res['msg'],
+                    "count": res['data']['count'],
+                    "data": res['data']['list']
+                };
+            }
+            , cols: _cols
+        });
+
+        table.on('tool(think-table)', function(obj){
+            var data = obj.data;
+            console.log('dddddd');
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 700, 550, '#submit');
+            }else if(obj.event==="del"){
+            }
+        });
+
+        form.on('submit(data-search)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
+
+        table.on('toolbar(think-table)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            active[obj.event] ? active[obj.event].call(this) : '';
+        })
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+</script>
+
+{include file="moban/bone_footer"}
