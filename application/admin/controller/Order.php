@@ -198,12 +198,20 @@ class Order extends Base
         return false;
     }
 
+    /**
+     * @param $uid
+     * @param $package_id int 购买套餐id
+     * @param $type
+     * @param $order 订单数据
+     * @return false|int
+     * @author Lucius yesheng35@126.com
+     */
     public function userPackage($uid, $package_id, $type, $order)
     {
-        $package = model('Package');
+        $package = model('PackageHistory');
         $userRecharge = model('userRecharge');
         $userInfo = model('userInfo');
-        $packagePrice = model('PackagePrice');
+        $packagePrice = model('packagePriceHistory');
         $orderModel = model('order');
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
