@@ -322,6 +322,7 @@ class Order extends Base
 
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }elseif ($type== 1) {
+            // 续费
             if($userRechargeInfo['allot_recharge_id'] > 0) {
                 $recharge_id = $userRechargeInfo['allot_recharge_id'];
                 $userRechargeOne = $userRecharge->where(['id'=>$recharge_id])->find();
@@ -329,7 +330,6 @@ class Order extends Base
                     'end_time' => $endTime + $userRechargeOne['end_time'],
                 ], ['id'=>$recharge_id]);
             }
-
             $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
