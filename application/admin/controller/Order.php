@@ -280,27 +280,14 @@ class Order extends Base
         if($type == 0){
             // 0 购买
             $end_time = $time + $endTime;
-            /*if (($time + $endTime) < $userRechargeInfo['end_time'] && $userRechargeInfo['package_id'] != 1) {
-                $t = $userRechargeInfo['end_time'] - $time;
-                $userRecharge->allowField(true)->isUpdate(false)->save([
-                    'uid'               => $uid,
-                    'package_id'        => $package_id,
-                    'pay_price'         => $packagePriceInfo['old_amount'],
-                    'flush'             => $PackageData['flush'],
-                    'publish'           => $PackageData['publish'],
-                    'view_demand'       => $PackageData['view_demand'],
-                    'view_provide'      => $PackageData['view_provide'],
-                    'view_provide_give' => $PackageData['view_provide_give'],
-                    'used_flush'        => $userRechargeInfo['used_flush'],
-                    'used_publish'      => $userRechargeInfo['used_publish'],
-                    'used_view_demand'  => $userRechargeInfo['used_view_demand'],
-                    'used_view_provide' => $userRechargeInfo['used_view_provide'],
-                    'start_time'        =>$end_time, // 开始时间
-                    'end_time' => $end_time + $t, // 结束时间
-                    'remarks'           => '审核-购买套餐 ',
-                ]);
-                $recharge_id = $userRecharge->id;
-            }*/
+            if($userRechargeInfo['allot_recharge_id'] > 0) {
+                $recharge_id = $userRechargeInfo['allot_recharge_id'];
+                $userRechargeOne = $userRecharge->where(['id'=>$recharge_id])->find();
+                $userRecharge->allowField(true)->isUpdate(true)->save([
+                    'end_time' => $endTime + $userRechargeOne['end_time'],
+                ], ['id'=>$recharge_id]);
+            }
+
             $userRecharge->allowField(true)->isUpdate(false)->save([
                 'uid' => $uid,
                 'package_id' => $package_id,
@@ -315,7 +302,7 @@ class Order extends Base
                 'used_publish' => $userRechargeInfo['used_publish'],
                 'used_view_demand' => 0,
                 'used_view_provide' => 0,
-                'start_time' => time(), // 开始时间
+                'start_time' => $time, // 开始时间
                 'end_time' => $end_time , // 结束时间
                 'remarks' => '审核-购买套餐 ',
             ]);
@@ -335,6 +322,14 @@ class Order extends Base
 
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }elseif ($type== 1) {
+            if($userRechargeInfo['allot_recharge_id'] > 0) {
+                $recharge_id = $userRechargeInfo['allot_recharge_id'];
+                $userRechargeOne = $userRecharge->where(['id'=>$recharge_id])->find();
+                $userRecharge->allowField(true)->isUpdate(true)->save([
+                    'end_time' => $endTime + $userRechargeOne['end_time'],
+                ], ['id'=>$recharge_id]);
+            }
+
             $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
