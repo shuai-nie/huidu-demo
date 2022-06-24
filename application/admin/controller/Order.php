@@ -14,8 +14,8 @@ class Order extends Base
         $order = model('order');
         $user = model('User');
         $resource = model('Resource');
-        $packagePrice = model('PackagePrice');
-        $package = model('Package');
+        $packagePrice = model('PackagePriceHistory');
+        $package = model('PackageHistory');
 
         if(request()->isPost()) {
             $page = request()->post('page', 1);
@@ -48,6 +48,7 @@ class Order extends Base
                 ->join($packagePrice->getTable().' F', 'A.package_price_id=F.id', 'left')
                 ->field('A.*,B.username,B.nickname,C.title as resource_title,D.title as old_package_title,E.title as new_package_title,F.type as price_type,F.old_amount as price_old_amount,F.new_amount as price_new_amount')
                 ->where($map)->order('A.status asc, A.id desc')->limit($offset, $limit)->select();
+
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 if(!empty($username)) {
@@ -216,7 +217,7 @@ class Order extends Base
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
         $userRechargeInfo = $userRecharge->where(['id' => $userInfoData['user_recharge_id']])->find();
-        $packagePriceInfo = $packagePrice->find($order['package_price_id']);
+        $packagePriceInfo = $packagePrice->where(['id'=>$order['package_price_id']])->find();
         $status = request()->post('status');
         $feedback = request()->post('feedback');
         /**
@@ -253,6 +254,7 @@ class Order extends Base
         $start_time = $time;
         $endTime = 0;
         $title = '';
+
         switch ($packagePriceInfo['type']){
             case 1:
                 $endTime =+ 86400*30;
@@ -333,7 +335,6 @@ class Order extends Base
 
             return $userInfo->allowField(true)->isUpdate(true)->save(['user_recharge_id'=>$userRecharge_id], ['uid'=>$uid]);
         }elseif ($type== 1) {
-            // 续费
             $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
@@ -384,9 +385,9 @@ class Order extends Base
                     'used_view_provide' => $userRechargeInfo['used_view_provide'],
                     'start_time'        => $userRechargeInfo['start_time'], // 开始时间
                     'end_time' => $userRechargeInfo['end_time'] + $endTime, // 结束时间
-                    'remarks'           => '审核-购买套餐 ',
+                    'remarks'           => '审核-升级套餐-原套餐 ',
                 ];
-                $userRecharge->allowField(true)->isUpdate(false)->save($save1);
+                $userRecharge->allowField(true)->data($save1, true)->save();
                 $recharge_id = $userRecharge->id;
             }
 
@@ -407,8 +408,11 @@ class Order extends Base
                 'start_time'        => $time, // 开始时间
                 'end_time'          => $time + $endTime, // 结束时间
                 'remarks'           => '审核-升级套餐 ',
+                'create_time' => 0,
+                'update_time' => 0,
             ];
-            $userRecharge->allowField(true)->isUpdate(false)->save($save2);
+
+            $userRecharge->allowField(true)->isUpdate(false)->data($save2, true)->save();
 
             $save3 = [
                 'base_type' => '1' ,
