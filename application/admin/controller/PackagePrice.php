@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\controller;
 
+use think\Db;
+
 class PackagePrice extends Base
 {
     public function _initialize()
@@ -37,10 +39,25 @@ class PackagePrice extends Base
 
     public function create()
     {
+        $PackagePriceHistory = model('PackagePriceHistory');
+        $PackagePrice = model('PackagePrice');
         if(request()->isPost()) {
             $_post = request()->post();
-            $PackagePrice = model('PackagePrice');
-            $state = $PackagePrice->allowField(true)->save($_post);
+            $state = false;
+            Db::startTrans();
+
+            try {
+                $PackagePriceHistory->saveId($_post);
+                $_post['history_id'] = $PackagePriceHistory->id;
+                $PackagePrice->allowField(true)->isUpdate(false)->save($_post);
+                Db::commit();
+                $state = true;
+            } catch (\Exception $e) {
+                Db::rollback();
+                $state = false;
+            }
+
+
             if($state !== false) {
                 return success_json('添加成功');
             }
@@ -48,7 +65,7 @@ class PackagePrice extends Base
         }
         $packageInfo = model('package')->where(['status'=>1])->select();
         return view('', [
-            'type' => $this->type,
+            'type' => $PackagePrice->type,
             'info' => $packageInfo,
         ]);
     }
@@ -58,7 +75,23 @@ class PackagePrice extends Base
         $PackagePrice = model('PackagePrice');
         if(request()->isPost()) {
             $_post = request()->post();
-            $state = $PackagePrice->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            $state = false;
+            $PackagePriceHistory = model('PackagePriceHistory');
+            $save = $_post;
+            unset($save['id']);
+            Db::startTrans();
+            try {
+                unset($save['id']);
+                $PackagePriceHistory->saveId($save);
+                $_post['history_id'] = $PackagePriceHistory->id;
+                $PackagePrice->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+                Db::commit();
+                $state = true;
+            }catch (\Exception $e) {
+                Db::rollback();
+                $state = false;
+            }
+
             if($state !== false) {
                 return success_json('编辑成功');
             }
@@ -67,7 +100,7 @@ class PackagePrice extends Base
         $packageInfo = model('package')->where(['status'=>1])->select();
         $data = $PackagePrice->find($id);
         return view('', [
-            'type' => $this->type,
+            'type' => $PackagePrice->type,
             'info' => $packageInfo,
             'data' => $data
         ]);

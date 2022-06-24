@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use think\Db;
 use think\Request;
 
 class Package extends Base
@@ -21,8 +22,8 @@ class Package extends Base
             $PackagePrice = model('PackagePrice');
             $Package = model("Package");
             $offset = ($page - 1) * $limit;
-            $data = model("Package")->where($map)->limit($offset, $limit)->select();
-            $count = model("Package")->where($map)->count();
+            $data = $Package->where($map)->limit($offset, $limit)->select();
+            $count = $Package->where($map)->count();
             foreach ($data as $key=>$val) {
                 $price = $PackagePrice->where(['package_id' => $val['id'], 'status' => 1])->select();
                 if(!empty($price)) {
@@ -49,7 +50,21 @@ class Package extends Base
     {
         if(\request()->isPost()){
             $_post = \request()->param();
-            $state = model("Package")->save($_post);
+            $packageHistory = model('packageHistory');
+            Db::startTrans();
+            $state = false;
+
+            try {
+                $packageHistory->saveId($_post);
+                $_post['history_id'] = $packageHistory->id;
+                model("Package")->saveId($_post);
+                Db::commit();
+                $state = true;
+            } catch (\Exception $e){
+                Db::rollback();;
+                $state = false;
+            }
+
             if($state !== false){
                 return success_json(lang('CreateSuccess', [lang('RESOURCE')]));
             }
@@ -71,7 +86,23 @@ class Package extends Base
         $Package = model("Package");
         if(\request()->isPost()){
             $_post = \request()->param();
-            $state = $Package->save($_post, ['id'=>$id]);
+            $packageHistory = model('packageHistory');
+            $state = false;
+            Db::startTrans();
+            try {
+                $save = $_post;
+                 unset($save['id']);
+                $packageHistory->saveId($save);
+                $_post['history_id'] = $packageHistory->id;
+                $Package->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+
+                Db::commit();
+                $state = true;
+            } catch (\Exception $e) {
+                Db::rollback();
+                $state = false;
+            }
+
             if($state !== false){
                 return success_json(lang('EditSuccess', [lang('RESOURCE')]));
             }
