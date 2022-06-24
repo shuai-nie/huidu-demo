@@ -334,6 +334,7 @@ class Order extends Base
                 'uid' => $uid,
                 'package_id' => $package_id,
                 'pay_price' => $packagePriceInfo['new_amount'] + $userRechargeInfo['pay_price'],
+                'allot_recharge_id' => $recharge_id,
                 'flush' => $PackageData['flush'],
                 'publish' => $PackageData['publish'],
                 'view_demand' => $PackageData['view_demand'],
