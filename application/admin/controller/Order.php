@@ -265,7 +265,7 @@ class Order extends Base
                 $title = '1个季度';
                 break;
             case 3:
-                $endTime =+ 86400*365;
+                $endTime =+ 86400*360;
                 $title = '1年';
                 break;
         }
