@@ -329,7 +329,7 @@ class Order extends Base
             $userRecharge->saveId([
                 'uid' => $uid,
                 'package_id' => $package_id,
-                'pay_price' => $packagePriceInfo['new_amount'],
+                'pay_price' => $packagePriceInfo['new_amount'] + $userRechargeInfo['pay_price'],
                 'flush' => $PackageData['flush'],
                 'publish' => $PackageData['publish'],
                 'view_demand' => $PackageData['view_demand'],
