@@ -189,6 +189,32 @@
             }
         })
 
+        form.val('first', {
+            "base_type": "{$info['base_type']}",
+            "title": "{$info['title']}",
+            "content":"{$info['content']}",
+            "end_time":"{$info['end_time']}",
+            'link_type' :"{$info['link_type']}",
+            "url{$info['link_type']}":"{$info['url']}",
+        })
+
+        switch ({$info['link_type']}){
+            case 1:
+                $("#url1").show();$("#url2").hide();$("#url3").hide();$("#url4").hide();
+                break;
+            case 2:
+                $("#url1").hide();$("#url2").show();$("#url3").hide();$("#url4").hide();
+                break;
+            case 3:
+                $("#url1").hide();$("#url2").hide();$("#url3").show();$("#url4").hide();
+                break;
+            case 4:
+                $("#url1").hide();$("#url2").hide();$("#url3").hide();$("#url4").show();
+                break;
+            default:
+                break;
+        }
+
 
 
 

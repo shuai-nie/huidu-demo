@@ -165,7 +165,11 @@
         //监听提交
         form.on('submit(submit)', function (data) {
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code == 1) {
+                    layer.msg(res.msg, function(){
+
+                    })
+                }
             });
         });
 
