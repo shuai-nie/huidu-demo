@@ -28,9 +28,17 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">永久有效</label>
+        <div class="layui-input-block">
+            <input type="radio" name="is_permanent" lay-filter="is_permanent" value="1" placeholder="" autocomplete="off" class="layui-input" title="是" >
+            <input type="radio" name="is_permanent" lay-filter="is_permanent" value="0" placeholder="" autocomplete="off" class="layui-input" title="否" >
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="end_time_show" >
         <label class="layui-form-label">结束时间</label>
         <div class="layui-input-block">
-            <input type="text" name="end_time" placeholder="" autocomplete="off" class="layui-input">
+            <input type="text" name="end_time" id="end_time" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -103,10 +111,15 @@
 
 <script>
     //Demo
-    layui.use(['form','upload','element'], function () {
+    layui.use(['form','upload','element','laydate'], function () {
         var form = layui.form,
             upload = layui.upload,
-            element = layui.element;
+            element = layui.element,
+            laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#end_time'
+        });
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept='images';
@@ -168,6 +181,25 @@
                 console.log(res);
             });
         });
+
+        form.on('radio(is_permanent)', function(data){
+            var _val = data.value;
+            switch (_val*1){
+                case 0:
+                    $("#end_time_show").show();
+                    break;
+                case 1:
+                    $("#end_time_show").hide();
+                    break;
+                default:
+                    break;
+            }
+        })
+        if({$info['is_permanent']} == 1){
+            $("#end_time_show").hide();
+        } else {
+            $("#end_time_show").show();
+        }
 
         form.on('radio(link_type)', function(data){
             var _val = data.value;
