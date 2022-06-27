@@ -32,7 +32,8 @@ class Message extends Base
 
             $map = [
                 'A.base_type' => [['=', 1], ['=', 2], 'or'],
-                'A.uid' => [['=', '0'], ['null', ''], 'or']
+                'A.uid' => [['=', '0'], ['null', ''], 'or'],
+                'A.status' => 1
             ];
 
             if(!empty($title)) {
