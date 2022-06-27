@@ -38,10 +38,10 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">结束时间</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="strtime" class="layui-input" placeholder="开始时间" />
+                        <input type="text" name="strtime" id="strtime" class="layui-input" placeholder="开始时间" />
                     </div>
                     <div class="layui-input-inline">
-                        <input type="text" name="endtime" class="layui-input" placeholder="结束时间" />
+                        <input type="text" name="endtime" id="endtime" class="layui-input" placeholder="结束时间" />
                     </div>
                 </div>
 
@@ -67,9 +67,13 @@
 </script>
 
 <script>
-    layui.use(['table', 'form'], function(){
-        var table = layui.table,
-            form = layui.form;
+    layui.use(['table', 'form', 'laydate'], function(){
+        var table = layui.table
+            ,form = layui.form
+            ,laydate = layui.laydate;
+
+        laydate.render({elem: '#strtime'});
+        laydate.render({elem: '#endtime'});
 
         var $ = layui.$, active = {
             create:function(){
@@ -99,7 +103,7 @@
                 }}
                 ,{field: 'end_time', title: '结束时间', width:170, templet:function(d){
                     if(d.end_time > 10000){
-                        return layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd');
+                        return layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss');
                     }
                     return '-';
                 }}

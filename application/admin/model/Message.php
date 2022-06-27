@@ -23,6 +23,11 @@ class Message extends Base
         return getLoginUserId();
     }
 
+    public function creData()
+    {
+
+    }
+
 
 
 }
