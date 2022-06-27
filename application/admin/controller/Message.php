@@ -80,7 +80,7 @@ class Message extends Base
         if(request()->isPost()){
             $_post = request()->post();
             $_post['subdivide_type'] = $_post['base_type'] == 1 ? 1: 2;
-            if(!empty($_post['end_time']) && $_post['is_permanent'] == 1){
+            if(!empty($_post['end_time']) && $_post['is_permanent'] == 0){
                 $_post['end_time'] = strtotime($_post['end_time']);
             } else {
                 unset($_post['end_time']);
@@ -121,7 +121,7 @@ class Message extends Base
         if(request()->isPost()) {
             $_post = request()->post();
             $_post['subdivide_type'] = $_post['base_type'] == 1 ? 1: 2;
-            if(!empty($_post['end_time']) && $_post['is_permanent'] == 1){
+            if(!empty($_post['end_time']) && $_post['is_permanent'] == 0){
                 $_post['end_time'] = strtotime($_post['end_time']);
             } else {
                 unset($_post['end_time']);

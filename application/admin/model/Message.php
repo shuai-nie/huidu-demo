@@ -5,7 +5,7 @@ class Message extends Base
 {
     public $base_type = [
         ['id' => 1, 'title' => '系统消息'],
-        ['id' => 1, 'title' => '活动消息'],
+        ['id' => 2, 'title' => '活动消息'],
     ];
     protected $autoWriteTimestamp = true;
     protected $createTime = 'create_time';
