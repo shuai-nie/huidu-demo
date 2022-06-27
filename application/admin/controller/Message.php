@@ -20,17 +20,46 @@ class Message extends Base
     {
         $message = model('Message');
         if(request()->isPost()){
-
-
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
 
-            $map = ['base_type'=>['=', '1,2', 'or']];
+            $title = request()->post('title');
+            $base_type = request()->post('base_type');
+            $is_permanent = request()->post('is_permanent');
+            $strtime = request()->post('strtime');
+            $endtime = request()->post('endtime');
+
+            $map = ['A.base_type'=>['=', '1,2', 'or']];
+
+            if(!empty($title)) {
+                $map['A.title'] = ['like', "%{$title}%"];
+            }
+
+            if(is_numeric($base_type)) {
+                $map['A.base_type'] = $base_type;
+            }
+
+            if(is_numeric($is_permanent)) {
+                $map['A.is_permanent'] = $is_permanent;
+            }
+
+            if(!empty($strtime)) {
+                $map['A.end_time'] = ['>=', strtotime($strtime)];
+            }
+
+            if(!empty($endtime)) {
+                $map['A.end_time'] = ['<=', strtotime($endtime)];
+            }
+
+            if(!empty($strtime) && !empty($endtime)) {
+                $map['A.end_time'] = ['between', [strtotime($strtime), strtotime($endtime)]];
+            }
+
             $list = $message->alias('A')->where($map)->limit($offset, $limit)->order('A.id desc')->select();
             $count = $message->alias('A')->where($map)->count();
             foreach ($list as $k => $v) {
-                $v['key'] = $k+ ($page-1)*$limit+1;
+                $v['key'] = $k + ($page - 1) * $limit + 1;
                 $data[$k] = $v;
             }
             return json(['data' => [ 'count' => $count, 'list' => $list]], 200);

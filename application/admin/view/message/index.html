@@ -1,44 +1,47 @@
 {include file="moban/bone_header"}
 
-<fieldset class="table-search-fieldset" style="display:none;">
+<fieldset class="table-search-fieldset" >
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width:125px">用户账号/昵称</label>
+                    <label class="layui-form-label" style="width:125px">消息标题</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="username" autocomplete="off" class="layui-input">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">订单类型</label>
+                    <label class="layui-form-label">类型</label>
                     <div class="layui-input-inline" style="width:90px;">
-                        <select name="type" lay-filter="data_type_no" lay-search="" >
+                        <select name="base_type" lay-filter="data_type_no" lay-search="" >
                             <option value="">全部</option>
-
+                            {volist name="base_type" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
                         </select>
                     </div>
                 </div>
 
-                <div class="layui-inline">
-                    <label class="layui-form-label">购买套餐</label>
-                    <div class="layui-input-inline" style="width:110px;">
-                        <select name="new_package_id" lay-filter="data_type_no" lay-search="" >
-                            <option value="">全部</option>
-
-                        </select>
-                    </div>
-                </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">订单状态</label>
+                    <label class="layui-form-label">消息状态</label>
                     <div class="layui-input-inline" style="width:90px;">
-                        <select name="status" lay-filter="data_type_no" lay-search="" >
+                        <select name="is_permanent" lay-filter="data_type_no" lay-search="" >
                             <option value="">全部</option>
-
+                            <option value="1">永久</option>
+                            <option value="0">不永久</option>
                         </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="strtime" class="layui-input" placeholder="开始时间" />
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="endtime" class="layui-input" placeholder="结束时间" />
                     </div>
                 </div>
 
@@ -85,11 +88,18 @@
                         default:return '-';
                     }
                 }}
-                ,{field: 'title', title: '标题', width:170}
+                ,{field: 'title', title: '消息标题', width:170}
                 ,{field: 'content', title: '内容', width:470}
+                ,{field: 'is_permanent', title: '永久有效', width:170,templet:function(d){
+                    switch (d.is_permanent * 1){
+                        case 0 : return '否';
+                        case 1 : return '是';
+                        default: return '-';
+                    }
+                }}
                 ,{field: 'end_time', title: '结束时间', width:170, templet:function(d){
                     if(d.end_time > 10000){
-                        return d.end_time;
+                        return layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd');
                     }
                     return '-';
                 }}
