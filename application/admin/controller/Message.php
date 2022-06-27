@@ -30,7 +30,10 @@ class Message extends Base
             $strtime = request()->post('strtime');
             $endtime = request()->post('endtime');
 
-            $map = ['A.base_type'=>['=', '1,2', 'or']];
+            $map = [
+                'A.base_type' => [['=', 1], ['=', 2], 'or'],
+                'A.uid' => [['=', '0'], ['null', ''], 'or']
+            ];
 
             if(!empty($title)) {
                 $map['A.title'] = ['like', "%{$title}%"];
@@ -58,6 +61,7 @@ class Message extends Base
 
             $list = $message->alias('A')->where($map)->limit($offset, $limit)->order('A.id desc')->select();
             $count = $message->alias('A')->where($map)->count();
+            //echo $message->getLastSql();exit();
             foreach ($list as $k => $v) {
                 $v['key'] = $k + ($page - 1) * $limit + 1;
                 $data[$k] = $v;

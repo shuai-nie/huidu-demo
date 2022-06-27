@@ -225,8 +225,9 @@
             "base_type": "{$info['base_type']}",
             "title": "{$info['title']}",
             "content":"{$info['content']}",
-            "end_time":"{$info['end_time']}",
+            "end_time":"{$info['end_time']|date='Y-m-d', ###}",
             'link_type' :"{$info['link_type']}",
+            "is_permanent" : "{$info['is_permanent']}",
             "url{$info['link_type']}":"{$info['url']}",
         })
 
