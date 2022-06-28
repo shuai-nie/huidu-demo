@@ -10,27 +10,38 @@
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">账号</label>
+                    <label class="layui-form-label" style="width:70px;">账号</label>
                     <div class="layui-input-inline">
                         <input type="text" name="username" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">昵称</label>
+                    <label class="layui-form-label" style="width:70px;">昵称</label>
                     <div class="layui-input-inline">
                         <input type="text" name="nickname" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">套餐</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:70px;">套餐</label>
+                    <div class="layui-input-inline" style="width:110px;">
                         <select name="package_id" lay-filter="package_id" lay-search="" >
                             <option value="">请选择</option>
                             {volist name="packageAll" id='vo'}
                             <option value="{$vo['id']}">{$vo['title']}</option>
                             {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:80px;">注册端</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="isweb" lay-filter="isweb" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="1">前端</option>
+                            <option value="2">后端</option>
                         </select>
                     </div>
                 </div>
@@ -113,6 +124,13 @@
                     return "<img src='"+d.head_url+"' height=30 width=30 />";
                 }
                 return "-";
+            }}
+            ,{field: 'isweb', title: '端', width:80,templet:function(d){
+                switch (d.isweb*1){
+                    case 1: return '前端';
+                    case 2: return '后台';
+                    default: return '-';
+                }
             }}
             ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
                 return  d.username + '/' + d.nickname ;

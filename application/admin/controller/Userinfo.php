@@ -25,6 +25,7 @@ class Userinfo extends Base
             $package_id = \request()->post('package_id');
             $field = \request()->post('field');
             $type = \request()->post('type');
+            $isweb = \request()->post('isweb');
             if(!empty($field) && !empty($type)) {
                 $order = "A." . $field . ' ' . $type;
             }else {
@@ -40,12 +41,15 @@ class Userinfo extends Base
             if(!empty($package_id)) {
                 $map['B.package_id'] = $package_id;
             }
+            if(!empty($isweb)) {
+                $map['E.isweb'] = $isweb;
+            }
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id,E.isweb')
                 ->limit($offset, $limit)->order($order)->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
