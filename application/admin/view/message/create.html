@@ -158,8 +158,6 @@
                 if(res.code == 0) {
                     $("#demo2").attr('src', res.url);
                     $("input[name='url2']").val(res.url);
-                    element.progress('demo2', '0%'); //进度条复位
-                    layer.msg('上传中', {icon: 16, time: 0});
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
