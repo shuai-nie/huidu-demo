@@ -42,6 +42,50 @@
         </div>
     </div>
 
+    <div class="layui-form-item" >
+        <label class="layui-form-label">icon</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="test2">上传icon</button>
+            <button type="button" class="layui-btn layui-btn-danger delete" data-id="2" >清除</button>
+            <input type="hidden" name="url2" value="{$messagelinkInfo2['url']|default=''}" >
+            <div class="layui-upload-list">
+                {if condition="isset($messagelinkInfo2->url)"}
+                <img class="layui-upload-img" id="demo2" src="{$messagelinkInfo2->url|default=null}">
+                {else/}
+                <img class="layui-upload-img" id="demo2" >
+                {/if}
+                <p id="demoText2"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo2">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" >
+        <label class="layui-form-label">封面</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="test1">上传封面</button>
+            <button type="button" class="layui-btn layui-btn-danger delete" data-id="1" >清除</button>
+            <input type="hidden" name="url1" value="{$messagelinkInfo1->url|default=''}" >
+            <div class="layui-upload-list">
+                {if condition="isset($messagelinkInfo1->url)"}
+                <img class="layui-upload-img" id="demo1" src="{$messagelinkInfo1->url|default=null}">
+                {else/}
+                <img class="layui-upload-img" id="demo1" >
+                {/if}
+                <p id="demoText1"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo1">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">消息类型</label>
         <div class="layui-input-block">
@@ -53,39 +97,7 @@
 
 
     {volist name="link_type" id="vo"}
-    {if condition="$vo['id'] eq 1"}
-    <div class="layui-form-item" id="url1">
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test1">上传封面</button>
-            <input type="hidden" name="url1" >
-            <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo1">
-                <p id="demoText1"></p>
-            </div>
-            <div style="width: 95px;">
-                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo1">
-                    <div class="layui-progress-bar" lay-percent=""></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {elseif condition="$vo['id'] eq 2"}
-    <div class="layui-form-item" style="display:none;" id="url2">
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test2">上传icon</button>
-            <input type="hidden" name="url2" >
-            <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo2">
-                <p id="demoText2"></p>
-            </div>
-            <div style="width: 95px;">
-                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo2">
-                    <div class="layui-progress-bar" lay-percent=""></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {elseif condition="$vo['id'] eq 3"}
+    {if condition="$vo['id'] eq 3"}
     <div class="layui-form-item" style="display:none;" id="url3">
         <label class="layui-form-label">详情链接</label>
         <div class="layui-input-block">
@@ -179,6 +191,15 @@
                 console.log(res);
             });
         });
+
+        $(".delete").on('click', function(){
+            var _this = $(this)
+                , _id = _this.attr('data-id');
+
+            $("#demo"+_id).attr('src', null);
+            $("input[name='url"+_id+"']").val(null);
+
+        })
 
         form.on('radio(is_permanent)', function(data){
             var _val = data.value;

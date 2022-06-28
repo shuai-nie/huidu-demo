@@ -95,8 +95,25 @@ class Message extends Base
             Db::startTrans();
             try {
                 $message->allowField(true)->isUpdate(false)->save($_post);
-                $save['msg_id'] = $message->id;
-                $MessageLink->allowField(true)->isUpdate(false)->save($save);
+                $message_id = $message->id ;
+                $save['msg_id'] = $message_id;
+                if(!empty($_post['url1']) ){
+                    $MessageLink->allowField(true)->isUpdate(false)->data([
+                        'msg_id' => $message_id,
+                        'link_type' => 1,
+                        'url' => $_post['url1']
+                    ], true)->save();
+                }
+
+                if(!empty($_post['url2']) ){
+                    $MessageLink->allowField(true)->isUpdate(false)->data([
+                        'msg_id'    => $message_id,
+                        'link_type' => 2,
+                        'url'       => $_post['url2']
+                    ], true)->save();
+                }
+                $MessageLink->allowField(true)->isUpdate(false)->data($save, true)->save();
+
                 Db::commit();
                 $state = true;
             }catch (\Exception $e) {
@@ -127,22 +144,54 @@ class Message extends Base
             } else {
                 unset($_post['end_time']);
             }
-            $save = [
-                'link_type' => $_post['link_type'],
-                'url' => $_post['url'.$_post['link_type']]
-            ];
 
-            $state = false;
             Db::startTrans();
             try {
-                $message->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
-                $messageLink->allowField(true)->isUpdate(true)->save($save, ['msg_id'=>$id]);
+                if(!empty($_post['url1'])){
+                    $count1 = $messageLink->where(['link_type' => 1, 'msg_id'=>$id,'status'=>1])->count();
+                    if($count1 > 0) {
+                        $messageLink->isUpdate(true)->save(['url'=>$_post['url1']], ['link_type' => 1, 'msg_id'=>$id, 'status'=>1]);
+                    }else {
+                        $messageLink->allowField(true)->isUpdate(false)->data([
+                            'msg_id'=>$id,
+                            'link_type' => 1,
+                            'url' => $_post['url1'],
+                        ], true)->save();
+                    }
+                }else{
+                    $messageLink->isUpdate(true)->save(['status' => 0], ['link_type' => 1, 'msg_id' => $id, 'status' => 1]);
+                }
+
+
+
+                if(!empty($_post['url2'])) {
+                    $count2 = $messageLink->where(['link_type' => 2, 'msg_id' => $id, 'status' => 1])->count();
+                    if ($count2 > 0) {
+                        $messageLink->isUpdate(true)->save(['url' => $_post['url2']], ['link_type' => 2, 'msg_id' => $id, 'status' => 1]);
+                    } else {
+                        $messageLink->allowField(true)->isUpdate(false)->data([
+                            'msg_id'=>$id,
+                            'link_type' => 2,
+                            'url' => $_post['url2'],
+                        ], true)->save();
+                    }
+                }else{
+                    $messageLink->where(['link_type' =>2, 'msg_id' => $id, 'status' => 1])->update(['status' => 0]);
+                }
+
+                $message->isUpdate(true)->save($_post, ['id'=>$id]);
+                $messageLink->where(['msg_id'=>$id, 'link_type' => [['=', 3], ['=', 4], 'or']])->update([
+                    'link_type' => $_post['link_type'],
+                    'url' => $_post['url'.$_post['link_type']]
+                ]);
+
                 Db::commit();
                 $state = true;
             }catch (\Exception $e) {
                 Db::rollback();
                 $state = false;
             }
+
             if($state !== false) {
                 return success_json('数据提交成功');
             } else {
@@ -151,14 +200,20 @@ class Message extends Base
 
         }
         $info = $message->where(['id'=>$id])->find();
-        $messagelinkInfo = $messageLink->where(['msg_id'=>$info['id']])->find();
+        $messagelinkInfo = $messageLink->where(['msg_id' => $info['id'], 'status' => 1, 'link_type' => [['=', 3], ['=', 4], 'or'] ])->find();
+
         if($messagelinkInfo){
             $info['link_type'] = $messagelinkInfo['link_type'];
             $info['url'] = $messagelinkInfo['url'];
         }
+        $messagelinkInfo1 = $messageLink->where(['msg_id' => $info['id'], 'status' => 1, 'link_type' => 1 ])->find();
+        $messagelinkInfo2 = $messageLink->where(['msg_id' => $info['id'], 'status' => 1, 'link_type' => 2 ])->find();
+
         return view('', [
             'info' => $info,
-            'link_type' => $messageLink->link_type
+            'link_type' => model('MessageLink')->link_type,
+            'messagelinkInfo1' => $messagelinkInfo1,
+            'messagelinkInfo2' => $messagelinkInfo2,
         ]);
     }
 
@@ -167,7 +222,6 @@ class Message extends Base
         $message = model('Message');
         $messageLink = model('MessageLink');
         $id = request()->param('id');
-//        $state = false;
         Db::startTrans();
         try {
             $message->allowField(true)->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
