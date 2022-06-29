@@ -72,9 +72,9 @@
             <input type="hidden" name="url1" value="{$messagelinkInfo1->url|default=''}" >
             <div class="layui-upload-list">
                 {if condition="isset($messagelinkInfo1->url)"}
-                <img class="layui-upload-img" id="demo1" src="{$messagelinkInfo1->url|default=null}">
+                <img class="layui-upload-img" id="demo1" src="{$messagelinkInfo1->url|default=null}" />
                 {else/}
-                <img class="layui-upload-img" id="demo1" >
+                <img class="layui-upload-img" id="demo1" />
                 {/if}
                 <p id="demoText1"></p>
             </div>
@@ -146,6 +146,7 @@
             ,done: function(res){
                 if(res.code == 0) {
                     $("#demo1").attr('src', res.url);
+                    $("#demo1").show();
                     $("input[name='url1']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -169,6 +170,7 @@
             ,done: function(res){
                 if(res.code == 0) {
                     $("#demo2").attr('src', res.url);
+                    $("#demo2").show();
                     $("input[name='url2']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -195,8 +197,8 @@
         $(".delete").on('click', function(){
             var _this = $(this)
                 , _id = _this.attr('data-id');
-
-            $("#demo"+_id).attr('src', null);
+            $("#demo"+_id).removeAttr('src');
+            $("#demo"+_id).hide();
             $("input[name='url"+_id+"']").val(null);
 
         })
@@ -245,12 +247,12 @@
             "title": "{$info['title']}",
             "content": "{$info['content']}",
             "end_time": "{$info['end_time']|date='Y-m-d', ###}",
-            'link_type': "{$info['link_type']}",
+            'link_type': "{$info['link_type']|default=3}",
             "is_permanent": "{$info['is_permanent']}",
-            "url{$info['link_type']}": "{$info['url']}",
+            "url{$info['link_type']|default=3}": "{$info['url']|default=''}",
         })
 
-        switch ({$info['link_type']}){
+        switch ({$info['link_type']|default=3}){
             case 1:
                 $("#url1").show();$("#url2").hide();$("#url3").hide();$("#url4").hide();
                 break;
