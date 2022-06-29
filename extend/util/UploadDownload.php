@@ -63,6 +63,7 @@ class UploadDownload
         foreach ($match[1] as $value) {
             if(strpos($value, 'file.huidu.io') > 0) {
             } elseif(strpos($value, 'super.huidu123.com') > 0) {
+            } elseif(strpos($value, 'huidu-bucket.s3.ap-southeast-1.amazonaws.com') > 0) {
             }else {
                 $data = $this->download($value, './' . $YmdPath);
                 if($data['error'] == 0) {
