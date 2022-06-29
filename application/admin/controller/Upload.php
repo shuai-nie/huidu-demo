@@ -37,9 +37,14 @@ class Upload extends Controller
                 $filePath = ROOT_PATH . 'public/uploads/' . $getSaveName;
 
                 try {
+                    // Aws
+                    $url = $this->fileUpload($filePath);
+/*
+                    Aliyun
                     $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
                     $data = $ossClient->uploadFile($bucket, $object, $filePath);
                     $url = $aliyunConfig['accessDomain'] . $object;
+*/
                     return json([
                         'code' => 0,
                         'url' => $url,
@@ -86,15 +91,20 @@ class Upload extends Controller
                     $filePath = ROOT_PATH . 'public/uploads/' . $getSaveName;
 
                     try {
-                        $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
-                        $data = $ossClient->uploadFile($bucket, $object, $filePath);
+// Aws
+                        $url = $this->fileUpload($filePath);
+//                        // Alioss
+//                        $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
+//                        $data = $ossClient->uploadFile($bucket, $object, $filePath);
+//                        $url = $aliyunConfig['accessDomain'] . $object ;
+
                         return json([
                             'original'        => $getFilename,
                             'size'            => $info->getSize(),
                             'state'           => "SUCCESS",
                             'title'           => $getFilename,
                             'type'            => "." . $info->getExtension(),
-                            'url'             => $aliyunConfig['accessDomain'] . $object,
+                            'url'             => $url,
                             'imageActionName' => 'uploadimage',
                         ], 200);
                     } catch (OssException $e) {
@@ -209,14 +219,15 @@ class Upload extends Controller
 
     }
 
-    private function fileUpload($file)
+    private function fileUpload($source)
     {
         //设置超时
         set_time_limit(0);
-        $s3Key = "AKIAZC2SXKMXFQO6YQTR";
-        $s3Secret = "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";
-        $bucket = "huidu-bucket";
-        $ENDPOINT = "https://s3.ap-southeast-1.amazonaws.com/";
+        $aws = config('Aws');
+        $s3Key = $aws['AccessKeyId']; //"AKIAZC2SXKMXFQO6YQTR";
+        $s3Secret = $aws['SecretAccessKey']; //"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";
+        $bucket = $aws['Bucket']; //"huidu-bucket";
+        $ENDPOINT = $aws['Endpoint']; //"https://s3.ap-southeast-1.amazonaws.com/";
         $credentials = new Credentials($s3Key, $s3Secret);
         $s3Client = new S3Client([
             'region' => 'ap-southeast-1',
@@ -224,10 +235,11 @@ class Upload extends Controller
             'endpoint' => $ENDPOINT,
             'credentials' =>$credentials
         ]);
-        $source =fopen( ROOT_PATH . 'public/uploads/20220613/'.$file, 'rb');
+        // $source = fopen( ROOT_PATH . 'public/uploads/20220613/'.$file, 'rb');
+        $key = "huidu/images/" . date('Y-m-d') . '/' . date('YmdHis') . '.png';
         $uploader = new MultipartUploader($s3Client, $source, [
             'bucket' => $bucket,
-            'key' => "huidu/images/" . date('Y-m-d') . '/' . date('YmdHis') . '.png',
+            'key' => $key,
             "ContentType" => 'image/png',
             'before_initiate' => function (\Aws\Command $command) {
                 // $command is a CreateMultipartUpload operation
@@ -244,8 +256,13 @@ class Upload extends Controller
         ]);
 
         $result = $uploader->upload();
-	    var_dump($result);
-        exit();
-        return $data;
+
+        $publicUrl = $s3Client->getObjectUrl($bucket, $key);
+
+        /*或者为私人内容生成签名网址：
+        $validTime = '+10 minutes';
+        $signedUrl = $s3Client->getObjectUrl($bucket, $keyname, $validTime);*/
+
+        return $publicUrl;
     }
 }
