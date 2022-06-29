@@ -22,7 +22,7 @@
                         <input type="text" name="nickname" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
-
+                {if condition="$id eq 0"}
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width:70px;">套餐</label>
                     <div class="layui-input-inline" style="width:110px;">
@@ -34,14 +34,15 @@
                         </select>
                     </div>
                 </div>
+                {/if}
 
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width:80px;">注册端</label>
+                    <label class="layui-form-label" style="width:80px;">来源</label>
                     <div class="layui-input-inline" style="width:90px;">
                         <select name="isweb" lay-filter="isweb" lay-search="" >
                             <option value="">请选择</option>
-                            <option value="1">前端</option>
-                            <option value="2">后端</option>
+                            <option value="1">PC</option>
+                            <option value="2">后台</option>
                         </select>
                     </div>
                 </div>
@@ -125,9 +126,9 @@
                 }
                 return "-";
             }}
-            ,{field: 'isweb', title: '注册端', width:80,templet:function(d){
+            ,{field: 'isweb', title: '来源', width:80,templet:function(d){
                 switch (d.isweb*1){
-                    case 1: return '前端';
+                    case 1: return 'PC';
                     case 2: return '后台';
                     default: return '-';
                 }
@@ -135,7 +136,6 @@
             ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
                 return  d.username + '/' + d.nickname ;
             }}
-            ,{field: 'title', title: '套餐',width:120}
             , {field: 'mobile', title: '手机号', width: 125,templet:function(d){
                 if(d.mobile){
                     return d.mobile;
@@ -163,7 +163,7 @@
             }}
             ,{fixed: 'right',title:'操作',width:200, align:'center', toolbar: '#barDemo'}
             {/if}
-        ]);
+        ], "#think-table", 540);
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
