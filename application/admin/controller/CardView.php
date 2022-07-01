@@ -25,12 +25,17 @@ class CardView extends Controller
             $offset = ($page - 1) * $limit;
             $username = \request()->post('username');
             $nickname = \request()->post('nickname');
+            $title = \request()->post('title');
             if(!empty($username)) {
                 $map['B.username'] = ['like', "%{$username}%"];
             }
             if(!empty($nickname)) {
                 $map['B.nickname'] = ['like', "%{$nickname}%"];
             }
+            if(!empty($title)) {
+                $map['C.title'] = ['like', "%{$title}%"];
+            }
+
             $data = $CardView->alias('A')
                     ->join($User->getTable().' B', 'A.uid=B.id', 'left')
                     ->join($Resource->getTable().' C', 'A.resources_id=C.id', 'left')
