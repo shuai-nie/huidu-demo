@@ -47,6 +47,21 @@ class CardView extends Controller
                 ->join($Resource->getTable().' C', 'A.resources_id=C.id', 'left')
                 ->join($Card->getTable().' D', 'A.card_id=D.id', 'left')
                 ->where($map)->count();
+
+            foreach ($data as $k => $v) {
+                if(!empty($title)){
+                    $v['title'] = str_ireplace($title, '<font color="red">' . $title . '</font>', $v['title']);
+                }
+
+                if(!empty($username)){
+                    $v['username'] = str_ireplace($username, '<font color="red">' . $username . '</font>', $v['username']);
+                }
+
+                if(!empty($nickname)){
+                    $v['nickname'] = str_ireplace($nickname, '<font color="red">' . $nickname . '</font>', $v['nickname']);
+                }
+                $data[$k] =$v;
+            }
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         return view('',

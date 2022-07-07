@@ -99,7 +99,8 @@
                 }}
             ,{field: 'category_sort', title: '分类置顶排序',width:120}
             ,{fixed: 'right',title:'操作',width:270, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", "auth");
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
