@@ -161,9 +161,15 @@
                 }
                 return '-'
             }}
+            ,{field: 'online_time', title: '在线时间',width:170,sort:true ,align:'center',templet: function (d){
+                    if(d.online_time > 10000) {
+                        return "<div>" + layui.util.toDateString(d.online_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                    }
+                    return '-'
+                }}
             ,{fixed: 'right',title:'操作',width:200, align:'center', toolbar: '#barDemo'}
             {/if}
-        ], "#think-table", 540);
+        ], "#think-table", "auto");
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {

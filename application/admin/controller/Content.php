@@ -54,8 +54,6 @@ class Content extends Controller
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->field("A.*,B.name as category_name")
                 ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
-            // echo $this->model->getLastSql();exit();
-
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->where($map)->count();
