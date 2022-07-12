@@ -10,33 +10,26 @@
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">账号</label>
+                    <label class="layui-form-label">称呼</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" autocomplete="off" class="layui-input" >
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">昵称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="nickname" autocomplete="off" class="layui-input" >
+                        <input type="text" name="user_name" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
                 <div class="layui-inline">
                     <label class="layui-form-label">联系号码</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="number" autocomplete="off" class="layui-input" >
+                        <input type="text" name="contact_number" autocomplete="off" class="layui-input" >
                     </div>
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">优质人脉</label>
+                    <label class="layui-form-label">来源</label>
                     <div class="layui-input-inline">
-                        <select name="quality" >
+                        <select name="source" >
                             <option value="">请选择</option>
-                            <option value="0">否</option>
-                            <option value="1">是</option>
+                            <option value="0">PC</option>
+                            <option value="1">后台</option>
                         </select>
                     </div>
                 </div>
@@ -57,7 +50,7 @@
 </script>
 
 <script type="text/html" id="switchTpl">
-    <input type="checkbox" name="quality" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
+    <input type="checkbox" name="show" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.show == 1 ? 'checked' : '' }}>
 </script>
 
 <script>
@@ -66,37 +59,24 @@
             form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            ,{field: 'isweb', title: '端', width:80,templet:function(d){
-                    switch (d.isweb*1){
-                        case 1: return '前端';
-                        case 2: return '后台';
-                        default: return '-';
-                    }
-                }}
-            ,{field: 'name', title: '账号/昵称',width:180,templet:function (d) {
-                    return d.username + '/' +d.nickname ;
-                }}
-            ,{field: 'logo', title: 'logo',width:80, templet:function (d) {
-                    if(d.logo) {
-                        return '<img src="'+d.logo+'" height="30" width="30" />';
-                    }
-                    return '-';
-                }}
-            ,{field: 'logo_watermark', width:70,title: '水印', templet:function (d) {
-                    if(d.logo_watermark) {
-                        return '<img src="'+d.logo_watermark+'" height="30" width="30" />';
-                    }
-                    return '-';
-                }}
-            ,{field: 'position', title: '职位',width: 170}
-            ,{field: 'business_tag', title: '业务',width: 170}
-            ,{field: 'quality', title: '优质人脉',width: 100,templet: '#switchTpl', unresize: true}
-            ,{field: 'greet', title: '默认打招呼语'}
-            ,{field: 'number', title: '联系号码',width: 170}
-            ,{field: 'create_time', title: '创建时间',width: 170}
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            ,{field: 'source', title: '来源', width:80,templet:function(d){
+                switch (d.source * 1) {
+                    case 0: return 'pc';
+                    case 1: return '后台';
+                    default: return '-';
+                }
+            }}
+            , {field: 'user_name', title: '称呼', width: 180}
+            , {field: 'contact_type_name', title: '联系方式', width: 170}
+            , {field: 'contact_number', title: '联系号码', width: 170}
+            , {field: 'website', title: '网站', width: 170}
+            , {field: 'demand', title: '需求', width: 170}
+            , {field: 'ip', title: '优质人脉', width: 100}
+            ,{field: 'show', title: '展示(合作动态)',width:130,templet: '#switchTpl', unresize: true}
+            ,{field: 'update_time', title: '更新时间',width: 170}
             ,{fixed: 'right',title:'操作',width:120, align:'center',fixed: 'right', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", "auth");
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
@@ -111,7 +91,7 @@
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -122,7 +102,7 @@
         });
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}");
+                UI.openLayer("{:url('create')}", 750, 450, '#submit');
             }
         };
 

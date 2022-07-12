@@ -1,0 +1,104 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">称呼</label>
+        <div class="layui-input-block">
+            <input type="text" name="user_name" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系方式</label>
+        <div class="layui-input-block">
+            <select name="contact_type" lay-search="">
+                {volist name="type" id="vo" }
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系号码</label>
+        <div class="layui-input-block">
+            <input type="text" name="contact_number" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">网站</label>
+        <div class="layui-input-block">
+            <input type="text" name="website" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">需求</label>
+        <div class="layui-input-block">
+            <input type="text" name="demand" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否展示</label>
+        <div class="layui-input-block">
+            <input type="radio" name="show" value="1" title="展示" checked>
+            <input type="radio" name="show" value="0" title="隐藏" >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+//Demo
+layui.use(['form','upload', 'element'], function () {
+    var form = layui.form,
+        upload = layui.upload,
+        element = layui.element;
+
+    var upload_url = "{:url('admin/Upload/upload')}";
+    var upload_accept='images';
+    var upload_acceptMime='image/*';
+    var upload_size=3145728;
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#url").show();
+                $("#url img").attr('src', res.url);
+                $("input[name='url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+
+        }
+        ,error: function(){
+            //请求异常回调
+        },progress: function(n, elem, res, index) {
+            var percent = n + '%'
+            element.progress('demo', percent);
+        }
+    });
+
+
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.add(data.field, function (res) {
+        });
+    });
+
+
+});
+</script>

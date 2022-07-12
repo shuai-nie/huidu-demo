@@ -43,8 +43,12 @@ class Card extends Base
             $UserModel = model("User");
             $CardContact = model('CardContact');
             $quality = \request()->post('quality');
+            $isweb = \request()->post('isweb');
             if(is_numeric($quality)) {
                 $map['A.quality'] = $quality;
+            }
+            if(!empty($isweb)){
+                $map['A.isweb'] = $isweb;
             }
             $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
