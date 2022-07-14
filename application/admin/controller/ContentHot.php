@@ -55,18 +55,24 @@ class ContentHot extends Base
                 if($type0){
                     $v['type0'] = $type0['status'];
                     $v['sort0'] = $type0['sort'];
+                }else{
+                    $v['type0'] = 0;
                 }
 
                 $type1 = $this->model->where(['cid' => $v['id'], 'type' => 1])->find();
                 if($type1){
                     $v['type1'] = $type1['status'];
                     $v['sort1'] = $type1['sort'];
+                }else{
+                    $v['type1'] = 0;
                 }
 
                 $type2 = $this->model->where(['cid' => $v['id'],'type' => 2])->find();
                 if($type2){
                     $v['type2'] = $type2['status'];
                     $v['sort2'] = $type2['sort'];
+                } else{
+                    $v['type2'] = 0;
                 }
 
                 $data[$k] = $v;
