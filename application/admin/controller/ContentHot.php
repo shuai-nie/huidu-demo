@@ -90,7 +90,7 @@ class ContentHot extends Base
             $id = \request()->post('id');
             $name = \request()->post('name');
             $value = \request()->post('value');
-            $type = mb_substr($name, strlen($name)-1, count($name));
+            $type = mb_substr($name, strlen($name)-1, strlen($name));
             $count = $this->model->where(['cid' => $id, 'type'=>$type])->count();
             $name = mb_substr($name, 0, strlen($name)-1);
             if($count > 0) {

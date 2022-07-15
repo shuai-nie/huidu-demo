@@ -57,7 +57,7 @@
                     return '-';
                 }}
             ,{fixed: 'right',title:'操作', width:100, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], '#think-table', 'auth');
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {

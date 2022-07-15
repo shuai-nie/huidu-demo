@@ -153,29 +153,29 @@ class Order extends Base
     {
         $status = request()->post('status');
         $feedback = request()->post('feedback');
-        $packagePrice = model('PackagePrice');
+        $packagePrice = model('PackagePriceHistory');
         $resource = model('Resource');
-        $packagePriceInfo = $packagePrice->find($info['package_price_id']);
+        $packagePriceInfo = $packagePrice->where(['id'=>$info['package_price_id']])->find();
         $time = time();
         $endTime = 0;
         switch ($packagePriceInfo['type']){
             case 1:
-                $endTime = 86400*30;
+                $endTime = 86400 * 30;
                 break;
             case 2:
-                $endTime = 86400*90;
+                $endTime = 86400 * 90;
                 break;
             case 3:
-                $endTime = 86400*365;
+                $endTime = 86400 * 365;
                 break;
         }
 
-        $state = $resource->isUpdate(true)->allowField(true)->save([
+        $state = $resource->isUpdate(true)->save([
             'top_start_time' => $time,
             'top_end_time' => $endTime + $time,
         ], ['id' => $info['rid']]);
         $order = model('order');
-        $order->allowField(true)->isUpdate(true)->save([
+        $order->isUpdate(true)->save([
             'feedback' => $feedback,
             'status' => $status,
         ], ['id' => $info['id']]);
