@@ -1,14 +1,12 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
-
 
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
+            <input type="text" disabled placeholder="" autocomplete="off" class="layui-input" style="background-color:#eee;" >
         </div>
     </div>
 
@@ -43,42 +41,28 @@
 <script type="text/javascript" src="/static/ueditor1433/lang/zh-cn/zh-cn.js?v=1.1.0"></script>
 
 <script>
-    //Demo
-    layui.use(['form','upload','laydate'], function () {
-        var form = layui.form,
-            upload = layui.upload,
-            laydate = layui.laydate;
+layui.use(['form','upload','laydate'], function () {
+    var form = layui.form,
+        upload = layui.upload,
+        laydate = layui.laydate;
 
-        //监听提交
-        form.on('submit(submit)', function (data) {
-            Api.edit(data.field, function (res) {
-                if(res.code == 200) {
-                    layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
-                } else {
-                    layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
-                }
-            });
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.edit(data.field, function (res) {
+            if(res.code == 200) {
+                layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
+            } else {
+                layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
+            }
         });
-
-        form.verify({
-            // region:function () {
-            //     var checked = document.getElementById("region");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个合作区域";
-            //     }
-            // },
-            // subdivide : function(){
-            //     var checked = document.getElementById("subdivides");
-            //     if (checked.checked == false) {
-            //         return "请至少选择一个业务细分";
-            //     }
-            // }
-        })
-
-        form.val('first', {
-            "title" : "{$data['title']}",
-            "auth" : "{$data['auth']}",
-        })
-
     });
+
+    form.verify({})
+
+    form.val('first', {
+        "title" : "{$data['title']}",
+        "auth" : "{$data['auth']}",
+    })
+
+});
 </script>

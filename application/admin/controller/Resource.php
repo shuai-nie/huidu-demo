@@ -120,8 +120,8 @@ class Resource extends Base
         }
         $type = $DataDic->field('data_no,data_name')->where(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1])->select();
         return view('', [
-            'ty'         => $this->ty,
-            'type'       => $type,
+            'ty' => $this->ty,
+            'type' => $type,
             'meta_title' => $examine == 'examine' ? '资源审核' : '资源管理',
             'examine' => $examine,
         ]);

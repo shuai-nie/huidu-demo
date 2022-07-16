@@ -26,15 +26,15 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">标题</label>
+                    <label class="layui-form-label" style="width:60px;">标题</label>
                     <div class="layui-input-inline">
                         <input type="text" name="title" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">类型</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:60px;">类型</label>
+                    <div class="layui-input-inline" style="width:90px;">
                         <select name="ty" lay-filter="ty" lay-search="" >
                             <option value="">请选择</option>
                             {foreach name='ty' id='vy' key='k'}
@@ -45,8 +45,8 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">合作领域</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:90px">合作领域</label>
+                    <div class="layui-input-inline" style="width:110px;">
                         <select name="type" lay-filter="data_type_no" lay-search="" >
                             <option value="">请选择</option>
                             {volist name="type" id="vt"}
@@ -57,8 +57,8 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:60px;">状态</label>
+                    <div class="layui-input-inline" style="width:90px;">
                         <select name="auth" lay-filter="data_type_no" lay-search="" >
                             <option value="">请选择</option>
                             <option value="1">通过</option>
@@ -71,8 +71,8 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">是否滚动</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:90px;">是否滚动</label>
+                    <div class="layui-input-inline" style="width:80px;">
                         <select name="home_roll" lay-filter="data_type_no" lay-search="" >
                             <option value="">请选择</option>
                             <option value="0">否</option>
@@ -82,8 +82,8 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label">来源</label>
-                    <div class="layui-input-inline">
+                    <label class="layui-form-label" style="width:60px;">来源</label>
+                    <div class="layui-input-inline" style="width:80px;">
                         <select name="types" lay-filter="data_type_no" lay-search="" >
                             <option value="">请选择</option>
                             <option value="1">前台</option>
@@ -119,7 +119,6 @@ layui.use(['table','form','dropdown'], function(){
         dropdown = layui.dropdown;
 
     UI.getPageTable(table, "{:url('')}", [
-        // {field: 'id', title: 'ID', width:80, fixed: 'left'}
         {field: 'uid', title: '用户UID', width:80}
         ,{field: 'username', title: '用户账号', width:80}
         ,{field: 'title', title: '标题', width:120}
@@ -131,13 +130,13 @@ layui.use(['table','form','dropdown'], function(){
             }
             }}
         ,{field: 'ty', title: '类型',width:80,templet:function(d){
-                switch (d.ty*1) {
-                    {foreach name='ty' id='vy' key='k'}
-                    case {$k}: return '<span class="">{$vy}</span>';break;
-                    {/foreach}
-                    default:return '-';break;
-                }
-            }}
+            switch (d.ty*1) {
+                {foreach name='ty' id='vy' key='k'}
+                case {$k}: return '<span class="">{$vy}</span>';break;
+                {/foreach}
+                default:return '-';break;
+            }
+        }}
         ,{field: 'type', title: '合作领域',width:110}
         ,{field: 'region', title: '合作区域',width:110}
         ,{field: 'business_subdivide', title: '业务细分',width:140}
@@ -145,7 +144,7 @@ layui.use(['table','form','dropdown'], function(){
         ,{field: 'feedback', title: '反馈信息',width:140}
         {/if}
         {if condition="$examine neq 'examine'"}
-        ,{field: 'home_roll', title: '首页滚动',width:120,templet:'#home_roll'}
+        ,{field: 'home_roll', title: '首页滚动',width:90,templet:'#home_roll'}
         {/if}
         ,{field: 'auth', title: '状态',width:80,align:'center',templet:function (d) {
                 switch (d.auth*1){
@@ -205,21 +204,21 @@ layui.use(['table','form','dropdown'], function(){
         }else if(obj.event === 'card'){
             UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
         } else if(obj.event === 'more') {
+            {if condition="$examine neq 'examine'"}
+            var _data = [
+                {title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-warm layui-btn-xs ">\n' + '{{d.title}}\n' +'</button>'}
+                ,{title:'删除',id:'del',templet:'<button type="button" class="layui-btn layui-btn-danger layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+                ,{title:'审核',id:'examine',templet:'<button type="button" class="layui-btn layui-btn-blue layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+                ,{title:'名片',id:'card',templet:'<button type="button" class="layui-btn layui-btn-primary layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+            ];
+            {else/}
+                var _data = [{title:'刷新',id:'flush',templet:'<button type="button" class="layui-btn layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}];
+            {/if}
             dropdown.render({
-                elem:this
-                ,show:true
-                ,data:[
-                    {title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-warm layui-btn-xs ">\n' +
-                            '  {{d.title}}\n' +
-                            '</button>'}
-                    ,{title:'删除',id:'del',templet:'<button type="button" class="layui-btn layui-btn-danger layui-btn-xs ">\n' +
-                            '  {{d.title}}\n' +
-                            '</button>'}
-                    {if condition="$examine neq 'examine'"}
-                    ,{title:'刷新',id:'flush'}
-                    {/if}
-                    ,{title:'名片',id:'card'}
-                ], click:function(menudata){
+                elem: this
+                , show: true
+                , data: _data
+                , click: function (menudata) {
                     if(menudata.id === 'del'){
                         UI.delete(data['id'], function(res){
                             if(res.code==200){
@@ -240,10 +239,12 @@ layui.use(['table','form','dropdown'], function(){
                         }, 'json');
                     }else if(menudata.id === 'card'){
                         UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
+                    }else if(menudata.id === 'examine'){
+                        UI.openLayer("{:url('examine')}?id=" + data['id'], 700, 330);
                     }
-                },
-                align:'right'
-                ,astyle:'box-shadow:1px 1px 10px rgb(0 0 0 12%);'
+                }
+                , align: 'right'
+                , astyle: 'box-shadow:1px 1px 10px rgb(0 0 0 12%);'
             });
         }
     });
