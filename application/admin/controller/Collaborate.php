@@ -6,7 +6,7 @@ class Collaborate extends Base
 
     public function _initialize()
     {
-        $this->assign('meta_title', '联系提交信息');
+        $this->assign('meta_title', '营销页信息收集');
         parent::_initialize();
     }
 
