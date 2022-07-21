@@ -8,7 +8,7 @@
 
 <script id="barDemo" type="text/html">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
 </script>
 
 <script>
@@ -32,7 +32,7 @@
             var msg = obj.msg;
             //修改
             if (obj.event === "edit") {
-                UI.openLayer("{:url('edit')}?id=" + data['id']);
+                UI.openLayer("{:url('/admin/config/edit')}?id=" + data['id']);
             }
             //删除
             if (obj.event === 'del') {

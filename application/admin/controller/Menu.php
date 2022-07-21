@@ -22,7 +22,7 @@ class Menu extends Base
     {
         if (Request()->isPost()) {
             $map   = ['pid' => 0];
-            $Menu  = $this->model->where($map)->select();
+            $Menu  = $this->model->where($map)->order("sort desc")->select();
             $count = $this->model->where($map)->count();
             $data  = [
                 'code' => 0,
@@ -40,7 +40,7 @@ class Menu extends Base
     public function read()
     {
         $map   = [];
-        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort,show')->select();
+        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort,show')->order("sort desc")->select();
         return json(['code'=>0,'count'=>24,'data'=>$Menu], 200);
 
     }
@@ -96,7 +96,7 @@ class Menu extends Base
             'step'  => 4,
         ]);
 
-        $data = $this->model->where([])->field('id,pid,title')->select();
+        $data = $this->model->where([])->field('id,pid,title')->order("sort desc")->select();
         if($data) {
             $data = collection($data)->toArray();
         }
