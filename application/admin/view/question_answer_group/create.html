@@ -1,0 +1,112 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+
+
+    <div id="list">
+        <div class="list">
+            <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">Q1</label>
+                    <div class="layui-input-block" style="width:600px;" >
+                        <input type="text" name="" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <span class="layui-btn layui-btn-normal layui-btn-sm" id="add">添加</span>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Q1</label>
+                <div class="layui-input-block" style="width:600px;" >
+                    <input type="text" name="" class="layui-input" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#image_url").show();
+                    $("#image_url img").attr('src', res.url);
+                    $("input[name='image_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+        var _keyCount = 2;
+
+
+        $("#add").on("click", function(){
+            var _html = "<div class=\"list\">\n" +
+                "    <fieldset class=\"layui-elem-field layui-field-title\" style=\"\"></fieldset>\n" +
+                "    <div class=\"layui-form-item\">\n" +
+                "        <div class=\"layui-inline\">\n" +
+                "            <label class=\"layui-form-label\">Q" + _keyCount + "</label>\n" +
+                "            <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
+                "                <input type=\"text\" name=\"\" class=\"layui-input\" />\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "        <div class=\"layui-inline\">\n" +
+                "            <span class=\"layui-btn layui-btn-danger layui-btn-sm DeleteList\">删除</span>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "\n" +
+                "    <div class=\"layui-form-item\">\n" +
+                "        <label class=\"layui-form-label\">Q" + _keyCount + "</label>\n" +
+                "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
+                "            <input type=\"text\" name=\"\" class=\"layui-input\" />\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "    </div>";
+            _keyCount++;
+            $("#list").append(_html)
+            return false;
+        })
+
+        $("form").on("click", ".DeleteList", function(){
+            var _this = $(this);
+            _this.parent().parent().parent('.list').remove();
+        })
+
+
+    });
+</script>
