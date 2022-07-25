@@ -16,20 +16,15 @@ layui.use('table', function(){
     var table = layui.table;
     UI.getPageTable(table, "{:url('')}", [
         {field: 'key', title: '', width:80, fixed: 'left'}
-        ,{field: 'image_url', title: '支付二维码', width:100,templet:function(d){
-                if(d.image_url){
-                    return "<img src='"+d.image_url+"' height='30' width='40'  >";
-                }
-                return '-';
-            }}
-        ,{field: 'secret_key', title: '地址', width:300,}
+        ,{field: 'title', title: '标题', width:300,}
+        ,{field: 'cou', title: '数量', width:70,}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
     ]);
-    
+
     table.on('tool(think-table)', function(obj){
         var data=obj.data;
         if(obj.event==="edit"){
-            UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
+            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 600, '#submit');
         }else if(obj.event==='del'){
             UI.delete(data['id'], function(res){
                 if(res.code==200){
