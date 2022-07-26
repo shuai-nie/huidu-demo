@@ -1,0 +1,129 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">专题类型</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="type" value="0" title="专题" checked />
+            <input type="radio" name="type" value="1" title="专区" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">SEO URL</label>
+        <div class="layui-input-block" >
+            <input type="text" name="seo_url" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">SEO标题</label>
+        <div class="layui-input-block" >
+            <input type="text" name="seo_title" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">SEO关键词</label>
+        <div class="layui-input-block" >
+            <input type="text" name="seo_keywords" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">SEO描述</label>
+        <div class="layui-input-block" >
+            <input type="text" name="seo_description" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">首页展示</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="home_show" value="0" title="否" checked />
+            <input type="radio" name="home_show" value="1" title="是" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章来源</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="content_source_type" value="0" title="分类" checked />
+            <input type="radio" name="content_source_type" value="1" title="单独分配" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-inline" >
+            <input type="text" name="sort" class="layui-input" />
+        </div>
+    </div>
+
+    <div id="image_url" style="width: 200px;height: 100px;border: 1px solid red;position: absolute;left: 500px;top: 300px;">
+        <img src="https://fakeimg.pl/250x100" width="200" height="100" />
+    </div>
+
+    <div class="layui-form-item">
+        <input type="hidden" name="img_url" >
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="margin:0;padding-left:0;padding-right:0;">跳转链接</label>
+        <div class="layui-input-block">
+            <input type="text" name="link_url" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+layui.use(['form','upload'], function () {
+    var form = layui.form,
+        upload = layui.upload;
+
+    var upload_url = "{:url('admin/Upload/upload')}";
+    var upload_accept = 'images';
+    var upload_acceptMime = 'image/*';
+    var upload_size = 3145728;
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#image_url img").attr('src', res.url);
+                $("input[name='img_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+
+        }
+        ,error: function(){
+            //请求异常回调
+        }
+    });
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.add(data.field, function (res) {
+            console.log(res);
+        });
+    });
+
+});
+</script>
