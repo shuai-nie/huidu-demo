@@ -34,7 +34,7 @@
             {field: 'key', title: '', width:80, fixed: 'left'}
             ,{field: 'title', title: '标题', width:300}
             ,{field: 'img_url', title: '图片', width:110,templet: '#img_url'}
-            ,{field: 'span', title: '按钮', width:500,templet: '#span'}
+            ,{field: 'span', title: '', width:500,templet: '#span'}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
@@ -63,10 +63,11 @@
                     ,data: [{
                         title: '编辑'
                         ,id: 'edit'
+                        ,templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '
                     },{
                         title: '删除'
                         ,id: 'del'
-                        ,templet: '<span class="layui-btn layui-btn-xs">{{d.title}}</span> '
+                        ,templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '
                         //<span class="layui-badge-dot"></span>
                     }]
                     ,click: function(menudata){
