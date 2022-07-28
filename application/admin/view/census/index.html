@@ -1,0 +1,86 @@
+{include file="moban/bone_header"}
+<script src="/style/js/echarts.min.js?v=1.1"></script>
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间区间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stime" id="stime" value="{$dataDay8}" autocomplete="off" class="layui-input" >
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="etime" id="etime" value="{$dataDay1}" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<div id="main" style="width: auto;height:600px;margin-top:20px;"></div>
+
+<script>
+layui.use(['table','form','laydate'], function(){
+    var table = layui.table
+        ,form = layui.form
+        ,$ = layui.jquery
+        laydate = layui.laydate;
+    laydate.render({elem: '#stime'});
+    laydate.render({elem: '#etime'});
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    myChartBrr($("input[name='stime']").val(), $("input[name='etime']").val());
+
+    form.on('submit(data-search-btn)', function(data){
+        myChartBrr(data.field.stime, data.field.etime);
+        return false;
+    })
+
+    function myChartBrr(stime, etime){
+        $.ajax({
+            url: "{:url('index')}"
+            , cache : false
+            , type: "POST"
+            , dataType: "json"
+            , data: {
+                stime: stime,
+                etime: etime,
+            }
+            , success: function(obj){
+                var option = {
+                    title: {text: '统计图'},
+                    tooltip: {trigger: 'axis'},
+                    legend: {
+                        data:['用户访问量']
+                    },
+                    grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
+                    toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
+                    xAxis: {type: 'category',boundaryGap: false,
+                        data: obj.xAxisData
+                    },
+                    yAxis: {type: 'value'},
+                    series: [{
+                        name: '用户访问量', type: 'line',
+                        data: obj.seriesUserData
+                    }]
+                };
+                myChart.setOption(option);
+            }
+        })
+    }
+
+
+
+
+
+});
+</script>
+{include file="moban/bone_footer"}
