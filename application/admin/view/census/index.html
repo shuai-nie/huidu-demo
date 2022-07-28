@@ -59,7 +59,7 @@ layui.use(['table','form','laydate'], function(){
                     title: {text: '统计图'},
                     tooltip: {trigger: 'axis'},
                     legend: {
-                        data:['用户访问量']
+                        data:['网站在线人数']
                     },
                     grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
                     toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
@@ -68,7 +68,7 @@ layui.use(['table','form','laydate'], function(){
                     },
                     yAxis: {type: 'value'},
                     series: [{
-                        name: '用户访问量', type: 'line',
+                        name: '网站在线人数', type: 'line',
                         data: obj.seriesUserData
                     }]
                 };
