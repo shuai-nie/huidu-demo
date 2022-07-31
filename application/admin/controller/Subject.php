@@ -109,12 +109,33 @@ class Subject extends Base
     public function plate()
     {
         $plate = model('plate');
+
+        if(request()->isPost()){
+            $_post = request()->post();
+            $id = request()->post('id', 0);
+            if($id > 0){
+                $state = $plate->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            }else{
+                $state = $plate->allowField(true)->data($_post)->save();
+            }
+
+            if($state !== false){
+                return success_json('提交成功');
+            }
+            return error_json("提交失败");
+        }
         $sid = request()->param('sid');
         $count = $plate->where(['subject_id'=>$sid])->count();
         if($count > 0){
-            return view('/plate/edit');
+            $info = $plate->where(['subject_id'=>$sid])->find();
+            return view('/plate/edit', [
+                'sid' => $sid,
+                'info' => $info,
+            ]);
         }
-        return view('/plate/create');
+        return view('/plate/create', [
+            'sid' => $sid
+        ]);
     }
 
     public function banner()
@@ -125,7 +146,9 @@ class Subject extends Base
         if($count > 0){
             return view('/subject_banner/edit');
         }
-        return view('/subject_banner/create');
+        return view('/subject_banner/create', [
+            'sid' => $sid,
+        ]);
     }
 
     public function zixun()

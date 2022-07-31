@@ -2,25 +2,27 @@
 {include file="moban/js"}
 
 <form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+    <input type="hidden" name="subject_id" value="{$sid}" >
 
     <div class="layui-form-item">
         <label class="layui-form-label">板块类型</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="radio" name="type" value="0" title="专题业务动态" checked />
+            <input type="radio" name="type" value="1" title="专区自定义模版" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">图标标题</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="text" name="icon_title" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">图标地址</label>
         <div class="layui-input-block" >
-            <input type="hidden" name="img_url" >
+            <input type="hidden" name="icon_url" >
             <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
         </div>
     </div>
@@ -28,30 +30,29 @@
     <div class="layui-form-item">
         <label class="layui-form-label">板块标题</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="text" name="plate_title" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">板块副标题</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="text" name="plate_subtitle" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">查看更多</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="text" name="more_link_url" class="layui-input" />
             <div class="layui-form-mid layui-word-aux">查看更多链接地址</div>
         </div>
-
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">顾问图片</label>
         <div class="layui-input-block" >
-            <input type="hidden" name="img_url" >
+            <input type="hidden" name="counselor_img_url" >
             <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
         </div>
     </div>
@@ -59,7 +60,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">顾问链接</label>
         <div class="layui-input-block" >
-            <input type="text" name="group_title" class="layui-input" />
+            <input type="text" name="counselor_link" class="layui-input" />
         </div>
     </div>
 

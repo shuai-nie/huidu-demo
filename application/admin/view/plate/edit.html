@@ -3,86 +3,67 @@
 
 <form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
 
+    <input type="hidden" name="subject_id" value="{$sid}" >
+
     <div class="layui-form-item">
-        <label class="layui-form-label">专题分组名</label>
-        <div class="layui-input-inline" >
-            <input type="text" name="group_title" class="layui-input" value="{$info['title']}" />
+        <label class="layui-form-label">板块类型</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="type" value="0" title="专题业务动态" checked />
+            <input type="radio" name="type" value="1" title="专区自定义模版" />
         </div>
     </div>
 
-    {if condition="empty($data)"}
-        <div id="list">
-            <div class="list">
-                <input type="hidden" name="qid[1]" value="0" >
-                <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">问题1</label>
-                        <div class="layui-input-block" style="width:600px;" >
-                            <input type="text" name="question[1]" class="layui-input" />
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add">添加</span>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">答案1</label>
-                    <div class="layui-input-block" style="width:600px;" >
-                        <input type="text" name="answer[1]" class="layui-input" />
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-inline" >
-                        <input type="text" name="sort[1]" class="layui-input" />
-                    </div>
-                </div>
-            </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图标标题</label>
+        <div class="layui-input-block" >
+            <input type="text" name="icon_title" class="layui-input" />
         </div>
-        {else/}
-        {volist name="data" id="vo" key="k"}
-            <div id="list">
-                <div class="list">
-                    <input type="hidden" name="qid[{$k}]" value="{$vo['id']}" >
-                    <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">问题1</label>
-                            <div class="layui-input-block" style="width:600px;" >
-                                <input type="text" name="question[{$k}]" class="layui-input" value="{$vo['question']}" />
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            {if condition="$k eq 1"}
-                            <span class="layui-btn layui-btn-normal layui-btn-sm" id="add">添加</span>
-                                {else/}
-                                <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
-                            {/if}
-                        </div>
-                    </div>
+    </div>
 
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">答案1</label>
-                        <div class="layui-input-block" style="width:600px;" >
-                            <input type="text" name="answer[{$k}]" class="layui-input" value="{$vo['answer']}" />
-                        </div>
-                    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图标地址</label>
+        <div class="layui-input-block" >
+            <input type="hidden" name="icon_url" >
+            <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
+        </div>
+    </div>
 
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">排序</label>
-                        <div class="layui-input-inline" >
-                            <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {/volist}
-    {/if}
+    <div class="layui-form-item">
+        <label class="layui-form-label">板块标题</label>
+        <div class="layui-input-block" >
+            <input type="text" name="plate_title" class="layui-input" />
+        </div>
+    </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">板块副标题</label>
+        <div class="layui-input-block" >
+            <input type="text" name="plate_subtitle" class="layui-input" />
+        </div>
+    </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">查看更多</label>
+        <div class="layui-input-block" >
+            <input type="text" name="more_link_url" class="layui-input" value="{$info['more_link_url']}" />
+            <div class="layui-form-mid layui-word-aux">查看更多链接地址</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顾问图片</label>
+        <div class="layui-input-block" >
+            <input type="hidden" name="counselor_img_url" >
+            <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">顾问链接</label>
+        <div class="layui-input-block" >
+            <input type="text" name="counselor_link" class="layui-input" value="{$info['counselor_link']}" />
+        </div>
+    </div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
@@ -92,84 +73,46 @@
 </form>
 
 <script>
-    //Demo
-    layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
+//Demo
+layui.use(['form','upload'], function () {
+    var form = layui.form,
+        upload = layui.upload;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept='images';
-        var upload_acceptMime='image/*';
-        var upload_size=3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url").show();
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='image_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
+    var upload_url = "{:url('admin/Upload/upload')}";
+    var upload_accept = 'images';
+    var upload_acceptMime = 'image/*';
+    var upload_size = 3145728;
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#image_url").show();
+                $("#image_url img").attr('src', res.url);
+                $("input[name='image_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
             }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
 
-        //监听提交
-        form.on('submit(submit)', function (data) {
-            Api.add(data.field, function (res) {
-                console.log(res);
-            });
-        });
-        var _keyCount = "{$data|count}"*1;
-
-
-        $("#add").on("click", function(){
-            var _html = "<div class=\"list\">\n" +
-                "<input type=\"hidden\" name=\"qid[" + _keyCount + "]\" value=\"0\" >"+
-                "    <fieldset class=\"layui-elem-field layui-field-title\" style=\"\"></fieldset>\n" +
-                "    <div class=\"layui-form-item\">\n" +
-                "        <div class=\"layui-inline\">\n" +
-                "            <label class=\"layui-form-label\">问题" + _keyCount + "</label>\n" +
-                "            <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "                <input type=\"text\" name=\"question["+_keyCount+"]\" class=\"layui-input\" />\n" +
-                "            </div>\n" +
-                "        </div>\n" +
-                "        <div class=\"layui-inline\">\n" +
-                "            <span class=\"layui-btn layui-btn-danger layui-btn-sm DeleteList\">删除</span>\n" +
-                "        </div>\n" +
-                "    </div>\n" +
-                "\n" +
-                "    <div class=\"layui-form-item\">\n" +
-                "        <label class=\"layui-form-label\">答案" + _keyCount + "</label>\n" +
-                "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" class=\"layui-input\" />\n" +
-                "        </div>\n" +
-                "    </div>\n" +
-                "    <div class=\"layui-form-item\">\n" +
-                "        <label class=\"layui-form-label\">排序" + _keyCount + "</label>\n" +
-                "        <div class=\"layui-input-inline\" >\n" +
-                "            <input type=\"text\" name=\"sort["+_keyCount+"]\" class=\"layui-input\" />\n" +
-                "        </div>\n" +
-                "    </div>\n" +
-                "    </div>";
-            _keyCount++;
-            $("#list").append(_html)
-            return false;
-        })
-
-        $("form").on("click", ".DeleteList", function(){
-            var _this = $(this);
-            _this.parent().parent().parent('.list').remove();
-        })
-
-
+        }
+        ,error: function(){
+            //请求异常回调
+        }
     });
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.edit(data.field, function (res) {
+            console.log(res);
+        });
+    });
+
+
+
+
+
+});
 </script>
