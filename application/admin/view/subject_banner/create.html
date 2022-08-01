@@ -2,11 +2,12 @@
 {include file="moban/js"}
 
 <form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+    <input type="hidden" name="subject_id" value="{$sid}" />
 
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="专题页入口" />
+            <input type="radio" name="type" value="0" title="专题页入口" checked />
             <input type="radio" name="type" value="1" title="首页入口" />
             <input type="radio" name="type" value="2" title="内页" />
         </div>

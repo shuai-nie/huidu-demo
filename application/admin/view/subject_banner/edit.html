@@ -6,9 +6,10 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="专题页入口" />
-            <input type="radio" name="type" value="1" title="首页入口" />
-            <input type="radio" name="type" value="2" title="内页" />
+            {volist name='type' id='vo'}
+            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}"  {if condition="$vo['id'] eq $info['type']"}checked{/if} />
+            {/volist}
+
         </div>
     </div>
 
@@ -24,14 +25,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">图片描述</label>
         <div class="layui-input-block" >
-            <input type="text" name="alt" class="layui-input" />
+            <input type="text" name="alt" class="layui-input" value="{$info['alt']}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">链接</label>
         <div class="layui-input-block" >
-            <input type="text" name="link_url" class="layui-input" />
+            <input type="text" name="link_url" class="layui-input" value="{$info['link_url']}" />
         </div>
     </div>
 

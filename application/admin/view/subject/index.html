@@ -51,7 +51,18 @@
             }else if(obj.event==='plate'){
                 UI.openLayer("{:url('plate')}?sid="+data['id'], 850, 730, '#submit');
             }else if(obj.event==='banner'){
-                UI.openLayer("{:url('banner')}?sid="+data['id'], 850, 730, '#submit');
+                //UI.openLayer("{:url('banner')}?sid="+data['id'], 1150, 650, '#submit');
+                layer.open({
+                    type: 2,
+                    anim: 2,
+                    area: ['1150px', '650px'],
+                    btn: ['关闭'],
+                    yes: function (index, layero) {
+                        layer.close(index);
+                    },
+                    content: "{:url('banner')}?sid="+data['id']
+                    ,end: function () {}
+                });
             }else if(obj.event==='zixun'){
                 UI.openLayer("{:url('zixun')}?sid="+data['id'], 850, 730, '#submit');
             }else if(obj.event==='question'){

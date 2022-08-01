@@ -142,13 +142,74 @@ class Subject extends Base
     {
         $subjectBanner = model('subjectBanner');
         $sid = request()->param('sid');
-        $count = $subjectBanner->where(['subject_id'=>$sid])->count();
-        if($count > 0){
-            return view('/subject_banner/edit');
+        if(request()->isPost()){
+            $page = request()->post('page', 1);
+            $limit = request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $map = ['status' => 1, 'subject_id' => $sid];
+            $data = $subjectBanner->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $count = $subjectBanner->where($map)->count();
+            foreach ($data as $k => $v) {
+                $v['key'] = $k+ ($page-1)*$limit+1;
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+        return view('/subject_banner/index', [
+            'sid' => $sid,
+            'type' => $subjectBanner->type
+        ]);
+    }
+
+    public function create_banner()
+    {
+        $subjectBanner = model('subjectBanner');
+        $sid = request()->param('sid');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectBanner->data($_post)->save();
+
+            if($state !== false){
+                return success_json('提交成功');
+            }
+            return error_json("提交失败");
         }
         return view('/subject_banner/create', [
             'sid' => $sid,
+            'type' => $subjectBanner->type
         ]);
+    }
+
+    public function edit_banner()
+    {
+        $subjectBanner = model('subjectBanner');
+        $id = request()->param('id');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectBanner->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
+        }
+        $info = $subjectBanner->where(['id'=>$id])->find();
+        return view('/subject_banner/edit', [
+            'info' => $info,
+            'type' => $subjectBanner->type
+        ]);
+    }
+
+    public function del_banner()
+    {
+        $subjectBanner = model('subjectBanner');
+        if(request()->isPost()){
+            $id = request()->param('id');
+            $state = $subjectBanner->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
+            if($state !== false) {
+                return success_json("删除成功");
+            }
+            return error_json("删除失败");
+        }
     }
 
     public function zixun()
@@ -165,12 +226,16 @@ class Subject extends Base
     public function question()
     {
         $subjectContent = model('subjectContent');
+        $questionAnswerGroup = model('questionAnswerGroup');
         $sid = request()->param('sid');
-        $count = $subjectContent->where(['subject_id'=>$sid])->count();
+        $count = $subjectContent->where(['subject_id'=>$sid,'status'=>2])->count();
         if($count > 0){
-            return view('/subject_question_answer/edit');
+            return view('/subject_question_answer/edit', []);
         }
-        return view('/subject_question_answer/create');
+        $groupAll = $questionAnswerGroup->where(['status'=>1])->field('id,title')->select();
+        return view('/subject_question_answer/create', [
+            'groupAll' => $groupAll
+        ]);
     }
 
 }

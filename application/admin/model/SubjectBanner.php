@@ -11,6 +11,11 @@ class SubjectBanner extends Base
     protected $updateTime = 'update_time';
     protected $insert = ['status' => 1, 'create_id', 'update_id'];
     protected $update = ['update_id'];
+    public $type  = [
+        0 => ['id'=>0, 'title'=>'专题入口'],
+        1 => ['id'=>1, 'title'=>'首页入口'],
+        2 => ['id'=>2, 'title'=>'内页'],
+    ];
 
     protected function setCreateIdAttr()
     {
