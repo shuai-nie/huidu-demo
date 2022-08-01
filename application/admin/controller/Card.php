@@ -103,6 +103,7 @@ class Card extends Base
             foreach ($_post['contact'] as $key => $val) {
                 if(!empty($val) && !empty($_post['tel'][$key])){
                 $map = array(
+                    'status' => 1,
                     'contact_type' => $val,
                     'contact_number' => $_post['tel'][$key]
                 );
