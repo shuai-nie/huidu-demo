@@ -98,6 +98,26 @@ class Card extends Base
             $userInfo = model('user_info');
             $package = model('package');
             $userRecharge = model('userRecharge');
+            $cardState = false;
+            $numberNumber = "";
+            foreach ($_post['contact'] as $key => $val) {
+                if(!empty($val) && !empty($_post['tel'][$key])){
+                $map = array(
+                    'contact_type' => $val,
+                    'contact_number' => $_post['tel'][$key]
+                );
+                    $numberNumber = $_post['tel'][$key];
+                    $couCard = $cardContact->where($map)->count();
+                    if($couCard > 0){
+                        $cardState = true;
+                        continue;
+                    }
+                }
+            }
+            if($cardState){
+                return error_json('联系方式有相同的，请修改['.$numberNumber."]");
+            }
+
             Db::startTrans();
             $time = time();
             $head_url = !isset($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
