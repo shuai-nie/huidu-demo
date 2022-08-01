@@ -6,7 +6,7 @@
     <div class="layui-form-item">
         <div class="layui-input-block" >
             {volist name='groupAll' id='vo'}
-            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" />
+            <input type="radio" name="question_answer_group_id" lay-filter="question_answer_group_id" value="{$vo['id']}" title="{$vo['title']}" />
             {/volist}
         </div>
     </div>
@@ -76,6 +76,14 @@
                 console.log(res);
             });
         });
+
+        form.on("radio(question_answer_group_id)", function(data){
+            var _val = data.value
+            $.post("{:url('answer_list')}?gid="+_val, {}, function (objPost) {
+
+            }, 'json');
+
+        })
 
     });
 </script>

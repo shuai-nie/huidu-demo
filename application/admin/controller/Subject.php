@@ -238,4 +238,20 @@ class Subject extends Base
         ]);
     }
 
+    public function answer_list()
+    {
+        if(request()->isPost()){
+            $gid = request()->param('gid');
+            $questionAnswer = model('questionAnswer');
+            $data = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->field('question,answer,sort')->order('sort desc')->select();
+
+            return json([
+                'code' => 0,
+                'data' => $data,
+                'gid' => $gid,
+            ]);
+        }
+
+    }
+
 }
