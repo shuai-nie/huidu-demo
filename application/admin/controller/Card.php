@@ -101,7 +101,7 @@ class Card extends Base
             $cardState = false;
             $numberNumber = "";
             foreach ($_post['contact'] as $key => $val) {
-                if(!empty($val) && !empty($_post['tel'][$key])){
+                if(is_numeric($val) && !empty($_post['tel'][$key])){
                 $map = array(
                     'status' => 1,
                     'contact_type' => $val,
