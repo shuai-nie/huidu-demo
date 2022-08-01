@@ -244,11 +244,13 @@ class Subject extends Base
             $gid = request()->param('gid');
             $questionAnswer = model('questionAnswer');
             $data = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->field('question,answer,sort')->order('sort desc')->select();
+            $count = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->count();
 
             return json([
                 'code' => 0,
                 'data' => $data,
                 'gid' => $gid,
+                'count' => $count
             ]);
         }
 
