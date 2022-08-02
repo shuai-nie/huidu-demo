@@ -235,6 +235,7 @@ class Subject extends Base
             $arrAll = [];
             $updateAll = [];
             $updateIdAll = [];
+            if(isset($_post['question'])){
             foreach ($_post['question'] as $key => $value) {
                 if($_post['id'][$key] > 0) {
                     array_push($updateAll, array(
@@ -258,6 +259,9 @@ class Subject extends Base
                     ));
                 }
             }
+            }else{
+                $updateIdAll = [0];
+            }
 
             $state = false;
             Db::startTrans();
@@ -271,9 +275,9 @@ class Subject extends Base
                 }
 
                 if(!empty($updateIdAll)){
-                    $subjectQuestionAnswer->isUpdate(true)->save(['status'=>0], ['id'=>['not in', $updateIdAll]]);
-                }
+                    $subjectQuestionAnswer->isUpdate(true)->save(['status'=>0], ['id'=>['not in', $updateIdAll],'subject_id'=>$sid]);
 
+                }
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
