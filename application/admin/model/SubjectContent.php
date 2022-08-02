@@ -22,4 +22,9 @@ class SubjectContent extends Base
         return getLoginUserId();
     }
 
+    public $type = [
+        ['id'=>0, 'title'=>'文章属性'],
+        ['id'=>1, 'title'=>'文章ID'],
+    ];
+
 }

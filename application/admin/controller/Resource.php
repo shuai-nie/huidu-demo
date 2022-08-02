@@ -819,7 +819,7 @@ class Resource extends Base
         $data = model('Card')->alias('A')
             ->join($UserModel->getTable().' B', 'A.uid=B.id')
             ->field('A.*,B.username,B.nickname')
-            ->where(['A.uid'=>$uid])->find();
+            ->where(['A.uid'=>$uid,'status'=>1])->find();
         if($data){
             $data['business_tag'] = explode('|', $data['business_tag']);
             $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();

@@ -476,4 +476,46 @@ class Subject extends Base
         }
     }
 
+    public function subject_content()
+    {
+        $sid = request()->param('sid');
+        $subject = model('subject');
+        $subjectContent = model('subjectContent');
+        if(request()->isPost()){
+            $page = request()->post('page', 1);
+            $limit = request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $map = ['A.status' => 1];
+            $data = $subject->alias('A')->where($map)->order('A.id desc')->limit($offset, $limit)->select();
+            $count = $subject->alias('A')->where($map)->count();
+            foreach ($data as $k => $v) {
+                $v['key'] = $k+ ($page-1)*$limit+1;
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+    // 文章
+    public function content()
+    {
+        $sid = request()->param('sid');
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+    // 内容
+    public function article()
+    {
+        $sid = request()->param('sid');
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+
 }
