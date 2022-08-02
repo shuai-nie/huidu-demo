@@ -73,9 +73,9 @@
                     }else{
                         var _html = "";
                         $.each(objPost.data, function(i, v){
-                            _html += "<div><div class=\"layui-form-item question group-" + _val + "\">\n" +
-                                " <input type='hidden' name='question_answer_group_id["+countList+"]' value='0'>  " +
-                                " <input type='hidden' name='question_answer["+countList+"]' value='0'>  " +
+                            _html += "<div class='question'><div class=\"layui-form-item  group-" + _val + "\">\n" +
+                                " <input type='hidden' name='question_answer_group_id[" + countList + "]' value='" + v.question_answer_template_id + "'>  " +
+                                " <input type='hidden' name='question_answer[" + countList + "]' value='" + v.id + "'>  " +
                                 " <input type='hidden' name='id[" + countList + "]' value='0' >  " +
                                 "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
                                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
@@ -111,6 +111,7 @@
             var _html = "<div><div class=\"layui-form-item\">\n" +
                 " <input type='hidden' name='question_answer_group_id["+countList+"]' value='0'>  " +
                 " <input type='hidden' name='question_answer["+countList+"]' value='0'>  " +
+                " <input type='hidden' name='id[" + countList + "]' value='0' >  " +
                 "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
                 "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" />\n" +

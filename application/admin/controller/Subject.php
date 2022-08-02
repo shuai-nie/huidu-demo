@@ -246,6 +246,7 @@ class Subject extends Base
                         'question' => $_post['question'][$key],
                         'answer' => $_post['answer'][$key],
                         'sort' => $_post['sort'][$key],
+                        'status' => 1,
                     ));
                     array_push($updateIdAll, $_post['id'][$key]);
                 } else {
@@ -259,25 +260,21 @@ class Subject extends Base
                     ));
                 }
             }
-            }else{
-                $updateIdAll = [0];
             }
 
             $state = false;
             Db::startTrans();
             try {
+                $subjectQuestionAnswer->isUpdate(true)->save(['status'=>0], ['subject_id'=>$sid]);
+
                 if(!empty($updateAll)){
-                    $subjectQuestionAnswer->saveAll($updateAll);
+                    $subjectQuestionAnswer->isUpdate(true)->saveAll($updateAll);
                 }
 
                 if(!empty($arrAll)){
-                    $subjectQuestionAnswer->saveAll($arrAll, false);
+                    $subjectQuestionAnswer->isUpdate(false)->saveAll($arrAll);
                 }
 
-                if(!empty($updateIdAll)){
-                    $subjectQuestionAnswer->isUpdate(true)->save(['status'=>0], ['id'=>['not in', $updateIdAll],'subject_id'=>$sid]);
-
-                }
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
@@ -311,7 +308,7 @@ class Subject extends Base
         if(request()->isPost()){
             $gid = request()->param('gid');
             $questionAnswer = model('questionAnswer');
-            $data = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->field('question,answer,sort')->order('sort desc')->select();
+            $data = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->field('id,question_answer_template_id,question,answer,sort')->order('sort desc')->select();
             $count = $questionAnswer->where(['status'=>1,'question_answer_template_id'=>$gid])->count();
 
             return json([
