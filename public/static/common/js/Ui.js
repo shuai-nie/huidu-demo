@@ -25,10 +25,11 @@ var UI = {
 
         });
     },
-    "openLayer": function (url, x = 750, y = 600, confirmButton = "#submit") {
+    "openLayer": function (url, x = 750, y = 600, confirmButton = "#submit", _title ="信息") {
         layer.open({
             type: 2,
             anim: 2,
+            title:_title,
             area: [x + 'px', y + 'px'],
             btn: ['确定', '取消'],
             yes: function (index, layero) {

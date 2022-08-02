@@ -23,6 +23,7 @@
     <span class="layui-btn layui-btn-xs" lay-event="banner">banner</span>
     <span class="layui-btn layui-btn-xs" lay-event="zixun">咨询</span>
     <span class="layui-btn layui-btn-xs" lay-event="question">入驻须知</span>
+    <span class="layui-btn layui-btn-xs" lay-event="advert">广告</span>
 </script>
 
 <script>
@@ -50,8 +51,19 @@
                 });
             }else if(obj.event==='plate'){
                 UI.openLayer("{:url('plate')}?sid="+data['id'], 850, 730, '#submit');
+            }else if(obj.event==='advert'){
+                layer.open({
+                    type: 2,
+                    anim: 2,
+                    area: ['1150px', '650px'],
+                    btn: ['关闭'],
+                    yes: function (index, layero) {
+                        layer.close(index);
+                    },
+                    content: "{:url('subject_advertisement')}?sid="+data['id']
+                    ,end: function () {}
+                });
             }else if(obj.event==='banner'){
-                //UI.openLayer("{:url('banner')}?sid="+data['id'], 1150, 650, '#submit');
                 layer.open({
                     type: 2,
                     anim: 2,

@@ -261,7 +261,6 @@ class Subject extends Base
                 }
             }
             }
-
             $state = false;
             Db::startTrans();
             try {
@@ -335,6 +334,79 @@ class Subject extends Base
                 'count' => $count
             ]);
         }
+    }
+
+    public function subject_advertisement()
+    {
+        $sid = request()->param('sid');
+        $subjectAdvertisement = model('subjectAdvertisement');
+
+        if(request()->isPost()){
+            $page = request()->post('page', 1);
+            $limit = request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $map = ['status' => 1, 'subject_id' => $sid];
+            $data = $subjectAdvertisement->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $count = $subjectAdvertisement->where($map)->count();
+            foreach ($data as $k => $v) {
+                $v['key'] = $k+ ($page-1)*$limit+1;
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+    public function create_advertisement()
+    {
+        $sid = request()->param('sid');
+        $subjectAdvertisement = model('subjectAdvertisement');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectAdvertisement->allowField(true)->data($_post)->save();
+            if($state !== false) {
+                return success_json('提交成功');
+            }
+            return error_json('提交失败');
+        }
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+    public function edit_advertisement()
+    {
+        $id = request()->param('id');
+        $subjectAdvertisement = model('subjectAdvertisement');
+        $info = $subjectAdvertisement->where(['id' => $id])->find();
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectAdvertisement->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            if($state !== false) {
+                return success_json('提交成功');
+            }
+            return error_json('提交失败');
+        }
+        return view('', [
+            'info' => $info,
+        ]);
+    }
+
+    public function del_advertisement()
+    {
+        if(request()->isPost()){
+            $id = request()->param('id');
+            $subjectAdvertisement = model('subjectAdvertisement');
+            $state = $subjectAdvertisement->allowField(true)->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
+            if($state !== false) {
+                return success_json(lang('DeleteSuccess', ["广告"]));
+            }
+            return error_json(lang('DeleteFail', ["广告"]));
+        }
+
     }
 
 }
