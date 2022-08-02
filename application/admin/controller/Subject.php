@@ -406,7 +406,74 @@ class Subject extends Base
             }
             return error_json(lang('DeleteFail', ["广告"]));
         }
+    }
 
+    public function subject_category()
+    {
+        $sid = request()->param('sid');
+        $subjectCategory = model('subjectCategory');
+
+        if(request()->isPost()){
+            $page = request()->post('page', 1);
+            $limit = request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $map = ['status' => 1, 'subject_id' => $sid];
+            $data = $subjectCategory->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $count = $subjectCategory->where($map)->count();
+            foreach ($data as $k => $v) {
+                $v['key'] = $k+ ($page-1)*$limit+1;
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+
+        return view('', [
+            'sid' => $sid,
+        ]);
+    }
+
+    public function create_subject_category()
+    {
+        $sid = request()->param('sid');
+        $subjectCategory = model('subjectCategory');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectCategory->allowField(true)->data($_post)->save();
+            if($state !== false) {
+                return success_json(lang('CreateSuccess', ["优选分类"]));
+            }
+            return error_json(lang('CreateFail', ["优选分类"]));
+        }
+        return view('', ['sid' => $sid]);
+    }
+
+    public function edit_subject_category()
+    {
+        $subjectCategory = model('subjectCategory');
+        $id = request()->param('id');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subjectCategory->allowField(true)->isUpdate(true)->save($_post, ['id' => $id]);
+            if($state !== false) {
+                return success_json(lang('CreateSuccess', ["优选分类"]));
+            }
+            return error_json(lang('CreateFail', ["优选分类"]));
+        }
+        $info = $subjectCategory->where(['id'=>$id])->find();
+        return view('', ['info' => $info]);
+    }
+
+    public function del_subject_category()
+    {
+        if(request()->isPost()){
+            $id = request()->param('id');
+            $subjectCategory = model('subjectCategory');
+            $state = $subjectCategory->allowField(true)->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
+            if($state !== false) {
+                return success_json(lang('DeleteSuccess', ["优选分类"]));
+            }
+            return error_json(lang('DeleteFail', ["优选分类"]));
+        }
     }
 
 }
