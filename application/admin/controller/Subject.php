@@ -227,18 +227,82 @@ class Subject extends Base
     {
         $subjectContent = model('subjectContent');
         $questionAnswerGroup = model('questionAnswerGroup');
+        $subjectQuestionAnswer = model('subjectQuestionAnswer');
         $sid = request()->param('sid');
-        $count = $subjectContent->where(['subject_id'=>$sid,'status'=>2])->count();
-        if($count > 0){
-            return view('/subject_question_answer/edit', []);
+
+        if(request()->isPost()){
+            $_post = request()->post();
+            $arrAll = [];
+            $updateAll = [];
+            $updateIdAll = [];
+            foreach ($_post['question'] as $key => $value) {
+                if($_post['id'][$key] > 0) {
+                    array_push($updateAll, array(
+                        'id' => $_post['id'][$key],
+                        'subject_id' => $sid,
+                        'question_answer_group_id' => $_post['question_answer_group_id'][$key],
+                        'question_answer' => $_post['question_answer'][$key],
+                        'question' => $_post['question'][$key],
+                        'answer' => $_post['answer'][$key],
+                        'sort' => $_post['sort'][$key],
+                    ));
+                    array_push($updateIdAll, $_post['id'][$key]);
+                } else {
+                    array_push($arrAll, array(
+                        'subject_id' => $sid,
+                        'question_answer_group_id' => $_post['question_answer_group_id'][$key],
+                        'question_answer' => $_post['question_answer'][$key],
+                        'question' => $_post['question'][$key],
+                        'answer' => $_post['answer'][$key],
+                        'sort' => $_post['sort'][$key],
+                    ));
+                }
+            }
+
+            $state = false;
+            Db::startTrans();
+            try {
+                if(!empty($updateAll)){
+                    $subjectQuestionAnswer->saveAll($updateAll);
+                }
+
+                if(!empty($arrAll)){
+                    $subjectQuestionAnswer->saveAll($arrAll, false);
+                }
+
+                if(!empty($updateIdAll)){
+                    $subjectQuestionAnswer->isUpdate(true)->save(['status'=>0], ['id'=>['not in', $updateIdAll]]);
+                }
+
+                Db::commit();
+                $state = true;
+            }catch (Exception $e) {
+                $state = false;
+                Db::rollback();
+            }
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
         }
+        $count = $subjectQuestionAnswer->where(['subject_id'=>$sid,'status'=>1])->count();
         $groupAll = $questionAnswerGroup->where(['status'=>1])->field('id,title')->select();
+        if($count > 0){
+            $answerAll = $subjectQuestionAnswer->where(['subject_id'=>$sid])->select();
+            return view('/subject_question_answer/edit', [
+                'answerAll' => $answerAll,
+                'groupAll' => $groupAll,
+                'sid' => $sid
+            ]);
+        }
+
         return view('/subject_question_answer/create', [
-            'groupAll' => $groupAll
+            'groupAll' => $groupAll,
+            'sid' => $sid
         ]);
     }
 
-    public function answer_list()
+    public function question_answer()
     {
         if(request()->isPost()){
             $gid = request()->param('gid');
@@ -254,6 +318,22 @@ class Subject extends Base
             ]);
         }
 
+    }
+
+    public function subject_question_answer()
+    {
+        if(request()->isPost()){
+            $sid = request()->param('sid');
+            $subjectQuestionAnswer = model('subjectQuestionAnswer');
+            $data = $subjectQuestionAnswer->where(['status'=>1,'subject_id'=>$sid])->field('question,answer,sort,id,question_answer_group_id,question_answer')->order('sort desc')->select();
+            $count = $subjectQuestionAnswer->where(['status'=>1,'subject_id'=>$sid])->count();
+            return json([
+                'code' => 0,
+                'data' => $data,
+                'sid' => $sid,
+                'count' => $count
+            ]);
+        }
     }
 
 }

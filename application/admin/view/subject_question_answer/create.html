@@ -1,38 +1,23 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
 
     <div class="layui-form-item">
+        <label class="layui-form-label">模版</label>
         <div class="layui-input-block" >
             {volist name='groupAll' id='vo'}
             <input type="radio" name="question_answer_group_id" lay-filter="question_answer_group_id" value="{$vo['id']}" title="{$vo['title']}" />
             {/volist}
         </div>
     </div>
-
-    <div id="listData">
     <div class="layui-form-item">
-        <label class="layui-form-label">问题</label>
-        <div class="layui-inline">
-        <div class="layui-input-inline" style="width:550px;" >
-            <input type="text" name="alt" class="layui-input" />
-        </div>
-        </div>
-        <div class="layui-inline">
-            <span class="layui-btn layui-btn-danger">删除</span>
-            <span class="layui-btn layui-btn-normal">添加</span>
+        <div class="layui-input-block" >
+            <span class="layui-btn layui-btn-normal" id="add">{:lang('create')}</span>
         </div>
     </div>
 
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">答案</label>
-        <div class="layui-input-inline" style="width:550px;" >
-            <input type="text" name="link_url" class="layui-input" />
-        </div>
-    </div>
+    <div id="listData"></div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
@@ -44,7 +29,8 @@
 <script>
     layui.use(['form','upload'], function () {
         var form = layui.form,
-            upload = layui.upload;
+            upload = layui.upload,
+            countList = 1;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept = 'images';
@@ -79,22 +65,81 @@
 
         form.on("radio(question_answer_group_id)", function(data){
             var _val = data.value
-            $.post("{:url('answer_list')}?gid="+_val, {}, function (objPost) {
+            $.post("{:url('question_answer')}?gid="+_val, {}, function (objPost) {
                 if(objPost.code == 0){
+                    $(".question").remove();
                     if(objPost.count == 0){
                         layer.msg("模版数据为空")
                     }else{
                         var _html = "";
                         $.each(objPost.data, function(i, v){
-                            _html += "";
+                            _html += "<div><div class=\"layui-form-item question group-" + _val + "\">\n" +
+                                " <input type='hidden' name='question_answer_group_id["+countList+"]' value='0'>  " +
+                                " <input type='hidden' name='question_answer["+countList+"]' value='0'>  " +
+                                " <input type='hidden' name='id[" + countList + "]' value='0' >  " +
+                                "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
+                                "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
+                                "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" value='" + v.question + "' />\n" +
+                                "            </div>\n" +
+                                "        </div>\n" +
+                                "        <div class=\"layui-form-item\">\n" +
+                                "            <label class=\"layui-form-label\">答案"+countList+"</label>\n" +
+                                "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
+                                "                <input type=\"text\" name=\"answer["+countList+"]\" class=\"layui-input\" />\n" +
+                                "            </div>\n" +
+                                "        </div>"+
+                                "        <div class=\"layui-form-item\">\n" +
+                                "            <div class=\"layui-inline\">\n" +
+                                "            <label class=\"layui-form-label\">排序"+countList+"</label>\n" +
+                                "            <div class=\"layui-input-inline\"  >\n" +
+                                "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" />\n" +
+                                "            </div>\n" +
+                                "            </div>\n" +
+                                "            <div class=\"layui-inline\">\n" +
+                                "                <span class=\"layui-btn layui-btn-danger DeleteList\">{:lang('delete')}</span>\n" +
+                                "            </div>\n" +
+                                "        </div></div><hr style='background-color: #1E9FFF;height: 1px;' />";
+                            countList += 1;
                         })
                         $("#listData").append(_html);
                     }
-
                 }
-
             }, 'json');
+        })
 
+        $("#add").on("click", function(){
+            var _html = "<div><div class=\"layui-form-item\">\n" +
+                " <input type='hidden' name='question_answer_group_id["+countList+"]' value='0'>  " +
+                " <input type='hidden' name='question_answer["+countList+"]' value='0'>  " +
+                "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
+                "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
+                "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" />\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "        <div class=\"layui-form-item\">\n" +
+                "            <label class=\"layui-form-label\">答案"+countList+"</label>\n" +
+                "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
+                "                <input type=\"text\" name=\"answer["+countList+"]\" class=\"layui-input\" />\n" +
+                "            </div>\n" +
+                "        </div>"+
+                "        <div class=\"layui-form-item\">\n" +
+                "            <div class=\"layui-inline\">\n" +
+                "            <label class=\"layui-form-label\">排序"+countList+"</label>\n" +
+                "            <div class=\"layui-input-inline\"  >\n" +
+                "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" />\n" +
+                "            </div>\n" +
+                "            </div>\n" +
+                "            <div class=\"layui-inline\">\n" +
+                "                <span class=\"layui-btn layui-btn-danger DeleteList\">{:lang('delete')}</span>\n" +
+                "            </div>\n" +
+                "        </div></div><hr style='background-color: #1E9FFF;height: 1px;' />";
+            countList += 1;
+            $("#listData").append(_html);
+        })
+
+        $("form").on("click", ".DeleteList", function(){
+            var _this = $(this);
+            _this.parent().parent().parent('div').remove();
         })
 
     });

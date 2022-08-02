@@ -2,6 +2,8 @@
 return [
     'head_title' => '灰度后台管理',
     'lang' => '语言包',
+    'delete' => '删除',
+    'create' => '添加',
 
     'AD' => '广告',
     'Bannel' => '首页banner',
