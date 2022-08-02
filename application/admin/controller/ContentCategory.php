@@ -31,7 +31,7 @@ class ContentCategory extends Controller
             $count = $this->model->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        return view('', ['type'=>$this->model->type]);
     }
 
     /**

@@ -6,7 +6,10 @@ use think\Model;
 
 class ContentCategory extends Base
 {
-//    protected $table = 'jm_content_category';
+    public $type = [
+        1 =>['id'=>1, 'title'=>'文章分类'],
+        2 => ['id'=>2, 'title'=>'文章属性'],
+    ];
     protected $connection = [
         'prefix' => 'jm_',
     ];

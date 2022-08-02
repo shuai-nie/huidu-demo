@@ -38,7 +38,16 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'name', title: '分类名称'}
+            ,{field: 'type',width:120, title: '分类',templet:function(d){
+                switch (d.type*1){
+                    {volist name='type' id='vo'}
+                    case {$vo['id']}: return "{$vo['title']}";
+                    {/volist}
+                    default:
+                        return '-';
+                }
+            }}
+            ,{field: 'name', title: '标题'}
             ,{field: 'sort', title: '排序',width:120}
             ,{field: 'url_keyword', title: '链接关键字',width:120}
             ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
@@ -47,7 +56,7 @@
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 500, 300, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 500, 350, "#submit", "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -59,7 +68,7 @@
 
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}", 500, 300);
+                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
             }
         };
 
