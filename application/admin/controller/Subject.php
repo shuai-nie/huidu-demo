@@ -108,33 +108,137 @@ class Subject extends Base
 
     public function plate()
     {
-        $plate = model('plate');
+        $sid = request()->param('sid');
+        if(request()->isPost()) {
+            $page = request()->post('page', 1);
+            $limit = request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $map = ['status' => 1,'subject_id'=>$sid];
+            $plate = model('plate');
+            $data = $plate->alias('A')
+                ->field("A.*")
+                ->where($map)->limit($offset, $limit)->select();
+            $count = $plate->alias('A')->where($map)->count();
+            foreach ($data as $k => $v) {
+                $v['key'] = $k+ ($page-1)*$limit+1;
+                $data[$k] = $v;
+            }
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
 
+        return view('/plate/index', [
+            'sid' => $sid,
+        ]);
+    }
+
+    public function create_plate()
+    {
+        $plate = model('plate');
         if(request()->isPost()){
             $_post = request()->post();
-            $id = request()->post('id', 0);
-            if($id > 0){
-                $state = $plate->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
-            }else{
-                $state = $plate->allowField(true)->data($_post)->save();
-            }
-
+            $state = $plate->allowField(true)->data($_post)->save();
             if($state !== false){
                 return success_json('提交成功');
             }
             return error_json("提交失败");
         }
         $sid = request()->param('sid');
-        $count = $plate->where(['subject_id'=>$sid])->count();
-        if($count > 0){
-            $info = $plate->where(['subject_id'=>$sid])->find();
-            return view('/plate/edit', [
-                'sid' => $sid,
-                'info' => $info,
-            ]);
-        }
         return view('/plate/create', [
             'sid' => $sid
+        ]);
+    }
+
+    public function edit_plate()
+    {
+        $plate = model('plate');
+        $id = request()->param('id');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $plate->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            if($state !== false){
+                return success_json(lang('EditSuccess', ['板块']));
+            }
+            return error_json(lang('EditFail', ['板块']));
+        }
+        $info = $plate->where(['id'=>$id])->find();
+        return view('/plate/edit', [
+            'info' => $info,
+        ]);
+    }
+
+    public function del_plate()
+    {
+        $plate = model('plate');
+        $id = request()->param('id');
+        if(request()->isPost()){
+            $state = $plate->isUpdate(true)->save(['status' => 0], ['id' => $id]);
+            if($state !== false){
+                return success_json(lang('DeleteSuccess', ['板块']));
+            }
+            return error_json(lang('DeleteFail', ['板块']));
+        }
+    }
+
+    public function plate_resource()
+    {
+        $pid = request()->param('pid');
+        $dataDic = model('dataDic');
+        $plate = model('plate');
+        $plateResource = model('plateResource');
+        if(request()->isPost()){
+            $_post = request()->post();
+            Db::startTrans();
+            if($_post['resource_type'] == 1){
+                $resourceAll = [
+                    ['type'=>0,'plate_id'=>$pid,'key'=>$_post['key1']],
+                    ['type'=>1,'plate_id'=>$pid,'key'=>$_post['key2']]
+                ];
+            }elseif ($_post['resource_type'] == 2){
+                $resourceAll = [];
+                $textarea = explode(',',  $_post['textarea']);
+                foreach ($textarea as $key => $value) {
+                    array_push($resourceAll, ['type'=>2,'plate_id'=>$pid,'key'=>$value]);
+                }
+            }
+            
+            $state = false;
+            try {
+                $plate->isUpdate(true)->save(['resource_type'=>$_post['resource_type']], ['id'=>$pid]);
+                $plateResource->saveAll($resourceAll);
+                Db::commit();
+                $state = true;
+            }catch (Exception $e) {
+                Db::rollback();
+            }
+
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
+
+        }
+        $info = $plate->where(['id'=>$pid])->find();
+        $data = [];
+        $dataDicAll = $dataDic->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
+        if($info['resource_type'] == 1){
+            $data1 = $plateResource->where(['type'=>0,'status'=>1])->find();
+            $data2 = $plateResource->where(['type'=>1,'status'=>1])->find();
+            $data = [
+                "resource_type" => $info['resource_type'],
+                'key1' => $data1['key'],
+                'key2' => $data2['key'],
+            ];
+        }elseif ($info['resource_type'] == 2){
+            $data = $plateResource->where(['type'=>1,'status'=>1])->find();
+            $data = [
+                "resource_type" => $info['resource_type'],
+                "textarea" => "ssss",
+            ];
+        }
+
+        return view('', [
+            'dataDicAll' => $dataDicAll,
+            'data' => $data
         ]);
     }
 
@@ -503,9 +607,26 @@ class Subject extends Base
     public function content()
     {
         $sid = request()->param('sid');
+        $dataDic = model('dataDic');
+        $dataDicAll = $dataDic->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
         return view('', [
             'sid' => $sid,
+            'dataDicAll' => $dataDicAll
         ]);
+    }
+
+    // 获取二级分类
+    public function resources_type()
+    {
+        $id = request()->param('id');
+        $dataDic = model('dataDic');
+        $info = $dataDic->where(['id'=>$id])->find();
+        if(!empty($info)){
+            $data = $dataDic->selectType(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $info['data_no']], "id, data_name");
+            return success_json("获取数据成功", $data);
+        } else {
+            return error_json("没有数据");
+        }
     }
 
     // 内容

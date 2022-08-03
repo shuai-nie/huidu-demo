@@ -7,8 +7,8 @@ use think\Model;
 class DataDic extends Base
 {
 
-    public function selectType($where)
+    public function selectType($where, $field = '*')
     {
-        return self::where($where)->order('sort desc')->select();
+        return self::where($where)->order('sort desc')->field($field)->select();
     }
 }

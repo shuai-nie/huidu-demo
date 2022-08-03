@@ -4,6 +4,7 @@ return [
     'lang' => '语言包',
     'delete' => '删除',
     'create' => '添加',
+    'edit' => '编辑',
 
     'AD' => '广告',
     'Bannel' => '首页banner',

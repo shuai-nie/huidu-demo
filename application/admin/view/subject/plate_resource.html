@@ -2,40 +2,39 @@
 {include file="moban/js"}
 
 <style type="text/css">
-.type1{display:none;}
+.type2{display:none;}
 </style>
 
 <form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
-    <input type="hidden" name="subject_id" value="{$sid}" />
 
     <div class="layui-form-item">
         <label class="layui-form-label">合作配置</label>
         <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="配置合作分类" checked lay-filter="type" />
-            <input type="radio" name="type" value="1" title="单独配置" lay-filter="type" />
+            <input type="radio" name="resource_type" value="1" title="配置合作分类" checked lay-filter="type" />
+            <input type="radio" name="resource_type" value="2" title="单独配置" lay-filter="type" />
         </div>
     </div>
 
-    <div class="layui-form-item type0">
+    <div class="layui-form-item type1">
         <div class="layui-inline">
             <label class="layui-form-label">选择分类</label>
             <div class="layui-input-block" >
-            <select name="key1" lay-filter="key1">
-                <option value="0">全部</option>
-                {volist name='dataDicAll' id='vo'}
-                <option value="{$vo['id']}">{$vo['data_name']}</option>
-                {/volist}
-            </select>
+                <select name="key1" lay-filter="key1" lay-search="">
+                    <option value="0">全部</option>
+                    {volist name='dataDicAll' id='vo'}
+                    <option value="{$vo['id']}">{$vo['data_name']}</option>
+                    {/volist}
+                </select>
             </div>
         </div>
         <div class="layui-inline">
-            <select name="key2" lay-filter="key2" id="key2">
+            <select name="key2" lay-filter="key2" id="key2" lay-search="" >
                 <option value="0">全部</option>
             </select>
         </div>
     </div>
 
-    <div class="layui-form-item type1" >
+    <div class="layui-form-item type2" >
         <label class="layui-form-label">单独配置</label>
         <div class="layui-input-block" >
             <textarea name="textarea" class="layui-textarea"></textarea>
@@ -84,11 +83,17 @@
                 console.log(res);
             });
         });
+        form.val('first', {
+            "resource_type":"{$data['resource_type']|default=1}",
+            "key1":"{$data['key1']|default=0}",
+            "key2":"{$data['key2']|default=0}",
+            "textarea":"{$data['textarea']|default=''}",
+        })
 
         form.on('radio(type)', function(data){
             var _val = data.value;
-            $(".type0").hide();
             $(".type1").hide();
+            $(".type2").hide();
             $(".type" + _val).show();
         })
 
