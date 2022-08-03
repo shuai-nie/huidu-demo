@@ -1,17 +1,20 @@
 {include file="moban/css"}
 {include file="moban/js"}
+<style>
+
+</style>
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
-        <label class="layui-form-label">分类名称</label>
+        <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-            <input type="radio" name="type" value="1" title="文章分类" checked />
-            <input type="radio" name="type" value="2" title="文章属性" />
+            <input type="radio" name="type" lay-filter="type" value="1" title="文章分类" checked />
+            <input type="radio" name="type" lay-filter="type" value="2" title="文章属性" />
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">分类名称</label>
+        <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
             <input type="text" name="name" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">
         </div>
@@ -24,7 +27,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item type">
         <label class="layui-form-label">链接关键字</label>
         <div class="layui-input-block">
             <input type="text" name="url_keyword" placeholder="页面链接关键字" autocomplete="off" class="layui-input">
@@ -80,6 +83,20 @@
                 console.log(res);
             });
         });
+
+        form.on("radio(type)", function(data){
+            var _val = data.value;
+            switch (_val*1){
+                case 1:
+                    $(".type").show();
+                    break;
+                case 2:
+                    $(".type").hide();
+                    break;
+                default:
+                    break;
+            }
+        })
 
 
     });

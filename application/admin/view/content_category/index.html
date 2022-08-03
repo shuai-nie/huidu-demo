@@ -38,7 +38,7 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'type',width:120, title: '分类',templet:function(d){
+            ,{field: 'type',width:120, title: '类型',templet:function(d){
                 switch (d.type*1){
                     {volist name='type' id='vo'}
                     case {$vo['id']}: return "{$vo['title']}";
@@ -47,9 +47,14 @@
                         return '-';
                 }
             }}
-            ,{field: 'name', title: '标题'}
+            ,{field: 'name', title: '名称'}
             ,{field: 'sort', title: '排序',width:120}
-            ,{field: 'url_keyword', title: '链接关键字',width:120}
+            ,{field: 'url_keyword', title: '链接关键字',width:120,templet:function(d){
+                if(d.type*1 == 1){
+                    return d.url_keyword;
+                }
+                return '-';
+            }}
             ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
         ]);
 
