@@ -33,7 +33,7 @@ layui.use(['table','dropdown'], function(){
         ,{field: 'icon_title', title: '图标标题', width:120,}
         ,{field: 'icon_url', title: '图标', width:80,templet: function (d) {
             if(d.icon_url){
-                return "<img src='''"+d.icon_url +"?v=1.1' height=30 width=30 />";
+                return "<img src='"+d.icon_url +"?v=1.1' height=30 width=30 />";
             }
             return '-';
         }}
