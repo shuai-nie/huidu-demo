@@ -90,6 +90,27 @@
             "textarea":"{$data['textarea']|default=''}",
         })
 
+        if ("{$data['resource_type']|default=1}" * 1 == 1) {
+            $(".type2").hide();
+            $(".type1").show();
+            $.post("{:url('resources_type')}", {id: "{$data['key1']|default=0}"}, function (objPost) {
+                var _html = "<option value='0'>全部</option>";
+                if (objPost.code == 200) {
+                    $.each(objPost.data, function (i, v) {
+                        _html += "<option value='" + v.id + "'>" + v.data_name + "</option>";
+                    })
+                }
+                $("#key2").html(_html);
+                form.render('select');
+                form.val('first', {"key2":"{$data['key2']|default=0}"});
+            })
+
+        }else if("{$data['resource_type']|default=1}" * 1 == 2){
+            $(".type1").hide();
+            $(".type2").show();
+
+        }
+
         form.on('radio(type)', function(data){
             var _val = data.value;
             $(".type1").hide();
@@ -99,17 +120,23 @@
 
         form.on('select(key1)', function(data){
             var _val = data.value;
+            resourcePost(_val)
+        })
+
+        function resourcePost(_val)
+        {
             $.post("{:url('resources_type')}", {id: _val}, function (objPost) {
+                var _html = "<option value='0'>全部</option>";
                 if(objPost.code == 200) {
-                    var _html = "<option value='0'>全部</option>";
                     $.each(objPost.data, function(i, v){
                         _html += "<option value='" + v.id + "'>" + v.data_name + "</option>";
                     })
-                    $("#key2").html(_html);
-                    form.render('select');
                 }
+                $("#key2").html(_html);
+                form.render('select');
             }, 'json');
-        })
+
+        }
 
     });
 </script>

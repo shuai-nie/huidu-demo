@@ -21,12 +21,12 @@
 <script type="text/html" id="span">
     <span class="layui-btn layui-btn-xs" lay-event="plate">版块</span>
     <span class="layui-btn layui-btn-xs" lay-event="banner">banner</span>
-    <span class="layui-btn layui-btn-xs" lay-event="zixun">资讯</span>
+    <span class="layui-btn layui-btn-xs" lay-event="zixun">文章资讯</span>
     <span class="layui-btn layui-btn-xs" lay-event="question">入驻须知</span>
     <span class="layui-btn layui-btn-xs" lay-event="advert">广告</span>
     <span class="layui-btn layui-btn-xs" lay-event="subject_category">优选分类</span>
-    <span class="layui-btn layui-btn-xs" lay-event="content">内容</span>
-    <span class="layui-btn layui-btn-xs" lay-event="article">文章</span>
+<!--    <span class="layui-btn layui-btn-xs" lay-event="content">内容</span>-->
+<!--    <span class="layui-btn layui-btn-xs" lay-event="article">文章</span>-->
 </script>
 
 <script>
@@ -85,9 +85,9 @@
                     ,end: function () {}
                 });
             }else if(obj.event==='zixun'){
-                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 730, '#submit', "专题资讯列表");
+                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 400, '#submit', "专题资讯列表");
             }else if(obj.event==='subject_category'){
-                UI.openLayer("{:url('subject_category')}?sid="+data['id'], 850, 730, '#submit', "优选分类列表");
+                UI.openLayer("{:url('subject_category')}?sid="+data['id'], 850, 700, '#submit', "优选分类列表");
             }else if(obj.event==='question'){
                 UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit');
             } else if(obj.event === 'more'){

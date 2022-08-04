@@ -188,21 +188,26 @@ class Subject extends Base
         if(request()->isPost()){
             $_post = request()->post();
             Db::startTrans();
-            if($_post['resource_type'] == 1){
-                $resourceAll = [
-                    ['type'=>0,'plate_id'=>$pid,'key'=>$_post['key1']],
-                    ['type'=>1,'plate_id'=>$pid,'key'=>$_post['key2']]
-                ];
-            }elseif ($_post['resource_type'] == 2){
-                $resourceAll = [];
-                $textarea = explode(',',  $_post['textarea']);
-                foreach ($textarea as $key => $value) {
-                    array_push($resourceAll, ['type'=>2,'plate_id'=>$pid,'key'=>$value]);
-                }
-            }
-            
+
+
             $state = false;
             try {
+
+                if($_post['resource_type'] == 1){
+                    $resourceAll = [
+                        ['type'=>0,'plate_id'=>$pid,'key'=>$_post['key1']],
+                        ['type'=>1,'plate_id'=>$pid,'key'=>$_post['key2']]
+                    ];
+                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$pid])->delete();
+                }elseif ($_post['resource_type'] == 2){
+                    $resourceAll = [];
+                    $textarea = explode(',',  $_post['textarea']);
+                    foreach ($textarea as $key => $value) {
+                        array_push($resourceAll, ['type'=>2,'plate_id'=>$pid,'key'=>$value]);
+                    }
+                    $plateResource->where(['type'=>2,'plate_id'=>$pid])->delete();
+                }
+
                 $plate->isUpdate(true)->save(['resource_type'=>$_post['resource_type']], ['id'=>$pid]);
                 $plateResource->saveAll($resourceAll);
                 Db::commit();
@@ -221,18 +226,18 @@ class Subject extends Base
         $data = [];
         $dataDicAll = $dataDic->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
         if($info['resource_type'] == 1){
-            $data1 = $plateResource->where(['type'=>0,'status'=>1])->find();
-            $data2 = $plateResource->where(['type'=>1,'status'=>1])->find();
+            $data1 = $plateResource->where(['type'=>0,'status'=>1,'plate_id'=>$pid])->find();
+            $data2 = $plateResource->where(['type'=>1,'status'=>1,'plate_id'=>$pid])->find();
             $data = [
                 "resource_type" => $info['resource_type'],
                 'key1' => $data1['key'],
                 'key2' => $data2['key'],
             ];
         }elseif ($info['resource_type'] == 2){
-            $data = $plateResource->where(['type'=>1,'status'=>1])->find();
+            $data = $plateResource->where(['type'=>2,'status'=>1,'plate_id'=>$pid])->field('GROUP_CONCAT(`key`) as group_key')->find();
             $data = [
                 "resource_type" => $info['resource_type'],
-                "textarea" => "ssss",
+                "textarea" => $data['group_key'],
             ];
         }
 
@@ -598,8 +603,10 @@ class Subject extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        $contentCategoryAll = model('contentCategory')->where(['type'=>2])->select();
         return view('', [
             'sid' => $sid,
+            'contentCategoryAll' => $contentCategoryAll
         ]);
     }
 
