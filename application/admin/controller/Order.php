@@ -49,6 +49,7 @@ class Order extends Base
                 ->field('A.*,B.username,B.nickname,C.title as resource_title,D.title as old_package_title,E.title as new_package_title,F.type as price_type,F.old_amount as price_old_amount,F.new_amount as price_new_amount')
                 ->where($map)->order('A.status asc, A.id desc')->limit($offset, $limit)->select();
 
+
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 if(!empty($username)) {
@@ -82,7 +83,7 @@ class Order extends Base
         $user = model('User');
         $resource = model('Resource');
         $packagePrice = model('PackagePrice');
-        $package = model('Package');
+        $PackageHistory = model('PackageHistory');
         $id = request()->param('id');
         $info = $order->where(['id'=>$id])->find();
 
@@ -107,7 +108,7 @@ class Order extends Base
                     $resourceInfo = model('Resource')->where(['id'=>$info['rid']])->field('id,title')->find();
                     $content = '['.$resourceInfo['title'].'] 置顶失败，操作原因（' . $_post['feedback'] . '）';
                 }elseif ($info['type'] == 0){
-                    $package = model('Package')->where(['id'=>$info['new_package_id']])->find();
+                    $package = $PackageHistory->where(['id'=>$info['new_package_id']])->find();
                     $content = '购买[' . $package['title'] . '] 失败,操作原因（' . $_post['feedback'] . '）';
                 }
 
@@ -138,8 +139,8 @@ class Order extends Base
         $orderInfo = $order->alias('A')
             ->join($user->getTable().' B', 'A.uid=B.id', 'left')
             ->join($resource->getTable().' C', 'A.rid=C.id', 'left')
-            ->join($package->getTable().' D', 'A.old_package_id=D.id', 'left')
-            ->join($package->getTable().' E', 'A.new_package_id=E.id', 'left')
+            ->join($PackageHistory->getTable().' D', 'A.old_package_id=D.id', 'left')
+            ->join($PackageHistory->getTable().' E', 'A.new_package_id=E.id', 'left')
             ->join($packagePrice->getTable().' F', 'A.package_price_id=F.id', 'left')
             ->field('A.*,B.username,B.nickname,C.title as resource_title,D.title as old_package_title,E.title as new_package_title,F.type as price_type,F.old_amount as price_old_amount,F.new_amount as price_new_amount')
             ->where($map)->find();
@@ -216,6 +217,7 @@ class Order extends Base
         $orderModel = model('order');
         $userInfoData = $userInfo->where(['uid'=>$uid])->find();
         $PackageData = $package->where(['id'=>$package_id])->find();
+        $packageInfo = model('package')->where(['history_id'=>$PackageData['id']])->find();
         $userRechargeInfo = $userRecharge->where(['id' => $userInfoData['user_recharge_id']])->find();
         $packagePriceInfo = $packagePrice->where(['id'=>$order['package_price_id']])->find();
         $status = request()->post('status');
@@ -290,7 +292,7 @@ class Order extends Base
 
             $userRecharge->allowField(true)->isUpdate(false)->save([
                 'uid' => $uid,
-                'package_id' => $package_id,
+                'package_id' => $packageInfo['id'],
                 'pay_price' => $packagePriceInfo['new_amount'],
                 'allot_recharge_id' => $recharge_id,
                 'flush' => $PackageData['flush'],
@@ -332,7 +334,7 @@ class Order extends Base
             }
             $userRecharge->saveId([
                 'uid' => $uid,
-                'package_id' => $package_id,
+                'package_id' => $packageInfo['id'],
                 'pay_price' => $packagePriceInfo['new_amount'] + $userRechargeInfo['pay_price'],
                 'allot_recharge_id' => $recharge_id,
                 'flush' => $PackageData['flush'],
@@ -368,7 +370,7 @@ class Order extends Base
                 $t = $userRechargeInfo['end_time'] - $time;
                 $save1 = [
                     'uid'               => $uid,
-                    'package_id'        => $package_id,
+                    'package_id'        => $packageInfo['id'],
                     'pay_price'         => $packagePriceInfo['new_amount'],
                     'flush'             => $PackageData['flush'],
                     'publish'           => $PackageData['publish'],
@@ -389,7 +391,7 @@ class Order extends Base
 
             $save2 = [
                 'uid'               => $uid,
-                'package_id'        => $package_id,
+                'package_id'        => $packageInfo['id'],
                 'pay_price'         => $packagePriceInfo['new_amount'],
                 'allot_recharge_id' => $recharge_id,
                 'flush'             => $PackageData['flush'],
