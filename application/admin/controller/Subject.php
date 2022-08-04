@@ -107,7 +107,7 @@ class Subject extends Base
             $map = ['status' => 1,'subject_id'=>$sid];
             $data = $plate->alias('A')
                 ->field("A.*")
-                ->where($map)->limit($offset, $limit)->select();
+                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
             $count = $plate->alias('A')->where($map)->count();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
