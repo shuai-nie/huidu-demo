@@ -1,14 +1,16 @@
 {include file="moban/bone_header"}
 
-<!--<div class="layui-btn-container" style="display: inline-block">-->
-<!--    <button class="layui-btn" data-type="addGroup">添加</button>-->
-<!--</div>-->
+<div class="layui-btn-container" style="display: inline-block">
+    <button class="layui-btn" data-type="addGroup">添加</button>
+</div>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script id="barDemo" type="text/html">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+    {{# if(d.id > 35){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {{# } }}
 </script>
 
 <script>
@@ -16,15 +18,11 @@
         var table = layui.table;
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width: 60, fixed: 'left'}
-            , {field: 'key', title: '键', width: 220}
-            , {field: 'remarks', title: '备注', width: 270}
-            , {field: 'value', title: '内容',templet:function (d) {
-                    if (d.key == 'tg_picture' || d.key == 'package_equities_image') {
-                        return "<img src='"+d.value+"' height=30 width=30 ";
-                    }
-                    return d.value;
-                }}
-            , {fixed: 'right', title: '操作', width:80,align: 'center', toolbar: '#barDemo'}
+            , {field: 'remarks', title: '联系名称', width: 270}
+            , {field: 'value', title: '联系号码',templet:function (d) {
+                return d.value;
+            }}
+            , {fixed: 'right', title: '操作', width:120,align: 'center', toolbar: '#barDemo'}
         ], '#think-table', 'auth');
 
         table.on('tool(think-table)', function (obj) {
@@ -32,7 +30,7 @@
             var msg = obj.msg;
             //修改
             if (obj.event === "edit") {
-                UI.openLayer("{:url('/admin/config/edit')}?id=" + data['id']);
+                UI.openLayer("{:url('edit')}?id=" + data['id'], 700, 300);
             }
             //删除
             if (obj.event === 'del') {
@@ -45,7 +43,7 @@
         });
         var $ = layui.$, active = {
             addGroup: function () {
-                UI.openLayer("{:url('add')}", 700, 400);
+                UI.openLayer("{:url('add')}", 700, 300);
             }
         };
 

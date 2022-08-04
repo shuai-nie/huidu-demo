@@ -44,9 +44,9 @@ class ContentCategory extends Controller
             $data = Request()->param();
             $state = $this->model->save($data);
             if($state !== false){
-                return success_json(lang('CreateSuccess', [lang('ContentCategory')]));
+                return success_json("提交成功");
             }
-            return error_json(lang('CreateSuccess', [lang('ContentCategory')]));
+            return error_json("提交失败");
         }
         return view();
     }
@@ -62,9 +62,9 @@ class ContentCategory extends Controller
             $data = Request()->param();
             $state = $this->model->save($data, ['id'=>$data['id']]);
             if($state !== false){
-                return success_json(lang('EditSuccess', [lang('ContentCategory')]) );
+                return success_json("提交成功");
             }
-            return error_json(lang('EditFail', [lang('ContentCategory')]));
+            return error_json("提交失败");
         }
         $data = $this->model->find($id);
         return view('edit', ['data'=>$data]);
@@ -80,8 +80,8 @@ class ContentCategory extends Controller
         $id = \request()->param('id');
         $state = $this->model->save(['is_del'=>1,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
-            return success_json(lang('DeleteSuccess', [lang('ContentCategory')]) );
+            return success_json("删除成功");
         }
-        return error_json(lang('DeleteFail', [lang('ContentCategory')]) );
+        return error_json("删除失败");
     }
 }

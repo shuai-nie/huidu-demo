@@ -1,0 +1,69 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<div class="layui-form" id="layuiadmin-app-form-list" lay-filter="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系名称</label>
+        <div class="layui-input-block">
+            <input name="remarks" autocomplete="off" class="layui-input"  placeholder="请输入" required type="text" value="{$info.remarks}">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系号码</label>
+        <div class="layui-input-block">
+            <input name="value" placeholder="请输入内容" class="layui-input" value="{$info.value}" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input id="submit" lay-filter="submit" lay-submit type="button" value="确认">
+        <input id="layuiadmin-app-form-edit" lay-filter="layuiadmin-app-form-edit" lay-submit type="button" value="取消">
+    </div>
+</div>
+
+<script>
+
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='value']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            {if condition="$info['key'] eq 'disclaimer' || $info['key'] eq 'disclaimer_all' "}
+            data.field.value = ue.getContent();
+            {/if}
+            Api.edit(data.field, function (res) {
+                console.log(res);
+            });
+        });
+    });
+
+</script>

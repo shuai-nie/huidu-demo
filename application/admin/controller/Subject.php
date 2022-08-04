@@ -321,16 +321,7 @@ class Subject extends Base
         }
     }
 
-    public function zixun()
-    {
-        $subjectContent = model('subjectContent');
-        $sid = request()->param('sid');
-        $count = $subjectContent->where(['subject_id'=>$sid])->count();
-        if($count > 0){
-            return view('/subject_content/edit');
-        }
-        return view('/subject_content/create');
-    }
+
 
     public function question()
     {
@@ -591,22 +582,56 @@ class Subject extends Base
         $subject = model('subject');
         $subjectContent = model('subjectContent');
         if(request()->isPost()){
-            $page = request()->post('page', 1);
-            $limit = request()->post('limit', 10);
-            $offset = ($page - 1) * $limit;
-            $map = ['A.status' => 1];
-            $data = $subject->alias('A')->where($map)->order('A.id desc')->limit($offset, $limit)->select();
-            $count = $subject->alias('A')->where($map)->count();
-            foreach ($data as $k => $v) {
-                $v['key'] = $k+ ($page-1)*$limit+1;
-                $data[$k] = $v;
+            $_post = request()->post();
+
+            Db::startTrans();
+            $state = false;
+            try {
+                $contentAll = [];
+                if($_post['subject_content_type'] == 1) {
+                    $subjectContent->where(['subject_id' => $sid, 'type' => 0])->delete();
+                    foreach ($_post['key'] as $key => $value) {
+                        array_push($contentAll, ['subject_id' => $sid, 'type' => 0, 'key' => $value]);
+                    }
+                    $subjectContent->saveAll($contentAll);
+                }elseif ($_post['subject_content_type'] == 2){
+                    $subjectContent->where(['subject_id' => $sid, 'type' => 1])->delete();
+                    $textarea = explode(',', $_post['textarea']);
+                    foreach ($textarea as $key => $value) {
+                        array_push($contentAll, ['subject_id' => $sid, 'type' => 1, 'key' => $value]);
+                    }
+                    $subjectContent->saveAll($contentAll);
+                }
+                $subject->isUpdate(true)->save(['subject_content_type'=>$_post['subject_content_type']], ['id'=>$sid]);
+
+                $state = true;
+                Db::commit();
+            }catch (Exception $e) {
+                Db::rollback();
+                $state = false;
             }
-            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
         }
         $contentCategoryAll = model('contentCategory')->where(['type'=>2])->select();
+        $subjectInfo = $subject->where(['id'=>$sid])->find();
+        $info = ['subject_content_type' => $subjectInfo['subject_content_type']];
+        $info['key'] = [];
+        if($subjectInfo['subject_content_type'] == 1){
+            $info['key'] = $subjectContent->where(['type'=>0,'status'=>1,'subject_id'=>$sid])->field('key')->select();
+
+        }elseif ($subjectInfo['subject_content_type'] == 2) {
+            $textarea = $subjectContent->where(['type'=>1,'status'=>1,'subject_id'=>$sid])->field('GROUP_CONCAT(`key`) as group_key')->find();
+            $info['textarea'] = $textarea['group_key'];
+        }
+
         return view('', [
             'sid' => $sid,
-            'contentCategoryAll' => $contentCategoryAll
+            'contentCategoryAll' => $contentCategoryAll,
+            'subjectInfo' => $subjectInfo,
+            'info' => $info,
         ]);
     }
 
@@ -637,11 +662,26 @@ class Subject extends Base
     }
 
     // 内容
-    public function article()
+    public function category_link_url()
     {
         $sid = request()->param('sid');
+        $Config = model('Config');
+        $subject = model('subject');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subject->isUpdate(true)->save(['category_link_url'=>$_post['category_link_url']], ['id'=>$sid]);
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
+        }
+
+        $ConfigAll = $Config->where(['type'=>1,'status'=>1])->select();
+        $info  = $subject->where(['id'=>$sid])->find();
         return view('', [
             'sid' => $sid,
+            'ConfigAll' => $ConfigAll,
+            'info' => $info,
         ]);
     }
 
