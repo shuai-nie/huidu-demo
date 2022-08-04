@@ -31,7 +31,12 @@ layui.use(['table','dropdown'], function(){
         ,{field: 'plate_title', title: '版块标题', width:120,}
         ,{field: 'plate_subtitle', title: '版块副标题', width:120,}
         ,{field: 'icon_title', title: '图标标题', width:120,}
-        ,{field: 'icon_url', title: '图标', width:80,}
+        ,{field: 'icon_url', title: '图标', width:80,templet: function (d) {
+            if(d.icon_url){
+                return "<img src'"+d.icon_url +"' height=30 width=30 />";
+            }
+            return '-';
+        }}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
     ]);
 
