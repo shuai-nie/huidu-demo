@@ -135,8 +135,11 @@ class Subject extends Base
             return error_json("提交失败");
         }
         $sid = request()->param('sid');
+        $configAll = model('config')->where(['type'=>1,'status'=>1])->select();
         return view('/plate/create', [
-            'sid' => $sid
+            'sid' => $sid,
+            'configAll' => $configAll
+
         ]);
     }
 
