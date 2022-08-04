@@ -156,8 +156,10 @@ class Subject extends Base
             return error_json(lang('EditFail', ['板块']));
         }
         $info = $plate->where(['id'=>$id])->find();
+        $configAll = model('config')->where(['type'=>1,'status'=>1])->select();
         return view('/plate/edit', [
             'info' => $info,
+            'configAll' => $configAll
         ]);
     }
 

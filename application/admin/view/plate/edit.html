@@ -43,7 +43,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">查看更多</label>
         <div class="layui-input-block" >
-            <input type="text" name="more_link_url" class="layui-input" value="{$info['more_link_url']}" />
+            <select name="more_link_url" lay-search="">
+                <option value="">请选择</option>
+                {volist name="configAll" id="vo"}
+                <option value="{$vo['id']}">{$vo['remarks']}</option>
+                {/volist}
+            </select>
             <div class="layui-form-mid layui-word-aux">查看更多链接地址</div>
         </div>
     </div>
@@ -94,7 +99,6 @@ layui.use(['form','upload'], function () {
             } else {
                 layui.msg('网络问题稍后再试');
             }
-
         }
         ,error: function(){
             //请求异常回调
@@ -107,6 +111,15 @@ layui.use(['form','upload'], function () {
             console.log(res);
         });
     });
+
+    form.val('first', {
+        "type":"{$info['type']}",
+        "icon_title":"{$info['icon_title']}",
+        "plate_title":"{$info['plate_title']}",
+        "plate_subtitle":"{$info['plate_subtitle']}",
+        "more_link_url":"{$info['more_link_url']}",
+        "counselor_link":"{$info['counselor_link']}",
+    })
 
 
 
