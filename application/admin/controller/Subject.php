@@ -685,5 +685,30 @@ class Subject extends Base
         ]);
     }
 
+    public function question_answer_link_url()
+    {
+        $sid = request()->param('sid');
+        $Config = model('Config');
+        $subject = model('subject');
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $subject->isUpdate(true)->save(['question_answer_link_url'=>$_post['category_link_url']], ['id'=>$sid]);
+
+            if($state !== false) {
+                return success_json("提交成功");
+            }
+            return error_json("提交失败");
+        }
+        $ConfigAll = $Config->where(['type'=>1,'status'=>1])->select();
+        $info  = $subject->where(['id'=>$sid])->find();
+        $info['category_link_url'] = $info['question_answer_link_url'];
+        
+        return view('category_link_url', [
+            'sid' => $sid,
+            'ConfigAll' => $ConfigAll,
+            'info' => $info,
+        ]);
+    }
+
 
 }

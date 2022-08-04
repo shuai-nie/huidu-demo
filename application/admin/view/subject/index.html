@@ -94,16 +94,11 @@
                 dropdown.render({
                     elem: this //触发事件的 DOM 对象
                     ,show: true //外部事件触发即显示
-                    ,data: [{
-                        title: '编辑'
-                        ,id: 'edit'
-                        ,templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '
-                    },{
-                        title: '删除'
-                        ,id: 'del'
-                        ,templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '
-                        //<span class="layui-badge-dot"></span>
-                    }]
+                    ,data: [
+                        {title: '编辑',id: 'edit',templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '}
+                        ,{title: '删除',id: 'del',templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '}
+                        ,{title: '入住须知-联系方式',id: 'question_answer_link_url',templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-service"></i>{{d.title}}</span> '}
+                    ]
                     ,click: function(menudata){
                         if(menudata.id === 'del'){
                             layer.confirm('真的删除行么', function(index){
@@ -116,6 +111,8 @@
                             //     layer.close(index);
                             //     //向服务端发送删除指令
                             });
+                        } else if(menudata.id === 'question_answer_link_url'){
+                            UI.openLayer("{:url('question_answer_link_url')}?sid="+data['id'], 650, 300, '#submit', "入住须知-联系方式");
                         } else if(menudata.id === 'edit'){
                             // layer.msg('编辑操作，当前行 ID:'+ data.id);
                             UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit');
