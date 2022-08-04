@@ -1,5 +1,4 @@
 <?php
-
 namespace app\admin\controller;
 
 use think\Controller;
@@ -59,8 +58,12 @@ class Content extends Controller
                 ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
-        return view('', ['category'=>$category]);
+        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
+        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
+        return view('', [
+            'category'=>$category,
+            'category2' => $category2
+        ]);
     }
 
     /**
@@ -92,8 +95,12 @@ class Content extends Controller
                 return error_json(lang('CreateFail', [lang('Content')]));
             }
         }
-        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
-        return view('', ['category'=>$category]);
+        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
+        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
+        return view('', [
+            'category'=>$category,
+            'category2'=>$category2
+        ]);
     }
 
     /**
@@ -135,10 +142,12 @@ class Content extends Controller
         $detail = $ContentDetail->where(['cid'=>$id])->find();
         $data['content'] = $detail['content'];
 
-        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
+        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
         return view('edit', [
             'data' => $data,
             'category' => $category,
+            'category2' => $category2,
         ]);
     }
 

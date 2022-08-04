@@ -702,7 +702,7 @@ class Subject extends Base
         $ConfigAll = $Config->where(['type'=>1,'status'=>1])->select();
         $info  = $subject->where(['id'=>$sid])->find();
         $info['category_link_url'] = $info['question_answer_link_url'];
-        
+
         return view('category_link_url', [
             'sid' => $sid,
             'ConfigAll' => $ConfigAll,
