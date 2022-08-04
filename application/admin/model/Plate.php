@@ -3,6 +3,11 @@ namespace app\admin\model;
 
 class Plate extends Base
 {
+    public $type = [
+        ['id'=>0,'title'=>'专题业务动态'],
+        ['id'=>1,'title'=>'专区自定义板块'],
+    ];
+
     protected $connection = [
         'prefix' => 'sj_',
     ];

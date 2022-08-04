@@ -46,13 +46,6 @@ class Subject extends Base
             Db::startTrans();
             try {
                 $subject->allowField(true)->isUpdate(false)->data($_post)->save();
-                $subject_id = $subject->id;
-                $subjectAdvertisement->allowField(true)->isUpdate(false)->data([
-                    'subject_id' => $subject_id,
-                    'img_url' => $_post['img_url'],
-                    'link_url' => $_post['link_url'],
-                ])->save();
-
                 Db::commit();
                 $state = true;
             } catch (Exception $e) {
@@ -78,10 +71,7 @@ class Subject extends Base
             Db::startTrans();
             try {
                 $subject->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
-                $subjectAdvertisement->isUpdate(true)->save([
-                    'img_url' => $_post['img_url'],
-                    'link_url' => $_post['link_url'],
-                ], ['subject_id'=>$id]);
+
                 Db::commit();
                 $state = true;
             }catch (Exception $e){
@@ -109,12 +99,12 @@ class Subject extends Base
     public function plate()
     {
         $sid = request()->param('sid');
+        $plate = model('plate');
         if(request()->isPost()) {
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
             $map = ['status' => 1,'subject_id'=>$sid];
-            $plate = model('plate');
             $data = $plate->alias('A')
                 ->field("A.*")
                 ->where($map)->limit($offset, $limit)->select();
@@ -128,6 +118,8 @@ class Subject extends Base
 
         return view('/plate/index', [
             'sid' => $sid,
+            'meta_title' => '版块列表',
+            'type' => $plate->type
         ]);
     }
 

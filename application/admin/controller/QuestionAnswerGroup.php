@@ -26,6 +26,7 @@ class QuestionAnswerGroup extends Base
             $data = $QuestionAnswerGroup->alias('A')
                 ->join("(select question_answer_template_id,count(*) as cou FROM sj_question_answer where status=1 Group By question_answer_template_id ) as B", 'A.id=B.question_answer_template_id', 'left')->where($map)->order('id desc')
                 ->field('A.*,B.cou')->limit($offset, $limit)->select();
+
             foreach ($data as $k => $v) {
                 $v['key'] = $k + ($page - 1) * $limit + 1;
                 $v['cou'] = $v['cou'] > 0 ? $v['cou'] : 0;
@@ -115,7 +116,7 @@ class QuestionAnswerGroup extends Base
             return error_json('编辑失败');
         }
         $info = $questionAnswerGroup->where(['id'=>$id])->find();
-        $data = $questionAnswer->where(['question_answer_template_id'=>$id])->order('sort desc')->select();
+        $data = $questionAnswer->where(['question_answer_template_id'=>$id,'status'=>1])->order('sort desc')->select();
         return view('', [
             'info' => $info,
             'data' => $data,

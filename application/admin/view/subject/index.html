@@ -37,7 +37,6 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
             ,{field: 'title', title: '标题', width:300}
-            ,{field: 'img_url', title: '图片', width:110,templet: '#img_url'}
             ,{field: 'span', title: '', width:500,templet: '#span'}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
@@ -59,7 +58,7 @@
                 // 文章
                 UI.openLayer("{:url('article')}?sid="+data['id'], 850, 730, '#submit');
             }else if(obj.event==='plate'){
-                UI.openLayer("{:url('plate')}?sid="+data['id'], 850, 730, '#submit');
+                UI.openLayer("{:url('plate')}?sid="+data['id'], 1050, 730, '#submit', "版块");
             }else if(obj.event==='advert'){
                 layer.open({
                     type: 2,

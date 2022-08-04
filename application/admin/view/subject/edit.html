@@ -69,26 +69,6 @@
         </div>
     </div>
 
-    <div id="image_url" style="width: 350px;height: 150px;position: absolute;left: 330px;top: 350px;">
-        <img src="{$info['img_url']|default='https://fakeimg.pl/712x196'}" width="350" height="150" />
-    </div>
-
-    <div class="layui-form-item">
-        <input type="hidden" name="img_url" value="{$info['img_url']}" >
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label" style="margin:0;padding-left:0;padding-right:0;">跳转链接</label>
-        <div class="layui-input-block">
-            <input type="text" name="link_url" class="layui-input" value="{$info['link_url']}" />
-        </div>
-    </div>
-
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
