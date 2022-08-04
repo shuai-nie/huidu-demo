@@ -61,62 +61,79 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="home_top">首页置顶</a>
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="category_top">分类置顶</a>
+<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+<!--    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="home_top">首页置顶</a>-->
+<!--    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="category_top">分类置顶</a>-->
+<a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
 </script>
 
 <script>
-    layui.use(['table','form'], function(){
-        var table = layui.table,
-            form = layui.form;
+    layui.use(['table','form','dropdown'], function(){
+        var table = layui.table
+            ,form = layui.form
+            ,dropdown = layui.dropdown;
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'category_name', title: '分类',width:100}
-            ,{field: 'title', title: '标题'}
-            ,{field: 'cover_url', title: '封面图',width:80, templet:function (d) {
-                    if(d.cover_url != '' || d.cover_url != null){
-                        return '<img src="'+d.cover_url+'" height="30" />';
-                    }
-                    return '-';
-                }}
+            ,{field: 'title', title: '标题', width:270}
+            ,{field: 'cover_url', title: '封面图',width:90, templet:function (d) {
+                if(d.cover_url != '' || d.cover_url != null){
+                    return '<img src="'+d.cover_url+'" height="30" />';
+                }
+                return '-';
+            }}
             ,{field: 'home_top', title: '首页置顶',width:90,templet:function (d) {
-                    switch (d.home_top*1){
-                        case 0:return '<span class="layui-btn-xs layui-border-blue">否</span>';break;
-                        case 1:return '<span class="layui-btn-xs layui-border-red">是</span>';break;
-                        default: return '-';
-                    }
-                }}
-            ,{field: 'home_sort', title: '首页置顶排序',width:120}
+                switch (d.home_top*1){
+                    case 0:return '<span class="layui-btn-xs layui-border-blue">否</span>';break;
+                    case 1:return '<span class="layui-btn-xs layui-border-red">是</span>';break;
+                    default: return '-';
+                }
+            }}
+            ,{field: 'home_sort', title: '首页置顶排序',width:130,sort:true}
             ,{field: 'category_top', title: '分类置顶',width:90,templet:function (d) {
-                    switch (d.category_top*1){
-                        case 0:return '<span class="layui-btn-xs layui-border-blue">否</span>';break;
-                        case 1:return '<span class="layui-btn-xs layui-border-red">是</span>';break;
-                        default: return '-';
-                    }
-                }}
-            ,{field: 'category_sort', title: '分类置顶排序',width:120}
-            ,{fixed: 'right',title:'操作',width:270, align:'center', toolbar: '#barDemo'}
+                switch (d.category_top*1){
+                    case 0:return '<span class="layui-btn-xs layui-border-blue">否</span>';break;
+                    case 1:return '<span class="layui-btn-xs layui-border-red">是</span>';break;
+                    default: return '-';
+                }
+            }}
+            ,{field: 'category_sort', title: '分类置顶排序',width:120,sort:true}
+            ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
+            if(obj.event==="more") {
+                dropdown.render({
+                    elem: this
+                    ,show: true
+                    , data: [
+                        {title: '编辑',id: 'edit'}
+                        ,{title: '删除',id: 'del'}
+                        ,{title: '首页置顶',id: 'home_top'}
+                        ,{title: '分类置顶',id: 'category_top'}
+                    ]
+                    , click: function(menudata) {
+                        if(menudata.id === 'del'){
+                            UI.delete(data['id'], function(res){
+                                if(res.code==200){
+                                    table.reload("table");
+                                }
+                            });
+                        }else if(menudata.id === 'edit'){
+                            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                        }else if(menudata.id === 'home_top'){
+                            UI.openLayer("{:url('homeTop')}?id="+data['id'], 600, 300, '#submit');
+                        }else if(menudata.id === 'category_top'){
+                            UI.openLayer("{:url('categoryTop')}?id="+data['id'], 600, 300, '#submit');
+                        }
                     }
-                });
-            }else if(obj.event === 'home_top'){
-                UI.openLayer("{:url('homeTop')}?id="+data['id'], 600, 300, '#submit');
-            }else if(obj.event === 'category_top'){
-                UI.openLayer("{:url('categoryTop')}?id="+data['id'], 600, 300, '#submit');
+                })
             }
         });
+
         var $ = layui.$, active = {
             create:function(){
                 UI.openLayer("{:url('create')}");
