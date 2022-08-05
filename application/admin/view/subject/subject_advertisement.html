@@ -21,8 +21,13 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
 
     UI.getPageTable(table, "{:url('', ['sid'=>$sid])}", [
         {field: 'key', title: '', width:80, fixed: 'left'}
-        ,{field: 'img_url', title: '图片', width:110,templet: '#img_url'}
-        ,{field: 'link_url', title: '链接', width:140,templet: '#span'}
+        ,{field: 'img_url', title: '图片', width:110,templet: function(d){
+            if(d.img_url){
+                return "<img src='"+d.img_url+"' width='30' height='30'>";
+            }
+            return "-";
+        }}
+        ,{field: 'link_url', title: '链接', width:140}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
     ]);
 
