@@ -264,7 +264,7 @@ class Subject extends Base
         return view('/subject_banner/index', [
             'sid' => $sid,
             'type' => $subjectBanner->type,
-            'meta_title' => 'banner'
+            'meta_title' => 'banner列表'
         ]);
     }
 
@@ -527,6 +527,7 @@ class Subject extends Base
 
         return view('', [
             'sid' => $sid,
+            'meta_title' => '优选分类列表'
         ]);
     }
 
