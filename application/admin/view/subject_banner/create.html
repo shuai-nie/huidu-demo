@@ -59,9 +59,10 @@
 </form>
 
 <script>
-    layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
+    layui.use(['form','upload','element'], function () {
+        var form = layui.form
+            ,upload = layui.upload
+            ,element = layui.element;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept = 'images';
