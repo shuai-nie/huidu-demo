@@ -30,9 +30,14 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
                     return '-';
             }
         }}
-        ,{field: 'url', title: '图片', width:110,templet: '#img_url'}
-        ,{field: 'alt', title: '描述', width:110,templet: '#img_url'}
-        ,{field: 'link_url', title: '链接', width:500,templet: '#span'}
+        ,{field: 'url', title: '图片', width:110,templet: function(d){
+            if(d.url){
+                return "<img src='"+d.url+"' height='30' width='30' />";
+            }
+            return '-';
+        }}
+        ,{field: 'alt', title: '描述', width:110}
+        ,{field: 'link_url', title: '链接', width:200}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
     ]);
 
