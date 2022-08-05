@@ -263,7 +263,8 @@ class Subject extends Base
         }
         return view('/subject_banner/index', [
             'sid' => $sid,
-            'type' => $subjectBanner->type
+            'type' => $subjectBanner->type,
+            'meta_title' => 'banner'
         ]);
     }
 
