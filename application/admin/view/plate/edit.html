@@ -19,10 +19,21 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">图标地址</label>
+        <label class="layui-form-label">图标</label>
         <div class="layui-input-block" >
             <input type="hidden" name="icon_url" >
             <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
+        </div>
+        <div class="layui-input-block" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo2" src="{$info['icon_url']|default=''}" >
+                <p id="demoText2"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo2">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -59,6 +70,17 @@
             <input type="hidden" name="counselor_img_url" >
             <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
         </div>
+        <div class="layui-input-block" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1" src="{$info['counselor_img_url']|default=''}" >
+                <p id="demoText"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="layui-form-item">
@@ -93,17 +115,44 @@ layui.use(['form','upload'], function () {
         ,size: upload_size
         ,done: function(res){
             if(res.code == 0) {
-                $("#image_url").show();
-                $("#image_url img").attr('src', res.url);
-                $("input[name='image_url']").val(res.url);
+                $("#demo1").attr('src', res.url);
+                $("input[name='counselor_img_url']").val(res.url);
             } else {
                 layui.msg('网络问题稍后再试');
             }
         }
-        ,error: function(){
-            //请求异常回调
+        ,error: function(){}
+        ,progress: function(n, elem, e){
+            element.progress('demo', n + '%');
+            if(n == 100){
+                layer.msg('上传完毕', {icon: 1});
+            }
         }
     });
+
+    upload.render({
+        elem: '#test2'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#demo2").attr('src', res.url);
+                $("input[name='icon_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+        }
+        ,error: function(){}
+        ,progress: function(n, elem, e){
+            element.progress('demo2', n + '%');
+            if(n == 100){
+                layer.msg('上传完毕', {icon: 1});
+            }
+        }
+    });
+
 
     //监听提交
     form.on('submit(submit)', function (data) {
