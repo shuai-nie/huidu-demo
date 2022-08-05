@@ -1,7 +1,9 @@
 {include file="moban/css"}
 {include file="moban/js"}
-
-<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
     <input type="hidden" name="subject_id" value="{$sid}" />
 
     <div class="layui-form-item">
@@ -10,6 +12,17 @@
             <button type="button" class="layui-btn" id="test1">
                 <i class="layui-icon">&#xe67c;</i>上传图片
             </button>
+        </div>
+        <div class="layui-input-block" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo" >
+                <p id="demoText2"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -29,8 +42,9 @@
 
 <script>
     layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
+        var form = layui.form
+            ,upload = layui.upload
+            ,element = layui.element;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept = 'images';
@@ -44,7 +58,7 @@
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
+                    $("#demo").attr('src', res.url);
                     $("input[name='img_url']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -53,6 +67,12 @@
             }
             ,error: function(){
                 //请求异常回调
+            }
+            ,progress: function(n, elem, e){
+                element.progress('demo', n + '%');
+                if(n == 100){
+                    layer.msg('上传完毕', {icon: 1});
+                }
             }
         });
 
