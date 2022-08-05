@@ -6,38 +6,6 @@
     <button class="layui-btn layui-btn-primary layui-btn-sm close-all" id="btn-fold">全部折叠</button>
 </div>
 
-<!--<fieldset class="table-search-fieldset">
-    <legend>搜索信息</legend>
-    <div style="margin: 10px 10px 10px 10px">
-        <form class="layui-form layui-form-pane" lay-filter="first" action="">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="data_name" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">类型</label>
-                    <div class="layui-input-inline">
-                        <select name="data_type_no" lay-filter="data_type_no" lay-search="" >
-                            <option value=""></option>
-                            {volist name='data_type' id='vo'}
-                            <option value="{$vo['type']}">{$vo['title']}</option>
-                            {/volist}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</fieldset>-->
-
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -68,7 +36,7 @@ layui.use(['table','treetable'], function(){
         url: "{:url('read')}",
         cols: [[
             {type: 'numbers'},
-            {field: 'title', title: '权限名称'},
+            {field: 'title', title: '权限名称',width:220},
             {field: 'data_icon', title: 'icon图标',width:120,templet: function(d){
                 if(d.pid == 5) {
                     return d.data_icon;

@@ -19,6 +19,7 @@ class Diction extends Base
         'RESOURCE_INDUSTRY' => ['type'=>'RESOURCE_INDUSTRY', 'title'=>'资源·行业类型'],
         'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'title'=>'资源·行业细分'],
         'RESOURCE_CURRENCY' => ['type'=>'RESOURCE_CURRENCY', 'title'=>'资源·货币'],
+        'CONTACTS_INDUSTRY' => ['type'=>'CONTACTS_INDUSTRY', 'title'=>'人脉·行业'],
 
     ];
 
@@ -29,62 +30,6 @@ class Diction extends Base
      */
     public function index()
     {
-        $DataDic = model("DataDic");
-        if(Request()->isPost()) {
-            /*$map = ['status'=>1];
-            $page = Request()->post('page');
-            $limit = Request()->post('limit');
-            $offset = ($page - 1) * $limit;
-            $data_name = request()->post('data_name');
-            $data_type_no = request()->post('data_type_no');
-            if (!empty($data_name)) {
-                $map['data_name'] = array('like', '%'.$data_name.'%');
-            }
-            if (!empty($data_type_no)) {
-                $map['data_type_no'] = $data_type_no;
-            }
-            $data = $DataDic->where($map)->limit($offset, $limit)->order('data_type_no desc,sort desc,id desc')->select();
-            $count = $DataDic->where($map)->count();
-            foreach ($data as $k => $v) {
-                if($v['data_type_no'] == 'RESOURCES_SUBDIVIDE'){
-                    if(is_numeric($v['data_top_id'])) {
-                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE', 'data_no'=>$v['data_top_id']])->find();
-                        if($DataInfo){
-                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
-                        }
-                    }
-                }
-
-                if($v['data_type_no'] == 'REPORT_DETAIL_CAUSE'){
-                    if(is_numeric($v['data_top_id'])) {
-                        $DataInfo = $DataDic->where(['data_type_no'=>'REPORT_TYPE', 'data_no'=>$v['data_top_id']])->find();
-                        if($DataInfo){
-                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
-                        }
-                    }
-                }
-                if($v['data_type_no'] == 'RESOURCE_INDUSTRY') {
-                    if(is_numeric($v['data_top_id'])) {
-                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCES_SUBDIVIDE', 'id'=>$v['data_top_id']])->find();
-                        if($DataInfo){
-                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
-                        }
-                    }
-                }
-                if($v['data_type_no'] == 'RESOURCE_INDUSTRY_SUBDIVIDE') {
-                    if(is_numeric($v['data_top_id'])) {
-                        $DataInfo = $DataDic->where(['data_type_no'=>'RESOURCE_INDUSTRY', 'data_no'=>$v['data_top_id']])->find();
-                        if($DataInfo){
-                            $v['data_name'] = '<span class="layui-border-blue layui-btn-xs">' . $DataInfo['data_name'] . '</span>-' . $v['data_name'];
-                        }
-                    }
-                }
-
-                $data[$k] = $v;
-            }
-            return json(['data' => ['count' => $count, 'list' => $data]], 200);*/
-        }
-
         return view('', [
             'data_type' => $this->data,
             'meta_title' => '字典',
@@ -264,6 +209,7 @@ class Diction extends Base
             ['id'=>3,'pid'=>0,'title'=>'资源·货币','isedit'=>false],
             ['id'=>4,'pid'=>0,'title'=>'举报类型','isedit'=>false],
             ['id'=>5,'pid'=>0,'title'=>'资源·合作区域','isedit'=>false],
+            ['id'=>6,'pid'=>0,'title'=>'人脉·行业','isedit'=>false],
         ];
         $DataDic = model('DataDic');
 
@@ -291,6 +237,12 @@ class Diction extends Base
         $resourcesAll = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_REGION'])->select();
         foreach ($resourcesAll as $k => $v) {
             array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+        }
+
+        //人脉*行业
+        $ContactsAll = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACTS_INDUSTRY'])->select();
+        foreach ($ContactsAll as $k=>$v){
+            array_push($data, ['id'=>$v['id'],'pid'=>6,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
