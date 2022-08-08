@@ -4,7 +4,7 @@
 <form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
 
     <div class="layui-form-item">
-        <label class="layui-form-label">专题分组名</label>
+        <label class="layui-form-label">模版名称</label>
         <div class="layui-input-inline" >
             <input type="text" name="group_title" class="layui-input" value="{$info['title']}" />
         </div>
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add">添加</span>
+                        <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
                     </div>
                 </div>
 
@@ -39,6 +39,7 @@
                     <div class="layui-input-inline" >
                         <input type="text" name="sort[1]" class="layui-input" />
                     </div>
+                    <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
                 </div>
             </div>
         </div>
@@ -56,11 +57,7 @@
                             </div>
                         </div>
                         <div class="layui-inline">
-                            {if condition="$k eq 1"}
-                            <span class="layui-btn layui-btn-normal layui-btn-sm" id="add">添加</span>
-                                {else/}
-                                <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
-                            {/if}
+                            <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
                         </div>
                     </div>
 
@@ -76,13 +73,16 @@
                         <div class="layui-input-inline" >
                             <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
                         </div>
+                        <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
                     </div>
                 </div>
             </div>
         {/volist}
     {/if}
 
-
+    <div class="layui-form-item" style="text-align:center;">
+        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add" style="width:200px;line-height:40px;height:40px;">添加</span>
+    </div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
