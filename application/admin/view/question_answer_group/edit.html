@@ -10,16 +10,17 @@
         </div>
     </div>
 
-    {if condition="empty($data)"}
+
+    {volist name="data" id="vo" key="k"}
         <div id="list">
             <div class="list">
-                <input type="hidden" name="qid[1]" value="0" >
+                <input type="hidden" name="qid[{$k}]" value="{$vo['id']}" >
                 <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">问题1</label>
                         <div class="layui-input-block" style="width:600px;" >
-                            <input type="text" name="question[1]" class="layui-input" />
+                            <input type="text" name="question[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['question']}" />
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -30,55 +31,21 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">答案1</label>
                     <div class="layui-input-block" style="width:600px;" >
-                        <input type="text" name="answer[1]" class="layui-input" />
+                        <input type="text" name="answer[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['answer']}" />
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-inline" >
-                        <input type="text" name="sort[1]" class="layui-input" />
+                        <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
                     </div>
                     <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
                 </div>
             </div>
         </div>
-        {else/}
-        {volist name="data" id="vo" key="k"}
-            <div id="list">
-                <div class="list">
-                    <input type="hidden" name="qid[{$k}]" value="{$vo['id']}" >
-                    <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">问题1</label>
-                            <div class="layui-input-block" style="width:600px;" >
-                                <input type="text" name="question[{$k}]" class="layui-input" value="{$vo['question']}" />
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
-                        </div>
-                    </div>
+    {/volist}
 
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">答案1</label>
-                        <div class="layui-input-block" style="width:600px;" >
-                            <input type="text" name="answer[{$k}]" class="layui-input" value="{$vo['answer']}" />
-                        </div>
-                    </div>
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">排序</label>
-                        <div class="layui-input-inline" >
-                            <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
-                        </div>
-                        <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
-                    </div>
-                </div>
-            </div>
-        {/volist}
-    {/if}
 
     <div class="layui-form-item" style="text-align:center;">
         <span class="layui-btn layui-btn-normal layui-btn-sm" id="add" style="width:200px;line-height:40px;height:40px;">添加</span>
@@ -139,7 +106,7 @@
                 "        <div class=\"layui-inline\">\n" +
                 "            <label class=\"layui-form-label\">问题" + _keyCount + "</label>\n" +
                 "            <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "                <input type=\"text\" name=\"question["+_keyCount+"]\" class=\"layui-input\" />\n" +
+                "                <input type=\"text\" name=\"question["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "            </div>\n" +
                 "        </div>\n" +
                 "        <div class=\"layui-inline\">\n" +
@@ -150,7 +117,7 @@
                 "    <div class=\"layui-form-item\">\n" +
                 "        <label class=\"layui-form-label\">答案" + _keyCount + "</label>\n" +
                 "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" class=\"layui-input\" />\n" +
+                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "    <div class=\"layui-form-item\">\n" +

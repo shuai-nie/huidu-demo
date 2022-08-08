@@ -6,7 +6,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">模版名称</label>
         <div class="layui-input-inline" >
-            <input type="text" name="group_title" class="layui-input" value="模版{$count}" />
+            <input type="text" name="group_title" lay-verify="required" placeholder="请输入" class="layui-input" value="模版{$count}" />
         </div>
     </div>
 
@@ -17,7 +17,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">问题1</label>
                     <div class="layui-input-block" style="width:600px;" >
-                        <input type="text" name="question[1]" class="layui-input" />
+                        <input type="text" name="question[1]" lay-verify="required" placeholder="请输入" class="layui-input" />
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -28,7 +28,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">答案1</label>
                 <div class="layui-input-block" style="width:600px;" >
-                    <input type="text" name="answer[1]" class="layui-input" />
+                    <input type="text" name="answer[1]" lay-verify="required" placeholder="请输入" class="layui-input" />
                 </div>
             </div>
 
@@ -100,7 +100,7 @@
                 "        <div class=\"layui-inline\">\n" +
                 "            <label class=\"layui-form-label\">问题" + _keyCount + "</label>\n" +
                 "            <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "                <input type=\"text\" name=\"question["+_keyCount+"]\" class=\"layui-input\" />\n" +
+                "                <input type=\"text\" name=\"question["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "            </div>\n" +
                 "        </div>\n" +
                 "        <div class=\"layui-inline\">\n" +
@@ -111,7 +111,7 @@
                 "    <div class=\"layui-form-item\">\n" +
                 "        <label class=\"layui-form-label\">答案" + _keyCount + "</label>\n" +
                 "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" class=\"layui-input\" />\n" +
+                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "    <div class=\"layui-form-item\">\n" +
