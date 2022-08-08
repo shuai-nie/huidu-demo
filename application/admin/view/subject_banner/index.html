@@ -1,10 +1,8 @@
 {include file="moban/bone_header"}
 
-{if condition="$count lt 1"}
 <div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
+    <button class="layui-btn" data-type="create">{:lang('create')}</button>
 </div>
-{/if}
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
@@ -37,8 +35,18 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
             }
             return '-';
         }}
-        ,{field: 'alt', title: '描述', width:110}
-        ,{field: 'link_url', title: '链接', width:200}
+        ,{field: 'alt', title: 'ALT描述', width:110, templet:function(d){
+            if(d.alt){
+                return d.alt;
+            }
+            return '-';
+        }}
+        ,{field: 'link_url', title: '外链', width:200, templet:function(d){
+            if(d.link_url){
+                return d.link_url;
+            }
+            return '-';
+        }}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
     ]);
 

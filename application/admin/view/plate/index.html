@@ -19,15 +19,6 @@ layui.use(['table','dropdown'], function(){
 
     UI.getPageTable(table, "{:url('', ['sid'=>$sid])}", [
         {field: 'key', title: '', width:80, fixed: 'left'}
-        ,{field: 'type', title: '类型', width:140,templet:function(d){
-            switch (d.type*1) {
-                {volist name="type" id='vo'}
-                case {$vo['id']}: return "{$vo['title']}";
-                {/volist}
-                default:
-                    return '-';
-            }
-        }}
         ,{field: 'plate_title', title: '版块标题', width:120,}
         ,{field: 'plate_subtitle', title: '版块副标题', width:120,}
         ,{field: 'icon_title', title: '图标标题', width:120,}
@@ -48,7 +39,7 @@ layui.use(['table','dropdown'], function(){
                 ,show: true
                 , data: [
                     {title:"{:lang('edit')}", id:'edit',templet:"<span class='layui-btn layui-btn-xs'>{{d.title}}</span>"}
-                    ,{title:"{:lang('delete')}", id:'del',templet:"<span class='layui-btn layui-btn-danger layui-btn-xs'>{{d.title}}</span>"}
+                    // ,{title:"{:lang('delete')}", id:'del',templet:"<span class='layui-btn layui-btn-danger layui-btn-xs'>{{d.title}}</span>"}
                     ,{title:"板块资源", id:'resource',templet:"<span class='layui-btn layui-btn-normal layui-btn-xs'>{{d.title}}</span>"}
                 ]
                 ,click: function(menudata){

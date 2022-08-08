@@ -7,13 +7,6 @@
 <form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
     <input type="hidden" name="subject_id" value="{$sid}" >
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">板块类型</label>
-        <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="专题业务动态" checked />
-            <input type="radio" name="type" value="1" title="专区自定义模版" />
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">图标标题</label>
@@ -23,12 +16,14 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">图标</label>
-        <div class="layui-input-block" >
-            <input type="hidden" name="icon_url" >
-            <button type="button" class="layui-btn" id="test2" ><i class="layui-icon">&#xe67c;</i>上传</button>
+        <div class="layui-inline">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-block" >
+                <input type="hidden" name="icon_url" >
+                <button type="button" class="layui-btn" id="test2" ><i class="layui-icon">&#xe67c;</i>上传</button>
+            </div>
         </div>
-        <div class="layui-input-block" >
+        <div class="layui-inline">
             <div class="layui-upload-list">
                 <img class="layui-upload-img" id="demo2">
                 <p id="demoText2"></p>
@@ -39,6 +34,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
     <div class="layui-form-item">
@@ -64,17 +61,19 @@
                 <option value="{$vo['id']}">{$vo['remarks']}</option>
                 {/volist}
             </select>
-            <div class="layui-form-mid layui-word-aux">查看更多链接地址1</div>
+            <div class="layui-form-mid layui-word-aux">查看更多链接地址</div>
         </div>
     </div>
 
     <div class="layui-form-item">
+        <div class="layui-inline">
         <label class="layui-form-label">顾问图片</label>
         <div class="layui-input-block" >
             <input type="hidden" name="counselor_img_url" >
             <button type="button" class="layui-btn" id="test1" ><i class="layui-icon">&#xe67c;</i>上传</button>
         </div>
-        <div class="layui-input-block" >
+        </div>
+        <div class="layui-inline" >
             <div class="layui-upload-list">
                 <img class="layui-upload-img" id="demo1">
                 <p id="demoText"></p>

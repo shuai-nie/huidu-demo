@@ -643,7 +643,8 @@ class Subject extends Base
             }
             return error_json("提交失败");
         }
-        $contentCategoryAll = model('contentCategory')->where(['type'=>2])->select();
+
+        $contentProperty = model('contentProperty')->where(['status'=>1])->order('id desc')->select();
         $subjectInfo = $subject->where(['id'=>$sid])->find();
         $info = ['subject_content_type' => $subjectInfo['subject_content_type']];
         $info['key'] = [];
@@ -657,7 +658,7 @@ class Subject extends Base
 
         return view('', [
             'sid' => $sid,
-            'contentCategoryAll' => $contentCategoryAll,
+            'contentProperty' => $contentProperty,
             'subjectInfo' => $subjectInfo,
             'info' => $info,
         ]);

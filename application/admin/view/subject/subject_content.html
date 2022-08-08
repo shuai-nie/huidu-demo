@@ -19,7 +19,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">文章属性</label>
             <div class="layui-input-block" >
-                {volist name='contentCategoryAll' id='vo'}
+                {volist name='contentProperty' id='vo'}
                 <input type="checkbox" name="key[{$vo['id']}]" value="{$vo['id']}" title="{$vo['name']}" />
                 {/volist}
             </div>
