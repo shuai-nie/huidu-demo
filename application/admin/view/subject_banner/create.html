@@ -96,8 +96,14 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code != 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
 
