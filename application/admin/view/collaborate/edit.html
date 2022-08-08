@@ -29,6 +29,17 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            <select name="resource_type" lay-search="">
+                {volist name="resource_type" id="vo" }
+                <option value="{$vo['data_no']}">{$vo['data_name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">网站</label>
         <div class="layui-input-block">
             <input type="text" name="website" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">

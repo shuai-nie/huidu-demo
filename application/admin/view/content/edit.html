@@ -17,12 +17,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">属性</label>
         <div class="layui-input-block">
-            <select name="attribute_id" lay-filter="attribute_id" lay-search="">
-                <option value="">请选择</option>
-                {volist name="category2" id="vo"}
-                <option value="{$vo['id']}">{$vo['name']}</option>
-                {/volist}
-            </select>
+            {volist name="category2" id="vo"}
+            <input type="checkbox" name="attribute_id[{$vo['id']}]" value="{$vo['id']}" title="{$vo['name']}">
+            {/volist}
         </div>
     </div>
 

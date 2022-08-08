@@ -24,7 +24,7 @@ layui.use('table', function(){
     table.on('tool(think-table)', function(obj){
         var data=obj.data;
         if(obj.event==="edit"){
-            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 600, '#submit');
+            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 600, '#submit', "{:lang('edit')}");
         }else if(obj.event==='del'){
             UI.delete(data['id'], function(res){
                 if(res.code==200){
@@ -36,7 +36,7 @@ layui.use('table', function(){
 
     var $ = layui.$, active = {
         create:function(){
-            UI.openLayer("{:url('create')}", 850, 600);
+            UI.openLayer("{:url('create')}", 850, 600, '#submit', "{:lang('edit')}");
         }
     };
 

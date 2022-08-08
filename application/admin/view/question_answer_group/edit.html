@@ -11,40 +11,40 @@
     </div>
 
 
+    <div id="list">
     {volist name="data" id="vo" key="k"}
-        <div id="list">
-            <div class="list">
-                <input type="hidden" name="qid[{$k}]" value="{$vo['id']}" >
-                <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">问题1</label>
-                        <div class="layui-input-block" style="width:600px;" >
-                            <input type="text" name="question[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['question']}" />
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">答案1</label>
+        <div class="list">
+            <input type="hidden" name="qid[{$k}]" value="{$vo['id']}" >
+            <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">问题{$k}</label>
                     <div class="layui-input-block" style="width:600px;" >
-                        <input type="text" name="answer[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['answer']}" />
+                        <input type="text" name="question[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['question']}" />
                     </div>
                 </div>
+                <div class="layui-inline">
+                    <span class="layui-btn layui-btn-danger layui-btn-sm DeleteList">删除</span>
+                </div>
+            </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">排序</label>
-                    <div class="layui-input-inline" >
-                        <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
-                    </div>
-                    <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">答案{$k}</label>
+                <div class="layui-input-block" style="width:600px;" >
+                    <input type="text" name="answer[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['answer']}" />
                 </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline" >
+                    <input type="text" name="sort[{$k}]" class="layui-input" value="{$vo['sort']}" />
+                </div>
+                <div class="layui-form-mid layui-word-aux">数字越大，展示越靠前</div>
             </div>
         </div>
     {/volist}
+    </div>
 
 
     <div class="layui-form-item" style="text-align:center;">
@@ -95,7 +95,7 @@
                 console.log(res);
             });
         });
-        var _keyCount = "{$data|count}"*1;
+        var _keyCount = "{$data|count}"*1+1;
 
 
         $("#add").on("click", function(){

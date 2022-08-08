@@ -20,26 +20,31 @@ class Collaborate extends Base
             $contact_number = request()->post('contact_number');
             $user_name = request()->post('user_name');
             $source = request()->post('source');
-            $map = ['status' => 1];
+            $map = ['A.status' => 1];
             if(!empty($contact_number)) {
-                $map['contact_number'] = ['like', "%{$contact_number}%"];
+                $map['A.contact_number'] = ['like', "%{$contact_number}%"];
             }
 
             if(!empty($user_name)) {
-                $map['user_name'] = ['like', "%{$user_name}%"];
+                $map['A.user_name'] = ['like', "%{$user_name}%"];
             }
 
             if(is_numeric($source)){
-                $map['source'] = $source;
+                $map['A.source'] = $source;
             }
-            $count = $Collaborate->where($map)->count();
-            $data = $Collaborate->where($map)->limit($offset, $limit)->order('id desc')->select();
-
             $dataDic = model('dataDic');
+            $count = $Collaborate->alias('A')->where($map)->count();
+            $data = $Collaborate->alias('A')->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+
+
             foreach ($data as $k => $v) {
                 $contact_type = $dataDic->where(['data_type_no' => 'CONTACT_TYPE', 'data_no'=>$v['contact_type']])->find();
                 if($contact_type){
                     $v['contact_type_name'] = $contact_type['data_name'];
+                }
+                $resource_type = $dataDic->where(['data_type_no'=>'RESOURCES_TYPE','data_no'=>$v['resource_type']])->find();
+                if($resource_type){
+                    $v['resource_type_name'] = $resource_type['data_name'];
                 }
                 $data[$k] = $v;
             }
@@ -61,7 +66,11 @@ class Collaborate extends Base
             return error_json('提交成功');
         }
         $type = model('DataDic')->where(['status' => 1, 'data_type_no' => 'CONTACT_TYPE'])->order('sort desc')->select();
-        return view('', ['type' => $type]);
+        $resource_type = model('DataDic')->where(['status' => 1, 'data_type_no'=>'RESOURCES_TYPE'])->order('sort desc')->select();
+        return view('', [
+            'type' => $type,
+            'resource_type' => $resource_type,
+        ]);
     }
 
     public function edit()
@@ -78,9 +87,11 @@ class Collaborate extends Base
         }
         $data = $Collaborate->where(['id'=>$id])->find();
         $type = model('DataDic')->where(['status' => 1, 'data_type_no' => 'CONTACT_TYPE'])->order('sort desc')->select();
+        $resource_type = model('DataDic')->where(['status' => 1, 'data_type_no'=>'RESOURCES_TYPE'])->order('sort desc')->select();
         return view('', [
             'data' => $data,
-            'type' => $type
+            'type' => $type,
+            'resource_type' => $resource_type,
         ]);
     }
 
