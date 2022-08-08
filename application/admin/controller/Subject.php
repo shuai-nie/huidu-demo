@@ -418,6 +418,7 @@ class Subject extends Base
         }
         $count = $subjectQuestionAnswer->where(['subject_id'=>$sid,'status'=>1])->count();
         $groupAll = $questionAnswerGroup->where(['status'=>1])->field('id,title')->select();
+
         if($count > 0){
             $answerAll = $subjectQuestionAnswer->where(['subject_id'=>$sid])->select();
             return view('/subject_question_answer/edit', [

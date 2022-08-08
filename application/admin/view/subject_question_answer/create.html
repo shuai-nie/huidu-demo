@@ -11,13 +11,13 @@
             {/volist}
         </div>
     </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block" >
-            <span class="layui-btn layui-btn-normal" id="add">{:lang('create')}</span>
-        </div>
-    </div>
+
 
     <div id="listData"></div>
+
+    <div class="layui-form-item" style="text-align:center;">
+        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add" style="width:200px;line-height:40px;height:40px;">添加</span>
+    </div>
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
@@ -32,34 +32,16 @@
             upload = layui.upload,
             countList = 1;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept = 'images';
-        var upload_acceptMime = 'image/*';
-        var upload_size = 3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='img_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
-
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code != 200) {
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
 
@@ -77,22 +59,22 @@
                                 " <input type='hidden' name='question_answer_group_id[" + countList + "]' value='" + v.question_answer_template_id + "'>  " +
                                 " <input type='hidden' name='question_answer[" + countList + "]' value='" + v.id + "'>  " +
                                 " <input type='hidden' name='id[" + countList + "]' value='0' >  " +
-                                "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
+                                "            <label class=\"layui-form-label\">问题</label>\n" +
                                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
                                 "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" value='" + v.question + "' />\n" +
                                 "            </div>\n" +
                                 "        </div>\n" +
                                 "        <div class=\"layui-form-item\">\n" +
-                                "            <label class=\"layui-form-label\">答案"+countList+"</label>\n" +
+                                "            <label class=\"layui-form-label\">答案</label>\n" +
                                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
-                                "                <input type=\"text\" name=\"answer["+countList+"]\" class=\"layui-input\" />\n" +
+                                "                <textarea type=\"text\" name=\"answer["+countList+"]\" class=\"layui-textarea\" >" + v.answer + "</textarea>\n" +
                                 "            </div>\n" +
                                 "        </div>"+
                                 "        <div class=\"layui-form-item\">\n" +
                                 "            <div class=\"layui-inline\">\n" +
-                                "            <label class=\"layui-form-label\">排序"+countList+"</label>\n" +
+                                "            <label class=\"layui-form-label\">排序</label>\n" +
                                 "            <div class=\"layui-input-inline\"  >\n" +
-                                "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" />\n" +
+                                "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" value='" + v.sort + "' />\n" +
                                 "            </div>\n" +
                                 "            </div>\n" +
                                 "            <div class=\"layui-inline\">\n" +
@@ -112,20 +94,20 @@
                 " <input type='hidden' name='question_answer_group_id["+countList+"]' value='0'>  " +
                 " <input type='hidden' name='question_answer["+countList+"]' value='0'>  " +
                 " <input type='hidden' name='id[" + countList + "]' value='0' >  " +
-                "            <label class=\"layui-form-label\">问题"+countList+"</label>\n" +
+                "            <label class=\"layui-form-label\">问题</label>\n" +
                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
                 "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" />\n" +
                 "            </div>\n" +
                 "        </div>\n" +
                 "        <div class=\"layui-form-item\">\n" +
-                "            <label class=\"layui-form-label\">答案"+countList+"</label>\n" +
+                "            <label class=\"layui-form-label\">答案</label>\n" +
                 "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
-                "                <input type=\"text\" name=\"answer["+countList+"]\" class=\"layui-input\" />\n" +
+                "                <textarea type=\"text\" name=\"answer["+countList+"]\" class=\"layui-textarea\" ></textarea>\n" +
                 "            </div>\n" +
                 "        </div>"+
                 "        <div class=\"layui-form-item\">\n" +
                 "            <div class=\"layui-inline\">\n" +
-                "            <label class=\"layui-form-label\">排序"+countList+"</label>\n" +
+                "            <label class=\"layui-form-label\">排序</label>\n" +
                 "            <div class=\"layui-input-inline\"  >\n" +
                 "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" />\n" +
                 "            </div>\n" +
