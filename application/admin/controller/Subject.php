@@ -271,13 +271,13 @@ class Subject extends Base
     {
         $subjectBanner = model('subjectBanner');
         $sid = request()->param('sid');
+        $map = ['status' => 1, 'subject_id' => $sid];
+        $count = $subjectBanner->where($map)->count();
         if(request()->isPost()){
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
-            $map = ['status' => 1, 'subject_id' => $sid];
             $data = $subjectBanner->where($map)->order('id desc')->limit($offset, $limit)->select();
-            $count = $subjectBanner->where($map)->count();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $data[$k] = $v;
@@ -287,7 +287,8 @@ class Subject extends Base
         return view('/subject_banner/index', [
             'sid' => $sid,
             'type' => $subjectBanner->type,
-            'meta_title' => 'banner列表'
+            'meta_title' => 'banner列表',
+            'count' => $count
         ]);
     }
 
