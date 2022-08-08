@@ -22,7 +22,7 @@ class Subject extends Base
             $subjectAdvertisement = model('SubjectAdvertisement');
             $data = $subject->alias('A')
                 ->field("A.*")
-                ->where($map)->limit($offset, $limit)->select();
+                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
             $count = $subject->alias('A')->where($map)->count();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;

@@ -34,7 +34,7 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
             ,{field: 'title', title: '专题名称', width:140}
-            ,{field: 'type', title: '专题分类', width:120, templet:function(d){
+            ,{field: 'type', title: '专题分类', width:90, templet:function(d){
                 switch (d.type * 1){
                     {volist name="type" id="vo"}
                     case {$vo['id']}: return "{$vo['title']}";
@@ -43,9 +43,10 @@
                         return '-';
                 }
             }}
-            ,{field: 'span', title: '', width:500,templet: '#span'}
+            ,{field: 'span', title: '', width:430,templet: '#span'}
             ,{field: 'home_show', title: '展示', width:100,templet: '#home_show'}
             ,{field: 'sort', title: '排序', width:80,sort: true}
+            ,{field: 'create_time', title: '创建时间', width:170}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
@@ -66,35 +67,50 @@
                 // 文章
                 UI.openLayer("{:url('article')}?sid="+data['id'], 850, 730, '#submit');
             }else if(obj.event==='plate'){
-                UI.openLayer("{:url('plate')}?sid="+data['id'], 1050, 730, '#submit', "版块");
+                layer.open({
+                    type: 2
+                    , anim: 2
+                    , area: ['1150px', '650px']
+                    , btn: ['关闭']
+                    , title: "版块列表"
+                    , yes: function (index, layero) { layer.close(index); }
+                    , content: "{:url('plate')}?sid="+data['id']
+                    , end: function () {}
+                });
             }else if(obj.event==='advert'){
                 layer.open({
-                    type: 2,
-                    anim: 2,
-                    area: ['1150px', '650px'],
-                    btn: ['关闭'],
-                    yes: function (index, layero) {
-                        layer.close(index);
-                    },
-                    content: "{:url('subject_advertisement')}?sid="+data['id']
-                    ,end: function () {}
+                    type: 2
+                    , anim: 2
+                    , area: ['1150px', '650px']
+                    , btn: ['关闭']
+                    , title: "广告列表"
+                    , yes: function (index, layero) { layer.close(index); }
+                    , content: "{:url('subject_advertisement')}?sid=" + data['id']
+                    , end: function () {}
                 });
             }else if(obj.event==='banner'){
                 layer.open({
-                    type: 2,
-                    anim: 2,
-                    area: ['1150px', '650px'],
-                    btn: ['关闭'],
-                    yes: function (index, layero) {
-                        layer.close(index);
-                    },
-                    content: "{:url('banner')}?sid="+data['id']
-                    ,end: function () {}
+                    type: 2
+                    , anim: 2
+                    , area: ['1150px', '650px']
+                    , btn: ['关闭']
+                    , yes: function (index, layero) { layer.close(index); }
+                    , content: "{:url('banner')}?sid=" + data['id']
+                    , end: function () { }
                 });
             }else if(obj.event==='zixun'){
-                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 400, '#submit', "专题资讯列表");
+                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 400, '#submit', "文章资讯");
             }else if(obj.event==='subject_category'){
-                UI.openLayer("{:url('subject_category')}?sid="+data['id'], 1050, 700, '#submit', "优选分类列表");
+                layer.open({
+                    type: 2
+                    , anim: 2
+                    , area: ['1150px', '650px']
+                    , title: "优选分类列表"
+                    , btn: ['关闭']
+                    , yes: function (index, layero) { layer.close(index); }
+                    , content: "{:url('subject_category')}?sid=" + data['id']
+                    , end: function () { }
+                });
             }else if(obj.event==='question'){
                 UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit');
             } else if(obj.event === 'more'){
