@@ -96,6 +96,9 @@ class QuestionAnswerGroup extends Base
                         array_push($insertAll, ['question_answer_template_id' => $id, 'question' => $v, 'answer' => $_post['answer'][$k], 'sort' => $_post['sort'][$k],]);
                     }
                 }
+
+                $questionAnswer->where(["id" => ["not in", $qids], 'question_answer_template_id' => $id])->update(['status' => 0]);
+
                 if(!empty($insertAll)){
                     $questionAnswer->saveAll($insertAll, false);
                 }
@@ -103,7 +106,7 @@ class QuestionAnswerGroup extends Base
                 if(!empty($updateAll)){
                     $questionAnswer->saveAll($updateAll, true);
                 }
-                $questionAnswer->where(["id" => ["not in", $qids], 'question_answer_template_id' => $id])->update(['status' => 0]);
+
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
