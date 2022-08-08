@@ -17,7 +17,7 @@ class Subject extends Base
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
-            $map = [];
+            $map = ['A.status'=>1];
             $subject = model('subject');
             $subjectAdvertisement = model('SubjectAdvertisement');
             $data = $subject->alias('A')
@@ -91,10 +91,33 @@ class Subject extends Base
         ]);
     }
 
-    public function del()
+    public function delete()
     {
+        $id = request()->param('id');
+        $subject = model('subject');
+        $state = $subject->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
+        if($state !== false) {
+            return success_json('刪除成功');
+        }
+        return error_json('刪除失败');
 
     }
+
+    public function set_value()
+    {
+        if(request()->isPost()){
+            $subject = model('subject');
+            $_post = request()->post();
+            $state = $subject->isUpdate(true)->save([
+                $_post['name']=>$_post['value']
+            ], ['id'=>$_post['id']]);
+            if($state !== false) {
+                return success_json('修改成功');
+            }
+            return error_json('修改失败');
+        }
+    }
+
 
     public function plate()
     {

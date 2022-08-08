@@ -12,10 +12,8 @@
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
 </script>
 
-<script type="text/html" id="img_url">
-{{# if(d.img_url){ }}
-    <img src="{{d.img_url}}" width="100" height="30" />
-{{# } }}
+<script type="text/html" id="home_show">
+    <input type="checkbox" name="home_show" value="{{d.id}}" lay-skin="switch" lay-text="下架|上架" lay-filter="home_show" {{ d.home_show == 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="span">
@@ -25,19 +23,20 @@
     <span class="layui-btn layui-btn-xs" lay-event="question">入驻须知</span>
     <span class="layui-btn layui-btn-xs" lay-event="advert">广告</span>
     <span class="layui-btn layui-btn-xs" lay-event="subject_category">优选分类</span>
-<!--    <span class="layui-btn layui-btn-xs" lay-event="content">内容</span>-->
-<!--    <span class="layui-btn layui-btn-xs" lay-event="article">文章</span>-->
 </script>
 
 <script>
-    layui.use(['table','dropdown'], function(){
+    layui.use(['table','dropdown','form'], function(){
         var table = layui.table
-            ,dropdown = layui.dropdown;
+            , form = layui.form
+            , dropdown = layui.dropdown;
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
-            ,{field: 'title', title: '标题', width:300}
+            ,{field: 'title', title: '标题', width:140}
             ,{field: 'span', title: '', width:500,templet: '#span'}
+            ,{field: 'home_show', title: '展示', width:100,templet: '#home_show'}
+            ,{field: 'sort', title: '排序', width:80,sort: true}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
@@ -133,6 +132,14 @@
         $('.layui-btn-container .layui-btn').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('switch(home_show)', function(obj){
+            var _check = obj.elem.checked == true ? 1 : 0;
+            $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
+
+            }, 'json');
+
         });
 
     });
