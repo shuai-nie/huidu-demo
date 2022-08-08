@@ -126,15 +126,16 @@ class Subject extends Base
     {
         $sid = request()->param('sid');
         $plate = model('plate');
+        $map = ['status' => 1,'subject_id'=>$sid];
+        $count = $plate->alias('A')->where($map)->count();
         if(request()->isPost()) {
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
-            $map = ['status' => 1,'subject_id'=>$sid];
             $data = $plate->alias('A')
                 ->field("A.*")
                 ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
-            $count = $plate->alias('A')->where($map)->count();
+
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $data[$k] = $v;
@@ -145,7 +146,8 @@ class Subject extends Base
         return view('/plate/index', [
             'sid' => $sid,
             'meta_title' => '版块列表',
-            'type' => $plate->type
+            'type' => $plate->type,
+            'count' => $count,
         ]);
     }
 
