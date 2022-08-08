@@ -1,0 +1,144 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<style type="text/css">
+.type2{display:none;}
+</style>
+
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">合作配置</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="resource_type" value="1" title="配置合作分类" checked lay-filter="type" />
+            <input type="radio" name="resource_type" value="2" title="单独配置" lay-filter="type" />
+        </div>
+    </div>
+
+    <div class="layui-form-item type1">
+        <div class="layui-inline">
+            <label class="layui-form-label">选择分类</label>
+            <div class="layui-input-block" >
+                <select name="key1" lay-filter="key1" lay-search="">
+                    <option value="0">全部</option>
+                    {volist name='dataDicAll' id='vo'}
+                    <option value="{$vo['id']}">{$vo['data_name']}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <select name="key2" lay-filter="key2" id="key2" lay-search="" >
+                <option value="0">全部</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item type2" >
+        <label class="layui-form-label">单独配置</label>
+        <div class="layui-input-block" >
+            <textarea name="textarea" class="layui-textarea"></textarea>
+            <div class="layui-form-mid layui-word-aux">请按照格式填写，以数字逗号分隔，例：1,2,3,4,5</div>
+        </div>
+
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept = 'images';
+        var upload_acceptMime = 'image/*';
+        var upload_size = 3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#image_url img").attr('src', res.url);
+                    $("input[name='img_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            Api.add(data.field, function (res) {
+                console.log(res);
+            });
+        });
+        form.val('first', {
+            "resource_type":"{$data['resource_type']|default=1}",
+            "key1":"{$data['key1']|default=0}",
+            "key2":"{$data['key2']|default=0}",
+            "textarea":"{$data['textarea']|default=''}",
+        })
+
+        if ("{$data['resource_type']|default=1}" * 1 == 1) {
+            $(".type2").hide();
+            $(".type1").show();
+            $.post("{:url('resources_type')}", {id: "{$data['key1']|default=0}"}, function (objPost) {
+                var _html = "<option value='0'>全部</option>";
+                if (objPost.code == 200) {
+                    $.each(objPost.data, function (i, v) {
+                        _html += "<option value='" + v.id + "'>" + v.data_name + "</option>";
+                    })
+                }
+                $("#key2").html(_html);
+                form.render('select');
+                form.val('first', {"key2":"{$data['key2']|default=0}"});
+            })
+
+        }else if("{$data['resource_type']|default=1}" * 1 == 2){
+            $(".type1").hide();
+            $(".type2").show();
+
+        }
+
+        form.on('radio(type)', function(data){
+            var _val = data.value;
+            $(".type1").hide();
+            $(".type2").hide();
+            $(".type" + _val).show();
+        })
+
+        form.on('select(key1)', function(data){
+            var _val = data.value;
+            resourcePost(_val)
+        })
+
+        function resourcePost(_val)
+        {
+            $.post("{:url('resources_type')}", {id: _val}, function (objPost) {
+                var _html = "<option value='0'>全部</option>";
+                if(objPost.code == 200) {
+                    $.each(objPost.data, function(i, v){
+                        _html += "<option value='" + v.id + "'>" + v.data_name + "</option>";
+                    })
+                }
+                $("#key2").html(_html);
+                form.render('select');
+            }, 'json');
+
+        }
+
+    });
+</script>

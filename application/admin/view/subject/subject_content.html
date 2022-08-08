@@ -71,6 +71,17 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+            if(data.field.subject_content_type == 2){
+                if(data.field.textarea == '' || data.field.textarea == null) {
+                    layer.msg("单独配置不能为空");
+                    return false;
+                }
+
+                if(arr_split(data.field.textarea)){
+                    return false;
+                }
+                
+            }
             Api.add(data.field, function (res) {
                 console.log(res);
             });
@@ -99,7 +110,26 @@
             $(".type2").hide();
             $(".type" + _val).show();
         })
+        //arr_split("1,2,3,sss,4,5");
+
+        function arr_split(str){
+            var _m = str.split(','), _b = false;
+            try {
+                $.each(_m, function (i, v) {
+                    if (isNaN(v)) {
+                        throw new Error("1");
+
+                    }
+                })
+            } catch(e){
+                if(e.message == "1"){
+                    layer.msg("格式错误");
+                    return false;
+                }
+            }
+        }
 
 
     });
+    //swt.prop('checked',!obj.elem.checked);
 </script>

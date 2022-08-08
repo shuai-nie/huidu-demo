@@ -126,7 +126,9 @@ class Subject extends Base
     {
         $sid = request()->param('sid');
         $plate = model('plate');
+        $subject = model('subject');
         $map = ['status' => 1,'subject_id'=>$sid];
+        $info = $subject->where(['id'=>$sid])->find();
         $count = $plate->alias('A')->where($map)->count();
         if(request()->isPost()) {
             $page = request()->post('page', 1);
@@ -143,12 +145,22 @@ class Subject extends Base
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
 
-        return view('/plate/index', [
-            'sid' => $sid,
-            'meta_title' => '版块列表',
-            'type' => $plate->type,
-            'count' => $count,
-        ]);
+        // 0专题 1专区
+        if($info['type'] == 0){
+            $dataDicAll = model('dataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
+            return view('plate/index_special', [
+                'dataDicAll' => $dataDicAll,
+                'meta_title' => '板块资源',
+            ]);
+        }else{
+            return view('/plate/index', [
+                'sid' => $sid,
+                'meta_title' => '版块列表',
+                'type' => $plate->type,
+                'count' => $count,
+            ]);
+        }
+
     }
 
     public function create_plate()
