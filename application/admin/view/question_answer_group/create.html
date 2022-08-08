@@ -1,7 +1,7 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<form class="layui-form" lay-filter="first" style="padding: 10px 30px 0 0;">
+<form class="layui-form" lay-filter="first" style="padding: 10px 30px 0 0;" xmlns="http://www.w3.org/1999/html">
 
     <div class="layui-form-item">
         <label class="layui-form-label">模版名称</label>
@@ -12,7 +12,7 @@
 
     <div id="list">
         <div class="list">
-            <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
+            <fieldset class="layui-elem-field layui-field-title" style="background-color:#1E9FFF;height:1px;"></fieldset>
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">问题</label>
@@ -28,7 +28,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">答案</label>
                 <div class="layui-input-block" style="width:600px;" >
-                    <input type="text" name="answer[1]" lay-verify="required" placeholder="请输入" class="layui-input" />
+                    <textarea type="text" name="answer[1]" lay-verify="required" placeholder="请输入" class="layui-textarea" /></textarea>
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
 
         $("#add").on("click", function(){
             var _html = "<div class=\"list\">\n" +
-                "    <fieldset class=\"layui-elem-field layui-field-title\" style=\"\"></fieldset>\n" +
+                "    <fieldset class=\"layui-elem-field layui-field-title\" style=\"background-color:#1E9FFF;height:1px;\" ></fieldset>\n" +
                 "    <div class=\"layui-form-item\">\n" +
                 "        <div class=\"layui-inline\">\n" +
                 "            <label class=\"layui-form-label\">问题</label>\n" +
@@ -117,7 +117,7 @@
                 "    <div class=\"layui-form-item\">\n" +
                 "        <label class=\"layui-form-label\">答案</label>\n" +
                 "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
-                "            <input type=\"text\" name=\"answer["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
+                "            <textarea type=\"text\" name=\"answer["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-textarea\" ></textarea>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "    <div class=\"layui-form-item\">\n" +
