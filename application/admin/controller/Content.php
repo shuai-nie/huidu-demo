@@ -58,8 +58,8 @@ class Content extends Controller
                 ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
-        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        $category2 = model('contentProperty')->where(['status'=>1])->field('id,name')->order("sort desc")->select();
         return view('', [
             'category'=>$category,
             'category2' => $category2
@@ -73,14 +73,32 @@ class Content extends Controller
     public function create()
     {
         $ContentCategory = model('ContentCategory');
+        $ContentPropertyRelevance = model("ContentPropertyRelevance");
+        $contentProperty = model('contentProperty');
+
         if(Request()->isPost()) {
             $data = Request()->post();
+            $RelevanceAll = [];
 
             Db::startTrans();
             try {
+                $attribute_id = $data['attribute_id'];
+                unset($data['attribute_id']);
+
                 $data['home_sort'] = 0;
-                $state = $this->model->save($data);
+                $state = $this->model->allowField(true)->data($data)->save();
                 $cid = $this->model->id;
+
+                foreach ($attribute_id as $val){
+                    array_push($RelevanceAll, [
+                        'property_id' => $val,
+                        'content_id' => $cid,
+                    ]);
+                }
+
+                if(!empty($RelevanceAll)){
+                    $ContentPropertyRelevance->saveAll($RelevanceAll);
+                }
                 $ContentDetail = model('ContentDetail');
                 $UploadDownload = new UploadDownload();
                 $data['content'] = $UploadDownload->replaceImg($data['content']);
@@ -88,6 +106,7 @@ class Content extends Controller
                     'cid' => $cid,
                     'content' => htmlspecialchars_decode($data['content'])
                 ]);
+
                 Db::commit();
                 return success_json(lang('CreateSuccess', [lang('Content')]));
             } catch (\Exception $e) {
@@ -95,8 +114,8 @@ class Content extends Controller
                 return error_json(lang('CreateFail', [lang('Content')]));
             }
         }
-        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
-        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        $category2 = $contentProperty->where(['status'=>1])->field('id,name')->order("sort desc")->select();
         return view('', [
             'category'=>$category,
             'category2'=>$category2
@@ -112,11 +131,30 @@ class Content extends Controller
     {
         $ContentCategory = model('ContentCategory');
         $ContentDetail = model('ContentDetail');
+        $ContentPropertyRelevance = model("ContentPropertyRelevance");
         if(Request()->isPost()) {
             $data = Request()->post();
             Db::startTrans();
+            $RelevanceAll = [];
+
             try {
-                $state = $this->model->save($data, ['id'=>$id]);
+                $attribute_id = $data['attribute_id'];
+                unset($data['attribute_id']);
+
+                $this->model->save($data, ['id'=>$id]);
+                foreach ($attribute_id as $val){
+                    array_push($RelevanceAll, [
+                        'property_id' => $val,
+                        'content_id' => $id,
+                    ]);
+                }
+
+                $ContentPropertyRelevance->where(['content_id'=>$id])->delete();
+
+                if(!empty($RelevanceAll)){
+                    $ContentPropertyRelevance->saveAll($RelevanceAll);
+                }
+
                 $ContentDetail = model('ContentDetail');
                 $count = $ContentDetail->where(['cid'=>$id])->count();
                 $UploadDownload = new UploadDownload();
@@ -142,12 +180,14 @@ class Content extends Controller
         $detail = $ContentDetail->where(['cid'=>$id])->find();
         $data['content'] = $detail['content'];
 
-        $category = $ContentCategory->where(['is_del'=>0,'type'=>1])->field('id,name')->order("sort desc")->select();
-        $category2 = $ContentCategory->where(['is_del'=>0,'type'=>2])->field('id,name')->order("sort desc")->select();
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        $category2 = model('ContentProperty')->where(['status'=>1])->field('id,name')->order("sort desc")->select();
+        $relevance = $ContentPropertyRelevance->where(['status' => 1, 'content_id' => $id])->select();
         return view('edit', [
             'data' => $data,
             'category' => $category,
             'category2' => $category2,
+            'relevance' => $relevance,
         ]);
     }
 

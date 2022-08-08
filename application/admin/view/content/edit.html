@@ -151,11 +151,13 @@
 
         form.val('first', {
             'category_id': "{$data['category_id']}",
-            'attribute_id': "{$data['attribute_id']}",
             'title': "{$data['title']}",
             'cover_url': "{$data['cover_url']}",
             'keywords': "{$data['keywords']}",
             'description': "{$data['description']}",
+            {volist name="relevance" id="vo"}
+            "attribute_id[{$vo['property_id']}]": true,
+            {/volist}
         });
 
     });

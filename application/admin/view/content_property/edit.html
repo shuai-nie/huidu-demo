@@ -1,8 +1,5 @@
 {include file="moban/css"}
 {include file="moban/js"}
-<style>
-
-</style>
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
@@ -17,13 +14,6 @@
         <label class="layui-form-label">排序</label>
         <div class="layui-input-block">
             <input type="text" name="sort" maxlength="3" placeholder="排序" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-
-    <div class="layui-form-item type">
-        <label class="layui-form-label">链接关键字</label>
-        <div class="layui-input-block">
-            <input type="text" name="url_keyword" placeholder="" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -77,9 +67,14 @@
             });
         });
 
+        form.val('first', {
+            'name': "{$data['name']}",
+            'sort': "{$data['sort']}",
+        });
+
         form.on("radio(type)", function(data){
             var _val = data.value;
-            switch (_val*1){
+            switch (_val * 1) {
                 case 1:
                     $(".type").show();
                     break;
@@ -90,7 +85,6 @@
                     break;
             }
         })
-
 
     });
 </script>
