@@ -307,9 +307,6 @@ class Subject extends Base
         $sid = request()->param('sid');
         if(request()->isPost()){
             $_post = request()->post();
-            var_dump($_post);
-            exit();
-
             $state = $subjectBanner->data($_post)->save();
 
             if($state !== false){

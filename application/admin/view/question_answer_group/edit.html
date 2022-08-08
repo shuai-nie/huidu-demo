@@ -18,7 +18,7 @@
             <fieldset class="layui-elem-field layui-field-title" style=""></fieldset>
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">问题{$k}</label>
+                    <label class="layui-form-label">问题</label>
                     <div class="layui-input-block" style="width:600px;" >
                         <input type="text" name="question[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['question']}" />
                     </div>
@@ -29,7 +29,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label">答案{$k}</label>
+                <label class="layui-form-label">答案</label>
                 <div class="layui-input-block" style="width:600px;" >
                     <input type="text" name="answer[{$k}]" lay-verify="required" placeholder="请输入" class="layui-input" value="{$vo['answer']}" />
                 </div>
@@ -91,8 +91,14 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code !== 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
         var _keyCount = "{$data|count}"*1+1;
@@ -104,7 +110,7 @@
                 "    <fieldset class=\"layui-elem-field layui-field-title\" style=\"\"></fieldset>\n" +
                 "    <div class=\"layui-form-item\">\n" +
                 "        <div class=\"layui-inline\">\n" +
-                "            <label class=\"layui-form-label\">问题" + _keyCount + "</label>\n" +
+                "            <label class=\"layui-form-label\">问题</label>\n" +
                 "            <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
                 "                <input type=\"text\" name=\"question["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "            </div>\n" +
@@ -115,13 +121,13 @@
                 "    </div>\n" +
                 "\n" +
                 "    <div class=\"layui-form-item\">\n" +
-                "        <label class=\"layui-form-label\">答案" + _keyCount + "</label>\n" +
+                "        <label class=\"layui-form-label\">答案</label>\n" +
                 "        <div class=\"layui-input-block\" style=\"width:600px;\" >\n" +
                 "            <input type=\"text\" name=\"answer["+_keyCount+"]\" lay-verify=\"required\" placeholder=\"请输入\" class=\"layui-input\" />\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "    <div class=\"layui-form-item\">\n" +
-                "        <label class=\"layui-form-label\">排序" + _keyCount + "</label>\n" +
+                "        <label class=\"layui-form-label\">排序</label>\n" +
                 "        <div class=\"layui-input-inline\" >\n" +
                 "            <input type=\"text\" name=\"sort["+_keyCount+"]\" class=\"layui-input\" />\n" +
                 "        </div>\n" +
