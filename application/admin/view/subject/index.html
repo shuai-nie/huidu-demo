@@ -12,8 +12,12 @@
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
 </script>
 
+<script type="text/html" id="show_status">
+    <input type="checkbox" name="show_status" value="{{d.id}}" lay-skin="switch" lay-text="上架|下架" lay-filter="show_status" {{ d.show_status == 1 ? 'checked' : '' }}>
+</script>
+
 <script type="text/html" id="home_show">
-    <input type="checkbox" name="home_show" value="{{d.id}}" lay-skin="switch" lay-text="下架|上架" lay-filter="home_show" {{ d.home_show == 1 ? 'checked' : '' }}>
+    <input type="checkbox" name="home_show" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="home_show" {{ d.home_show == 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="span">
@@ -44,7 +48,8 @@
                 }
             }}
             ,{field: 'span', title: '', width:430,templet: '#span'}
-            ,{field: 'home_show', title: '展示', width:100,templet: '#home_show'}
+            ,{field: 'home_show', title: '首页展示', width:100,templet: '#home_show'}
+            ,{field: 'show_status', title: '展示给用户', width:100,templet: '#show_status'}
             ,{field: 'sort', title: '排序', width:80,sort: true}
             ,{field: 'create_time', title: '创建时间', width:170}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
@@ -164,7 +169,13 @@
             $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
                 layer.msg(objPost.msg);
             }, 'json');
+        });
 
+        form.on('switch(show_status)', function(obj){
+            var _check = obj.elem.checked == true ? 1 : 0;
+            $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
+                layer.msg(objPost.msg);
+            }, 'json');
         });
 
     });
