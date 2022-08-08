@@ -3,6 +3,15 @@ namespace app\admin\model;
 
 class Subject extends Base
 {
+    public $type = [
+        ['id' => 0, 'title' => '专题'],
+        ['id' => 1, 'title' => '专区'],
+    ];
+    public $home_show = [
+        ['id' => 0, 'title' => '否'],
+        ['id' => 1, 'title' => '是'],
+    ];
+
     protected $connection = [
         'prefix' => 'sj_',
     ];

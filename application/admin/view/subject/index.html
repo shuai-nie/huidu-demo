@@ -33,7 +33,16 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
-            ,{field: 'title', title: '标题', width:140}
+            ,{field: 'title', title: '专题名称', width:140}
+            ,{field: 'type', title: '专题分类', width:120, templet:function(d){
+                switch (d.type * 1){
+                    {volist name="type" id="vo"}
+                    case {$vo['id']}: return "{$vo['title']}";
+                    {/volist}
+                    default:
+                        return '-';
+                }
+            }}
             ,{field: 'span', title: '', width:500,templet: '#span'}
             ,{field: 'home_show', title: '展示', width:100,templet: '#home_show'}
             ,{field: 'sort', title: '排序', width:80,sort: true}
@@ -137,7 +146,7 @@
         form.on('switch(home_show)', function(obj){
             var _check = obj.elem.checked == true ? 1 : 0;
             $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
-
+                layer.msg(objPost.msg);
             }, 'json');
 
         });

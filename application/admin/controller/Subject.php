@@ -13,16 +13,15 @@ class Subject extends Base
 
     public function index()
     {
+        $subject = model('subject');
         if(request()->isPost()){
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
             $map = ['A.status'=>1];
-            $subject = model('subject');
             $subjectAdvertisement = model('SubjectAdvertisement');
             $data = $subject->alias('A')
-                ->join($subjectAdvertisement->getTable().' B', "A.id=B.subject_id", "left")
-                ->field("A.*,B.img_url,B.link_url")
+                ->field("A.*")
                 ->where($map)->limit($offset, $limit)->select();
             $count = $subject->alias('A')->where($map)->count();
             foreach ($data as $k => $v) {
@@ -33,6 +32,7 @@ class Subject extends Base
         }
         return view('', [
             'meta_title' => '专题列表',
+            'type' => $subject->type
         ]);
     }
 
@@ -57,7 +57,9 @@ class Subject extends Base
             }
             return error_json('提交失败');
         }
-        return view('', []);
+        return view('', [
+            'type' => $subject->type,
+        ]);
     }
 
     public function edit()
@@ -87,7 +89,8 @@ class Subject extends Base
         $info = $subject->alias('A')
             ->join($subjectAdvertisement->getTable().' B', "A.id=B.subject_id", "left")->field('A.*,B.img_url,B.link_url')->where($map)->find();
         return view('', [
-            'info' => $info
+            'info' => $info,
+            'type' => $subject->type,
         ]);
     }
 

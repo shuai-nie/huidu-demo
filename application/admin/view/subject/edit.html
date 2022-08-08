@@ -13,8 +13,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">专题类型</label>
         <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="专题" checked />
-            <input type="radio" name="type" value="1" title="专区" />
+            {volist name="type" id="vo" key="k"}
+            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" />
+            {/volist}
         </div>
     </div>
 
@@ -49,16 +50,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">首页展示</label>
         <div class="layui-input-block" >
-            <input type="radio" name="home_show" value="0" title="否" checked />
+            <input type="radio" name="home_show" value="0" title="否" />
             <input type="radio" name="home_show" value="1" title="是" />
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">文章来源</label>
-        <div class="layui-input-block" >
-            <input type="radio" name="content_source_type" value="0" title="分类" checked />
-            <input type="radio" name="content_source_type" value="1" title="单独分配" />
         </div>
     </div>
 
@@ -105,9 +98,14 @@
             }
         });
 
+        form.val("first",{
+            "type":"{$info['type']}",
+            "home_show":"{$info['home_show']}",
+        })
+
         //监听提交
         form.on('submit(submit)', function (data) {
-            Api.add(data.field, function (res) {
+            Api.edit(data.field, function (res) {
                 console.log(res);
             });
         });
