@@ -11,20 +11,22 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block" >
-            <input type="radio" name="type" value="0" title="专题页入口" checked />
-            <input type="radio" name="type" value="1" title="首页入口" />
-            <input type="radio" name="type" value="2" title="内页" />
+            {volist name='type' id='vo' key='k'}
+            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" />
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
-        <input type="hidden" name="url" >
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
+        <div class="layui-inline">
+            <input type="hidden" name="url" >
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
         </div>
-        <div class="layui-input-block" >
+        <div class="layui-inline" >
             <div class="layui-upload-list">
                 <img class="layui-upload-img" id="demo">
                 <p id="demoText2"></p>
@@ -38,14 +40,14 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">图片描述</label>
+        <label class="layui-form-label">ALT描述</label>
         <div class="layui-input-block" >
             <input type="text" name="alt" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">链接</label>
+        <label class="layui-form-label">外链</label>
         <div class="layui-input-block" >
             <input type="text" name="link_url" class="layui-input" />
         </div>
@@ -94,8 +96,17 @@
             }
         });
 
+        form.verify({
+            type: function(value){
+                if (value == '' || value == null) {
+                    return '类型不能为空，请选择';
+                }
+            }
+        })
+
         //监听提交
         form.on('submit(submit)', function (data) {
+
             var DISABLED = 'layui-btn-disabled';
             $(':button').addClass(DISABLED);
             $(':button').attr('disabled', 'disabled');

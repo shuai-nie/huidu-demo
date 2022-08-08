@@ -16,13 +16,15 @@
     </div>
 
     <div class="layui-form-item">
-        <input type="hidden" name="url" >
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
+        <div class="layui-inline">
+            <input type="hidden" name="url" value="{$info['url']|default=''}" >
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
         </div>
-        <div class="layui-input-block" >
+        <div class="layui-inline" >
             <div class="layui-upload-list">
                 <img class="layui-upload-img" id="demo"  src="{$info['url']|default=''}"  >
                 <p id="demoText2"></p>
@@ -36,14 +38,14 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">图片描述</label>
+        <label class="layui-form-label">alt描述</label>
         <div class="layui-input-block" >
             <input type="text" name="alt" class="layui-input" value="{$info['alt']}" />
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">链接</label>
+        <label class="layui-form-label">外链</label>
         <div class="layui-input-block" >
             <input type="text" name="link_url" class="layui-input" value="{$info['link_url']}" />
         </div>
