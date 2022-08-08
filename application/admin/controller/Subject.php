@@ -154,15 +154,19 @@ class Subject extends Base
     public function create_plate()
     {
         $plate = model('plate');
+        $subject = model('subject');
+        $sid = request()->param('sid');
         if(request()->isPost()){
             $_post = request()->post();
+            $info = $subject->where(['id'=>$sid])->find();
+            $_post['type'] = $info['type'];
             $state = $plate->allowField(true)->data($_post)->save();
             if($state !== false){
                 return success_json('提交成功');
             }
             return error_json("提交失败");
         }
-        $sid = request()->param('sid');
+
         $configAll = model('config')->where(['type'=>1,'status'=>1])->select();
         return view('/plate/create', [
             'sid' => $sid,
