@@ -173,17 +173,100 @@
         });
 
         form.on('switch(home_show)', function(obj){
-            var _check = obj.elem.checked == true ? 1 : 0;
-            $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
-                layer.msg(objPost.msg);
-            }, 'json');
+            var _check = obj.elem.checked == true ? 1 : 0
+                , _contexts
+                , _swt = $(obj.elem)
+                , _this = this;
+
+            if(obj.elem.checked == true){
+                _contexts = "你确定要显示吗";
+            }else {
+                _contexts = "你确定要隐藏吗";
+            }
+            //
+
+            layer.open({
+                content: _contexts
+                , btn: ['确定', '取消']
+                , yes: function(index, layer0){
+                    $.post("{:url('set_value')}", {
+                        id: _this.value,
+                        name: _this.name,
+                        value: _check
+                    }, function (objPost) {
+                            if(objPost.code == 200){
+                                _swt.prop('checked', obj.elem.checked);
+                                form.render();
+                                layer.close(index)
+                            }else{
+                                _swt.prop('checked', !obj.elem.checked);
+                            }
+                            layer.msg(objPost.msg);
+                            form.render();
+                        }, 'json');
+
+                }
+                , btn2: function(index, layer0) {
+                    _swt.prop('checked', !obj.elem.checked);
+                    form.render();
+                }
+                , cancel: function() {
+                    layer.close();
+                    form.render();
+
+                }
+            })
+            return false;
+
+
+
+
         });
 
         form.on('switch(show_status)', function(obj){
-            var _check = obj.elem.checked == true ? 1 : 0;
-            $.post("{:url('set_value')}", {id:this.value, name:this.name, value:_check}, function(objPost){
-                layer.msg(objPost.msg);
-            }, 'json');
+            var _check = obj.elem.checked == true ? 1 : 0
+                , _contexts
+                , _swt = $(obj.elem)
+                , _this = this;
+
+            if(obj.elem.checked == true){
+                _contexts = "你确定要上架吗";
+            }else {
+                _contexts = "你确定要下架吗";
+            }
+
+            layer.open({
+                content: _contexts
+                , btn: ['确定', '取消']
+                , yes: function (index, layer0) {
+                    $.post("{:url('set_value')}", {
+                        id: _this.value,
+                        name: _this.name,
+                        value: _check
+                    }, function (objPost) {
+                        if(objPost.code == 200){
+                            _swt.prop('checked', obj.elem.checked);
+                            form.render();
+                            layer.close(index)
+                        }else{
+                            _swt.prop('checked', !obj.elem.checked);
+                        }
+                        layer.msg(objPost.msg);
+                        form.render();
+                    }, 'json');
+                }
+                , btn2: function (index, layer0) {
+                    _swt.prop('checked', !obj.elem.checked);
+                    form.render();
+                }
+                , cancel: function () {
+                    layer.close();
+                    form.render();
+
+                }
+            });
+
+
         });
 
     });
