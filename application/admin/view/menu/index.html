@@ -72,11 +72,7 @@
       table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', function(obj){
-                  table.reload("table");
-                  parent.window.location.reload();
-                  window.location.reload();
-                });
+                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                 if(res.code==200){

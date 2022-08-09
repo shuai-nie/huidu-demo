@@ -34,7 +34,7 @@ class QuestionAnswerGroup extends Base
             }
             return json(['data' => [ 'count' => $count, 'list' => $data]], 200);
         }
-        return view('', ['meta_title'=>'专题列表']);
+        return view('', ['meta_title'=>'入驻须知模版列表']);
     }
 
     public function create()
