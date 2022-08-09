@@ -59,6 +59,7 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
                         layer.msg(objPost.msg, function(){
                             layer.close(index);
                             obj.del();
+                            window.location.reload();
                         })
                     }
                     layer.msg(objPost.msg);

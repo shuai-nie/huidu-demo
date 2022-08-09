@@ -101,6 +101,10 @@
                 if(res.code != 200){
                     $(':button').removeClass(DISABLED);
                     $(':button').removeAttr('disabled');
+                }else{
+                    setTimeout(function () {
+                        parent.location.reload();
+                    }, 1000);
                 }
             });
         });
