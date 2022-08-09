@@ -50,7 +50,7 @@
             }}
             ,{field: 'span', title: '', width:430,templet: '#span'}
             ,{field: 'home_show', title: '首页展示', width:100,templet: '#home_show'}
-            ,{field: 'show_status', title: '展示给用户', width:100,templet: '#show_status'}
+            ,{field: 'show_status', title: '展示', width:100,templet: '#show_status'}
             ,{field: 'sort', title: '排序', width:80,sort: true}
             ,{field: 'create_time', title: '创建时间', width:170}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
@@ -129,13 +129,13 @@
                 UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit', _title);
             } else if(obj.event === 'more'){
                 dropdown.render({
-                    elem: this //触发事件的 DOM 对象
-                    ,show: true //外部事件触发即显示
-                    ,data: [
+                    elem: this
+                    , show: true
+                    , data: [
                         {title: '编辑',id: 'edit',templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '}
                         ,{title: '删除',id: 'del',templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '}
                     ]
-                    ,click: function(menudata){
+                    , click: function(menudata){
                         if(menudata.id === 'del'){
                             layer.confirm('真的删除行么', function(index){
                                 UI.delete(data['id'], function(res){
@@ -154,15 +154,15 @@
                             UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit', "编辑");
                         }
                     }
-                    ,align: 'center'
-                    ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);'
+                    , align: 'center'
+                    , style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);'
                 })
             }
 
         });
 
         var $ = layui.$, active = {
-            create:function(){
+            create: function () {
                 UI.openLayer("{:url('create')}", 850, 730);
             }
         };
@@ -183,7 +183,6 @@
             }else {
                 _contexts = "你确定要隐藏吗";
             }
-            //
 
             layer.open({
                 content: _contexts
@@ -213,14 +212,9 @@
                 , cancel: function() {
                     layer.close();
                     form.render();
-
                 }
             })
             return false;
-
-
-
-
         });
 
         form.on('switch(show_status)', function(obj){
@@ -246,7 +240,6 @@
                     }, function (objPost) {
                         if(objPost.code == 200){
                             _swt.prop('checked', obj.elem.checked);
-                            form.render();
                             layer.close(index)
                         }else{
                             _swt.prop('checked', !obj.elem.checked);
@@ -262,7 +255,6 @@
                 , cancel: function () {
                     layer.close();
                     form.render();
-
                 }
             });
 

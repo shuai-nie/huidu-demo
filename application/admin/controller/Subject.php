@@ -118,9 +118,51 @@ class Subject extends Base
         if(request()->isPost()){
             $subject = model('subject');
             $_post = request()->post();
+            $id = $_post['id'];
+            if($_post['name'] == 'show_status' && $_post['value'] == 1){
+                // 判断是否都填了
+                $subjectBanner = model('subjectBanner');
+                $subjectAdvertisement = model('subjectAdvertisement');
+                $subjectQuestionAnswer = model('subjectQuestionAnswer');
+                $subjectCategory = model('subjectCategory');
+                $plate = model('plate');
+                $plateResource = model('plateResource');
+                $subjectContent = model('subjectContent');
+
+                $count = $subjectBanner->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("banner 未填，不能上架");
+                }
+
+                $count = $plate->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("版块资源 未填，不能上架");
+                }
+
+                $count = $subjectContent->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("文章资源 未填，不能上架");
+                }
+
+                $count = $subjectCategory->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("优选分类 未填，不能上架");
+                }
+
+                $count = $subjectQuestionAnswer->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("入驻须知 未填，不能上架");
+                }
+
+                $count = $subjectAdvertisement->where(['status'=>1, 'subject_id'=>$id])->count();
+                if($count == 0){
+                    return error_json("广告 未填，不能上架");
+                }
+
+            }
             $state = $subject->isUpdate(true)->save([
-                $_post['name']=>$_post['value']
-            ], ['id'=>$_post['id']]);
+                $_post['name'] => $_post['value'],
+            ], ['id' => $id]);
             if($state !== false) {
                 return success_json('修改成功');
             }
