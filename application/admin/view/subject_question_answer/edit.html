@@ -144,13 +144,13 @@ layui.use(['form','upload'], function () {
                             " <input type='hidden' name='id[" + countList + "]' value='" + v.id + "' >  " +
                             "            <label class=\"layui-form-label\">问题</label>\n" +
                             "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
-                            "                <input type=\"text\" name=\"question["+countList+"]\" class=\"layui-input\" value='" + v.question + "' />\n" +
+                            "                <input type=\"text\" name=\"question["+countList+"]\" lay-verify=\"required\" class=\"layui-input\" value='" + v.question + "' />\n" +
                             "            </div>\n" +
                             "        </div>\n" +
                             "        <div class=\"layui-form-item\">\n" +
                             "            <label class=\"layui-form-label\">答案</label>\n" +
                             "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
-                            "                <textarea type=\"text\" name=\"answer[" + countList + "]\" class=\"layui-textarea\">" + v.answer + "</textarea>\n" +
+                            "                <textarea type=\"text\" name=\"answer[" + countList + "]\" lay-verify=\"required\" class=\"layui-textarea\">" + v.answer + "</textarea>\n" +
                             "            </div>\n" +
                             "        </div>"+
                             "        <div class=\"layui-form-item\">\n" +
