@@ -43,6 +43,10 @@ class QuestionAnswerGroup extends Base
         $questionAnswer = model('questionAnswer');
         if(request()->isPost()){
             $_post = request()->post('');
+            $count = $questionAnswerGroup->where(['status'=>1,'title'=>$_post['group_title']])->count();
+            if($count > 0){
+                return error_json("模版名称重复请修改");
+            }
             Db::startTrans();
             try {
                 $questionAnswerGroup->data(['title'=>$_post['group_title']])->save();
@@ -64,9 +68,9 @@ class QuestionAnswerGroup extends Base
                 Db::rollback();
             }
             if($state !== false) {
-                return success_json('编辑成功');
+                return success_json('提交成功');
             }
-            return error_json('编辑失败');
+            return error_json('提交失败');
         }
 
         $count = $questionAnswerGroup->where(['status'=>1])->count();
