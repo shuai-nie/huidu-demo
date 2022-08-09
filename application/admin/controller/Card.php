@@ -189,6 +189,11 @@ class Card extends Base
     public function edit($id)
     {
         $dataDic = model('DataDic');
+        $UserModel = model('User');
+        $data = model('Card')->alias('A')
+            ->join($UserModel->getTable().' B', 'A.uid=B.id')
+            ->field('A.*,B.username,B.nickname')
+            ->where(['A.id'=>$id])->find();
         if(\request()->isPost()) {
             $_post = \request()->post();
             $contact = [];
@@ -200,20 +205,29 @@ class Card extends Base
                 ]);
             }
             $_post['business_tag'] = implode('|', $_post['business_tag']);
-            $state = model('Card')->save($_post, ['id'=>$id]);
-            model('CardContact')->where(['card_id'=>$id])->delete();
-            model('CardContact')->saveAll($contact);
+            $state = false;
+            Db::startTrans();
+            try {
+                model('Card')->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+                model('CardContact')->where(['card_id'=>$id])->delete();
+                model('CardContact')->saveAll($contact);
+                model('user')->allowField(true)->isUpdate(true)->save([
+                    'nickname' => $_post['name'],
+                    'head_url' => $_post['logo'],
+                ], ['id' => $data['uid']]);
+                Db::commit();
+                $state = true;
+            }catch (Exception $e){
+                Db::rollback();
+                $state = false;
+            }
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
             return error_json(lang('EditSuccess', [lang('CARD')]) );
 
         }
-        $UserModel = model('User');
-        $data = model('Card')->alias('A')
-            ->join($UserModel->getTable().' B', 'A.uid=B.id')
-            ->field('A.*,B.username,B.nickname')
-            ->where(['A.id'=>$id])->find();
+
         $data['business_tag'] = explode('|', $data['business_tag']);
 
         $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();

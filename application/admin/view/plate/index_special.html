@@ -1,16 +1,16 @@
-{include file="moban/css"}
-{include file="moban/js"}
+{include file="moban/bone_header"}
 
 <style type="text/css">
 .type2{display:none;}
 </style>
 
 <form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+    <input type="hidden" name="plate_id" value="{$plateInfo['id']|default=0}" />
 
     <div class="layui-form-item">
         <label class="layui-form-label">合作配置</label>
         <div class="layui-input-block" >
-            <input type="radio" name="resource_type" value="1" title="配置合作分类" checked lay-filter="type" />
+            <input type="radio" name="resource_type" value="1" title="配置合作分类" lay-filter="type" checked />
             <input type="radio" name="resource_type" value="2" title="单独配置" lay-filter="type" />
         </div>
     </div>
@@ -55,36 +55,19 @@
         var form = layui.form,
             upload = layui.upload;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept = 'images';
-        var upload_acceptMime = 'image/*';
-        var upload_size = 3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='img_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
-
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code != 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
+
         form.val('first', {
             "resource_type":"{$data['resource_type']|default=1}",
             "key1":"{$data['key1']|default=0}",

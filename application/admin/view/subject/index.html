@@ -57,9 +57,10 @@
         ], "#think-table", "auth");
 
         table.on('tool(think-table)', function(obj){
-            var data = obj.data;
+            var data = obj.data
+                ,_title = "[" + data.title + "]";
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit', "编辑");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -68,28 +69,34 @@
                 });
             }else if(obj.event==='content'){
                 // 内容
-                UI.openLayer("{:url('content')}?sid="+data['id'], 850, 730, '#submit');
+                UI.openLayer("{:url('content')}?sid="+data['id'], 850, 730, '#submit', _title);
             }else if(obj.event==='article'){
                 // 文章
-                UI.openLayer("{:url('article')}?sid="+data['id'], 850, 730, '#submit');
+                UI.openLayer("{:url('article')}?sid="+data['id'], 850, 730, '#submit', _title);
             }else if(obj.event==='plate'){
-                layer.open({
-                    type: 2
-                    , anim: 2
-                    , area: ['1150px', '650px']
-                    , btn: ['关闭']
-                    , title: "版块列表"
-                    , yes: function (index, layero) { layer.close(index); }
-                    , content: "{:url('plate')}?sid="+data['id']
-                    , end: function () {}
-                });
+                if(data.type == 0){
+                    UI.openLayer("{:url('plate')}?sid="+data['id'], 650, 400, '#submit', _title);
+                }else if(data.type == 1){
+                    layer.open({
+                        type: 2
+                        , anim: 2
+                        , area: ['1150px', '650px']
+                        , btn: ['关闭']
+                        , title: _title
+                        , yes: function (index, layero) { layer.close(index); }
+                        , content: "{:url('plate')}?sid="+data['id']
+                        , end: function () {}
+                    });
+                }
+
+
             }else if(obj.event==='advert'){
                 layer.open({
                     type: 2
                     , anim: 2
                     , area: ['1150px', '650px']
                     , btn: ['关闭']
-                    , title: "广告列表"
+                    , title: _title
                     , yes: function (index, layero) { layer.close(index); }
                     , content: "{:url('subject_advertisement')}?sid=" + data['id']
                     , end: function () {}
@@ -100,25 +107,26 @@
                     , anim: 2
                     , area: ['1150px', '650px']
                     , btn: ['关闭']
+                    , title: _title
                     , yes: function (index, layero) { layer.close(index); }
                     , content: "{:url('banner')}?sid=" + data['id']
                     , end: function () { }
                 });
             }else if(obj.event==='zixun'){
-                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 400, '#submit', "文章资讯");
+                UI.openLayer("{:url('subject_content')}?sid="+data['id'], 850, 400, '#submit', _title);
             }else if(obj.event==='subject_category'){
                 layer.open({
                     type: 2
                     , anim: 2
                     , area: ['1150px', '650px']
-                    , title: "优选分类列表"
+                    , title: _title
                     , btn: ['关闭']
                     , yes: function (index, layero) { layer.close(index); }
                     , content: "{:url('subject_category')}?sid=" + data['id']
                     , end: function () { }
                 });
             }else if(obj.event==='question'){
-                UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit');
+                UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit', _title);
             } else if(obj.event === 'more'){
                 dropdown.render({
                     elem: this //触发事件的 DOM 对象
@@ -144,7 +152,7 @@
                             UI.openLayer("{:url('question_answer_link_url')}?sid="+data['id'], 650, 300, '#submit', "入住须知-联系方式");
                         } else if(menudata.id === 'edit'){
                             // layer.msg('编辑操作，当前行 ID:'+ data.id);
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit');
+                            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit', "编辑");
                         }
                     }
                     ,align: 'center'

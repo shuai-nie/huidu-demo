@@ -46,6 +46,13 @@ class Subject extends Base
             Db::startTrans();
             try {
                 $subject->allowField(true)->isUpdate(false)->data($_post)->save();
+                $sid = $subject->id;
+                if($_post['type'] == 0){
+                    model('plate')->allowField(true)->isUpdate(false)->data([
+                        'subject_id' =>$sid,
+                        'type' => 0,
+                    ])->save();
+                }
                 Db::commit();
                 $state = true;
             } catch (Exception $e) {
@@ -127,10 +134,43 @@ class Subject extends Base
         $sid = request()->param('sid');
         $plate = model('plate');
         $subject = model('subject');
+        $plateResource = model('plateResource');
         $map = ['status' => 1,'subject_id'=>$sid];
         $info = $subject->where(['id'=>$sid])->find();
         $count = $plate->alias('A')->where($map)->count();
         if(request()->isPost()) {
+            if($info['type'] == 0){
+                $_post = request()->post();
+                Db::startTrans();
+                try {
+                    if($_post['resource_type'] == 1){
+                        $resourceAll = [
+                            ['type'=>0,'plate_id'=>$_post['plate_id'],'key'=>$_post['key1']],
+                            ['type'=>1,'plate_id'=>$_post['plate_id'],'key'=>$_post['key2']]
+                        ];
+                    }elseif ($_post['resource_type'] == 2){
+                        $resourceAll = [];
+                        $textarea = explode(',',  $_post['textarea']);
+                        foreach ($textarea as $key => $value) {
+                            array_push($resourceAll, ['type'=>2,'plate_id'=>$_post['plate_id'],'key'=>$value]);
+                        }
+                    }
+                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$_post['plate_id']])->delete();
+                    $plateResource->where(['type' => 2, 'plate_id' => $_post['plate_id']])->delete();
+                    $plate->isUpdate(true)->save(['resource_type' => $_post['resource_type']], ['id' => $_post['plate_id']]);
+                    $plateResource->saveAll($resourceAll);
+                    $state = true;
+                    Db::commit();
+                }catch (Exception $e){
+                    Db::rollback();
+                    $state = false;
+                }
+                if($state != false){
+                    return success_json("提交成功");
+                }
+                return error_json("提交失败");
+            }
+
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
@@ -148,9 +188,29 @@ class Subject extends Base
         // 0专题 1专区
         if($info['type'] == 0){
             $dataDicAll = model('dataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
+            $plateInfo = $plate->where(['subject_id'=>$sid, 'status'=>1])->order('id desc')->find();
+            $data = [];
+            if($plateInfo['resource_type'] == 1){
+                $data1 = $plateResource->where(['type'=>0,'status'=>1,'plate_id'=>$plateInfo['id']])->find();
+                $data2 = $plateResource->where(['type'=>1,'status'=>1,'plate_id'=>$plateInfo['id']])->find();
+                $data = [
+                    "resource_type" => $plateInfo['resource_type'],
+                    'key1' => $data1['key'],
+                    'key2' => $data2['key'],
+                ];
+            }elseif ($plateInfo['resource_type'] == 2){
+                $data = $plateResource->where(['type'=>2,'status'=>1,'plate_id'=>$plateInfo['id']])->field('GROUP_CONCAT(`key`) as group_key')->find();
+                $data = [
+                    "resource_type" => $plateInfo['resource_type'],
+                    "textarea" => $data['group_key'],
+                ];
+            }
+
             return view('plate/index_special', [
                 'dataDicAll' => $dataDicAll,
-                'meta_title' => '板块资源',
+                'meta_title' => '资源板块',
+                'plateInfo' => $plateInfo,
+                'data' => $data,
             ]);
         }else{
             return view('/plate/index', [
@@ -436,13 +496,15 @@ class Subject extends Base
             return view('/subject_question_answer/edit', [
                 'answerAll' => $answerAll,
                 'groupAll' => $groupAll,
-                'sid' => $sid
+                'sid' => $sid,
+                'meta_title' => '入驻须知',
             ]);
         }
 
         return view('/subject_question_answer/create', [
             'groupAll' => $groupAll,
-            'sid' => $sid
+            'sid' => $sid,
+            'meta_title' => '入驻须知',
         ]);
     }
 
@@ -501,6 +563,7 @@ class Subject extends Base
 
         return view('', [
             'sid' => $sid,
+            'meta_title' => '广告列表',
         ]);
     }
 
@@ -678,6 +741,7 @@ class Subject extends Base
             'contentProperty' => $contentProperty,
             'subjectInfo' => $subjectInfo,
             'info' => $info,
+            'meta_title' => '文章咨询'
         ]);
     }
 

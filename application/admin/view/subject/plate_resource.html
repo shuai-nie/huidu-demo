@@ -55,29 +55,6 @@
         var form = layui.form,
             upload = layui.upload;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept = 'images';
-        var upload_acceptMime = 'image/*';
-        var upload_size = 3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='img_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
 
         //监听提交
         form.on('submit(submit)', function (data) {
