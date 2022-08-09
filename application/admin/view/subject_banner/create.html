@@ -37,7 +37,7 @@
 
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="url" >
+            <input type="hidden" name="url" lay-verify="urlVerify" >
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="test1">
                     <i class="layui-icon">&#xe67c;</i>上传图片
@@ -60,7 +60,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">ALT描述</label>
         <div class="layui-input-block" >
-            <input type="text" name="alt" class="layui-input" />
+            <input type="text" name="alt" class="layui-input" lay-verify="required" />
         </div>
     </div>
 
@@ -118,6 +118,11 @@
             type: function(value){
                 if (value == '' || value == null) {
                     return '类型不能为空，请选择';
+                }
+            },
+            urlVerify: function(value, item){
+                if(value == '' || value == null){
+                    return "图片不能为空，请上传";
                 }
             }
         })
