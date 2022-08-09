@@ -3,16 +3,34 @@
 
 <style>
 .layui-upload-img {width: 92px;height: 92px;}
+
 </style>
 
-<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
     <input type="hidden" name="subject_id" value="{$sid}" />
 
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block" >
             {volist name='type' id='vo' key='k'}
-            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" />
+                {if condition="$vo['id'] eq 0 && $count0 gt 0"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
+                {elseif condition="$vo['id'] eq 0"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                {/if}
+
+                {if condition="$vo['id'] eq 1 && $count1 gt 0"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
+                {elseif condition="$vo['id'] eq 1"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                {/if}
+
+                {if condition="$vo['id'] eq 2 && $count2 gt 0"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
+                {elseif condition="$vo['id'] eq 2"}
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                {/if}
+
             {/volist}
         </div>
     </div>
@@ -46,7 +64,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item layui-hide" id="link_url_list">
         <label class="layui-form-label">外链</label>
         <div class="layui-input-block" >
             <input type="text" name="link_url" class="layui-input" />
@@ -106,7 +124,6 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
-
             var DISABLED = 'layui-btn-disabled';
             $(':button').addClass(DISABLED);
             $(':button').attr('disabled', 'disabled');
@@ -117,6 +134,15 @@
                 }
             });
         });
+
+        form.on('radio(type)', function(data){
+            var _typeValue = data.value;
+            if(_typeValue == 2){
+                $("#link_url_list").removeClass('layui-hide');
+            }else{
+                $("#link_url_list").addClass('layui-hide');
+            }
+        })
 
     });
 </script>

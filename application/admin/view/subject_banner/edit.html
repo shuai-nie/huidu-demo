@@ -9,9 +9,8 @@
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block" >
             {volist name='type' id='vo'}
-            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}"  {if condition="$vo['id'] eq $info['type']"}checked{/if} />
+            <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" disabled {if condition="$vo['id'] eq $info['type']"}checked{/if} />
             {/volist}
-
         </div>
     </div>
 
@@ -26,7 +25,7 @@
         </div>
         <div class="layui-inline" >
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo"  src="{$info['url']|default=''}"  >
+                <img class="layui-upload-img" id="demo" {if condition="$info['url']"}src="{$info['url']|default=''}"{/if} />
                 <p id="demoText2"></p>
             </div>
             <div style="width: 95px;">
@@ -44,7 +43,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="link_url_list">
         <label class="layui-form-label">外链</label>
         <div class="layui-input-block" >
             <input type="text" name="link_url" class="layui-input" value="{$info['link_url']}" />
@@ -105,6 +104,23 @@
                 }
             });
         });
+
+        {if condition="$info['type'] eq 2"}
+            $("#link_url_list").removeClass('layui-hide');
+        {else/}
+            $("#link_url_list").addClass('layui-hide');
+        {/if}
+
+        form.on('radio(type)', function(data){
+            var _typeValue = data.value;
+            if(_typeValue == 2){
+                $("#link_url_list").removeClass('layui-hide');
+            }else{
+                $("#link_url_list").addClass('layui-hide');
+            }
+        })
+
+
 
     });
 </script>

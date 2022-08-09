@@ -352,12 +352,13 @@ class Subject extends Base
     {
         $subjectBanner = model('subjectBanner');
         $sid = request()->param('sid');
-        $map = ['status' => 1, 'subject_id' => $sid];
-        $count = $subjectBanner->where($map)->count();
+
         if(request()->isPost()){
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
             $offset = ($page - 1) * $limit;
+            $map = ['status' => 1, 'subject_id' => $sid];
+            $count = $subjectBanner->where($map)->count();
             $data = $subjectBanner->where($map)->order('id desc')->limit($offset, $limit)->select();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
@@ -365,11 +366,16 @@ class Subject extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        $type0 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>0])->count();
+        $type1 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>1])->count();
+        $type2 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>2])->count();
         return view('/subject_banner/index', [
             'sid' => $sid,
             'type' => $subjectBanner->type,
             'meta_title' => 'banner列表',
-            'count' => $count
+            'count0' => $type0,
+            'count1' => $type1,
+            'count2' => $type2,
         ]);
     }
 
@@ -386,9 +392,15 @@ class Subject extends Base
             }
             return error_json("提交失败");
         }
+        $type0 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>0])->count();
+        $type1 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>1])->count();
+        $type2 = $subjectBanner->where(['status' => 1, 'subject_id' => $sid, 'type'=>2])->count();
         return view('/subject_banner/create', [
             'sid' => $sid,
-            'type' => $subjectBanner->type
+            'type' => $subjectBanner->type,
+            'count0' => $type0,
+            'count1' => $type1,
+            'count2' => $type2,
         ]);
     }
 

@@ -1,13 +1,16 @@
 {include file="moban/bone_header"}
 
+{if condition="$count0 eq 0 && $count1 eq 0 && $count2 eq 0"}
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">{:lang('create')}</button>
 </div>
+{/if}
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 </script>
 
 
@@ -20,7 +23,7 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
 
     UI.getPageTable(table, "{:url('', ['sid'=>$sid])}", [
         {field: 'key', title: '', width:80, fixed: 'left'}
-        ,{field: 'type', title: '类型', width:300,templet: function(d){
+        ,{field: 'type', title: '类型', width:150,templet: function(d){
             switch (d.type*1){
                 {volist name='type' id='vo'}
                 case {$vo['id']}: return "{$vo['title']}";
@@ -48,44 +51,24 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
             return '-';
         }}
         ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
-    ]);
+    ], "#think-table", "auth" );
 
     table.on('tool(think-table)', function(obj){
         var data = obj.data;
-        if(obj.event === 'more'){
-            dropdown.render({
-                elem: this
-                ,show: true
-                ,data: [{
-                    title: '编辑'
-                    ,id: 'edit'
-                    ,templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '
-                },{
-                    title: '删除'
-                    ,id: 'del'
-                    ,templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '
-                }]
-                ,click: function(menudata){
-                    if(menudata.id === 'del'){
-                        layer.confirm('真的删除行么', function(index){
-                            $.post("{:url('del_banner')}?id="+data['id'], {}, function(objPost){
-                                if(objPost.code == 200){
-                                    layer.msg(objPost.msg, function(){
-                                        layer.close(index);
-                                        obj.del();
-                                    })
-                                }
-                                layer.msg(objPost.msg);
-                            }, 'json');
-                        });
-                    } else if(menudata.id === 'edit'){
-                        // layer.msg('编辑操作，当前行 ID:'+ data.id);
-                        UI.openLayer("{:url('edit_banner')}?id="+data['id'], 850, 430, '#submit');
+        if(obj.event === 'del'){
+            layer.confirm('真的删除行么', function(index){
+                $.post("{:url('del_banner')}?id="+data['id'], {}, function(objPost){
+                    if(objPost.code == 200){
+                        layer.msg(objPost.msg, function(){
+                            layer.close(index);
+                            obj.del();
+                        })
                     }
-                }
-                ,align: 'center'
-                ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);'
-            })
+                    layer.msg(objPost.msg);
+                }, 'json');
+            });
+        } else if(menudata.id === 'edit'){
+            UI.openLayer("{:url('edit_banner')}?id="+data['id'], 850, 430, '#submit');
         }
     })
 
