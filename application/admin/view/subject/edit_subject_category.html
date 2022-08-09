@@ -1,6 +1,10 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
+
 <form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">分类标题</label>
@@ -10,11 +14,25 @@
     </div>
 
     <div class="layui-form-item">
-        <input type="hidden" name="icon_url" value="{$info['icon_url']}" >
-        <div class="layui-input-block">
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传图片
-            </button>
+        <div class="layui-inline">
+            <input type="hidden" name="icon_url" value="{$info['icon_url']}" >
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-inline" >
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo" {if condition="$info['icon_url']"} src="{$info['icon_url']}"{/if} >
+                <p id="demoText2"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -40,9 +58,10 @@
 </form>
 
 <script>
-    layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
+    layui.use(['form','upload','element'], function () {
+        var form = layui.form
+            , upload = layui.upload
+            , element = layui.element;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept = 'images';
@@ -50,21 +69,25 @@
         var upload_size = 3145728;
         var uploadInst = upload.render({
             elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
                 if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='img_url']").val(res.url);
+                    $("#demo").attr('src', res.url);
+                    $("input[name='icon_url']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
 
             }
-            ,error: function(){
-                //请求异常回调
+            ,error: function(){ }
+            ,progress: function(n, elem, e){
+                element.progress('demo', n + '%');
+                if(n == 100){
+                    layer.msg('上传完毕', {icon: 1});
+                }
             }
         });
 
