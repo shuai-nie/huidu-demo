@@ -38,7 +38,7 @@
         <label class="layui-form-label">单独配置</label>
         <div class="layui-input-block" >
             <textarea name="textarea" class="layui-textarea"></textarea>
-            <div class="layui-form-mid layui-word-aux">请按照格式填写，以数字逗号分隔，例：1,2,3,4,5</div>
+            <div class="layui-form-mid layui-word-aux">请按照格式填写，数字逗号分隔，例：1,2,3,4,5</div>
         </div>
 
     </div>
@@ -60,6 +60,23 @@
             var DISABLED = 'layui-btn-disabled';
             $(':button').addClass(DISABLED);
             $(':button').attr('disabled', 'disabled');
+
+            if(data.field.resource_type == 2){
+                if(data.field.textarea == '' || data.field.textarea == null) {
+                    layer.msg("单独配置不能为空");
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                    return false;
+                }
+
+                if(!arr_split(data.field.textarea)){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                    return false;
+                }
+            }
+
+
             Api.add(data.field, function (res) {
                 if(res.code != 200){
                     $(':button').removeClass(DISABLED);
@@ -93,7 +110,6 @@
         }else if("{$data['resource_type']|default=1}" * 1 == 2){
             $(".type1").hide();
             $(".type2").show();
-
         }
 
         form.on('radio(type)', function(data){
@@ -121,6 +137,24 @@
                 form.render('select');
             }, 'json');
 
+        }
+
+        function arr_split(str){
+            var _m = str.split(','), _b = false;
+            try {
+                $.each(_m, function (i, v) {
+                    if (isNaN(v)) {
+                        throw new Error("1");
+
+                    }
+                })
+            } catch(e){
+                if(e.message == "1"){
+                    layer.msg("格式错误:请按照格式填写，以数字逗号分隔，例：1,2,3,4,5");
+                    return false;
+                }
+            }
+            return true;
         }
 
     });

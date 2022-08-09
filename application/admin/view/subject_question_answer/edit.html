@@ -1,5 +1,7 @@
 {include file="moban/bone_header"}
 
+<span class="layui layui-btn layui-btn-sm" id="lxfs">联系方式</span>
+
 <form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">模版</label>
@@ -85,6 +87,10 @@ layui.use(['form','upload'], function () {
                 }
             }
         }, 'json');
+    })
+
+    $("#lxfs").on("click", function(){
+        UI.openLayer("{:url('question_answer_link_url')}?sid={$sid}", 650, 300, '#submit', "入住须知-联系方式");
     })
 
     $("#add").on("click", function(){

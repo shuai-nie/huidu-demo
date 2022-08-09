@@ -29,7 +29,7 @@
         <label class="layui-form-label">单独配置</label>
         <div class="layui-input-block" >
             <textarea name="textarea" class="layui-textarea"></textarea>
-            <div class="layui-form-mid layui-word-aux">请按照格式填写，以数字逗号分隔，例：1,2,3,4,5</div>
+            <div class="layui-form-mid layui-word-aux">请按照格式填写，数字逗号分隔，例：1,2,3,4,5</div>
         </div>
 
     </div>
@@ -46,45 +46,31 @@
         var form = layui.form,
             upload = layui.upload;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept = 'images';
-        var upload_acceptMime = 'image/*';
-        var upload_size = 3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='img_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
-
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
+
             if(data.field.subject_content_type == 2){
                 if(data.field.textarea == '' || data.field.textarea == null) {
                     layer.msg("单独配置不能为空");
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
                     return false;
                 }
 
-                if(arr_split(data.field.textarea)){
+                if(!arr_split(data.field.textarea)){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
                     return false;
                 }
-
             }
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code != 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
 
@@ -124,10 +110,11 @@
                 })
             } catch(e){
                 if(e.message == "1"){
-                    layer.msg("格式错误");
+                    layer.msg("格式错误:请按照格式填写，以数字逗号分隔，例：1,2,3,4,5");
                     return false;
                 }
             }
+            return true;
         }
 
 
