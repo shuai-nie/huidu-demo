@@ -15,9 +15,7 @@
 <script>
 layui.use(['form', 'upload', 'table', 'dropdown'], function () {
     var form = layui.form
-        ,upload = layui.upload
-        ,table = layui.table
-        ,dropdown = layui.dropdown;
+        ,table = layui.table;
 
     UI.getPageTable(table, "{:url('', ['sid'=>$sid])}", [
         {field: 'key', title: '', width:80, fixed: 'left'}

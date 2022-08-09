@@ -1,6 +1,6 @@
 {include file="moban/bone_header"}
 
-{if condition="$count0 eq 0 && $count1 eq 0 && $count2 eq 0"}
+{if condition="$count0 eq 0 || $count1 eq 0 || $count2 eq 0"}
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">{:lang('create')}</button>
 </div>
@@ -16,10 +16,7 @@
 
 <script>
 layui.use(['form', 'upload', 'table', 'dropdown'], function () {
-    var form = layui.form
-        ,upload = layui.upload
-        ,table = layui.table
-        ,dropdown = layui.dropdown;
+    var table = layui.table;
 
     UI.getPageTable(table, "{:url('', ['sid'=>$sid])}", [
         {field: 'key', title: '', width:80, fixed: 'left'}
