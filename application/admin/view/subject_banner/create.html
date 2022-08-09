@@ -16,19 +16,19 @@
                 {if condition="$vo['id'] eq 0 && $count0 gt 0"}
                 <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
                 {elseif condition="$vo['id'] eq 0"}
-                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" checked />
                 {/if}
 
                 {if condition="$vo['id'] eq 1 && $count1 gt 0"}
                 <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
                 {elseif condition="$vo['id'] eq 1"}
-                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" checked />
                 {/if}
 
                 {if condition="$vo['id'] eq 2 && $count2 gt 0"}
                 <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" disabled />
                 {elseif condition="$vo['id'] eq 2"}
-                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" />
+                <input type="radio" name="type" value="{$vo['id']}" title="{$vo['title']}" lay-verify="type" lay-filter="type" checked />
                 {/if}
 
             {/volist}
