@@ -67,7 +67,7 @@ layui.use(['form', 'upload', 'table', 'dropdown'], function () {
                     layer.msg(objPost.msg);
                 }, 'json');
             });
-        } else if(menudata.id === 'edit'){
+        } else if(obj.event === 'edit'){
             UI.openLayer("{:url('edit_banner')}?id="+data['id'], 850, 430, '#submit');
         }
     })
