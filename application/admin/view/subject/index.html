@@ -151,7 +151,7 @@
 
                         } else if(menudata.id === 'edit'){
                             // layer.msg('编辑操作，当前行 ID:'+ data.id);
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit', "编辑");
+                            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 550, '#submit', "编辑");
                         }
                     }
                     , align: 'center'
@@ -163,7 +163,7 @@
 
         var $ = layui.$, active = {
             create: function () {
-                UI.openLayer("{:url('create')}", 850, 730);
+                UI.openLayer("{:url('create')}", 850, 550, '#submit', "{:lang('create')}");
             }
         };
 

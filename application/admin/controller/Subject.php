@@ -158,7 +158,6 @@ class Subject extends Base
                 if($count == 0){
                     return error_json("广告 未填，不能上架");
                 }
-
             }
             $state = $subject->isUpdate(true)->save([
                 $_post['name'] => $_post['value'],
