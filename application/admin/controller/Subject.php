@@ -161,6 +161,11 @@ class Subject extends Base
                     return error_json("banner 未填，不能上架");
                 }
 
+                $count = $subjectBanner->where(['status'=>1, 'subject_id'=>$id, 'type'=>1])->count();
+                if($count == 0){
+                    return error_json("banner 首页入口 未填，不能上架");
+                }
+
                 $count = $plate->where(['status'=>1, 'subject_id'=>$id])->count();
                 if($count == 0){
                     return error_json("版块资源 未填，不能上架");
