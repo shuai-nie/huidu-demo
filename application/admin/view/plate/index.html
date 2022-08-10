@@ -33,7 +33,7 @@ layui.use(['table','dropdown'], function(){
     table.on('tool(think-table)', function(obj){
         var data = obj.data;
         if(obj.event==="edit") {
-            UI.openLayer("{:url('edit_plate')}?id="+data['id'], 650, 450, '#submit', "{:lang('edit')}");
+            UI.openLayer("{:url('edit_plate')}?id="+data['id'], 650, 500, '#submit', "{:lang('edit')}");
         }else if(obj.event == 'resource'){
             UI.openLayer("{:url('plate_resource')}?pid="+data['id'], 650, 350, '#submit', "板块资源");
         }
@@ -41,7 +41,7 @@ layui.use(['table','dropdown'], function(){
 
     var $ = layui.$, active = {
         create:function(){
-            UI.openLayer("{:url('create_plate', ['sid'=>$sid])}", 650, 350, '#submit', "{:lang('create')}");
+            UI.openLayer("{:url('create_plate', ['sid'=>$sid])}", 650, 500, '#submit', "{:lang('create')}");
         }
     };
 
