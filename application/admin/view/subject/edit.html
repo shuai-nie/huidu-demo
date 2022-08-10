@@ -6,7 +6,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">专题名称</label>
         <div class="layui-input-block" >
-            <input type="text" name="title" class="layui-input" value="{$info['title']}" />
+            <input type="text" name="title" lay-verify="required" class="layui-input" value="{$info['title']}" />
         </div>
     </div>
 
@@ -22,28 +22,28 @@
     <div class="layui-form-item">
         <label class="layui-form-label">SEO URL</label>
         <div class="layui-input-block" >
-            <input type="text" name="seo_url" class="layui-input" value="{$info['seo_url']}" />
+            <input type="text" name="seo_url" lay-verify="required" lay-reqText="SEO URL 不能为空" class="layui-input" value="{$info['seo_url']}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">SEO标题</label>
         <div class="layui-input-block" >
-            <input type="text" name="seo_title" class="layui-input" value="{$info['seo_title']}" />
+            <input type="text" name="seo_title" lay-verify="required" lay-reqText="SEO标题 不能为空" class="layui-input" value="{$info['seo_title']}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">SEO关键词</label>
         <div class="layui-input-block" >
-            <input type="text" name="seo_keywords" class="layui-input" value="{$info['seo_keywords']}" />
+            <input type="text" name="seo_keywords" lay-verify="required" lay-reqText="SEO关键词 不能为空" class="layui-input" value="{$info['seo_keywords']}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">SEO描述</label>
         <div class="layui-input-block" >
-            <input type="text" name="seo_description" class="layui-input" value="{$info['seo_description']}" />
+            <input type="text" name="seo_description" lay-verify="required" lay-reqText="SEO描述 不能为空" class="layui-input" value="{$info['seo_description']}" />
         </div>
     </div>
 
@@ -100,8 +100,9 @@
         });
 
         form.val("first",{
-            "type":"{$info['type']}",
-            "home_show":"{$info['home_show']}",
+            "type": "{$info['type']}",
+            "home_show": "{$info['home_show']}",
+            "sort": "{$info['sort']}",
         })
 
         //监听提交

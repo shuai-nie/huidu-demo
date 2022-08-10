@@ -196,8 +196,8 @@ class Subject extends Base
                             array_push($resourceAll, ['type'=>2,'plate_id'=>$_post['plate_id'],'key'=>$value]);
                         }
                     }
-                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$_post['plate_id']])->delete();
-                    $plateResource->where(['type' => 2, 'plate_id' => $_post['plate_id']])->delete();
+                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$_post['plate_id']])->update(['status'=>0]);
+                    $plateResource->where(['type' => 2, 'plate_id' => $_post['plate_id']])->update(['status'=>0]);
                     $plate->isUpdate(true)->save(['resource_type' => $_post['resource_type']], ['id' => $_post['plate_id']]);
                     $plateResource->saveAll($resourceAll);
                     $state = true;
@@ -340,14 +340,14 @@ class Subject extends Base
                         ['type'=>0,'plate_id'=>$pid,'key'=>$_post['key1']],
                         ['type'=>1,'plate_id'=>$pid,'key'=>$_post['key2']]
                     ];
-                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$pid])->delete();
+                    $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$pid])->update(['status'=>0]);
                 }elseif ($_post['resource_type'] == 2){
                     $resourceAll = [];
                     $textarea = explode(',',  $_post['textarea']);
                     foreach ($textarea as $key => $value) {
                         array_push($resourceAll, ['type'=>2,'plate_id'=>$pid,'key'=>$value]);
                     }
-                    $plateResource->where(['type'=>2,'plate_id'=>$pid])->delete();
+                    $plateResource->where(['type'=>2,'plate_id'=>$pid])->update(['status'=>0]);
                 }
 
                 $plate->isUpdate(true)->save(['resource_type'=>$_post['resource_type']], ['id'=>$pid]);
@@ -750,13 +750,13 @@ class Subject extends Base
             try {
                 $contentAll = [];
                 if($_post['subject_content_type'] == 1) {
-                    $subjectContent->where(['subject_id' => $sid, 'type' => 0])->delete();
+                    $subjectContent->where(['subject_id' => $sid, 'type' => 0])->update(['status'=>0]);
                     foreach ($_post['key'] as $key => $value) {
                         array_push($contentAll, ['subject_id' => $sid, 'type' => 0, 'key' => $value]);
                     }
                     $subjectContent->saveAll($contentAll);
                 }elseif ($_post['subject_content_type'] == 2){
-                    $subjectContent->where(['subject_id' => $sid, 'type' => 1])->delete();
+                    $subjectContent->where(['subject_id' => $sid, 'type' => 1])->update(['status'=>0]);
                     $textarea = explode(',', $_post['textarea']);
                     foreach ($textarea as $key => $value) {
                         array_push($contentAll, ['subject_id' => $sid, 'type' => 1, 'key' => $value]);
