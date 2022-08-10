@@ -66,6 +66,10 @@ class Subject extends Base
         if(request()->isPost()){
             $_post = request()->post();
             $state = false;
+            $count = $subject->where(['seo_url'=>$_post['seo_url'], 'status'=>1])->count();
+            if($count > 0){
+                return error_json('SEO URL 出现重复请修改');
+            }
             Db::startTrans();
             try {
                 $subject->allowField(true)->isUpdate(false)->data($_post)->save();
@@ -176,12 +180,8 @@ class Subject extends Base
                 if($count == 0){
                     return error_json("入驻须知 未填，不能上架");
                 }
-
-                $count = $subjectAdvertisement->where(['status'=>1, 'subject_id'=>$id])->count();
-                if($count == 0){
-                    return error_json("广告 未填，不能上架");
-                }
             }
+
             $state = $subject->isUpdate(true)->save([
                 $_post['name'] => $_post['value'],
             ], ['id' => $id]);
@@ -638,10 +638,11 @@ class Subject extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-
+        $count = $subjectAdvertisement->where(['status' => 1, 'subject_id' => $sid])->count();
         return view('', [
             'sid' => $sid,
             'meta_title' => '广告列表',
+            'count' => $count
         ]);
     }
 

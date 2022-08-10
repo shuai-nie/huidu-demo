@@ -1,7 +1,7 @@
 {include file="moban/bone_header"}
 
 <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" data-type="create">添加</button>
+    <button class="layui-btn layui-btn-sm" data-type="create">{:lang('create')}</button>
 </div>
 
 <fieldset class="table-search-fieldset">
@@ -62,7 +62,8 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+    <span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>编辑</span>
+    <span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>删除</span>
 </script>
 
 <script type="text/html" id="show_status">
@@ -101,20 +102,20 @@
                         return '-';
                 }
             }}
+            ,{field: 'right',title:'操作', width:160, align:'center', toolbar: '#barDemo'}
             ,{field: 'span', title: '', width:430,templet: '#span'}
             ,{field: 'home_show', title: '首页展示', width:110,templet: '#home_show', sort: true}
             ,{field: 'show_status', title: '展示', width:100,templet: '#show_status', sort: true}
             ,{field: 'sort', title: '排序', width:80, sort: true}
             ,{field: 'create_time', title: '创建时间', width:170}
-            ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
+
         ], "#think-table", "auth");
 
         table.on('tool(think-table)', function(obj){
             var data = obj.data
-                ,_title = "[" + data.title + "]";
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 850, 730, '#submit', "编辑");
-            }else if(obj.event==='del'){
+                , _title = "[" + data.title + "]";
+
+            if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
                         table.reload("table");
@@ -180,38 +181,20 @@
                 });
             }else if(obj.event==='question'){
                 UI.openLayer("{:url('question')}?sid="+data['id'], 850, 730, '#submit', _title);
-            } else if(obj.event === 'more'){
-                dropdown.render({
-                    elem: this
-                    , show: true
-                    , data: [
-                        {title: '编辑',id: 'edit',templet: '<span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span> '}
-                        ,{title: '删除',id: 'del',templet: '<span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '}
-                    ]
-                    , click: function(menudata){
-                        if(menudata.id === 'del'){
-                            layer.confirm('真的删除行么', function(index){
-                                UI.delete(data['id'], function(res){
-                                    if(res.code==200){
-                                        table.reload("table");
-                                    }
-                                });
-                            //     obj.del(); //删除对应行（tr）的DOM结构
-                            //     layer.close(index);
-                            //     //向服务端发送删除指令
-                            });
-                        } else if(menudata.id === 'question_answer_link_url'){
-
-                        } else if(menudata.id === 'edit'){
-                            // layer.msg('编辑操作，当前行 ID:'+ data.id);
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 850, 550, '#submit', "编辑");
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    UI.delete(data['id'], function(res){
+                        if(res.code==200){
+                            table.reload("table");
                         }
-                    }
-                    , align: 'center'
-                    , style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);'
-                })
+                    });
+                    //     obj.del(); //删除对应行（tr）的DOM结构
+                    //     layer.close(index);
+                    //     //向服务端发送删除指令
+                });
+            } else if(obj.event === 'edit'){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 850, 550, '#submit', "编辑");
             }
-
         });
 
         var $ = layui.$, active = {

@@ -1,14 +1,16 @@
 {include file="moban/bone_header"}
 
+{if condition="$count eq 0"}
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
 </div>
+{/if}
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
     <span class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</span>
-    <span class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</span>
+<!--    <span class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</span>-->
 </script>
 
 
