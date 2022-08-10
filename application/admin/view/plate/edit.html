@@ -17,14 +17,14 @@
         <div class="layui-inline">
             <label class="layui-form-label">图标</label>
             <div class="layui-input-block" >
-                <input type="hidden" name="icon_url" >
+                <input type="hidden" name="icon_url" value="{$info['icon_url']|default=''}" >
                 <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
             </div>
         </div>
 
         <div class="layui-inline">
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo2" src="{$info['icon_url']|default=''}" >
+                <img class="layui-upload-img" id="demo2" {if condition="$info['icon_url']"} src="{$info['icon_url']|default=''}" {/if} >
                 <p id="demoText2"></p>
             </div>
             <div style="width: 95px;">
@@ -66,13 +66,13 @@
         <div class="layui-inline" >
             <label class="layui-form-label">顾问图片</label>
             <div class="layui-input-block" >
-                <input type="hidden" name="counselor_img_url" >
+                <input type="hidden" name="counselor_img_url" value="{$info['counselor_img_url']|default=''}" >
                 <button type="button" class="layui-btn" ><i class="layui-icon">&#xe67c;</i>上传</button>
             </div>
         </div>
         <div class="layui-inline" >
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo1" src="{$info['counselor_img_url']|default=''}" >
+                <img class="layui-upload-img" id="demo1" {if condition="$info['counselor_img_url']"} src="{$info['counselor_img_url']|default=''}" {/if}  >
                 <p id="demoText"></p>
             </div>
             <div style="width: 95px;">
