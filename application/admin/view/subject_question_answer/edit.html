@@ -2,20 +2,25 @@
 
 <span class="layui layui-btn layui-btn-sm" id="lxfs">联系方式</span>
 
-<form class="layui-form layui-form-pane" lay-filter="first" style="padding: 10px 30px 0 0;">
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+
     <div class="layui-form-item">
         <label class="layui-form-label">模版</label>
-        <div class="layui-input-block" >
-            {volist name='groupAll' id='vo'}
-            <input type="radio" name="question_answer_group_id" lay-filter="question_answer_group_id" value="{$vo['id']}" title="{$vo['title']}" />
-            {/volist}
+        <div class="layui-input-inline" >
+            <select name="question_answer_group_id" lay-filter="question_answer_group_id" lay-search="" >
+                <option value="">请选择</option>
+                {volist name='groupAll' id='vo'}
+                <option value="{$vo['id']}">{$vo['title']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
+    <hr style="height: 1px;background-color: #1E9FFF;" />
 
     <div id="listData"></div>
 
-    <div class="layui-form-item" style="text-align:center;">
-        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add" style="width:200px;line-height:40px;height:40px;">添加</span>
+    <div class="layui-form-item" style="">
+        <span class="layui-btn layui-btn-normal layui-btn-sm" id="add" style="width:200px;line-height:40px;height:40px;margin-left:200px;">添加</span>
     </div>
 
     <div class="layui-form-item layui-hide">
@@ -28,7 +33,6 @@
 <script>
 layui.use(['form','upload'], function () {
     var form = layui.form
-        , upload = layui.upload
         , countList = 1 ;
 
 
@@ -45,7 +49,7 @@ layui.use(['form','upload'], function () {
         });
     });
 
-    form.on("radio(question_answer_group_id)", function(data){
+    form.on("select(question_answer_group_id)", function(data){
         var _val = data.value
         $.post("{:url('question_answer')}?gid="+_val, {}, function (objPost) {
             if(objPost.code == 0){
@@ -176,6 +180,10 @@ layui.use(['form','upload'], function () {
         var _this = $(this);
         _this.parent().parent().parent('div').remove();
     })
+
+    form.val("first",{
+        "question_answer_group_id": "{$subjectQuestionAnswerInfo['question_answer_group_id']|default=0}",
+    });
 
 });
 </script>

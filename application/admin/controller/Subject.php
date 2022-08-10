@@ -256,7 +256,7 @@ class Subject extends Base
         }else{
             return view('/plate/index', [
                 'sid' => $sid,
-                'meta_title' => '版块列表',
+                'meta_title' => '资源板块',
                 'type' => $plate->type,
                 'count' => $count,
             ]);
@@ -545,11 +545,13 @@ class Subject extends Base
         $groupAll = $questionAnswerGroup->where(['status'=>1])->field('id,title')->select();
 
         if($count > 0){
-            $answerAll = $subjectQuestionAnswer->where(['subject_id'=>$sid])->select();
+            $answerAll = $subjectQuestionAnswer->where(['subject_id'=>$sid,'status'=>1])->select();
+            $subjectQuestionAnswerInfo = $subjectQuestionAnswer->where(['subject_id'=>$sid,'status'=>1,'question_answer_group_id'=>['<>', 0]])->find();
             return view('/subject_question_answer/edit', [
                 'answerAll' => $answerAll,
                 'groupAll' => $groupAll,
                 'sid' => $sid,
+                'subjectQuestionAnswerInfo' => $subjectQuestionAnswerInfo,
                 'meta_title' => '入驻须知',
             ]);
         }
@@ -689,7 +691,7 @@ class Subject extends Base
 
         return view('', [
             'sid' => $sid,
-            'meta_title' => '优选分类列表'
+            'meta_title' => '优选分类'
         ]);
     }
 
@@ -794,7 +796,7 @@ class Subject extends Base
             'contentProperty' => $contentProperty,
             'subjectInfo' => $subjectInfo,
             'info' => $info,
-            'meta_title' => '文章咨询'
+            'meta_title' => '文章资讯'
         ]);
     }
 
