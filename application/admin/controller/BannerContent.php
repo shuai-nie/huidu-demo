@@ -34,7 +34,9 @@ class BannerContent extends Controller
                 ->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        return view('', [
+            'meta_title' => '咨询banner 列表',
+        ]);
     }
 
     /**
