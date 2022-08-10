@@ -88,6 +88,7 @@ class Ad extends Base
             'search_name'     => $name,
             'search_page'     => $page,
             'search_category' => $category,
+            'meta_title' => '广告列表',
         ]);
     }
 
