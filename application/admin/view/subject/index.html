@@ -4,6 +4,61 @@
     <button class="layui-btn layui-btn-sm" data-type="create">添加</button>
 </div>
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">专题名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:60px;">展示</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="type" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">专题</option>
+                            <option value="1">专区</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px;">首页展示</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="home_show" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">隐藏</option>
+                            <option value="1">显示</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:60px;">展示</label>
+                    <div class="layui-input-inline" style="width:90px;">
+                        <select name="show_status" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">下架</option>
+                            <option value="1">上架</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -47,9 +102,9 @@
                 }
             }}
             ,{field: 'span', title: '', width:430,templet: '#span'}
-            ,{field: 'home_show', title: '首页展示', width:100,templet: '#home_show'}
-            ,{field: 'show_status', title: '展示', width:100,templet: '#show_status'}
-            ,{field: 'sort', title: '排序', width:80,sort: true}
+            ,{field: 'home_show', title: '首页展示', width:110,templet: '#home_show', sort: true}
+            ,{field: 'show_status', title: '展示', width:100,templet: '#show_status', sort: true}
+            ,{field: 'sort', title: '排序', width:80, sort: true}
             ,{field: 'create_time', title: '创建时间', width:170}
             ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
@@ -255,9 +310,17 @@
                     form.render();
                 }
             });
-
-
         });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
 
     });
 </script>

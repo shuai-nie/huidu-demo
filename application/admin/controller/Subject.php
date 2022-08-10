@@ -17,12 +17,35 @@ class Subject extends Base
         if(request()->isPost()){
             $page = request()->post('page', 1);
             $limit = request()->post('limit', 10);
+            $title = request()->post('title');
+            $type = request()->post('type');
+            $home_show = request()->post('home_show');
+            $show_status = request()->post('show_status');
+
             $offset = ($page - 1) * $limit;
             $map = ['A.status'=>1];
+
+            if(!empty($title)) {
+                $map['A.title'] = ['like', "%{$title}%"];
+            }
+
+            if(is_numeric($type)){
+                $map['A.type'] = $type;
+            }
+
+            if(is_numeric($home_show)){
+                $map['A.home_show'] = $home_show;
+            }
+
+            if(is_numeric($show_status)){
+                $map['A.show_status'] = $show_status;
+            }
+
             $subjectAdvertisement = model('SubjectAdvertisement');
             $data = $subject->alias('A')
                 ->field("A.*")
                 ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+
             $count = $subject->alias('A')->where($map)->count();
             foreach ($data as $k => $v) {
                 $v['key'] = $k+ ($page-1)*$limit+1;
