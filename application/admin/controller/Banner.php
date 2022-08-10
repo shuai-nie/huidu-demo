@@ -20,7 +20,9 @@ class Banner extends Base
             $count = model("Banner")->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$adAll]], 200);
         }
-        return view();
+        return view('', [
+            'meta_title' => 'banner 列表',
+        ]);
     }
 
     /**

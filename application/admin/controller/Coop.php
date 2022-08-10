@@ -52,7 +52,9 @@ class Coop extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view('');
+        return view('', [
+            'meta_title' => '合作动态',
+        ]);
     }
 
     /**
