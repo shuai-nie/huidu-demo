@@ -26,6 +26,7 @@ class Userinfo extends Base
             $field = \request()->post('field');
             $type = \request()->post('type');
             $isweb = \request()->post('isweb');
+            $is_tg = \request()->post('is_tg', 0);
             if(!empty($field) && !empty($type)) {
                 $order = "A." . $field . ' ' . $type;
             }else {
@@ -43,6 +44,9 @@ class Userinfo extends Base
             }
             if(!empty($isweb)) {
                 $map['E.isweb'] = $isweb;
+            }
+            if($is_tg != 0){
+                $map['E.chat_id'] = ['neq', ''];
             }
             $offset = ($page - 1) * $limit;
             $data = model("UserInfo")->alias('A')
