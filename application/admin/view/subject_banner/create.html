@@ -114,6 +114,13 @@
             }
         });
 
+        var _type = $("input[name='type']:checked").val();
+        if(_type == 2){
+            $("#link_url_list").removeClass('layui-hide');
+        }else{
+            $("#link_url_list").addClass('layui-hide');
+        }
+
         form.verify({
             type: function(value){
                 if (value == '' || value == null) {

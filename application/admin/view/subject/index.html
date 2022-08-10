@@ -62,8 +62,8 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
-    <span class="layui-btn layui-btn-xs layui-btn-warm"><i class="layui-icon layui-icon-edit"></i>编辑</span>
-    <span class="layui-btn layui-btn-xs layui-btn-danger"><i class="layui-icon layui-icon-delete"></i>删除</span>
+    <span class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</span>
+    <span class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</span>
 </script>
 
 <script type="text/html" id="show_status">
@@ -103,7 +103,7 @@
                 }
             }}
             ,{field: 'right',title:'操作', width:160, align:'center', toolbar: '#barDemo'}
-            ,{field: 'span', title: '', width:430,templet: '#span'}
+            ,{field: 'span', title: '基本信息', width:430,templet: '#span'}
             ,{field: 'home_show', title: '首页展示', width:110,templet: '#home_show', sort: true}
             ,{field: 'show_status', title: '展示', width:100,templet: '#show_status', sort: true}
             ,{field: 'sort', title: '排序', width:80, sort: true}
