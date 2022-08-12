@@ -153,6 +153,7 @@ class Card extends Base
                     'user_recharge_id' => $userRecharge->id
                 ]);
 
+                $_post['logo'] = $head_url;
                 $card->allowField(true)->isUpdate(false)->save($_post);
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
