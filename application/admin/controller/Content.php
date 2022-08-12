@@ -56,6 +56,19 @@ class Content extends Controller
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->where($map)->count();
+
+            foreach ($data as $key=>$value) {
+                $relevance = $this->property_relevance($value['id']);
+                $relevance_arr = [];
+                foreach ($relevance as $k=>$v){
+                    if(!empty($v['property_name'])){
+                        array_push($relevance_arr, $v['property_name']);
+                    }
+                }
+                $value['relevance_name'] = implode(',', $relevance_arr);
+                $data[$key] = $value;
+            }
+
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
@@ -238,6 +251,17 @@ class Content extends Controller
         }
         $data = $this->model->find($id);
         return view('', ['data'=>$data]);
+    }
+
+    private function property_relevance($content_id)
+    {
+        $contentProperty = model('contentProperty');
+        $contentPropertyRelevance = model('contentPropertyRelevance');
+
+        return $contentPropertyRelevance->alias('A')
+            ->join($contentProperty->getTable().' B', 'A.property_id=B.id', 'left')
+            ->field('A.*,B.name as property_name')
+            ->where(['A.content_id' => $content_id, 'A.status' => 1])->select();
     }
 
 
