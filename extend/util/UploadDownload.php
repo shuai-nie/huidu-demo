@@ -38,7 +38,7 @@ class UploadDownload
             curl_close($ch);
         } else {
             ob_start();
-            readfile($url);
+            @readfile($url);
             $img = ob_get_contents();
             ob_end_clean();
         }
