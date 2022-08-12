@@ -147,10 +147,10 @@ class Content extends Controller
         $ContentPropertyRelevance = model("ContentPropertyRelevance");
         if(Request()->isPost()) {
             $data = Request()->post();
-//            Db::startTrans();
+            Db::startTrans();
             $RelevanceAll = [];
 
-//            try {
+            try {
                 $attribute_id = $data['attribute_id'];
                 unset($data['attribute_id']);
 
@@ -182,13 +182,12 @@ class Content extends Controller
                         'cid' => $id
                     ]);
                 }
-//                Db::commit();
-//                return success_json(lang('EditSuccess', [lang('Content')]));
-//            } catch (\Exception $e) {
-//                Db::rollback();
-//                return error_json(lang('EditFail', [lang('Content')]));
-//            }
-            exit();
+                Db::commit();
+                return success_json(lang('EditSuccess', [lang('Content')]));
+            } catch (\Exception $e) {
+                Db::rollback();
+                return error_json(lang('EditFail', [lang('Content')]));
+            }
         }
         $data = $this->model->find($id);
         $detail = $ContentDetail->where(['cid'=>$id])->find();
