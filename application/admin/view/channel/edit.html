@@ -1,0 +1,81 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">渠道名字</label>
+        <div class="layui-input-block">
+            <input type="text" name="channel_name" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">渠道标识</label>
+        <div class="layui-input-block">
+            <input type="text" name="channel_key" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload,
+            element = layui.element;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            },error: function(){
+                //请求异常回调
+            },progress: function(n, elem, res, index) {
+                var percent = n + '%'
+                element.progress('demo', percent);
+            }
+        });
+
+        form.val('first', {
+            "channel_name": "{$info['channel_name']}",
+            "channel_key": "{$info['channel_key']}",
+        });
+
+        form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
+            Api.edit(data.field, function (res) {
+                if(res.code != 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
+                layer.msg(res.msg);
+            });
+        });
+
+
+    });
+</script>

@@ -336,6 +336,60 @@ class Base extends Model
             ]);
         });
 
+        Channel::afterUpdate(function($data){
+            model('Channel')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 推广渠道 ID:' . request()->param('id') ,
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Channel::afterInsert(function($data){
+            model('Channel')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 推广渠道 ID:' . model('Channel')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Adsense::afterUpdate(function($data){
+            model('Adsense')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 广告位表 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Adsense::afterInsert(function($data){
+            model('Adsense')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 广告位表 ID:' . model('Adsense')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Advert::afterUpdate(function($data){
+            model('Advert')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 广告 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Advert::afterInsert(function($data){
+            model('Advert')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 广告 ID:' . model('Advert')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
     }
 
 
