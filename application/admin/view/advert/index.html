@@ -4,6 +4,48 @@
     <button class="layui-btn" data-type="create">添加</button>
 </div>
 
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">广告名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:90px;">广告位</label>
+                    <div class="layui-input-inline" >
+                        <select name="adsense_id" lay-filter="ty" lay-search="" >
+                            <option value="">请选择</option>
+                            <option value="0">专题</option>
+                            <option value="1">专区</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px;">时间区间</label>
+                    <div class="layui-input-inline" >
+                        <input type="text" name="start_time" id="start_time"  class="layui-input" />
+                    </div>
+                    <div class="layui-input-inline" >
+                        <input type="text" name="end_time" id="end_time"  class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon layui-icon-search"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
@@ -12,26 +54,31 @@
 </script>
 
 <script>
-    layui.use(['table', 'util'], function(){
+    layui.use(['table', 'util', 'form'], function(){
         var table = layui.table
-            , util = layui.util;
+            , util = layui.util
+            , laydate = layui.laydate
+            , form = layui.form ;
+
+        laydate.render({ elem: '#start_time' ,type: 'datetime' });
+        laydate.render({ elem: '#end_time' ,type: 'datetime' });
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
             ,{field: 'adsense_title', title: '广告位',width:170,templet:function(d){
                 return d.adsense_title;
             }}
-            ,{field: 'title', title: '广告名称',width:100}
+            ,{field: 'title', title: '广告名称',width:170}
             ,{field: 'url', title: '广告图',width:100}
             ,{field: 'preload_url', title: '预加载图',width:100}
             ,{field: 'link_url', title: '外链',width:160}
-            ,{field: 'start_time', title: '开始时间',width:170, templet: function(d){
+            ,{field: 'start_time', title: '开始时间',width:170, sort: true, templet: function(d){
                 if(d.start_time){
                     return util.toDateString(d.start_time*1000);
                 }
                 return '-';
             }}
-            ,{field: 'end_time', title: '结束时间',width:170, templet: function(d){
+            ,{field: 'end_time', title: '结束时间',width:170, sort: true,templet: function(d){
                 if(d.end_time){
                     return util.toDateString(d.end_time*1000);
                 }
@@ -64,6 +111,17 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                // url: "{:url('')}",
+                // method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
+
     });
 </script>
 {include file="moban/bone_footer"}

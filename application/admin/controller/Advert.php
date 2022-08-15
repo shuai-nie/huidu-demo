@@ -15,8 +15,29 @@ class Advert extends Base
         if(request()->isPost()){
             $limit = request()->post('limit');
             $page = request()->post('page', 1);
+            $title = request()->post('title');
+            $adsense_id = request()->post('adsense_id');
+            $start_time = request()->post('start_time');
+            $end_time = request()->post('end_time');
             $offset = ($page - 1) * $limit;
             $map = ['status'=>1];
+
+            if(!empty($title)) {
+                $map['title'] = ['like', "%{$title}%"];
+            }
+
+            if(!empty($adsense_id)) {
+                $map['adsense_id'] = $adsense_id;
+            }
+
+            if(!empty($start_time)) {
+                $map['start_time'] = ['>=', strtotime($start_time)];
+            }
+
+            if(!empty($end_time)) {
+                $map['end_time'] = ['<=', strtotime($end_time)];
+            }
+
             $count = $Advert->where($map)->count();
             $list = $Advert->where($map)->order('id desc')->limit($offset, $limit)->select();
             foreach ($list as $k=>$v){
