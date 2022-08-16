@@ -226,7 +226,10 @@ class Subject extends Base
                     }
                     $plateResource->where(['type'=>['in',[0,1]],'plate_id'=>$_post['plate_id']])->update(['status'=>0]);
                     $plateResource->where(['type' => 2, 'plate_id' => $_post['plate_id']])->update(['status'=>0]);
-                    $plate->isUpdate(true)->save(['resource_type' => $_post['resource_type']], ['id' => $_post['plate_id']]);
+                    $plate->isUpdate(true)->save([
+                        'resource_type' => $_post['resource_type'],
+                        'more_link_url' => $_post['more_link_url'],
+                    ], ['id' => $_post['plate_id']]);
                     $plateResource->saveAll($resourceAll);
                     $state = true;
                     Db::commit();
@@ -254,6 +257,7 @@ class Subject extends Base
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
 
+
         // 0专题 1专区
         if($info['type'] == 0){
             $dataDicAll = model('dataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE','status'=>1]);
@@ -274,6 +278,7 @@ class Subject extends Base
                     "textarea" => $data['group_key'],
                 ];
             }
+            $data['more_link_url'] = $plateInfo['more_link_url'];
 
             return view('plate/index_special', [
                 'dataDicAll' => $dataDicAll,
