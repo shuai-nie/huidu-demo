@@ -43,6 +43,14 @@
 
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">查看更多</label>
+        <div class="layui-input-block" >
+            <input type="text" name="more_link_url" class="layui-input" />
+            <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -90,6 +98,7 @@
             "key1":"{$data['key1']|default=0}",
             "key2":"{$data['key2']|default=0}",
             "textarea":"{$data['textarea']|default=''}",
+            "more_link_url":"{$data['more_link_url']|default=''}",
         })
 
         if ("{$data['resource_type']|default=1}" * 1 == 1) {
