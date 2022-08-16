@@ -90,6 +90,14 @@
         </div>
     </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block" >
+            <input type="text" name="sort" class="layui-input" />
+            <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -174,6 +182,7 @@ layui.use(['form','upload'], function () {
         "plate_subtitle":"{$info['plate_subtitle']}",
         "more_link_url":"{$info['more_link_url']}",
         "counselor_link":"{$info['counselor_link']}",
+        "sort":"{$info['sort']}",
     })
 
 
