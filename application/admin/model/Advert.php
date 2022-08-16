@@ -23,5 +23,16 @@ class Advert extends Base
         return getLoginUserId();
     }
 
+    public static function selectData($map = [])
+    {
+        $map['status'] = 1;
+        return self::where($map)->select();
+    }
+
+    public static function allFind($id)
+    {
+        return self::where(['status' => 1, 'id'=>$id])->find();
+    }
+
 
 }

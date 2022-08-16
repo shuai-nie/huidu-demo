@@ -1,0 +1,143 @@
+{include file="moban/bone_header"}
+<script src="/style/js/echarts.min.js?v=1.1"></script>
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item" id="advert">
+                {volist name="advertAll" id="vo"}
+                <input type="checkbox" name="advert[{$vo['id']}]" value="{$vo['id']}" title="{$vo['title']}" >
+                {/volist}
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间区间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stime" id="stime" value="{$dataDay8}" autocomplete="off" class="layui-input" >
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="etime" id="etime" value="{$dataDay1}" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<div id="main" style="width: auto;height:600px;margin-top:20px;"></div>
+
+<script>
+    layui.use(['table','form','laydate'], function(){
+        var table = layui.table
+            , form = layui.form
+            , $ = layui.jquery
+            , laydate = layui.laydate;
+
+        form.val("first", {
+        {volist name="advertAll" id="vo" key="k"}
+            {if condition="$k lt 6"}
+                "advert[{$vo['id']}]": true,
+            {/if}
+        {/volist}
+        })
+
+        laydate.render({elem: '#stime'});
+        laydate.render({elem: '#etime'});
+
+        var myChart = echarts.init(document.getElementById('main'))
+            , _stime = $("input[name='stime']").val()
+            , _etime = $("input[name='etime']").val();
+
+
+        myChartBrr(_stime, _etime);
+
+        form.on('submit(data-search-btn)', function(data){
+            myChartBrr(data.field.stime, data.field.etime);
+            return false;
+        })
+
+        /**
+         * 获取参数
+         */
+        function myChartCheckbox(){
+            var _che = $("#advert input[type='checkbox']:checked"), _arr = new Array();
+            for(var i = 0; i < _che.length; i++) {
+                $.each(_che, function(){
+                    _arr.push($(this).val());
+                });
+            }
+             return Array.from(new Set(_arr)).join() ;
+        }
+
+        function myChartBrr(stime, etime){
+            $.ajax({
+                url: "{:url('index')}"
+                , cache : false
+                , type: "POST"
+                , dataType: "json"
+                , data: {
+                    stime: stime,
+                    etime: etime,
+                    checkbox: myChartCheckbox(),
+                }
+                , success: function(obj){
+                    var option = {
+                        title: {text: '统计图'},
+                        tooltip: {trigger: 'axis'},
+                        legend: {
+                            // data:['网站在线人数', '1']
+                        },
+                        grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
+                        toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
+                        xAxis: {type: 'category',boundaryGap: false,
+                            data: ['2017-09-01','2017-09-02','2017-09-03','2017-09-04','2017-09-05','2017-09-06','2017-09-07','2017-09-08','2017-09-09']
+                        },
+                        yAxis: {type: 'value'},
+                        series: [{
+                            name: '广告1-展示次数',
+                            type: 'line',
+                            data: [1,2,3,4,5,6,7,8,9]
+                        },{
+                            name: '广告2-展示次数',
+                            type: 'line',
+                            data: [11,21,31,41,51,61,71,81,91]
+                        },{
+                            name: '广告1-点击总次数',
+                            type: 'line',
+                            data: [21,31,41,51,61,71,81,91,101]
+                        },{
+                            name: '广告2-点击总次数',
+                            type: 'line',
+                            data: [22,32,42,52,62,72,82,92,102]
+                        },{
+                            name: '广告1-点击总用户数',
+                            type: 'line',
+                            data: [3,4,5,6,7,8,9,10,11]
+                        },{
+                            name: '广告1-2点击总用户数',
+                            type: 'line',
+                            data: [3,4,5,6,7,8,9,10,11]
+                        },{
+                            name: '点击总用户数',
+                            type: 'line',
+                            data: [4,5,6,7,8,9,10,11,12,13]
+                        }
+                        ]
+                    };
+                    myChart.setOption(option);
+                }
+            })
+        }
+
+
+
+
+
+    });
+</script>
+{include file="moban/bone_footer"}

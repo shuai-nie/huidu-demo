@@ -18,10 +18,7 @@ class Census extends Base
 
             $month_arr = [];
             $seriesUser = [];
-            $st = $this->diffBetweenTwoDays($stime, $etime);
-            /*$map['stat_date'] = ['between', [$stime, $etime]];
-            $data = $userStat->where($map)->order('stat_date desc')->select();
-            var_dump($data);exit();*/
+            $st = diffBetweenTwoDays($stime, $etime);
 
             for ($me = 0; $me <= $st; $me++) {
                 $ymd = date("Y-m-d", (strtotime($stime) + 86400 * $me));
@@ -45,16 +42,6 @@ class Census extends Base
         ]);
     }
 
-    public function diffBetweenTwoDays ($day1, $day2){
-        $second1 = strtotime($day1);
-        $second2 = strtotime($day2);
-        if ($second1 < $second2) {
-            $tmp = $second2;
-            $second2 = $second1;
-            $second1 = $tmp;
-        }
-        return ($second1 - $second2) / 86400;
-    }
 
 
 
