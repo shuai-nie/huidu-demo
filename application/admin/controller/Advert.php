@@ -72,7 +72,6 @@ class Advert extends Base
             return error_json("提交失败");
         }
 
-
         $adsenseAll = model('adsense')->allselect();
         return view('', [
             'adsenseAll' => $adsenseAll,
@@ -91,7 +90,9 @@ class Advert extends Base
             if(!empty($_post['end_time'])){
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
-            $state = $Advert->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+
+            $state = $Advert->where(['id'=>$id])->update($_post);
+
             if($state != false) {
                 return success_json("提交成功");
             }
@@ -101,7 +102,7 @@ class Advert extends Base
         $info = $Advert->where(['id'=>$id])->find();
         $adsenseAll = model('adsense')->allselect();
         return view('', [
-            'info' => $info,
+            'info' => $info->toArray(),
             'adsenseAll' => $adsenseAll,
         ]);
     }

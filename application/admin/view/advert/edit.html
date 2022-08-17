@@ -189,8 +189,8 @@
 
         form.on('submit(submit)', function (data) {
             var DISABLED = 'layui-btn-disabled';
-            $(':button').addClass(DISABLED);
-            $(':button').attr('disabled', 'disabled');
+            // $(':button').addClass(DISABLED);
+            // $(':button').attr('disabled', 'disabled');
             Api.edit(data.field, function (res) {
                 if(res.code != 200){
                     $(':button').removeClass(DISABLED);
