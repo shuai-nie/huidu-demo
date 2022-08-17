@@ -157,7 +157,7 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
         ,size: upload_size
         ,done: function(res){
             if(res.code == 0) {
-                $("#demo1").attr('src', res.url);
+                $("#demo2").attr('src', res.url);
                 $("input[name='preload_url']").val(res.url);
             } else {
                 layui.msg('网络问题稍后再试');
