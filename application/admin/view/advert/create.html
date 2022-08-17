@@ -172,10 +172,6 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
         }
     });
 
-
-
-
-
     form.on('submit(submit)', function (data) {
         var DISABLED = 'layui-btn-disabled';
         $(':button').addClass(DISABLED);
@@ -185,7 +181,6 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
                 $(':button').removeClass(DISABLED);
                 $(':button').removeAttr('disabled');
             }
-            layer.msg(res.msg);
         });
     });
 

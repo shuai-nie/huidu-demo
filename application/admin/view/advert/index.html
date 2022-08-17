@@ -71,8 +71,18 @@
                 return d.adsense_title;
             }}
             ,{field: 'title', title: '广告名称',width:170}
-            ,{field: 'url', title: '广告图',width:100}
-            ,{field: 'preload_url', title: '预加载图',width:100}
+            ,{field: 'url', title: '广告图',width:100, templet: function(d){
+                if(d.url){
+                    return "<img src='"+d.url+"?v=1.1' width='30' height='30' />";
+                }
+                return '-';
+            }}
+            ,{field: 'preload_url', title: '预加载图',width:100, templet: function(d){
+                if(d.url){
+                    return "<img src='"+d.preload_url+"?v=1.1' width='30' height='30' />";
+                }
+                return '-';
+            }}
             ,{field: 'link_url', title: '外链',width:160}
             ,{field: 'start_time', title: '开始时间',width:170, sort: true, templet: function(d){
                 if(d.start_time){
