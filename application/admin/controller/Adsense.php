@@ -35,6 +35,7 @@ class Adsense extends Base
             $_post = request()->post();
             $state = $Adsense->allowField(true)->data($_post)->save();
             if($state != false) {
+                GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -53,6 +54,7 @@ class Adsense extends Base
             $_post = request()->post();
             $state = $Adsense->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state != false) {
+                GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -71,6 +73,7 @@ class Adsense extends Base
         $id = request()->param('id');
         $state = $Adsense->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
         if ($state != false) {
+            GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
             return success_json("刪除成功");
         }
         return error_json("删除失败");
