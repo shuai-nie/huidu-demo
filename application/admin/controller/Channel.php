@@ -34,6 +34,10 @@ class Channel extends Base
         $Channel = model('Channel');
         if(request()->isPost()) {
             $_post = request()->post();
+            $count = $Channel->where(['channel_key'=>$_post['channel_key']])->count();
+            if($count > 0){
+                return error_json("渠道标识 已存在");
+            }
             $state = $Channel->allowField(true)->data($_post)->save();
             if($state != false) {
                 return success_json("提交成功");
@@ -51,6 +55,11 @@ class Channel extends Base
         $id = request()->param('id');
         if(request()->isPost()) {
             $_post = request()->post();
+            $count = $Channel->where(['channel_key'=>$_post['channel_key'], 'id'=>['neq', $id]])->count();
+            if($count > 0){
+                return error_json("渠道标识 已存在");
+            }
+
             $state = $Channel->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state != false) {
                 return success_json("提交成功");
