@@ -104,6 +104,10 @@ class Subject extends Base
         if(request()->isPost()) {
             $_post = request()->post();
             $state = false;
+            $count = $subject->where(['seo_url'=>$_post['seo_url'], 'status'=>1, 'id'=>['neq', $id]])->count();
+            if($count > 0){
+                return error_json('SEO URL 出现重复请修改');
+            }
             Db::startTrans();
             try {
                 $subject->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
