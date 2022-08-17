@@ -21,13 +21,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">广告名称</label>
         <div class="layui-input-block">
-            <input type="text" name="title" class="layui-input" />
+            <input type="text" name="title" required  lay-verify="required" class="layui-input" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="url" >
+            <input type="hidden" name="url" lay-verify="url" />
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="test1">
                     <i class="layui-icon">&#xe67c;</i>广告图
@@ -50,7 +50,7 @@
 
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="preload_url" >
+            <input type="hidden" name="preload_url" lay-verify="preload_url" />
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="test2">
                     <i class="layui-icon">&#xe67c;</i>预加载图
@@ -74,7 +74,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">外链</label>
         <div class="layui-input-block">
-            <input type="text" name="link_url" class="layui-input" />
+            <input type="text" required  lay-verify="required" name="link_url" class="layui-input" />
         </div>
     </div>
 
@@ -82,11 +82,11 @@
         <div class="layui-inline">
             <label class="layui-form-label">展示时间</label>
             <div class="layui-input-inline">
-                <input type="text" name="start_time" id="start_time" class="layui-input" />
+                <input type="text" required  lay-verify="required" name="start_time" id="start_time" class="layui-input" />
             </div>
         </div>
         <div class="layui-inline">
-            <input type="text" name="end_time" id="end_time" class="layui-input" />
+            <input type="text" required  lay-verify="required" name="end_time" id="end_time" class="layui-input" />
         </div>
     </div>
 
@@ -171,6 +171,19 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
             element.progress('demo2', percent);
         }
     });
+
+    form.verify({
+        url: function(value, item){
+            if(value == '' || value == null){
+                return "广告图 不能为空";
+            }
+        },
+        preload_url: function(value, item){
+            if(value == '' || value == null){
+                return "预加载图 不能为空";
+            }
+        }
+    })
 
     form.on('submit(submit)', function (data) {
         var DISABLED = 'layui-btn-disabled';
