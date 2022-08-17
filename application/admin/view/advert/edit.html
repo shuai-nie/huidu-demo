@@ -134,8 +134,7 @@
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
+                    $("#demo1").attr('src', res.url);
                     $("input[name='url']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -146,9 +145,33 @@
                 //请求异常回调
             },progress: function(n, elem, res, index) {
                 var percent = n + '%'
-                element.progress('demo', percent);
+                element.progress('demo1', percent);
             }
         });
+
+        upload.render({
+            elem: '#test2'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#demo1").attr('src', res.url);
+                    $("input[name='preload_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            },progress: function(n, elem, res, index) {
+                var percent = n + '%'
+                element.progress('demo2', percent);
+            }
+        });
+        
 
         form.val('first', {
             "adsense_id": "{$info['adsense_id']}",

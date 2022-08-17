@@ -3,7 +3,6 @@ namespace app\admin\controller;
 
 class Advert extends Base
 {
-
     public function _initialize()
     {
         parent::_initialize();
@@ -47,7 +46,9 @@ class Advert extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
         }
+        $AdsenseAll = model('Adsense')->allselect();
         return view('', [
+            'AdsenseAll' => $AdsenseAll,
         ]);
     }
 

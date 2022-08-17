@@ -22,8 +22,10 @@
                     <div class="layui-input-inline" >
                         <select name="adsense_id" lay-filter="ty" lay-search="" >
                             <option value="">请选择</option>
-                            <option value="0">专题</option>
-                            <option value="1">专区</option>
+                            {volist name="AdsenseAll" id="vo"}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
+
                         </select>
                     </div>
                 </div>
