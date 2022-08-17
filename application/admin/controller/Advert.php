@@ -63,7 +63,7 @@ class Advert extends Base
             if(!empty($_post['end_time'])){
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
-            $state = $Advert->allowField(true)->data($_post)->save();
+            $state = $Advert->allowField(false)->data($_post)->save();
             if($state != false) {
                 return success_json("提交成功");
             }
