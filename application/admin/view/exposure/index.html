@@ -102,17 +102,25 @@
                 , success: function(obj){
                     var _as = [], _xAxisData = [];
                     $.each(obj.data, function(i, v){
+                        if(v.show_cnt){
                         _as.push({ name : v.title+"展示次数", type: 'line', data: v.show_cnt, });
                         _xAxisData.push(v.title + "展示次数");
+                        }
 
-                        _as.push({ name : v.title+"点击总次数", type: 'line', data: v.click_pv, });
-                        _xAxisData.push(v.title + "点击总次数");
+                        if(v.click_pv) {
+                            _as.push({name: v.title + "点击总次数", type: 'line', data: v.click_pv,});
+                            _xAxisData.push(v.title + "点击总次数");
+                        }
 
-                        _as.push({ name : v.title+"点击总用户数IP", type: 'line', data: v.click_uv_ip, });
-                        _xAxisData.push( v.title + "点击总用户数IP");
+                        if(v.click_uv_ip) {
+                            _as.push({name: v.title + "点击总用户数IP", type: 'line', data: v.click_uv_ip,});
+                            _xAxisData.push(v.title + "点击总用户数IP");
+                        }
 
-                        _as.push({ name : v.title+"点击总用户数UIP", type: 'line', data: v.click_uv_uid, });
-                        _xAxisData.push( v.title + "点击总用户数UIP");
+                        if(v.click_uv_uid) {
+                            _as.push({name: v.title + "点击总用户数UIP", type: 'line', data: v.click_uv_uid,});
+                            _xAxisData.push(v.title + "点击总用户数UIP");
+                        }
 
                     })
 
