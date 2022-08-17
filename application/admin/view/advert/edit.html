@@ -9,7 +9,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">广告位</label>
         <div class="layui-input-block">
-            <select name="adsense_id" lay-serach="">
+            <select name="adsense_id" lay-serach="" required  lay-verify="required" >
                 <option value="">请选择</option>
                 {volist name='adsenseAll' id='vo'}
                 <option value="{$vo['id']}">{$vo['title']}</option>
@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">广告名称</label>
         <div class="layui-input-block">
-            <input type="text" name="title" class="layui-input" />
+            <input type="text" name="title" required  lay-verify="required" class="layui-input" />
         </div>
     </div>
 
