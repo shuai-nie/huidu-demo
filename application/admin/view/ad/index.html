@@ -48,9 +48,7 @@
     </div>
 </fieldset>
 
-<table class="layui-hide" id="table think-table" ></table>
-
-<table class="layui-table" id="test table" lay-data="{page:true,limit:50,width:1400,defaultToolbar: ['exports']}" lay-filter="think-table">
+<table class="layui-table" id="think-table" lay-data="{page:true,limit:50,width:1400,defaultToolbar: ['exports']}" lay-filter="think-table">
     <thead>
     <tr>
         <th lay-data="{field:'id', width:60}">ID</th>
@@ -104,13 +102,6 @@
             form = layui.form;
 
         form.on('submit(data-search-btn)', function(data){
-            table.reload('table', {
-                url: "{:url('')}",
-                method:'post',
-                where : data.field,
-                page : {curr : 1}
-            });
-            return false;
         })
 
 

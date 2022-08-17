@@ -10,6 +10,14 @@
                 <input type="checkbox" name="advert[{$vo['id']}]" value="{$vo['id']}" title="{$vo['title']}" >
                 {/volist}
             </div>
+
+            <div class="layui-form-item">
+                <input type="checkbox" name="show_cnt" value="1" title="展示次数" >
+                <input type="checkbox" name="click_pv" value="1" title="点击总次数" >
+                <input type="checkbox" name="click_uv_ip" value="1" title="点击总用户数IP" >
+                <input type="checkbox" name="click_uv_uid" value="1" title="点击总用户数UID" >
+            </div>
+
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">时间区间</label>
@@ -44,6 +52,8 @@
                 "advert[{$vo['id']}]": true,
             {/if}
         {/volist}
+            "show_cnt": true,
+
         })
 
         laydate.render({elem: '#stime'});
@@ -84,51 +94,43 @@
                     stime: stime,
                     etime: etime,
                     checkbox: myChartCheckbox(),
+                    show_cnt: $("input[name='show_cnt']:checked").val(),
+                    click_pv: $("input[name='click_pv']:checked").val(),
+                    click_uv_ip: $("input[name='click_uv_ip']:checked").val(),
+                    click_uv_uid: $("input[name='click_uv_uid']:checked").val(),
                 }
                 , success: function(obj){
+                    var _as = [], _xAxisData = [];
+                    $.each(obj.data, function(i, v){
+                        _as.push({ name : v.title+"展示次数", type: 'line', data: v.show_cnt, });
+                        _xAxisData.push(v.title + "展示次数");
+
+                        _as.push({ name : v.title+"点击总次数", type: 'line', data: v.click_pv, });
+                        _xAxisData.push(v.title + "点击总次数");
+
+                        _as.push({ name : v.title+"点击总用户数IP", type: 'line', data: v.click_uv_ip, });
+                        _xAxisData.push( v.title + "点击总用户数IP");
+
+                        _as.push({ name : v.title+"点击总用户数UIP", type: 'line', data: v.click_uv_uid, });
+                        _xAxisData.push( v.title + "点击总用户数UIP");
+
+                    })
+
                     var option = {
                         title: {text: '统计图'},
                         tooltip: {trigger: 'axis'},
                         legend: {
-                            // data:['网站在线人数', '1']
+                            data: _xAxisData
                         },
                         grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
                         toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
                         xAxis: {type: 'category',boundaryGap: false,
-                            data: ['2017-09-01','2017-09-02','2017-09-03','2017-09-04','2017-09-05','2017-09-06','2017-09-07','2017-09-08','2017-09-09']
+                            data: obj.xAxisData
                         },
                         yAxis: {type: 'value'},
-                        series: [{
-                            name: '广告1-展示次数',
-                            type: 'line',
-                            data: [1,2,3,4,5,6,7,8,9]
-                        },{
-                            name: '广告2-展示次数',
-                            type: 'line',
-                            data: [11,21,31,41,51,61,71,81,91]
-                        },{
-                            name: '广告1-点击总次数',
-                            type: 'line',
-                            data: [21,31,41,51,61,71,81,91,101]
-                        },{
-                            name: '广告2-点击总次数',
-                            type: 'line',
-                            data: [22,32,42,52,62,72,82,92,102]
-                        },{
-                            name: '广告1-点击总用户数',
-                            type: 'line',
-                            data: [3,4,5,6,7,8,9,10,11]
-                        },{
-                            name: '广告1-2点击总用户数',
-                            type: 'line',
-                            data: [3,4,5,6,7,8,9,10,11]
-                        },{
-                            name: '点击总用户数',
-                            type: 'line',
-                            data: [4,5,6,7,8,9,10,11,12,13]
-                        }
-                        ]
+                        series: _as
                     };
+                    console.log(option);
                     myChart.setOption(option);
                 }
             })
