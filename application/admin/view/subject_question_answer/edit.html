@@ -71,14 +71,14 @@ layui.use(['form','upload'], function () {
                             "        <div class=\"layui-form-item\">\n" +
                             "            <label class=\"layui-form-label\">答案</label>\n" +
                             "            <div class=\"layui-input-inline\" style=\"width:550px;\" >\n" +
-                            "                <textarea type=\"text\" name=\"answer["+countList+"]\" class=\"layui-textarea\" ></textarea>\n" +
+                            "                <textarea type=\"text\" name=\"answer[" + countList + "]\" class=\"layui-textarea\" >" + v.answer + "</textarea>\n" +
                             "            </div>\n" +
                             "        </div>"+
                             "        <div class=\"layui-form-item\">\n" +
                             "            <div class=\"layui-inline\">\n" +
                             "            <label class=\"layui-form-label\">排序</label>\n" +
                             "            <div class=\"layui-input-inline\"  >\n" +
-                            "                <input type=\"text\" name=\"sort["+countList+"]\" class=\"layui-input\" />\n" +
+                            "                <input type=\"text\" name=\"sort[" + countList + "]\" class=\"layui-input\" value='" + v.sort + "' />\n" +
                             "            </div>\n" +
                             "            </div>\n" +
                             "            <div class=\"layui-inline\">\n" +
