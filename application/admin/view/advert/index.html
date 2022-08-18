@@ -87,13 +87,13 @@
                 return '-';
             }}
             ,{field: 'link_url', title: '外链',width:160}
-            ,{field: 'start_time', title: '开始时间',width:170, sort: true, templet: function(d){
+            ,{field: 'start_time', title: '开始时间',width:170, align: 'center', sort: true, templet: function(d){
                 if(d.start_time){
                     return util.toDateString(d.start_time*1000);
                 }
                 return '-';
             }}
-            ,{field: 'end_time', title: '结束时间',width:170, sort: true,templet: function(d){
+            ,{field: 'end_time', title: '结束时间',width:170, align: 'center', sort: true,templet: function(d){
                 if(d.end_time){
                     return util.toDateString(d.end_time*1000);
                 }
