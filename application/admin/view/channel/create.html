@@ -5,14 +5,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">渠道名字</label>
         <div class="layui-input-block">
-            <input type="text" name="channel_name" class="layui-input" />
+            <input type="text" name="channel_name" required lay-verify="required" class="layui-input" />
+            <div class="layui-form-mid layui-word-aux" style="color:red!important;">谨慎添加，不能修改删除</div>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">渠道标识</label>
         <div class="layui-input-block">
-            <input type="text" name="channel_key" class="layui-input" />
+            <input type="text" name="channel_key" required lay-verify="required" class="layui-input" />
+            <div class="layui-form-mid layui-word-aux" style="color:red!important;">谨慎添加，不能修改删除</div>
         </div>
     </div>
 

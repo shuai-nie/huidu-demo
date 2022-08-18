@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\controller;
 
+use app\admin\model\User;
+
 class Channel extends Base
 {
 
@@ -19,6 +21,10 @@ class Channel extends Base
             $map = ['status'=>1];
             $count = $Channel->where($map)->count();
             $list = $Channel->where($map)->order('id desc')->limit($offset, $limit)->select();
+            foreach ($list as $key => $v){
+                $v['user_count'] = User::where(['channel_id'=>$v['id']])->count();
+                $list[$key] = $v;
+            }
             foreach ($list as $k=>$v){
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $list[$k] = $v;

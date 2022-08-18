@@ -18,7 +18,7 @@
             {field: 'key', title: '', width:80, fixed: 'left'}
             ,{field: 'channel_name', title: '渠道名字',width:170}
             ,{field: 'channel_key', title: '渠道标识',width:170}
-            ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
+            ,{field: 'user_count', title: '渠道人数',width:170}
         ]);
 
         table.on('tool(think-table)', function(obj){
@@ -35,7 +35,7 @@
         });
         var $ = layui.$, active = {
             create:function(){
-                UI.openLayer("{:url('create')}", 450, 250, '#submit', "{:lang('create')}");
+                UI.openLayer("{:url('create')}", 450, 350, '#submit', "{:lang('create')}");
             }
         };
 
