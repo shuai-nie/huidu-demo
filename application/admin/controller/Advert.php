@@ -43,7 +43,7 @@ class Advert extends Base
             $count = $Advert->where($map)->count();
             $list = $Advert->where($map)->order('id desc')->limit($offset, $limit)->select();
             foreach ($list as $k=>$v){
-                $v['key'] = $k+ ($page-1)*$limit+1;
+                $v['key'] = $count-($k+ ($page-1)*$limit);
                 $v['adsense_title'] = allAdventFind($v['adsense_id']);
                 $v['show_status'] = getAdvertShowStatus($v['start_time'], $v['end_time']);
                 $list[$k] = $v;
@@ -68,7 +68,7 @@ class Advert extends Base
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
 
-            $state = $Advert->allowField(true)->insert($_post);
+            $state = $Advert->allowField(true)->data($_post)->save();
 
             if($state != false) {
                 GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
@@ -96,7 +96,7 @@ class Advert extends Base
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
 
-            $state = $Advert->where(['id'=>$id])->update($_post);
+            $state = $Advert->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
 
             if($state != false) {
                 GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
