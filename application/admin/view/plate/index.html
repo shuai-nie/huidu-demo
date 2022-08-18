@@ -7,6 +7,7 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-xs layui-btn-normal " lay-event="resource">板块资源</a>
 </script>
@@ -28,7 +29,7 @@ layui.use(['table','dropdown'], function(){
             return '-';
         }}
         ,{field: 'sort', title: '排序', width:90,sort: true}
-        ,{fixed: 'right',title:'操作', width:190, align:'center', toolbar: '#barDemo'}
+        ,{fixed: 'right',title:'操作', width:240, align:'center', toolbar: '#barDemo'}
     ]);
 
     table.on('tool(think-table)', function(obj){
@@ -37,6 +38,20 @@ layui.use(['table','dropdown'], function(){
             UI.openLayer("{:url('edit_plate')}?id="+data['id'], 650, 500, '#submit', "{:lang('edit')}");
         }else if(obj.event == 'resource'){
             UI.openLayer("{:url('plate_resource')}?pid="+data['id'], 650, 350, '#submit', "板块资源");
+        }else if(obj.event == 'del'){
+            layer.confirm('是否删除?', {icon: 3, title:'提示'}, function(index){
+                $.post("{:url('del_plate')}?id="+ data['id'], function(obj2){
+                    if(obj2.code == 200) {
+                        layer.msg(obj2['msg'], {icon: 1}, function(){
+                            layer.close(index);
+                            obj.del();
+                        });
+                    }else {
+                        layer.msg(obj2['msg']);
+                    }
+
+                }, 'json');
+            })
         }
     });
 
