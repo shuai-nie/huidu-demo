@@ -1,6 +1,9 @@
 <?php
 namespace app\admin\controller;
 
+use app\admin\model\Advert as AdvertModel;
+use app\admin\model\AdvertExposureStatDaily;
+
 class Advert extends Base
 {
     public function _initialize()
@@ -42,6 +45,7 @@ class Advert extends Base
             foreach ($list as $k=>$v){
                 $v['key'] = $k+ ($page-1)*$limit+1;
                 $v['adsense_title'] = allAdventFind($v['adsense_id']);
+                $v['show_status'] = getAdvertShowStatus($v['start_time'], $v['end_time']);
                 $list[$k] = $v;
             }
             return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
@@ -119,6 +123,57 @@ class Advert extends Base
             return success_json("刪除成功");
         }
         return error_json("删除失败");
+    }
+
+    public function see()
+    {
+        if(request()->isPost()){
+
+            $stime = request()->post('stime');
+            $etime = request()->post('etime');
+            $advert_id = request()->post('advert_id');
+
+            $st = diffBetweenTwoDays($stime, $etime);
+            $show_cnt = [];
+            $click_pv = [];
+            $click_uv_ip = [];
+            $click_uv_uid = [];
+            $xAxisData = [];
+
+            for ($me = 0; $me <= $st; $me++) {
+                array_push($xAxisData, date("Y-m-d", (strtotime($stime) + 86400 * $me)) );
+                $ymd = date("Ymd", strtotime($stime) + 86400 * $me);
+                $dataAdvert = AdvertExposureStatDaily::where(['advert_id' => $advert_id, 'ymd' => $ymd])->find();
+                if($dataAdvert){
+                    array_push($show_cnt, $dataAdvert['show_cnt']);
+                    array_push($click_pv, $dataAdvert['click_pv']);
+                    array_push($click_uv_ip, $dataAdvert['click_uv_ip']);
+                    array_push($click_uv_uid, $dataAdvert['click_uv_uid']);
+                } else {
+                    array_push($show_cnt, 0);
+                    array_push($click_pv, 0);
+                    array_push($click_uv_ip, 0);
+                    array_push($click_uv_uid, 0);
+                }
+            }
+            return json([
+                'code' => 0,
+                'xAxisData' => $xAxisData,
+                'show_cnt' => $show_cnt,
+                'click_pv' => $click_pv,
+                'click_uv_ip' => $click_uv_ip,
+                'click_uv_uid' => $click_uv_uid,
+            ]);
+        }
+        $id =  request()->param('id');
+        $dateDay1 =  date("Y-m-d",strtotime("-1 day")) ;
+        $dateDay8 =  date("Y-m-d",strtotime("-8 day")) ;
+        $info = AdvertModel::where(['status'=>1, 'id'=>$id])->find();
+        return view('', [
+            'dateDay1' => $dateDay1,
+            'dateDay8' => $dateDay8,
+            'info' => $info,
+        ]);
     }
 
 }

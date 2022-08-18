@@ -16,3 +16,19 @@ function diffBetweenTwoDays ($day1, $day2){
     }
     return ($second1 - $second2) / 86400;
 }
+
+function getAdvertShowStatus($sta, $end)
+{
+    $time = time();
+    if($sta > $time){
+        return "未上架";
+    }
+    if($sta <  $time) {
+        if($end > $time) {
+            return "正常";
+        }else {
+            return "已过期";
+        }
+    }
+
+}
