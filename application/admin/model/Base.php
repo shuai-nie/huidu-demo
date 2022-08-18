@@ -337,7 +337,7 @@ class Base extends Model
         });
 
         Channel::afterUpdate(function($data){
-            model('Channel')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 推广渠道 ID:' . request()->param('id') ,
                 'url' => (string)url(),
@@ -346,7 +346,7 @@ class Base extends Model
         });
 
         Channel::afterInsert(function($data){
-            model('Channel')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 推广渠道 ID:' . model('Channel')->getLastInsID(),
                 'url' => (string)url(),
@@ -355,7 +355,7 @@ class Base extends Model
         });
 
         Adsense::afterUpdate(function($data){
-            model('Adsense')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 广告位表 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -364,7 +364,7 @@ class Base extends Model
         });
 
         Adsense::afterInsert(function($data){
-            model('Adsense')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 广告位表 ID:' . model('Adsense')->getLastInsID(),
                 'url' => (string)url(),
@@ -373,7 +373,7 @@ class Base extends Model
         });
 
         Advert::afterUpdate(function($data){
-            model('Advert')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 广告 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -382,7 +382,7 @@ class Base extends Model
         });
 
         Advert::afterInsert(function($data){
-            model('Advert')->data([
+            model('AdminLog')->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 广告 ID:' . model('Advert')->getLastInsID(),
                 'url' => (string)url(),
