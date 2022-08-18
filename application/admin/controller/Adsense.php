@@ -1,8 +1,7 @@
 <?php
-
-
 namespace app\admin\controller;
 
+use app\admin\model\Advert as AdvertModel;
 
 class Adsense extends Base
 {
@@ -21,6 +20,10 @@ class Adsense extends Base
             $map = ['status'=>1];
             $count = $Adsense->where($map)->count();
             $list = $Adsense->where($map)->order('id desc')->limit($offset, $limit)->select();
+            foreach ($list as $k => $v) {
+                $v['count'] = AdvertModel::where(['status' => 1, 'adsense_id' => $v['id']])->count();
+                $list[$k] = $v;
+            }
             return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
         }
         return view('', [
