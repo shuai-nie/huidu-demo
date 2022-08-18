@@ -26,7 +26,7 @@ class Advert extends Base
     public static function selectData($map = [])
     {
         $map['status'] = 1;
-        return self::where($map)->select();
+        return self::where($map)->order("id desc")->select();
     }
 
     public static function allFind($id)
