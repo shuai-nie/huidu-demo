@@ -15,6 +15,7 @@ class Advert extends Base
     {
         $Advert = model('Advert');
         if(request()->isPost()){
+            $time = time();
             $limit = request()->post('limit');
             $page = request()->post('page', 1);
             $title = request()->post('title');
@@ -41,11 +42,10 @@ class Advert extends Base
             }
 
             $count = $Advert->where($map)->count();
-            $list = $Advert->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $list = $Advert->where($map)->field("*,IF(start_time > $time, '1', if(end_time > $time, '2', '3')) as show_status")->order('show_status asc')->limit($offset, $limit)->select();
             foreach ($list as $k=>$v){
                 $v['key'] = $count-($k+ ($page-1)*$limit);
                 $v['adsense_title'] = allAdventFind($v['adsense_id']);
-                $v['show_status'] = getAdvertShowStatus($v['start_time'], $v['end_time']);
                 $list[$k] = $v;
             }
             return json(['data'=>['count'=>$count, 'list'=>$list]], 200);

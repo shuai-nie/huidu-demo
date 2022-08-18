@@ -101,7 +101,14 @@
             }}
             ,{field: 'keyword', title: '关键词',width:200}
             ,{field: 'remark', title: '备注',width:120}
-            ,{field: 'show_status', title: '状态',width:60}
+            ,{field: 'show_status', title: '状态',width:80, templet(d){
+                switch (d.show_status *1){
+                    case 1: return '未开始';
+                    case 2: return '正常';
+                    case 3: return '已结束';
+                    default: return '-';
+                }
+            }}
             ,{fixed: 'right',title:'操作',width:90, align:'center', toolbar: '#barDemo'}
         ]);
 
