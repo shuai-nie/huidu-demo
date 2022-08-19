@@ -36,7 +36,7 @@
 
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="url" lay-verify="url" />
+            <input type="hidden" name="url" />
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="test1">
                     <i class="layui-icon">&#xe67c;</i>广告图
@@ -59,7 +59,7 @@
 
     <div class="layui-form-item">
         <div class="layui-inline">
-            <input type="hidden" name="preload_url" lay-verify="preload_url" />
+            <input type="hidden" name="preload_url"  />
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" id="test2">
                     <i class="layui-icon">&#xe67c;</i>预加载图
@@ -181,18 +181,18 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
         }
     });
 
-    form.verify({
-        url: function(value, item){
-            if(value == '' || value == null){
-                return "广告图 不能为空";
-            }
-        },
-        preload_url: function(value, item){
-            if(value == '' || value == null){
-                return "预加载图 不能为空";
-            }
-        }
-    })
+    // form.verify({
+    //     url: function(value, item){
+    //         if(value == '' || value == null){
+    //             return "广告图 不能为空";
+    //         }
+    //     },
+    //     preload_url: function(value, item){
+    //         if(value == '' || value == null){
+    //             return "预加载图 不能为空";
+    //         }
+    //     }
+    // })
 
     form.on('submit(submit)', function (data) {
         var DISABLED = 'layui-btn-disabled';

@@ -87,8 +87,8 @@ class Advert extends Base
             $attribute = $_post['attribute'];
             unset($_post['attribute']);
             $attr = [];
-            Db::startTrans();
             $state = false;
+            Db::startTrans();
             try {
                 $Advert->allowField(true)->data($_post)->save();
                 $advert_id = $Advert->id;
@@ -98,7 +98,7 @@ class Advert extends Base
                         'value' => $v,
                     ]);
                 }
-                AdvertAttribute::saveAll($attr);
+                model('AdvertAttribute')->saveAll($attr, false);
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
