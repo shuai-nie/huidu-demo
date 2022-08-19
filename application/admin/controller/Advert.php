@@ -6,6 +6,7 @@ use app\admin\model\AdvertExposureStatDaily;
 use think\Db;
 use app\admin\model\DataDic as DataDicModel;
 use think\Exception;
+use app\admin\model\AdvertAttribute;
 
 class Advert extends Base
 {
