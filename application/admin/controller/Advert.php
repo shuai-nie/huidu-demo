@@ -4,6 +4,8 @@ namespace app\admin\controller;
 use app\admin\model\Advert as AdvertModel;
 use app\admin\model\AdvertExposureStatDaily;
 use think\Db;
+use app\admin\model\DataDic as DataDicModel;
+use think\Exception;
 
 class Advert extends Base
 {
@@ -81,8 +83,26 @@ class Advert extends Base
             if(!empty($_post['end_time'])){
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
-
-            $state = $Advert->allowField(true)->data($_post)->save();
+            $attribute = $_post['attribute'];
+            unset($_post['attribute']);
+            $attr = [];
+            Db::startTrans();
+            $state = false;
+            try {
+                $Advert->allowField(true)->data($_post)->save();
+                $advert_id = $Advert->id;
+                foreach ($attribute as $key =>$v ){
+                    array_push($attr, [
+                        'advert_id' => $advert_id,
+                        'value' => $v,
+                    ]);
+                }
+                AdvertAttribute::saveAll($attr);
+                Db::commit();
+                $state = true;
+            }catch (Exception $e) {
+                Db::rollback();
+            }
 
             if($state != false) {
                 GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
@@ -92,8 +112,10 @@ class Advert extends Base
         }
 
         $adsenseAll = model('adsense')->allselect();
+        $attributeAll = DataDicModel::where(['data_type_no'=>'ADVERT_ATTRIBUTE','status'=>1])->order('sort desc')->select();
         return view('', [
             'adsenseAll' => $adsenseAll,
+            'attributeAll' => $attributeAll,
         ]);
     }
 
@@ -121,9 +143,11 @@ class Advert extends Base
 
         $info = $Advert->where(['id'=>$id])->find();
         $adsenseAll = model('adsense')->allselect();
+        $attributeAll = DataDicModel::where(['data_type_no'=>'ADVERT_ATTRIBUTE','status'=>1])->order('sort desc')->select();
         return view('', [
             'info' => $info->toArray(),
             'adsenseAll' => $adsenseAll,
+            'attributeAll' => $attributeAll,
         ]);
     }
 
