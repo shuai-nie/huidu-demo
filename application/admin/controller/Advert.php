@@ -9,6 +9,7 @@ class Advert extends Base
 {
     public function _initialize()
     {
+        $this->assign('meta_title', '广告列表');
         parent::_initialize();
     }
 

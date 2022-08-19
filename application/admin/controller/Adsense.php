@@ -7,6 +7,7 @@ class Adsense extends Base
 {
     public function _initialize()
     {
+        $this->assign('meta_title', '广告位列表');
         parent::_initialize();
     }
 
