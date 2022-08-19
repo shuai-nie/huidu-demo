@@ -88,7 +88,7 @@
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
           {volist name="menuList" id="one_level"}
           <li data-name="{$one_level['link']}" class="layui-nav-item">
-            <a href="javascript:;" lay-tips="主页" lay-direction="3">
+            <a href="javascript:;" lay-tips="{$one_level['title']}" lay-direction="3">
               <i class="layui-icon {$one_level['icon']}"></i>
               <cite>{$one_level['title']}</cite>
             </a>
