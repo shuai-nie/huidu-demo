@@ -26,6 +26,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">广告属性</label>
+        <div class="layui-input-block">
+            {volist name='attributeAll' id='vo'}
+            <input type="checkbox" name="attribute[{$vo['id']}]" value="{$vo['id']}" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <div class="layui-inline">
             <input type="hidden" name="url" lay-verify="url" >
             <div class="layui-input-block">
@@ -182,6 +191,9 @@
             "end_time": "{$info['end_time']|date='Y-m-d H:i:s', ###}",
             "keyword": "{$info['keyword']}",
             "remark": "{$info['remark']}",
+            {volist name='advertAttribute' id='vo'}
+                "attribute[{$vo['value']}]": true,
+            {/volist}
         });
 
         form.verify({

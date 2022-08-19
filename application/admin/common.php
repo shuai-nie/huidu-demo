@@ -30,5 +30,16 @@ function getAdvertShowStatus($sta, $end)
             return "已过期";
         }
     }
+}
 
+
+function getAttribute($aid)
+{
+    $data = \app\admin\model\AdvertAttribute::where(['status'=>1, 'advert_id'=>$aid])->field('id,value')->select();
+    $name = [];
+    foreach ($data as $k => $v) {
+        $data_name = \app\admin\model\DataDic::where(['status'=>1,'id'=>$v['value']])->value('data_name');
+        array_push($name, $data_name);
+    }
+    return implode(',', $name);
 }

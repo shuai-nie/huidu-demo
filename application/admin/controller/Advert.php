@@ -63,6 +63,7 @@ class Advert extends Base
             foreach ($list as $k=>$v){
                 $v['key'] = $count[0]['cou'] - ($k + ($page - 1) * $limit);
                 $v['adsense_title'] = allAdventFind($v['adsense_id']);
+                $v['attribute_title'] = getAttribute($v['id']);
                 $list[$k] = $v;
             }
             return json(['data'=>['count'=>$count[0]['cou'], 'list'=>$list]], 200);
@@ -84,21 +85,28 @@ class Advert extends Base
             if(!empty($_post['end_time'])){
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
-            $attribute = $_post['attribute'];
-            unset($_post['attribute']);
+
             $attr = [];
             $state = false;
             Db::startTrans();
             try {
+
+                if(isset($_post['attribute'])){
+                    $attribute = $_post['attribute'];
+                    unset($_post['attribute']);
+                }
+
                 $Advert->allowField(true)->data($_post)->save();
                 $advert_id = $Advert->id;
-                foreach ($attribute as $key =>$v ){
-                    array_push($attr, [
-                        'advert_id' => $advert_id,
-                        'value' => $v,
-                    ]);
+                if(isset($_post['attribute'])) {
+                    foreach ($attribute as $key => $v) {
+                        array_push($attr, [
+                            'advert_id' => $advert_id,
+                            'value'     => $v,
+                        ]);
+                    }
+                    model('AdvertAttribute')->saveAll($attr, false);
                 }
-                model('AdvertAttribute')->saveAll($attr, false);
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
@@ -133,7 +141,32 @@ class Advert extends Base
                 $_post['end_time'] = strtotime($_post['end_time']);
             }
 
-            $state = $Advert->allowField(true)->isUpdate(true)->save($_post, ['id'=>$id]);
+            $attr = [];
+            $state = false;
+            Db::startTrans();
+            try {
+
+                if (isset($_post['attribute'])) {
+                    $attribute = $_post['attribute'];
+                    unset($_post['attribute']);
+                }
+                $state = $Advert->allowField(true)->isUpdate(true)->save($_post, ['id' => $id]);
+                model('AdvertAttribute')->isUpdate(true)->save(['status'=>0], ['advert_id'=>$id]);
+                if(isset($_post['attribute'])) {
+                    foreach ($attribute as $key => $v) {
+                        array_push($attr, [
+                            'advert_id' => $id,
+                            'value'     => $v,
+                        ]);
+                    }
+                    model('AdvertAttribute')->saveAll($attr, false);
+                }
+
+                Db::commit();
+                $state = true;
+            }catch (Exception $e) {
+                Db::rollback();
+            }
 
             if($state != false) {
                 GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
@@ -145,10 +178,12 @@ class Advert extends Base
         $info = $Advert->where(['id'=>$id])->find();
         $adsenseAll = model('adsense')->allselect();
         $attributeAll = DataDicModel::where(['data_type_no'=>'ADVERT_ATTRIBUTE','status'=>1])->order('sort desc')->select();
+        $advertAttribute = model('AdvertAttribute')->where(['status' => 1, 'advert_id' => $info['id']])->select();
         return view('', [
             'info' => $info->toArray(),
             'adsenseAll' => $adsenseAll,
             'attributeAll' => $attributeAll,
+            'advertAttribute' => $advertAttribute,
         ]);
     }
 
