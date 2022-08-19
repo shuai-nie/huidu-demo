@@ -40,18 +40,6 @@
                 </div>
 
                 <div class="layui-inline">
-                    <label class="layui-form-label" style="width:90px;">状态</label>
-                    <div class="layui-input-inline" >
-                        <select name="show_status" lay-filter="ty" lay-search="" >
-                            <option value="">请选择</option>
-                            <option value="1">未开始</option>
-                            <option value="2">正常</option>
-                            <option value="3">已结束</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon layui-icon-search"></i> 搜 索</button>
                 </div>
             </div>
@@ -62,7 +50,11 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="barDemo">
+    {if condition="$type eq 'log'"}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</i></a>
+    {else/}
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+    {/if}
 </script>
 
 <script>
@@ -156,6 +148,17 @@
                     }
                 })
                 //
+            }else if(menudata.id === "see"){
+                layer.open({
+                    type: 2
+                    , anim: 2
+                    , area: ['1150px', '650px']
+                    , btn: ['关闭']
+                    , title: "查看统计"
+                    , yes: function (index, layero) { layer.close(index); }
+                    , content: "{:url('see')}?id=" + data['id']
+                    , end: function () {}
+                });
             }
         });
 

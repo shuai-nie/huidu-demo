@@ -27,7 +27,6 @@ class Advert extends Base
             $adsense_id = request()->post('adsense_id');
             $start_time = request()->post('start_time');
             $end_time = request()->post('end_time');
-            $show_status = request()->post('show_status');
             $offset = ($page - 1) * $limit;
             $map = [];
 
@@ -47,18 +46,14 @@ class Advert extends Base
                 array_push($map, 'end_time <= '. strtotime($end_time) );
             }
 
-            if(!empty($show_status)){
-                array_push($map, 'show_status = ' . $show_status);
-            }
-
             $where = "";
             if(count($map) > 0 ){
-                $where = " where ". implode(' and ', $map);
+                $where =  " and ". implode(' and ', $map);
             }
 
             $sql1 = "SELECT *,IF(start_time > $time, '1', if(end_time > $time, '2', '3')) as show_status FROM `mk_advert` WHERE `status` = 1  ORDER BY `show_status` ASC,`id`";
-            $count = Db::query("select count(*) as cou from ($sql1) as t " . $where);
-            $list = Db::query("select * from ($sql1) as t " . $where . " limit $offset, $limit");
+            $count = Db::query("select count(*) as cou from ($sql1) as t where ( show_status = 1 or show_status = 2) " . $where);
+            $list = Db::query("select * from ($sql1) as t where ( show_status = 1 or show_status = 2)  " . $where . " limit $offset, $limit");
 
             foreach ($list as $k=>$v){
                 $v['key'] = $count[0]['cou'] - ($k + ($page - 1) * $limit);
@@ -150,16 +145,17 @@ class Advert extends Base
                     $attribute = $_post['attribute'];
                     unset($_post['attribute']);
                 }
+
                 $state = $Advert->allowField(true)->isUpdate(true)->save($_post, ['id' => $id]);
                 model('AdvertAttribute')->isUpdate(true)->save(['status'=>0], ['advert_id'=>$id]);
-                if(isset($_post['attribute'])) {
+                if(!empty($attribute)) {
                     foreach ($attribute as $key => $v) {
                         array_push($attr, [
                             'advert_id' => $id,
                             'value'     => $v,
                         ]);
                     }
-                    model('AdvertAttribute')->saveAll($attr, false);
+                    model('AdvertAttribute')->isUpdate(false)->saveAll($attr, false);
                 }
 
                 Db::commit();
