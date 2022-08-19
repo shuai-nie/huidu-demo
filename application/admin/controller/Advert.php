@@ -66,6 +66,7 @@ class Advert extends Base
         $AdsenseAll = model('Adsense')->allselect();
         return view('', [
             'AdsenseAll' => $AdsenseAll,
+            'type' => '',
         ]);
     }
 
