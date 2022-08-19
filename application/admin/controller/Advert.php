@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\admin\model\Advert as AdvertModel;
 use app\admin\model\AdvertExposureStatDaily;
+use think\Db;
 
 class Advert extends Base
 {
@@ -22,33 +23,45 @@ class Advert extends Base
             $adsense_id = request()->post('adsense_id');
             $start_time = request()->post('start_time');
             $end_time = request()->post('end_time');
+            $show_status = request()->post('show_status');
             $offset = ($page - 1) * $limit;
-            $map = ['status'=>1];
+            $map = [];
 
             if(!empty($title)) {
-                $map['title'] = ['like', "%{$title}%"];
+                 array_push($map, " `title` like '%{$title}%'");
             }
 
             if(!empty($adsense_id)) {
-                $map['adsense_id'] = $adsense_id;
+                array_push($map, " `adsense_id` = $adsense_id ");
             }
 
             if(!empty($start_time)) {
-                $map['start_time'] = ['>=', strtotime($start_time)];
+                array_push($map,'start_time >= '.strtotime($start_time) );
             }
 
             if(!empty($end_time)) {
-                $map['end_time'] = ['<=', strtotime($end_time)];
+                array_push($map, 'end_time <= '. strtotime($end_time) );
             }
 
-            $count = $Advert->where($map)->count();
-            $list = $Advert->where($map)->field("*,IF(start_time > $time, '1', if(end_time > $time, '2', '3')) as show_status")->order('show_status asc')->limit($offset, $limit)->select();
+            if(!empty($show_status)){
+                array_push($map, 'show_status = ' . $show_status);
+            }
+
+            $where = "";
+            if(count($map) > 0 ){
+                $where = " where ". implode(' and ', $map);
+            }
+
+            $sql1 = "SELECT *,IF(start_time > $time, '1', if(end_time > $time, '2', '3')) as show_status FROM `mk_advert` WHERE `status` = 1  ORDER BY `show_status` ASC,`id`";
+            $count = Db::query("select count(*) as cou from ($sql1) as t " . $where);
+            $list = Db::query("select * from ($sql1) as t " . $where . " limit $offset, $limit");
+
             foreach ($list as $k=>$v){
-                $v['key'] = $count-($k+ ($page-1)*$limit);
+                $v['key'] = $count[0]['cou'] - ($k + ($page - 1) * $limit);
                 $v['adsense_title'] = allAdventFind($v['adsense_id']);
                 $list[$k] = $v;
             }
-            return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
+            return json(['data'=>['count'=>$count[0]['cou'], 'list'=>$list]], 200);
         }
         $AdsenseAll = model('Adsense')->allselect();
         return view('', [
