@@ -9,7 +9,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">广告位</label>
         <div class="layui-input-block">
-            <select name="adsense_id" lay-serach="" required  lay-verify="required" >
+            <select name="adsense_id" lay-serach="" required  lay-verify="required" lay-filter="adsense_id"  >
                 <option value="">请选择</option>
                 {volist name='adsenseAll' id='vo'}
                 <option value="{$vo['id']}">{$vo['title']}</option>
@@ -74,6 +74,29 @@
             </div>
             <div style="width: 95px;">
                 <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo2">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide" id="small_url">
+        <div class="layui-inline">
+            <input type="hidden" name="small_url" lay-verify="small_url"  />
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test3">
+                    <i class="layui-icon">&#xe67c;</i>弹窗图小图
+                </button>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo3" {if condition="$info['small_url']"} src="{$info['small_url']}?v=1.1" {/if} >
+                <p id="demoText3"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo3">
                     <div class="layui-progress-bar" lay-percent=""></div>
                 </div>
             </div>
@@ -181,6 +204,29 @@
             }
         });
 
+        upload.render({
+            elem: '#test3'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#demo3").attr('src', res.url);
+                    $("input[name='small_url']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+
+            }
+            ,error: function(){
+                //请求异常回调
+            },progress: function(n, elem, res, index) {
+                var percent = n + '%'
+                element.progress('demo3', percent);
+            }
+        });
+
         form.val('first', {
             "adsense_id": "{$info['adsense_id']}",
             "title": "{$info['title']}",
@@ -195,6 +241,19 @@
                 "attribute[{$vo['value']}]": true,
             {/volist}
         });
+
+        {if condition="$info['adsense_id'] eq 14"}
+        $("#small_url").removeClass("layui-hide");
+        {/if}
+
+        form.on("select(adsense_id)", function(data){
+            var _value = data.value;
+            if(_value == 14){
+                $("#small_url").removeClass("layui-hide");
+            } else {
+                $("#small_url").addClass("layui-hide");
+            }
+        })
 
         form.verify({
             url: function(value, item){
