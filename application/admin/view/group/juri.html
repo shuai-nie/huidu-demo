@@ -2,12 +2,11 @@
 
 {include file="moban/js"}
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">用户组名称</label>
         <div class="layui-input-block">
-            <input type="text" name="group_name" placeholder="请输入用户组名称" autocomplete="off" class="layui-input" disabled checked >
+            <input type="text" name="group_name" placeholder="请输入用户组名称" autocomplete="off" class="layui-input" disabled checked style="background-color:#eee;" >
         </div>
     </div>
 
@@ -23,10 +22,8 @@
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
     </div>
 </form>
-<!--</div>-->
 
 <script>
-//Demo
 layui.use(['form','tree','util','jquery'], function(){
     var form = layui.form,
         tree = layui.tree,
@@ -34,16 +31,13 @@ layui.use(['form','tree','util','jquery'], function(){
         $ = layui.jquery,
         _data = {$data};
 
-    tree.render({
+    var _tree =tree.render({
         elem: '#test12'
         ,data: _data
         ,showCheckbox: true
         ,id: 'demoId'
         ,isJump: true
-        ,click: function(obj){
-            var data = obj.data;
-            layer.msg('状态：'+ obj.state + '<br>节点数据：' + JSON.stringify(data));
-        }
+        ,oncheck: function(obj){}
     });
 
     form.val('first', {
@@ -59,6 +53,7 @@ layui.use(['form','tree','util','jquery'], function(){
         Api.edit(data.field, function(res){
 
         });
+        return false;
     });
 
     // 获取选中节点的id

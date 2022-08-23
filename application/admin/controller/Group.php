@@ -66,13 +66,14 @@ class Group extends Base
     public function juri($id)
     {
         if (request()->isPost()) {
-            $nodeIds = request()->param('nodeIds');
-            $state = model('Group')->save(['rules'=>$nodeIds], ['id'=>$id]);
+            $nodeIds = request()->post('nodeIds');
+            $state = model('Group')->isUpdate(true)->save(['rules' => $nodeIds], ['id' => $id]);
             if ($state !== false) {
                 return success_json();
             }
             return error_json();
         }
+
         $AuthMenu = model('AuthMenu');
         $data = $AuthMenu->where([])->field('id,pid,title')->select();
         if($data) {
@@ -89,16 +90,30 @@ class Group extends Base
             'step'  => 4,
         ]);
         $rules = explode(',', $GroupInfo->rules);
-        foreach ($data as $key=>$val){
-            if(in_array($val['id'], $rules)) {
-                $val['checked'] = true;
-            }else {
-                $val['checked'] = false;
-            }
-            $val['spread'] = true;
-            $data[$key] = $val;
-        }
         $data = Tree::toLayer($data);
+        foreach ($data as $k => $v) {
+            if(!isset($v['children'])){
+                if(in_array($v['id'], $rules) ) {
+                    $data[$k]['checked'] = true;
+                }
+            }else{
+                foreach ($data[$k]['children'] as $k1 => $v1){
+                    if(!isset($v1['children'])){
+                        if(in_array($v1['id'], $rules) ) {
+                            $data[$k]['children'][$k1]['checked'] = true;
+                        }
+                    }else{
+                        foreach ($data[$k]['children'][$k1]['children'] as $k2 => $v2){
+                            if(in_array($v2['id'], $rules) ) {
+                                $data[$k]['children'][$k1]['children'][$k2]['checked'] = true;
+                            }
+                        }
+                    }
+                }
+            }
+            $data[$k]['spread'] = true;
+        }
+
         return view('', [
             'data'=> json_encode($data, JSON_UNESCAPED_UNICODE),
             'groupInfo'=>$GroupInfo
