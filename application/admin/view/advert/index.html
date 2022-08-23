@@ -130,7 +130,7 @@
                         if(menudata.id === 'del'){
                             UI.delete(data['id'], function(res){
                                 if(res.code==200){
-                                    window.location.href="{:url('index')}";
+                                    obj.del();
                                 }
                             });
                         }else if(menudata.id === 'edit'){
