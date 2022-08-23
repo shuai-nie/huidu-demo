@@ -17,8 +17,15 @@ class Admin extends Base
     {
         if (request()->isPost()) {
             $map      = ['status'=>1];
-            $userData = model("Admin")->where($map)->select();
-            $count    = model("Admin")->where($map)->count();
+            $admin = model("Admin");
+            $group = model('group');
+            $userData = $admin->alias('A')
+                ->join($group->getTable().' B', 'A.group_id=B.id', 'left')
+                ->field('A.*,B.group_name')
+                ->where($map)->select();
+            $count = $admin->alias('A')
+                ->join($group->getTable().' B', 'A.group_id=B.id', 'left')
+                ->where($map)->count();
             $data     = [
                 'code' => 0,
                 'msg'  => '',

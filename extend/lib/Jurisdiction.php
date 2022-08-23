@@ -86,10 +86,12 @@ class Jurisdiction extends Controller
                 $rules = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
                 $map['id'] = ['in', explode(",", $rules)];
                 $map['pid'] = 0;
+                $map['show'] = 1;
                 $addAuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
                 foreach ($addAuthMenu as $k => $v) {
-                    $map['pid'] = $v['id'];
-                    $AuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
+                    $whe['pid'] = $v['id'];
+                    $whe['show'] = 1;
+                    $AuthMenu = $authMenuModel->where($whe)->order("sort desc, id desc")->select();
                     if($AuthMenu) {
                         $v['_html']  = str_repeat($html, $level - 1);
                         $v['_data'] = $AuthMenu;

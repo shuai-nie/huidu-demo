@@ -24,15 +24,17 @@
 <script>
     layui.use('table', function () {
         var table = layui.table;
+
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
-            , {field: 'group_name', title: '用户组名称'}
-            , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barDemo'}
+            , {field: 'group_name', title: '用户组名称', width: 120}
+            , {fixed: 'right', title: '操作', width: 220, align: 'center', toolbar: '#barDemo'}
         ]);
+
         table.on('tool(think-table)', function (obj) {
             var data = obj.data;
             if (obj.event === "edit") {
-                UI.openLayer("{:url('edit')}?id=" + data['id'], 500, 260, '#submit', function () {
+                UI.openLayer("{:url('edit')}?id=" + data['id'], 500, 260, '#submit', "{:lang('edit')}", function () {
                     table.reload("table");
                 });
             } else if (obj.event === 'del') {

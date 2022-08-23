@@ -13,7 +13,7 @@ class Login extends Controller
     {
         if (request()->isPost()) {
             $model  = model('Admin');
-            $data   = request()->param();
+            $data   = request()->post();
             $isUser = $model->where(['username' => $data['username'], 'status'=>1])->find();
             if(!empty($isUser)){
                 if($isUser['password'] !== md5(md5($data['password']).$isUser['str'])){

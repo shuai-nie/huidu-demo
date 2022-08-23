@@ -25,10 +25,11 @@
           var table = layui.table;
           UI.getPageTable(table,"{:url('')}",[
           	{field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-          	,{field: 'name', title: '姓名'}
-          	,{field: 'phone', title: '联系方式'}
-          	,{field: 'username', title: '用户名'}
-          	,{fixed: 'right',title:'操作', align:'center', toolbar: '#barDemo'}
+          	,{field: 'name', title: '昵称', width: 120}
+          	,{field: 'phone', title: '联系方式', width: 120}
+          	,{field: 'username', title: '登录名', width: 120}
+          	,{field: 'group_name', title: '用户组', width: 120}
+          	,{fixed: 'right',title:'操作', align:'center', width: 120, toolbar: '#barDemo'}
           ]);
           table.on('tool(think-table)', function(obj){
           		var data=obj.data;
