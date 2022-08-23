@@ -64,7 +64,7 @@ class Adsense extends Base
 
     public function allselect()
     {
-        $data = $this->where(['status' => 1])->field(['site,id'])->select();
+        $data = $this->where(['status' => 1])->field(['site,id'])->order('site desc')->select();
         foreach ($data as $key => $value) {
             $value['title'] = $this->type[$value['site']]['title'];
             $data[$key] = $value;

@@ -52,7 +52,7 @@ layui.use(['table','treetable', 'form'], function(){
           {type: 'numbers'},
           {field: 'title', title: '权限名称', width:290},
           {field: 'link', title: '菜单url', width: 270},
-          {field: 'sort', title: '排序', width: 80},
+          {field: 'sort', title: '排序', width: 80, edit:true},
           {field: 'show', title: '显示', width: 100, templet: "#show"},
           {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
@@ -94,22 +94,38 @@ layui.use(['table','treetable', 'form'], function(){
       active[type] ? active[type].call(this) : '';
     });
 
-      form.on('switch(show)', function(obj){
-        var _val = obj.elem.checked == true ? 1 : 0
-            , _id = this.value
-            , _name = this.name ;
-            $.post("{:url('set_value')}", {
-              id : _id,
-              name : _name,
-              value : _val
-            }, function(objPost){
-              if(objPost.code == 200){
-                layer.msg(objPost.msg, {icon:1}, function(){
+    form.on('switch(show)', function(obj){
+      var _val = obj.elem.checked == true ? 1 : 0
+          , _id = this.value
+          , _name = this.name ;
+          $.post("{:url('set_value')}", {
+            id : _id,
+            name : _name,
+            value : _val
+          }, function(objPost){
+            if(objPost.code == 200){
+              layer.msg(objPost.msg, {icon:1}, function(){
 
-                })
-              }
-            }, 'json');
-      });
+              })
+            }
+          }, 'json');
+    });
+
+    table.on('edit(think-table)', function(obj){
+      var _val = obj.value
+              , _id = obj.data.id
+              , _name = obj.field ;
+
+        $.post("{:url('set_value')}", {
+          id : _id,
+          name : _name,
+          value : _val
+        }, function(objPost){
+          if(objPost.code == 200){
+            layer.msg(objPost.msg, {icon:1}, function(){})
+          }
+        }, 'json');
+    })
 
 });
 </script>

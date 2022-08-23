@@ -54,6 +54,8 @@
 <script type="text/html" id="barDemo">
     {if condition="$type eq 'log'"}
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</i></a>
+    {elseif condition="$type eq 'data'"}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</i></a>
     {else/}
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
     {/if}
@@ -77,19 +79,19 @@
             }}
             ,{field: 'title', title: '广告名称',width:170}
             ,{field: 'attribute_title', title: '属性',width:90}
-            ,{field: 'url', title: '广告图',width:100, templet: function(d){
+            ,{field: 'url', title: '广告图',width:90, templet: function(d){
                 if(d.url){
                     return "<img src='"+d.url+"?v=1.1' width='30' height='30' />";
                 }
                 return '-';
             }}
-            ,{field: 'preload_url', title: '预加载图',width:100, templet: function(d){
+            ,{field: 'preload_url', title: '预加载图',width:90, templet: function(d){
                 if(d.preload_url){
                     return "<img src='"+d.preload_url+"?v=1.1' width='30' height='30' />";
                 }
                 return '-';
             }}
-            ,{field: 'link_url', title: '外链',width:160}
+            ,{field: 'link_url', title: '链接',width:160}
             ,{field: 'start_time', title: '开始时间',width:170, align: 'center', sort: true, templet: function(d){
                 if(d.start_time){
                     return util.toDateString(d.start_time*1000);
@@ -102,8 +104,12 @@
                 }
                 return '-';
             }}
+            {if condition="$type eq 'log'"}
+            {elseif condition="$type eq 'data'"}
+            {else/}
             ,{field: 'keyword', title: '关键词',width:200}
             ,{field: 'remark', title: '备注',width:120}
+            {/if}
             ,{field: 'show_status', title: '状态',width:80, templet(d){
                 switch (d.show_status *1){
                     case 1: return '未开始';

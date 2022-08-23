@@ -102,7 +102,7 @@
                         title: {text: '统计图'},
                         tooltip: {trigger: 'axis'},
                         legend: {
-                            data: ['展示次数', '点击总次数', '点击总用户数IP', '点击总用户数UID']
+                            data: ['PV', 'UV', '图片曝光次数', '注册用户点击数']
                         },
                         grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
                         toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
@@ -111,17 +111,26 @@
                         },
                         yAxis: {type: 'value'},
                         series: [
-                            {name:"展示次数", type: 'line', data: obj.show_cnt}
-                            , {name:"点击总次数", type: 'line', data: obj.click_pv}
-                            , {name:"点击总用户数IP", type: 'line', data: obj.click_uv_ip}
-                            , {name:"点击总用户数UID", type: 'line', data: obj.click_uv_uid}
+                             {name:"PV", type: 'line', data: obj.click_pv}
+                            , {name:"UV", type: 'line', data: obj.click_uv_ip}
+                            , {name:"图片曝光次数", type: 'line', data: obj.show_cnt}
+                            , {name:"注册用户点击数", type: 'line', data: obj.click_uv_uid}
                         ]
                     };
-                    console.log(option);
+
                     myChart.setOption(option);
                 }
             })
         }
+
+        myChart.on('click', function (params) {
+            var _advertId = {$info['id']}
+                , _name = params.name;
+            console.log( _advertId);
+            console.log( _name);
+        });
+
+
 
 
 
