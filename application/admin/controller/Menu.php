@@ -22,7 +22,7 @@ class Menu extends Base
     {
         if (Request()->isPost()) {
             $map   = ['pid' => 0];
-            $Menu  = $this->model->where($map)->order("sort desc")->select();
+            $Menu  = $this->model->where($map)->order("sort desc, id desc")->select();
             $count = $this->model->where($map)->count();
             $data  = [
                 'code' => 0,
@@ -40,7 +40,7 @@ class Menu extends Base
     public function read()
     {
         $map   = [];
-        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort,show')->order("sort desc")->select();
+        $Menu  = $this->model->where($map)->field('id,pid,title,link,sort,show')->order("sort desc, id desc")->select();
         return json(['code'=>0,'count'=>24,'data'=>$Menu], 200);
 
     }
@@ -96,7 +96,7 @@ class Menu extends Base
             'step'  => 4,
         ]);
 
-        $data = $this->model->where([])->field('id,pid,title')->order("sort desc")->select();
+        $data = $this->model->where([])->field('id,pid,title')->order("sort desc, id desc")->select();
         if($data) {
             $data = collection($data)->toArray();
         }
@@ -108,5 +108,20 @@ class Menu extends Base
         $data = Tree::toLayer($data);
         array_unshift($data, ['id' => 0, 'pid' => 0, 'name' => '顶级']);
         return json($data, 200);
+    }
+
+    public function set_value()
+    {
+        if(request()->isPost()){
+            $_post = request()->post();
+            $state = $this->model->isUpdate(true)->save([
+                $_post['name'] => $_post['value']
+            ], ['id' => $_post['id']]);
+
+            if($state !== false ) {
+                return success_json("修改成功");
+            }
+            return error_json("修改失败");
+        }
     }
 }

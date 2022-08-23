@@ -22,17 +22,23 @@
   {/if}
 </script>
 
+<script type="text/html" id="show">
+  <input type="checkbox" name="show" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="show" {{ d.show == 1 ? 'checked' : '' }}>
+</script>
+
 <script>
-  layui.config({
+layui.config({
     base: "/static/admin_templete/lib/",
     version: true
-  }).extend({
+}).extend({
     treetable: 'treetable-lay/treetable',
-  });
-	layui.use(['table','treetable'], function(){
-          var table = layui.table,
-              treetable = layui.treetable,
-          $ = layui.jquery;
+});
+
+layui.use(['table','treetable', 'form'], function(){
+  var table = layui.table
+      , treetable = layui.treetable
+      , form = layui.form
+      , $ = layui.jquery;
 
       var re = treetable.render({
         treeColIndex: 1,
@@ -44,16 +50,10 @@
         page: false,
         cols: [[
           {type: 'numbers'},
-          {field: 'title', width:290, title: '权限名称'},
-          {field: 'link', title: '菜单url'},
-          {field: 'sort', title: '排序',width:80},
-          {field: 'show', title: '显示',width:80,templet:function (d) {
-            switch (d.show*1){
-              case 0: return '<span class="layui-border-black layui-btn-xs">隐藏</span>';
-              case 1: return '<span class="layui-border-blue layui-btn-xs">显示</span>';
-              default: return '-';
-            }
-          }},
+          {field: 'title', title: '权限名称', width:290},
+          {field: 'link', title: '菜单url', width: 270},
+          {field: 'sort', title: '排序', width: 80},
+          {field: 'show', title: '显示', width: 100, templet: "#show"},
           {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
         done: function () {
@@ -93,6 +93,24 @@
       var type = $(this).data('type');
       active[type] ? active[type].call(this) : '';
     });
+
+      form.on('switch(show)', function(obj){
+        var _val = obj.elem.checked == true ? 1 : 0
+            , _id = this.value
+            , _name = this.name ;
+            $.post("{:url('set_value')}", {
+              id : _id,
+              name : _name,
+              value : _val
+            }, function(objPost){
+              if(objPost.code == 200){
+                layer.msg(objPost.msg, {icon:1}, function(){
+
+                })
+              }
+            }, 'json');
+      });
+
 });
 </script>
 {include file="moban/bone_footer"}

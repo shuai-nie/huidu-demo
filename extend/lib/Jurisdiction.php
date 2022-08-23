@@ -69,10 +69,10 @@ class Jurisdiction extends Controller
 
         if (in_array($uid, $this->config["jump"])) {
             $map['pid'] = 0;
-            $addAuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+            $addAuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
             foreach ($addAuthMenu as $k => $v){
                 $map['pid'] = $v['id'];
-                $AuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                $AuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
                 if($AuthMenu) {
                     $v['_html']  = str_repeat($html, $level - 1);
                     $v['_data'] = $AuthMenu;
@@ -86,10 +86,10 @@ class Jurisdiction extends Controller
                 $rules = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
                 $map['id'] = ['in', explode(",", $rules)];
                 $map['pid'] = 0;
-                $addAuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                $addAuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
                 foreach ($addAuthMenu as $k => $v) {
                     $map['pid'] = $v['id'];
-                    $AuthMenu = $authMenuModel->where($map)->order("sort desc")->select();
+                    $AuthMenu = $authMenuModel->where($map)->order("sort desc, id desc")->select();
                     if($AuthMenu) {
                         $v['_html']  = str_repeat($html, $level - 1);
                         $v['_data'] = $AuthMenu;
@@ -129,14 +129,14 @@ class Jurisdiction extends Controller
         }
 
         if (in_array($uid, $this->config["jump"])) {
-            $addAuthMenu = db($this->config["authMenu"])->where($map)->order("sort desc")->select();
+            $addAuthMenu = db($this->config["authMenu"])->where($map)->order("sort desc, id desc")->select();
         } else {
             //否则
             $userInfo = db($this->config['authUser'])->where(array("id" => $uid))->find();
             if (!empty($userInfo)) {
                 $rules = db($this->config['group'])->where(array("id" => $userInfo['group_id']))->value("rules");
                 $map['id'] = ['in', explode(",", $rules)];
-                $addAuthMenu = db($this->config['authMenu'])->where($map)->order("sort desc")->select();
+                $addAuthMenu = db($this->config['authMenu'])->where($map)->order("sort desc, id desc")->select();
             }
         }
         return $addAuthMenu;
