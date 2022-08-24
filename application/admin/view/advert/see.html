@@ -1,8 +1,8 @@
 {include file="moban/bone_header"}
 <script src="/style/js/echarts.min.js?v=1.1"></script>
 
-<fieldset class="table-search-fieldset">
-    <legend>搜索信息</legend>
+<fieldset class="layui-elem-field">
+    <legend></legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
             <div class="layui-form-item">
@@ -83,8 +83,6 @@
             return false;
         })
 
-
-
         function myChartBrr(stime, etime){
             $.ajax({
                 url: "{:url('see')}"
@@ -125,9 +123,17 @@
 
         myChart.on('click', function (params) {
             var _advertId = {$info['id']}
-                , _name = params.name;
-            console.log( _advertId);
-            console.log( _name);
+                , _ymd = params.name;
+            layer.open({
+                title: _ymd
+                , type: 2
+                , area: ['750px', '580px']
+                , content: "{:url('advert_user')}?advert_id=" + _advertId + "&ymd=" + _ymd
+                , btn: ['关闭']
+                , function(index){
+                    layer.clone(index)
+                }
+            });
         });
 
 

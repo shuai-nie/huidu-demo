@@ -3,10 +3,12 @@ namespace app\admin\controller;
 
 use app\admin\model\Advert as AdvertModel;
 use app\admin\model\AdvertExposureStatDaily;
+use app\admin\model\User;
 use think\Db;
 use app\admin\model\DataDic as DataDicModel;
 use think\Exception;
 use app\admin\model\AdvertAttribute;
+use app\admin\model\AdvertExposureUserStatDaily;
 
 class Advert extends Base
 {
@@ -244,6 +246,49 @@ class Advert extends Base
             'dateDay1' => $dateDay1,
             'dateDay8' => $dateDay8,
             'info' => $info,
+        ]);
+    }
+
+    public function advert_user()
+    {
+        $advert_id = request()->param('advert_id');
+        $ymd = date('Ymd', strtotime(request()->param('ymd')));
+
+        $AdvertExposureUserStatDaily = model('AdvertExposureUserStatDaily');
+        $User = model('User');
+        $userTable = $User->getTable();
+
+        $map = ['A.advert_id' => $advert_id, 'A.ymd' => $ymd];
+        $count = $AdvertExposureUserStatDaily->alias('A')
+            ->join([$userTable => "B"], 'A.uid=B.id', 'left')
+            ->where($map)->count();
+        $sum = $AdvertExposureUserStatDaily->alias('A')
+            ->join([$userTable => "B"], 'A.uid=B.id', 'left')
+            ->where($map)->sum('click_pv');
+
+        if(request()->isPost()){
+
+            $page = request()->post('page');
+            $limit = request()->post('limit');
+
+            $advert_id = request()->post('advert_id');
+            $ymd = request()->post('ymd');
+
+            $map = ['A.advert_id' => $advert_id, 'A.ymd' => $ymd];
+
+            $offset = ($page - 1) * $limit ;
+            $list = $AdvertExposureUserStatDaily->alias('A')
+                ->join([$userTable => "B"], 'A.uid=B.id', 'left')
+                ->field('A.*,B.username,B.nickname,B.head_url')
+                ->where($map)->limit($offset, $limit)->select();
+
+            return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
+        }
+        return view('', [
+            'ymd' => $ymd,
+            'advert_id' => $advert_id,
+            'sum' => $sum,
+            'dan_sum' => $count == 0 ? 0 :  intval($sum/$count) ,
         ]);
     }
 
