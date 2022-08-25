@@ -151,8 +151,8 @@ layui.use(['form','upload', 'element', 'laydate'], function () {
         , element = layui.element
         , laydate = layui.laydate;
 
-    laydate.render({ elem: '#start_time' ,type: 'datetime' });
-    laydate.render({ elem: '#end_time' ,type: 'datetime' });
+    laydate.render({elem: '#start_time', type: 'datetime'});
+    laydate.render({elem: '#end_time', type: 'datetime'});
 
     var upload_url = "{:url('admin/Upload/upload')}";
     var upload_accept='images';

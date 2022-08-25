@@ -121,7 +121,7 @@ class Card extends Base
 
             Db::startTrans();
             $time = time();
-            $head_url = !isset($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
+            $head_url = isset($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
             try {
                 $packageInfo = $package->find(1);
                 $userModel->allowField(true)->isUpdate(false)->save([
