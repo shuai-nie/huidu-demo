@@ -390,6 +390,62 @@ class Base extends Model
             ])->save();
         });
 
+        Content::afterInsert(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 文章 ID:' . model('Content')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Content::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 文章 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        ContentCategory::afterInsert(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 文章分类 ID:' . model('ContentCategory')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        ContentCategory::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 文章分类 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        ContentHot::afterInsert(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 文章置顶 ID:' . model('ContentHot')->getLastInsID() . '='.$data['type'],
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        ContentHot::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 文章置顶 ID:'. request()->param('id'). '='.$data['type'],
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+
+
     }
 
 

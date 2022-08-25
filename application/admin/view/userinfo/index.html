@@ -130,10 +130,16 @@
                 }
                 return "-";
             }}
-            ,{field: 'isweb', title: '来源', width:80,templet:function(d){
+            ,{field: 'isweb', title: '来源/渠道', width:120,templet:function(d){
+                var channel_name = '';
+                if(d.channel_name){
+                    channel_name = '/'+ d.channel_name;
+                }else{
+                    channel_name = '/ -';
+                }
                 switch (d.isweb*1){
-                    case 1: return 'PC';
-                    case 2: return '后台';
+                    case 1: return 'PC'+channel_name;
+                    case 2: return '后台'+channel_name;
                     default: return '-';
                 }
             }}
