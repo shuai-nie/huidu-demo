@@ -20,7 +20,7 @@ class Diction extends Base
         'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'title'=>'资源·行业细分'],
         'RESOURCE_CURRENCY' => ['type'=>'RESOURCE_CURRENCY', 'title'=>'资源·货币'],
         'CONTACTS_INDUSTRY' => ['type'=>'CONTACTS_INDUSTRY', 'title'=>'人脉·行业'],
-        'ADVERT_ATTRIBUTE' => ['type'=>'ADVERT_ATTRIBUTE', 'title'=>'广告·属性'],
+        'ADVERT_ATTRIBUTE' => ['type'=>'ADVERT_ATTRIBUTE', 'title'=>'行业·属性'],
 
     ];
 
@@ -211,7 +211,7 @@ class Diction extends Base
             ['id'=>4,'pid'=>0,'title'=>'举报类型','isedit'=>false],
             ['id'=>5,'pid'=>0,'title'=>'资源·合作区域','isedit'=>false],
             ['id'=>6,'pid'=>0,'title'=>'人脉·行业','isedit'=>false],
-            ['id'=>7,'pid'=>0,'title'=>'广告·属性','isedit'=>false],
+            ['id'=>7,'pid'=>0,'title'=>'行业·属性','isedit'=>false],
         ];
         $DataDic = model('DataDic');
 
