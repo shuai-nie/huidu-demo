@@ -1,6 +1,10 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
+
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
     <div class="layui-form-item">
@@ -12,9 +16,25 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">企业logo</label>
-        <div class="layui-input-block">
-            <input type="text" name="logo" class="layui-input" />
+        <input type="hidden" name="logo" />
+        <div class="layui-input-inline">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+            </div>
         </div>
+
+        <div class="layui-input-inline">
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1">
+                <p id="demoText"></p>
+            </div>
+            <div style="width: 95px;">
+                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                    <div class="layui-progress-bar" lay-percent=""></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="layui-form-item">
@@ -55,7 +75,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">宣传视频</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入" name="intro" class="layui-textarea"></textarea>
+            <textarea placeholder="请输入" name="publicity_video" class="layui-textarea"></textarea>
         </div>
     </div>
 
@@ -96,6 +116,18 @@ layui.use(['form','upload'], function () {
             //请求异常回调
         }
     });
+
+    form.val('first', {
+        "name": "{$info['name']}",
+        "logo": "{$info['logo']}",
+        "scale": "{$info['scale']}",
+        "business_type": "{$info['business_type']}",
+        "industry": "{$info['industry']}",
+        "region": "{$info['region']}",
+        "intro": "{$info['intro']}",
+        "publicity_video": "{$info['publicity_video']}",
+
+    })
 
     //监听提交
     form.on('submit(submit)', function (data) {

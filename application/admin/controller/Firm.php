@@ -36,14 +36,22 @@ class Firm extends Base
             }
             return error_json("提交失败");
         }
-        return view('', []);
+        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        return view('', [
+            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+        ]);
     }
 
     public function edit()
     {
         $id = request()->param('id');
+        $Firm = model('Firm');
         if(request()->isPost()) {
-            $Firm = model('Firm');
+
             $_post = request()->post();
             $state = $Firm->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state !== false) {
@@ -51,7 +59,17 @@ class Firm extends Base
             }
             return error_json("提交失败");
         }
-        return view('', []);
+        $info = $Firm->where(['id'=>$id])->find();
+
+        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        return view('', [
+            'info' => $info,
+            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+        ]);
     }
 
     public function delete()
