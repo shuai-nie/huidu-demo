@@ -1,0 +1,109 @@
+{include file="moban/bone_header"}
+
+
+
+<fieldset class="layui-elem-field">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="uname" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">添加方式</label>
+                    <div class="layui-input-inline">
+                        <select name="type_status">
+                            <option value="">请选择</option>
+                            <option value="1">后台添加</option>
+                            <option value="2">前台添加</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <button class="layui-btn layui-btn-xs layui-btn-normal"lay-event="add">添加</button>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+    layui.use(['table', 'form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            , {field: 'name', title: '企业名称', width: 100,}
+            , {field: 'logo', title: 'logo', width: 120}
+            , {field: 'scale', title: '企业规模', width: 120}
+            , {field: 'business_type', title: '业务类型', width: 120}
+            , {field: 'industry', title: '行业类型'}
+            , {field: 'region', title: '企业地区'}
+            , {field: 'status', title: '审核状态'}
+            , {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#barDemo'}
+        ]);
+
+        table.on("toolbar(think-table)", function(obj){
+            var data = obj.data
+                , layEvent = obj.event;
+            if(layEvent === 'add'){
+                UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
+            }
+        })
+
+        table.on('tool(think-table)', function(obj){
+            var data = obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', "{:lang('update')}");
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                    if(res.code==200){
+                        table.reload("table");
+                    }
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}");
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+
+            });
+            return false;
+        })
+
+    });
+</script>
+{include file="moban/bone_footer"}
