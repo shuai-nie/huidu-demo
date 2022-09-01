@@ -242,13 +242,13 @@
             {/volist}
         });
 
-        {if condition="$info['adsense_id'] eq 14"}
+        {if condition="$info['adsense_id'] eq 2"}
         $("#small_url").removeClass("layui-hide");
         {/if}
 
         form.on("select(adsense_id)", function(data){
             var _value = data.value;
-            if(_value == 14){
+            if(_value == 2){
                 $("#small_url").removeClass("layui-hide");
             } else {
                 $("#small_url").addClass("layui-hide");
