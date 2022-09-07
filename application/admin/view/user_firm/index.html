@@ -1,0 +1,94 @@
+{include file="moban/bone_header"}
+
+<fieldset class="table-search-fieldset">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" >用户昵称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" >企业名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" autocomplete="off" class="layui-input" >
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="examine">审核</a>
+</script>
+
+<script>
+    layui.use(['table', 'form'], function(){
+        var table = layui.table,
+            form = layui.form;
+
+        UI.getPageTable(table, "{:url('')}", [
+            {field: 'id', title: '', width:80, fixed: 'left'}
+			, {field: 'uid', title: 'UID', width:80, fixed: 'left'}
+            , {field: 'mobile', title: '手机号', width: 125}
+            , {field: 'email', title: '邮箱', width: 130}
+            , {field: 'title', title: '套餐',width:120}
+            , {field: 'used_publish', title: '(总/用)发布',width:120,templet(d){
+                return d.publish  +"/"+ d.used_publish;
+            }}
+            ,{fixed: 'right',title:'操作',width:90, align:'center', toolbar: '#barDemo'}
+        ], "#think-table", "auto");
+
+        form.on('submit(data-search-btn)', function(data){
+            table.reload('table', {
+                url: "{:url('')}",
+                method:'post',
+                where : data.field,
+                page : {curr : 1}
+            });
+            return false;
+        })
+
+
+        table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="change"){
+                UI.openLayer("{:url('change')}?id="+data['id'], 750, 400, '#submit');
+            }
+        });
+
+        table.on('sort(think-table)', function(obj){
+            table.reload('table', {
+                initSort: obj,
+                method: 'post',
+                where: obj,
+                sort: true,
+                page: {curr: 1}
+            })
+        })
+
+        var $ = layui.$, active = {
+            create:function(){
+                UI.openLayer("{:url('create')}");
+            }
+        };
+
+        $('.layui-btn-container .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{include file="moban/bone_footer"}

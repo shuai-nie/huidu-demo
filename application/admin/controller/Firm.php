@@ -16,10 +16,44 @@ class Firm extends Base
             $limit = request()->post('limit');
             $offset = ($page - 1 ) * $limit;
 
-            $map = [];
-
+            $map = ['status'=>['in', [1,2,3]]];
             $count = $Firm->where($map)->count();
-            $data = $Firm->where($map)->order('id desc')->limit($offset, $limit)->select();;
+            $data = $Firm->where($map)->order('id desc')->limit($offset, $limit)->select();
+
+            $DataDic = model('DataDic');
+            foreach ($data as $k => $v) {
+                $scale = $DataDic->where(['status' => 1, 'data_type_no' => 'FIRM_SCALE', 'data_no'=>$v['scale']])->find();
+                if($scale){
+                    $v['scale'] = $scale['data_name'];
+                }
+                //RESOURCES_TYPE
+                $business_type = explode('|', $v['business_type']) ;
+
+                $businessTypeAll = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_TYPE', 'data_no'=>['in', $business_type]])->select();
+                $TypeAll = [];
+                foreach ($businessTypeAll as $ty){
+                    array_push($TypeAll, $ty['data_name']);
+                }
+                $v['business_type'] = implode('|', $TypeAll);
+
+                $industry = explode('|', $v['industry']);
+                $industryAll = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_no'=>['in', $industry]])->select();
+                $indusAll = [];
+                foreach ($industryAll as $try){
+                    array_push($indusAll, $try['data_name']);
+                }
+                $v['industry'] = implode('|', $indusAll);
+
+                $region = explode('|', $v['region']);
+                $regionAll = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_REGION', 'data_no'=>['in', $region]])->select();
+                $regAll = [];
+                foreach ($regionAll as $reg){
+                    array_push($regAll, $reg['data_name']);
+                }
+                $v['region'] = implode('|', $regAll);
+
+                $data[$k] = $v;
+            }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         return view('', []);
@@ -39,10 +73,12 @@ class Firm extends Base
         $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
         $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
         $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no'=>'FIRM_SCALE', 'status'=>1]);
         return view('', [
             'RESOURCES_TYPE' => $RESOURCES_TYPE,
             'RESOURCES_REGION' => $RESOURCES_REGION,
             'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE' => $FIRM_SCALE,
         ]);
     }
 
@@ -64,11 +100,13 @@ class Firm extends Base
         $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
         $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
         $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no'=>'FIRM_SCALE', 'status'=>1]);
         return view('', [
             'info' => $info,
             'RESOURCES_TYPE' => $RESOURCES_TYPE,
             'RESOURCES_REGION' => $RESOURCES_REGION,
             'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE' => $FIRM_SCALE,
         ]);
     }
 

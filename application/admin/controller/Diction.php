@@ -21,6 +21,7 @@ class Diction extends Base
         'RESOURCE_CURRENCY' => ['type'=>'RESOURCE_CURRENCY', 'title'=>'资源·货币'],
         'CONTACTS_INDUSTRY' => ['type'=>'CONTACTS_INDUSTRY', 'title'=>'人脉·行业'],
         'ADVERT_ATTRIBUTE' => ['type'=>'ADVERT_ATTRIBUTE', 'title'=>'行业·属性'],
+        'FIRM_SCALE' => ['type'=>'FIRM_SCALE', 'title'=>'企业规模'],
 
     ];
 
@@ -212,6 +213,7 @@ class Diction extends Base
             ['id'=>5,'pid'=>0,'title'=>'资源·合作区域','isedit'=>false],
             ['id'=>6,'pid'=>0,'title'=>'人脉·行业','isedit'=>false],
             ['id'=>7,'pid'=>0,'title'=>'行业·属性','isedit'=>false],
+            ['id'=>8,'pid'=>0,'title'=>'企业规模','isedit'=>false],
         ];
         $DataDic = model('DataDic');
 
@@ -250,6 +252,11 @@ class Diction extends Base
         $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'ADVERT_ATTRIBUTE'])->select();
         foreach ($advertAttribute as $k=>$v){
             array_push($data, ['id'=>$v['id'],'pid'=>7,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+        }
+
+        $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'FIRM_SCALE'])->select();
+        foreach ($advertAttribute as $k=>$v){
+            array_push($data, ['id'=>$v['id'],'pid'=>8,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
