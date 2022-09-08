@@ -1,0 +1,95 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<style>
+.disabled{background-color:#e0e0e0;}
+.layui-form-label{width:140px;}
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
+
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名/昵称</label>
+        <div class="layui-input-inline" >
+            <input type="text" class="layui-input disabled" disabled value="{$info['username']}/{$info['nickname']}" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业名称</label>
+        <div class="layui-input-inline" >
+            <input type="text" class="layui-input disabled" disabled value="{$info['firm_name']}" />
+        </div>
+    </div>
+
+    {volist name="datumAll" id='vo'}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{$vo['type']|getFirmRelevanceDatumStatus}</label>
+        <div class="layui-input-block" style="margin-left: 170px;">
+            {if condition="$vo['type'] eq 4 || $vo['type'] eq 5 "}
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                <div class="layui-upload-list" id="demo2">
+                {volist name="vo['value']" id='vo2'}
+                    {if condition="$vo2"}
+                    <img src="{$vo2}" class="layui-upload-img" />
+                    {/if}
+                {/volist}
+                </div>
+            </blockquote>
+            {else/}
+            <input type="text" class="layui-input disabled" disabled value="{$vo['value']}" />
+            {/if}
+        </div>
+    </div>
+    {/volist}
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="status" value="0" title="未审核" />
+            <input type="radio" name="status" value="1" title="通过" />
+            <input type="radio" name="status" value="2" title="未通过" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+layui.use(['form','upload'], function () {
+    var form = layui.form;
+
+    form.val("first", {
+        "status": "{$info['status']}"
+    })
+
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        var DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
+        Api.edit(data.field, function (res) {
+            if(res.code != 200) {
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            }
+        });
+    });
+
+    $(".layui-upload-img").on('click', function(){
+        var _src = $(this).attr('src');
+        layer.open({
+            type: 1
+            , title: false
+            , content: "<img src='"+_src+"' width='400' height='400' />"
+        })
+    })
+
+
+});
+</script>

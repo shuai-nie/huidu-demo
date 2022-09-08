@@ -43,3 +43,9 @@ function getAttribute($aid)
     }
     return implode(',', $name);
 }
+
+function getFirmRelevanceDatumStatus($str)
+{
+    $FirmRelevanceDatum = model('FirmRelevanceDatum');
+    return $FirmRelevanceDatum->type[$str];
+}

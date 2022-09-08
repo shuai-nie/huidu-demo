@@ -444,6 +444,42 @@ class Base extends Model
             ])->save();
         });
 
+        Firm::afterInsert(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '新建 企业 ID:' . model('Firm')->getLastInsID(),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        Firm::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '编辑 文章置顶 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        FirmRelevance::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '用户关联 审核 ID:'. request()->param('id'),
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
+        FirmRelevanceDatum::afterUpdate(function($data){
+            model('AdminLog')->data([
+                'uid' => getLoginUserId(),
+                'text' => '用户关联企业·审核记录·资料表 ID:'. request()->param('id') ,
+                'url' => (string)url(),
+                'ip' => request()->ip(),
+            ])->save();
+        });
+
 
 
     }
