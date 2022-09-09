@@ -73,7 +73,7 @@ layui.use(['table','treetable'], function(){
     table.on('tool(think-table)', function(obj){
         var data=obj.data;
         if(obj.event==="edit"){
-            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
+            UI.openLayer("{:url('edit')}?id="+data['id'], 950, 650, '#submit', "{:lang('edit')}");
         }else if(obj.event==='del'){
             UI.delete(data['id'], function(res){
                 if(res.code==200){
@@ -85,7 +85,7 @@ layui.use(['table','treetable'], function(){
 
     var $ = layui.$, active = {
         create:function(){
-            UI.openLayer("{:url('create')}");
+            UI.openLayer("{:url('create')}", 950, 650, '#submit', "{:lang('create')}");
         }
     };
 
