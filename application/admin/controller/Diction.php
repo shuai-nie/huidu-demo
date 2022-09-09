@@ -47,7 +47,6 @@ class Diction extends Base
         $DataDic = model('DataDic');
         if(request()->isPost()){
             $_post = request()->post();
-            var_dump($_post);exit();
             $Datafind = $DataDic->where(['data_type_no'=>$_post['data_type_no']])->order('data_no desc')->find();
             $state = $DataDic->data([
                 'data_type_no'   => $_post['data_type_no'],
