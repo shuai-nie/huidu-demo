@@ -37,7 +37,7 @@ layui.use(['table','treetable'], function(){
         cols: [[
             {type: 'numbers'},
             {field: 'title', title: '权限名称',width:220},
-            {field: 'data_icon', title: 'icon图标',width:120,templet: function(d){
+            {field: 'data_icon', title: 'icon图标',width:120, align: "center",templet: function(d){
                 if(d.pid == 5) {
                     return d.data_icon;
                 } else {
@@ -47,25 +47,25 @@ layui.use(['table','treetable'], function(){
                 }
                 return '-';
             }},
-            {field: 'data_dark_icon', title: '深色icon图标',width:120,templet: function(d){
+            {field: 'data_dark_icon', title: '深色icon图标',width:120, align: "center",templet: function(d){
                 if(d.data_dark_icon) {
                     return "<img src='"+ d.data_dark_icon + "?v=1.1' height='30' />";
                 }
                 return '-';
             }},
-            {field: 'recommend_icon', title: '推荐资源icon',width:120,templet: function(d){
+            {field: 'recommend_icon', title: '推荐资源icon',width:120, align: "center",templet: function(d){
                 if(d.recommend_icon) {
                     return "<img src='"+ d.recommend_icon + "?v=1.1' height='30' />";
                 }
                 return '-';
             }},
-            {field: 'demand_icon', title: '业务需求icon',width:120,templet: function(d){
+            {field: 'demand_icon', title: '业务需求icon',width:120, align: "center",templet: function(d){
                 if(d.demand_icon) {
                     return "<img src='"+ d.demand_icon + "?v=1.1' height='30' />";
                 }
                 return '-';
             }},
-            {field: 'sort', title: '排序',width:80},
+            {field: 'sort', title: '排序',width:80, align: "center"},
             {field: 'url_keyword', title: '链接关键字',width:100},
             {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
