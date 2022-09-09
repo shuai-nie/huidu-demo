@@ -89,7 +89,8 @@ layui.use(['table','treetable'], function(){
         }else if(obj.event==='del'){
             UI.delete(data['id'], function(res){
                 if(res.code==200){
-                    table.reload("table");
+                    obj.del()
+//                    table.reload("think-table");
                 }
             });
         }
