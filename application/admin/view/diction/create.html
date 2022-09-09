@@ -160,7 +160,7 @@
             , size: upload_size
             , done: function (res) {
                 if(res.code == 0) {
-                    $("#data_dark_icon_url-img").attr('src', res.url);
+                    $("#data_dark_icon-img").attr('src', res.url);
                     $("input[name='data_dark_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
