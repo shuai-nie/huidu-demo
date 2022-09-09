@@ -36,14 +36,14 @@
             <label class="layui-form-label">图片</label>
             <div class="layui-input-inline" style="width:100px;">
                 <input type="hidden" name="data_icon" class="layui-input" />
-                <button type="button" class="layui-btn" id="test1">
+                <button type="button" class="layui-btn" id="data_icon">
                     <i class="layui-icon">&#xe67c;</i>上传
                 </button>
             </div>
             <div class="layui-input-inline">
                 <blockquote class="layui-elem-quote layui-quote-nm">
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" id="demo1" {if condition="$data['data_icon']"}src="{$data['data_icon']}"{/if} >
+                        <img class="layui-upload-img" id="data_icon-img" {if condition="$data['data_icon']"}src="{$data['data_icon']}"{/if} >
                     </div>
                 </blockquote>
             </div>
@@ -96,7 +96,7 @@
             <div class="layui-input-inline">
                 <blockquote class="layui-elem-quote layui-quote-nm">
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" id="" {if condition="$data['demand_icon']"}src="{$data['demand_icon']}"{/if} >
+                        <img class="layui-upload-img" id="demand_icon-img" {if condition="$data['demand_icon']"}src="{$data['demand_icon']}"{/if} >
                     </div>
                 </blockquote>
             </div>
@@ -135,15 +135,14 @@
         var upload_acceptMime='image/*';
         var upload_size=3145728;
         var uploadInst = upload.render({
-            elem: '#test1'
+            elem: '#data_icon'
             ,url: upload_url
             ,accept: upload_accept
             ,acceptMime:upload_acceptMime
             ,size: upload_size
             ,done: function(res){
                 if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
+                    $("#data_icon-img").attr('src', res.url);
                     $("input[name='data_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -164,6 +163,42 @@
                 if(res.code == 0) {
                     $("#data_dark_icon-img").attr('src', res.url);
                     $("input[name='data_dark_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#recommend_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#recommend_icon-img").attr('src', res.url);
+                    $("input[name='recommend_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#demand_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#demand_icon-img").attr('src', res.url);
+                    $("input[name='demand_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
