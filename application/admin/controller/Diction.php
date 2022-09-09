@@ -225,41 +225,41 @@ class Diction extends Base
 
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACT_TYPE'])->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
 
         $arrCur = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCE_CURRENCY'])->select();
         foreach ($arrCur as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
-                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'],'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
             }
         }
 
         $resourcesAll = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_REGION'])->select();
         foreach ($resourcesAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         //人脉*行业
         $ContactsAll = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACTS_INDUSTRY'])->select();
         foreach ($ContactsAll as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>6,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>6,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'ADVERT_ATTRIBUTE'])->select();
         foreach ($advertAttribute as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>7,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>7,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'FIRM_SCALE'])->select();
         foreach ($advertAttribute as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>8,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>8,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
