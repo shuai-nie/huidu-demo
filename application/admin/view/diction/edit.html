@@ -31,10 +31,9 @@
         </div>
     </div>
 
-
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label" id="data_icon_label">图片</label>
+            <label class="layui-form-label">图片</label>
             <div class="layui-input-inline" style="width:100px;">
                 <input type="hidden" name="data_icon" class="layui-input" />
                 <button type="button" class="layui-btn" id="test1">
@@ -51,7 +50,7 @@
         </div>
 
         <div class="layui-inline">
-            <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
+            <label class="layui-form-label" >深色图片</label>
             <div class="layui-input-inline" style="width:100px;" >
                 <input type="hidden" name="data_dark_icon" class="layui-input" />
                 <button type="button" class="layui-btn" id="data_dark_icon">
@@ -163,8 +162,7 @@
             , size: upload_size
             , done: function (res) {
                 if(res.code == 0) {
-                    $("#data_dark_icon_url").show();
-                    $("#data_dark_icon_url img").attr('src', res.url);
+                    $("#data_dark_icon-img").attr('src', res.url);
                     $("input[name='data_dark_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
