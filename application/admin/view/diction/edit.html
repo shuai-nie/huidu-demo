@@ -1,5 +1,8 @@
 {include file="moban/css"}
 {include file="moban/js"}
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
@@ -28,37 +31,76 @@
         </div>
     </div>
 
-    <div id="url" {if condition="empty($data['data_icon'])"}style="display: none;"{/if} >
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <img src="{$data['data_icon']}" height="100" width="100" />
-        </div>
-    </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label" id="data_icon_label">图片</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="data_icon" class="layui-input" />
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传
-            </button>
+        <div class="layui-inline">
+            <label class="layui-form-label" id="data_icon_label">图片</label>
+            <div class="layui-input-inline" style="width:100px;">
+                <input type="hidden" name="data_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="test1">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="demo1" {if condition="$data['data_icon']"}src="{$data['data_icon']}"{/if} >
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="data_dark_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="data_dark_icon">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="data_dark_icon-img" {if condition="$data['data_dark_icon']"}src="{$data['data_dark_icon']}"{/if} >
+                    </div>
+                </blockquote>
+            </div>
         </div>
     </div>
 
-    <div id="data_dark_icon_url" {if condition="empty($data['data_dark_icon'])"}style="display: none;"{/if} >
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <img src="{$data['data_dark_icon']}" height="100" width="100" />
+    <div class="layui-form-item" >
+        <div class="layui-inline">
+            <label class="layui-form-label" >首页推荐资源ICON</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="recommend_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="recommend_icon" >
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="recommend_icon-img" {if condition="$data['recommend_icon']"}src="{$data['recommend_icon']}"{/if} >
+                    </div>
+                </blockquote>
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item" style="display: none;" >
-        <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="data_dark_icon" class="layui-input" />
-            <button type="button" class="layui-btn" id="data_dark_icon">
-                <i class="layui-icon">&#xe67c;</i>上传
-            </button>
+        <div class="layui-inline">
+            <label class="layui-form-label" >业务需求ICON</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="demand_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="demand_icon" >
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="" {if condition="$data['demand_icon']"}src="{$data['demand_icon']}"{/if} >
+                    </div>
+                </blockquote>
+            </div>
         </div>
     </div>
 
@@ -178,7 +220,8 @@
             default:
                 break;
         }
-        form.render('data_top_id', "{$data['data_top_id']}");
+
+        // form.render('data_top_id', "{$data['data_top_id']}");
 
         form.on('radio(data_type_no)', function(data){
             $("#data_top_id").hide();

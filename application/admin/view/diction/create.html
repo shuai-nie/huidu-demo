@@ -1,7 +1,9 @@
 {include file="moban/css"}
 {include file="moban/js"}
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
 
     <div class="layui-form-item">
@@ -29,37 +31,75 @@
         </div>
     </div>
 
-    <div id="url" style="display: none;">
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <img src="#" height="100" width="100" />
-        </div>
-    </div>
-
     <div class="layui-form-item">
-        <label class="layui-form-label" id="data_icon_label">图片</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="data_icon" class="layui-input" />
-            <button type="button" class="layui-btn" id="test1">
-                <i class="layui-icon">&#xe67c;</i>上传
-            </button>
+        <div class="layui-inline">
+            <label class="layui-form-label" id="data_icon_label">图片</label>
+            <div class="layui-input-inline" style="width:100px;">
+                <input type="hidden" name="data_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="data_icon">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="data_icon-img" >
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="data_dark_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="data_dark_icon">
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="data_dark_icon-img" >
+                    </div>
+                </blockquote>
+            </div>
         </div>
     </div>
 
-    <div id="data_dark_icon_url" style="display: none;" >
-        <label class="layui-form-label"></label>
-        <div class="layui-input-block">
-            <img src="#" height="100" width="100" />
+    <div class="layui-form-item" >
+        <div class="layui-inline">
+            <label class="layui-form-label" >首页推荐资源ICON</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="recommend_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="recommend_icon" >
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="recommend_icon-img" >
+                    </div>
+                </blockquote>
+            </div>
         </div>
-    </div>
 
-    <div class="layui-form-item" style="display: none;" >
-        <label class="layui-form-label" id="data_dark_icon_label">深色图片</label>
-        <div class="layui-input-block">
-            <input type="hidden" name="data_dark_icon" class="layui-input" />
-            <button type="button" class="layui-btn" id="data_dark_icon">
-                <i class="layui-icon">&#xe67c;</i>上传
-            </button>
+        <div class="layui-inline">
+            <label class="layui-form-label" >业务需求ICON</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="demand_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="demand_icon" >
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="demand_icon-img" >
+                    </div>
+                </blockquote>
+            </div>
         </div>
     </div>
 
@@ -95,15 +135,14 @@
         var upload_acceptMime='image/*';
         var upload_size=3145728;
         var uploadInst = upload.render({
-            elem: '#test1'
+            elem: '#data_icon'
             , url: upload_url
             , accept: upload_accept
             , acceptMime: upload_acceptMime
             , size: upload_size
             , done: function (res) {
                 if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
+                    $("#data_icon-img").attr('src', res.url);
                     $("input[name='data_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
@@ -121,9 +160,44 @@
             , size: upload_size
             , done: function (res) {
                 if(res.code == 0) {
-                    $("#data_dark_icon_url").show();
-                    $("#data_dark_icon_url img").attr('src', res.url);
+                    $("#data_dark_icon_url-img").attr('src', res.url);
                     $("input[name='data_dark_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#recommend_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#recommend_icon-img").attr('src', res.url);
+                    $("input[name='recommend_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#demand_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#demand_icon-img").attr('src', res.url);
+                    $("input[name='demand_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
@@ -155,7 +229,6 @@
             form.render('select');
             switch (data.value){
                 case 'RESOURCES_TYPE':
-                    // $("#data_dark_icon_url").show();
                     $("#data_dark_icon_label").parents('div').show();
                     break;
                 case 'RESOURCES_SUBDIVIDE':
@@ -190,7 +263,7 @@
                 url: urlValue,
                 dataType:'json',
                 async: true,
-                success:function(data) {
+                success: function (data) {
                     node.html("<option value=''>请选择</option>");
                     $.each(data.data, function(index, item){
                         if(type == 1){

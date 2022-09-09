@@ -10,19 +10,18 @@ use util\Tree;
 class Diction extends Base
 {
     public $data = [
-        'CONTACT_TYPE'     => ['type' => 'CONTACT_TYPE', 'title' => '联系方式'],
-        'RESOURCES_TYPE'   => ['type' => 'RESOURCES_TYPE', 'title' => '资源·合作领域'],
-        'RESOURCES_REGION' => ['type' => 'RESOURCES_REGION', 'title' => '资源·合作区域'],
-        'RESOURCES_SUBDIVIDE' => ['type' => 'RESOURCES_SUBDIVIDE', 'title' => '资源·业务细分'],
-        'REPORT_TYPE' => ['type'=>'REPORT_TYPE', 'title'=>'举报类型'],
-        'REPORT_DETAIL_CAUSE' => ['type'=>'REPORT_DETAIL_CAUSE', 'title'=>'举报详细原因'],
-        'RESOURCE_INDUSTRY' => ['type'=>'RESOURCE_INDUSTRY', 'title'=>'资源·行业类型'],
-        'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type'=>'RESOURCE_INDUSTRY_SUBDIVIDE', 'title'=>'资源·行业细分'],
-        'RESOURCE_CURRENCY' => ['type'=>'RESOURCE_CURRENCY', 'title'=>'资源·货币'],
-        'CONTACTS_INDUSTRY' => ['type'=>'CONTACTS_INDUSTRY', 'title'=>'人脉·行业'],
-        'ADVERT_ATTRIBUTE' => ['type'=>'ADVERT_ATTRIBUTE', 'title'=>'行业·属性'],
-        'FIRM_SCALE' => ['type'=>'FIRM_SCALE', 'title'=>'企业规模'],
-
+        'CONTACT_TYPE'                => ['type' => 'CONTACT_TYPE', 'title' => '联系方式'],
+        'RESOURCES_TYPE'              => ['type' => 'RESOURCES_TYPE', 'title' => '资源·合作领域'],
+        'RESOURCES_REGION'            => ['type' => 'RESOURCES_REGION', 'title' => '资源·合作区域'],
+        'RESOURCES_SUBDIVIDE'         => ['type' => 'RESOURCES_SUBDIVIDE', 'title' => '资源·业务细分'],
+        'REPORT_TYPE'                 => ['type' => 'REPORT_TYPE', 'title' => '举报类型'],
+        'REPORT_DETAIL_CAUSE'         => ['type' => 'REPORT_DETAIL_CAUSE', 'title' => '举报详细原因'],
+        'RESOURCE_INDUSTRY'           => ['type' => 'RESOURCE_INDUSTRY', 'title' => '资源·行业类型'],
+        'RESOURCE_INDUSTRY_SUBDIVIDE' => ['type' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'title' => '资源·行业细分'],
+        'RESOURCE_CURRENCY'           => ['type' => 'RESOURCE_CURRENCY', 'title' => '资源·货币'],
+        'CONTACTS_INDUSTRY'           => ['type' => 'CONTACTS_INDUSTRY', 'title' => '人脉·行业'],
+        'ADVERT_ATTRIBUTE'            => ['type' => 'ADVERT_ATTRIBUTE', 'title' => '行业·属性'],
+        'FIRM_SCALE'                  => ['type' => 'FIRM_SCALE', 'title' => '企业规模'],
     ];
 
     /**
@@ -48,18 +47,21 @@ class Diction extends Base
         $DataDic = model('DataDic');
         if(request()->isPost()){
             $_post = request()->post();
+            var_dump($_post);exit();
             $Datafind = $DataDic->where(['data_type_no'=>$_post['data_type_no']])->order('data_no desc')->find();
-            $state = $DataDic->save([
-                'data_type_no' => $_post['data_type_no'],
+            $state = $DataDic->data([
+                'data_type_no'   => $_post['data_type_no'],
                 'data_type_name' => $this->data[$_post['data_type_no']]['title'],
-                'data_no' => $Datafind['data_no']+1,
-                'data_name' => $_post['data_name'],
-                'data_icon' => $_post['data_icon'],
-                'sort' => $_post['sort'],
-                'data_top_id' => $_post['data_top_id'],
+                'data_no'        => $Datafind['data_no'] + 1,
+                'data_name'      => $_post['data_name'],
+                'data_icon'      => $_post['data_icon'],
+                'sort'           => $_post['sort'],
+                'data_top_id'    => $_post['data_top_id'],
                 'data_dark_icon' => $_post['data_dark_icon'],
-                'url_keyword' => $_post['url_keyword'],
-            ]);
+                'recommend_icon' => $_post['recommend_icon'],
+                'demand_icon'    => $_post['demand_icon'],
+                'url_keyword'    => $_post['url_keyword'],
+            ])->save();
             if($state !== false) {
                 return success_json(lang('CreateSuccess', [lang('Dictionaries')] ));
             }
@@ -86,14 +88,16 @@ class Diction extends Base
         if(request()->isPost()) {
             $_post = request()->param();
             $state = $DataDic->where(['id' => $id])->update([
-                'data_type_no' => $_post['data_type_no'],
+                'data_type_no'   => $_post['data_type_no'],
                 'data_type_name' => $this->data[$_post['data_type_no']]['title'],
-                'data_name' => $_post['data_name'],
-                'data_icon' => $_post['data_icon'],
-                'sort' => $_post['sort'],
-                'data_top_id' => $_post['data_top_id'],
+                'data_name'      => $_post['data_name'],
+                'data_icon'      => $_post['data_icon'],
+                'sort'           => $_post['sort'],
+                'data_top_id'    => $_post['data_top_id'],
                 'data_dark_icon' => $_post['data_dark_icon'],
-                'url_keyword' => $_post['url_keyword'],
+                'recommend_icon' => $_post['recommend_icon'],
+                'demand_icon'    => $_post['demand_icon'],
+                'url_keyword'    => $_post['url_keyword'],
             ]);
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('Dictionaries')] ));
