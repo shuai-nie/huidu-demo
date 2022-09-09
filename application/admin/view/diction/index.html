@@ -42,14 +42,26 @@ layui.use(['table','treetable'], function(){
                     return d.data_icon;
                 } else {
                     if(d.data_icon) {
-                        return "<img src='"+ d.data_icon + "' height='30' />";
+                        return "<img src='"+ d.data_icon + "?v=1.1' height='30' />";
                     }
                 }
                 return '-';
             }},
             {field: 'data_dark_icon', title: '深色icon图标',width:120,templet: function(d){
                 if(d.data_dark_icon) {
-                    return "<img src='"+ d.data_dark_icon + "' height='30' />";
+                    return "<img src='"+ d.data_dark_icon + "?v=1.1' height='30' />";
+                }
+                return '-';
+            }},
+            {field: 'recommend_icon', title: '推荐资源icon',width:120,templet: function(d){
+                if(d.recommend_icon) {
+                    return "<img src='"+ d.recommend_icon + "?v=1.1' height='30' />";
+                }
+                return '-';
+            }},
+            {field: 'demand_icon', title: '业务需求icon',width:120,templet: function(d){
+                if(d.demand_icon) {
+                    return "<img src='"+ d.demand_icon + "?v=1.1' height='30' />";
                 }
                 return '-';
             }},
