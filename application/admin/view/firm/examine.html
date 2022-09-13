@@ -1,0 +1,96 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+.layui-disabled{line-height:38px;}
+</style>
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业名称</label>
+        <div class="layui-input-block">
+            <div class="layui-input layui-disabled">111</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业logo</label>
+        <div class="layui-input-inline">
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1">
+                <p id="demoText"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业规模</label>
+        <div class="layui-input-block">
+            <div type="text" name="scale" class="layui-input layui-disabled" >111</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行业类型</label>
+        <div class="layui-input-block">
+            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业地区</label>
+        <div class="layui-input-block">
+            <input class="layui-input" value="111" disabled />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业介绍</label>
+        <div class="layui-input-block">
+            <div class="layui-textarea">111</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">宣传视频</label>
+        <div class="layui-input-block">
+            <input type="radio" name="" value="" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+
+<script>
+layui.use(['form','upload'], function () {
+    var form = layui.form;
+
+    form.val('first', {
+    })
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        Api.edit(data.field, function (res) {
+            console.log(res);
+        });
+    });
+
+
+});
+</script>

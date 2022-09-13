@@ -5,6 +5,7 @@ class Firm extends Base
 {
     public function _initialize()
     {
+        $this->assign('meta_title', '企业审核列表');
         parent::_initialize();
     }
 
@@ -128,13 +129,26 @@ class Firm extends Base
     {
         $id = request()->param('id');
 
+        $Firm = model('Firm');
+        $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
+        if($state !== false) {
+            return success_json("提交成功");
+        }
+        return error_json("提交失败");
+    }
+
+    public function examine()
+    {
+        $id = request()->param('id');
+        if(request()->isPost()){
             $Firm = model('Firm');
             $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
             if($state !== false) {
                 return success_json("提交成功");
             }
             return error_json("提交失败");
-
+        }
+        return view('', []);
     }
 
 

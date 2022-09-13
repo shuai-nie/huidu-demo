@@ -84,7 +84,7 @@
                 }
             }}
             , {fixed: 'right', title: '操作', width: 140, align: 'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", "auto");
 
         table.on("toolbar(think-table)", function(obj){
             var data = obj.data
@@ -106,7 +106,7 @@
                     ]
                     , click: function(menudata){
                         if(menudata.id === 'edit'){
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', "{:lang('edit')}");
+                            UI.openLayer("{:url('edit')}?id=" + data['id'], 750, 600, '#submit', "{:lang('edit')}");
                         }else if(menudata.id === 'del'){
                             UI.delete(data['id'], function(res){
                                 if(res.code==200){
@@ -117,7 +117,7 @@
                     }
                 })
             }else if(obj.event==='examine'){
-                UI.openLayer("{:url('examine')}", 750, 600, "#submit", '审核');
+                UI.openLayer("{:url('examine')}?id=" + data['id'], 750, 600, "#submit", '审核');
             }
         });
 

@@ -5,6 +5,7 @@ class UserFirm extends Base
 {
     public function _initialize()
     {
+        $this->assign('meta_title', '用户关联企业审核');
         parent::_initialize();
     }
 
