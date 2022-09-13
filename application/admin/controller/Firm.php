@@ -37,7 +37,7 @@ class Firm extends Base
                 $v['business_type'] = implode('|', $TypeAll);
 
                 $industry = explode('|', $v['industry']);
-                $industryAll = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_no'=>['in', $industry]])->select();
+                $industryAll = $DataDic->where(['status' => 1, 'data_type_no' => 'ADVERT_ATTRIBUTE', 'data_no'=>['in', $industry]])->select();
                 $indusAll = [];
                 foreach ($industryAll as $try){
                     array_push($indusAll, $try['data_name']);
@@ -64,6 +64,17 @@ class Firm extends Base
         if(request()->isPost()) {
             $Firm = model('Firm');
             $_post = request()->post();
+            if(isset($_post['business_type'])){
+                $_post['business_type'] = implode('|', $_post['business_type']);
+            }
+
+            if(isset($_post['industry'])){
+                $_post['industry'] = implode('|', $_post['industry']);
+            }
+            if(isset($_post['region'])) {
+                $_post['region'] = implode('|', $_post['region']);
+            }
+
             $state = $Firm->data($_post)->save();
             if($state !== false) {
                 return success_json("提交成功");
@@ -96,6 +107,9 @@ class Firm extends Base
             return error_json("提交失败");
         }
         $info = $Firm->where(['id'=>$id])->find();
+        $info['business_type'] = explode('|', $info['business_type']);
+        $info['industry'] = explode('|', $info['industry']);
+        $info['region'] = explode('|', $info['region']);
 
         $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
         $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
@@ -113,15 +127,14 @@ class Firm extends Base
     public function delete()
     {
         $id = request()->param('id');
-        if(request()->isPost()) {
+
             $Firm = model('Firm');
             $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
             if($state !== false) {
                 return success_json("提交成功");
             }
             return error_json("提交失败");
-        }
-        return view('', []);
+
     }
 
 

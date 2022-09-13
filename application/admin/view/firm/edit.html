@@ -48,7 +48,7 @@
         <label class="layui-form-label">业务类型</label>
         <div class="layui-input-block">
             {volist name='RESOURCES_TYPE' id='vo'}
-            <input type="checkbox" name="business_type[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="business_type[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -57,7 +57,7 @@
         <label class="layui-form-label">行业类型</label>
         <div class="layui-input-block">
             {volist name='ADVERT_ATTRIBUTE' id='vo'}
-            <input type="checkbox" name="industry[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -66,7 +66,7 @@
         <label class="layui-form-label">企业地区</label>
         <div class="layui-input-block">
             {volist name='RESOURCES_REGION' id='vo'}
-            <input type="checkbox" name="region[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -127,12 +127,17 @@ layui.use(['form','upload'], function () {
         "name": "{$info['name']}",
         "logo": "{$info['logo']}",
         "scale": "{$info['scale']}",
-        "business_type": "{$info['business_type']}",
-        "industry": "{$info['industry']}",
-        "region": "{$info['region']}",
+        {volist name="$info['business_type']" id="ty"}
+        "business_type[{$ty}]": true,
+        {/volist}
+        {volist name="$info['industry']" id="ty"}
+        "industry[{$ty}]": true,
+        {/volist}
+        {volist name="$info['region']" id="ty"}
+        "region[{$ty}]": true,
+        {/volist}
         "intro": "{$info['intro']}",
         "publicity_video": "{$info['publicity_video']}",
-
     })
 
     //监听提交

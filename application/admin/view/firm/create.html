@@ -40,7 +40,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业规模</label>
         <div class="layui-input-block">
-            <input type="text" name="scale" class="layui-input" />
+            <select name="scale" >
+                <option value="">请选择</option>
+                {volist name="FIRM_SCALE" id='sc'}
+                <option value="{$sc['data_no']}">{$sc['data_name']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
 
@@ -48,7 +53,7 @@
         <label class="layui-form-label">业务类型</label>
         <div class="layui-input-block">
             {volist name='RESOURCES_TYPE' id='vo'}
-            <input type="checkbox" name="business_type[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="business_type[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -57,7 +62,7 @@
         <label class="layui-form-label">行业类型</label>
         <div class="layui-input-block">
             {volist name='ADVERT_ATTRIBUTE' id='vo'}
-            <input type="checkbox" name="industry[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -66,7 +71,7 @@
         <label class="layui-form-label">企业地区</label>
         <div class="layui-input-block">
             {volist name='RESOURCES_REGION' id='vo'}
-            <input type="checkbox" name="region[{$vo['id']}]" value="{$vo['id']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -81,7 +86,15 @@
     <div class="layui-form-item">
         <label class="layui-form-label">宣传视频</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入" name="intro" class="layui-textarea"></textarea>
+            <textarea placeholder="请输入" name="publicity_video" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="2" title="正常" checked />
+            <input type="radio" name="status" value="1" title="审核中" />
         </div>
     </div>
 
