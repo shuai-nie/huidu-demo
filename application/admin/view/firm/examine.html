@@ -11,7 +11,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业名称</label>
         <div class="layui-input-block">
-            <div class="layui-input layui-disabled">111</div>
+            <div class="layui-input layui-disabled">{$info['name']}</div>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
         <label class="layui-form-label">企业logo</label>
         <div class="layui-input-inline">
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo1">
+                <img class="layui-upload-img" {if condition="$info['logo']"}src="{$info['logo']}"{/if} >
                 <p id="demoText"></p>
             </div>
         </div>
@@ -28,44 +28,50 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业规模</label>
         <div class="layui-input-block">
-            <div type="text" name="scale" class="layui-input layui-disabled" >111</div>
+            <div type="text" name="scale" class="layui-input layui-disabled" >{$info['scale']|getFirmScale=###, 'FIRM_SCALE'}</div>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">业务类型</label>
         <div class="layui-input-block">
-            <div class="layui-disabled" style="width:50px;float:left;">11</div>
-            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+            {volist name="info['business_type']" id='vo'}
+            <span class="layui-btn-primary" style="line-height:38px;">{$vo|getFirmScale=###, 'RESOURCES_TYPE'}</span>
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">行业类型</label>
         <div class="layui-input-block">
-            <div class="layui-disabled" style="width:50px;float:left;">11</div>
-            <div class="layui-disabled" style="width:50px;float:left;">11</div>
+            {volist name="info['industry']" id='vo'}
+            <span class="layui-btn-primary" style="line-height:38px;">{$vo|getFirmScale=###, 'ADVERT_ATTRIBUTE'}</span>
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">企业地区</label>
         <div class="layui-input-block">
-            <input class="layui-input" value="111" disabled />
+            {volist name="info['region']" id='vo'}
+            <span class="layui-btn-primary" style="line-height:38px;">{$vo|getFirmScale=###, 'RESOURCES_REGION'}</span>
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">企业介绍</label>
         <div class="layui-input-block">
-            <div class="layui-textarea">111</div>
+            <div class="layui-textarea">{$info['intro']}</div>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">宣传视频</label>
+        <label class="layui-form-label">审核状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="" value="" />
+            <input type="radio" name="status" value="1" title="审核中" />
+            <input type="radio" name="status" value="2" title="审核通过" />
+            <input type="radio" name="status" value="3" title="审核失败" />
         </div>
     </div>
 
@@ -82,6 +88,7 @@ layui.use(['form','upload'], function () {
     var form = layui.form;
 
     form.val('first', {
+        "status": "{$info['status']}"
     })
 
     //监听提交

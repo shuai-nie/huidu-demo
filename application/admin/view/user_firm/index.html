@@ -47,11 +47,11 @@
                 return d.username + '/'+ d.nickname;
             }}
             , {field: 'firm_name', title: '企业名称', width: 170}
-            , {field: 'status', title: '状态',width:120, templet(d){
+            , {field: 'status', title: '状态',width:100, templet(d){
                 switch (d.status){
-                    case 0: return '未审核';
+                    case 0: return '<span class="layui-btn-primary layui-border-blue layui-btn-xs ">未审核</span>';
                     case 1: return '通过';
-                    case 2: return '未通过';
+                    case 2: return '<span class="layui-btn-primary layui-border-red layui-btn-xs">未通过</span>';
                     default: return '-';
                 }
             }}

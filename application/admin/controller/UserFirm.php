@@ -20,17 +20,27 @@ class UserFirm extends Base
             $page = request()->post('page', 1);
             $limit = request()->post('limit');
             $offset = ($page - 1 ) * $limit;
+            $username = request()->post('username');
+            $firm_name = request()->post('firm_name');
+
+            if(!empty($username)) {
+                $map['C.username|C.nickname'] = ['like', '%'.$username.'%'];
+            }
+
+            if(!empty($firm_name)) {
+                $map['B.name'] = ['like', '%'.$firm_name.'%'];
+            }
 
             $count = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
                 ->where($map)->count();
-
+            $exp = new \think\Db\Expression('field(A.status, 0,1,2), id desc');
             $data = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
                 ->field('A.*,B.name as firm_name,C.username,C.nickname')
-                ->where($map)->order('id desc')->limit($offset, $limit)->select();
+                ->where($map)->order($exp)->limit($offset, $limit)->select();
 
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
@@ -43,8 +53,19 @@ class UserFirm extends Base
         $FirmRelevanceDatum = model('FirmRelevanceDatum');
         $Firm = model('Firm');
         $User = model('User');
-
         $id = request()->param('id');
+
+        if(request()->isPost()) {
+            $_post = request()->post();
+
+            $state = $FirmRelevance->isUpdate(true)->save(['status'=>$_post['status']], ['id'=>$id]);
+
+            if($state !== false) {
+                return  success_json('审核提交成功');
+            }
+            return error_json('审核提交失败');
+        }
+
         $map = ['A.id'=>$id];
         $info = $FirmRelevance->alias('A')
             ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")

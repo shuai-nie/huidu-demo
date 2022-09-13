@@ -16,8 +16,13 @@ class Firm extends Base
             $page = request()->post('page', 1);
             $limit = request()->post('limit');
             $offset = ($page - 1 ) * $limit;
+            $name = request()->post('name');
 
             $map = ['status'=>['in', [1,2,3]]];
+            if(!empty($name)) {
+                $map['name'] = ['like', '%'.$name.'%'];
+            }
+
             $count = $Firm->where($map)->count();
             $data = $Firm->where($map)->order('id desc')->limit($offset, $limit)->select();
 
@@ -27,7 +32,7 @@ class Firm extends Base
                 if($scale){
                     $v['scale'] = $scale['data_name'];
                 }
-                //RESOURCES_TYPE
+
                 $business_type = explode('|', $v['business_type']) ;
 
                 $businessTypeAll = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCES_TYPE', 'data_no'=>['in', $business_type]])->select();
@@ -140,15 +145,21 @@ class Firm extends Base
     public function examine()
     {
         $id = request()->param('id');
+        $Firm = model('Firm');
         if(request()->isPost()){
-            $Firm = model('Firm');
             $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
             if($state !== false) {
                 return success_json("提交成功");
             }
             return error_json("提交失败");
         }
-        return view('', []);
+        $info = $Firm->where(['id'=>$id])->find();
+        $info['business_type'] = explode('|', $info['business_type']);
+        $info['industry'] = explode('|', $info['industry']);
+        $info['region'] = explode('|', $info['region']);
+        return view('', [
+            'info' => $info,
+        ]);
     }
 
 

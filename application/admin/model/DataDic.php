@@ -11,4 +11,9 @@ class DataDic extends Base
     {
         return self::where($where)->order('sort desc')->field($field)->select();
     }
+
+    public function findType($where)
+    {
+        return self::where($where)->find();
+    }
 }
