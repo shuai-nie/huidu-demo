@@ -24,6 +24,18 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">企业</label>
+        <div class="layui-input-block">
+            <select name="firm_id">
+                <option value="">请选择</option>
+                {volist name="firmAll" id='vo'}
+                <option value="{$vo['id']}">{$vo['name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
             <input type="text" name="title" required lay-verify="required" placeholder="菜单标题" autocomplete="off" class="layui-input">

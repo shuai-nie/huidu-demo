@@ -129,9 +129,11 @@ class Content extends Controller
         }
         $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
         $category2 = $contentProperty->where(['status'=>1])->field('id,name')->order("sort desc")->select();
+        $firmAll = model('firm')->where(['status' => 2])->select();
         return view('', [
-            'category'=>$category,
-            'category2'=>$category2
+            'category'  => $category,
+            'category2' => $category2,
+            'firmAll'   => $firmAll,
         ]);
     }
 
@@ -193,14 +195,16 @@ class Content extends Controller
         $detail = $ContentDetail->where(['cid'=>$id])->find();
         $data['content'] = $detail['content'];
 
-        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
-        $category2 = model('ContentProperty')->where(['status'=>1])->field('id,name')->order("sort desc")->select();
+        $category  = $ContentCategory->where(['is_del' => 0])->field('id,name')->order("sort desc")->select();
+        $category2 = model('ContentProperty')->where(['status' => 1])->field('id,name')->order("sort desc")->select();
         $relevance = $ContentPropertyRelevance->where(['status' => 1, 'content_id' => $id])->select();
+        $firmAll   = model('firm')->where(['status' => 2])->select();
         return view('edit', [
-            'data' => $data,
-            'category' => $category,
+            'data'      => $data,
+            'category'  => $category,
             'category2' => $category2,
             'relevance' => $relevance,
+            'firmAll'   => $firmAll,
         ]);
     }
 
