@@ -58,6 +58,7 @@ class Package extends Base
                 $packageHistory->saveId($_post);
                 $_post['history_id'] = $packageHistory->id;
                 model("Package")->saveId($_post);
+
                 Db::commit();
                 $state = true;
             } catch (\Exception $e){

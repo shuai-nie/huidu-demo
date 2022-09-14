@@ -92,20 +92,21 @@ class Userinfo extends Base
             $Package = model('Package')->find($_post['package_id']);
             $time = time();
             $save = [
-                'uid'          => $_post['uid'],
-                'package_id'   => $_post['package_id'],
-                'start_time'   => $time,
-                'flush'        => $Package['flush'],
-                'publish'      => $Package['publish'],
-                'view_demand'       => $Package['view_demand'],
-                'view_provide'      => $Package['view_provide'],
-                'view_provide_give' => $Package['view_provide_give'],
-
-                'used_flush'   => 0,
-                'used_publish' => $userInfo['used_publish'],
-                'used_view_demand'  => 0,
-                'used_view_provide' => 0,
-                'remarks'      => '变更套餐',
+                'uid'                => $_post['uid'],
+                'package_id'         => $_post['package_id'],
+                'start_time'         => $time,
+                'flush'              => $Package['flush'],
+                'publish'            => $Package['publish'],
+                'view_demand'        => $Package['view_demand'],
+                'view_provide'       => $Package['view_provide'],
+                'view_provide_give'  => $Package['view_provide_give'],
+                'used_publish'       => $userInfo['used_publish'],
+                'view_contacts'      => $userInfo['view_contacts'],
+                'used_flush'         => 0,
+                'used_view_demand'   => 0,
+                'used_view_provide'  => 0,
+                'used_view_contacts' => 0,
+                'remarks'            => '变更套餐',
             ];
 
             if($_post['time'] > 0){
@@ -115,11 +116,10 @@ class Userinfo extends Base
 
             }
 
-            $UserRecharge->save($save);
+            $UserRecharge->data($save)->save();
             $recharge_id = $UserRecharge->id;
 
-
-            $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
+            $state = model('UserInfo')->isUpdate(true)->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
                 return success_json(lang('PACKAGEDISTRIBUTION'). lang('Success'));
             }
@@ -138,7 +138,7 @@ class Userinfo extends Base
         $userInfo = $UserInfo->alias('A')
             ->join($UserRecharge->getTable().' B', 'A.user_recharge_id=B.id', 'left')
             ->join($User->getTable()." D", 'D.id=A.uid')
-            ->field('A.*,B.package_id,B.start_time,B.end_time,B.used_flush,B.used_publish,B.flush,B.publish,D.username,D.nickname,B.view_demand,B.view_provide,B.view_provide_give,B.used_view_demand,B.used_view_provide')
+            ->field('A.*,B.package_id,B.start_time,B.end_time,B.used_flush,B.used_publish,B.flush,B.publish,D.username,D.nickname,B.view_demand,B.view_provide,B.view_provide_give,B.view_contacts,B.used_view_demand,B.used_view_provide,B.used_view_contacts')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
@@ -146,17 +146,19 @@ class Userinfo extends Base
             $UserRecharge->save([
                 'uid'          => $_post['uid'],
                 'package_id'   => $_post['package_id'],
-                'start_time'   => $userInfo['start_time'],
-                'end_time'     => $endtime,
-                'flush'        => $userInfo['flush'],
-                'publish'      => $userInfo['publish'],
+                'start_time'        => $userInfo['start_time'],
+                'end_time'          => $endtime,
+                'flush'             => $userInfo['flush'],
+                'publish'           => $userInfo['publish'],
                 'view_demand'       => $userInfo['view_demand'],
                 'view_provide_give' => $userInfo['view_provide_give'],
-                'view_provide'              => $userInfo['view_provide'],
+                'view_provide'      => $userInfo['view_provide'],
+                'view_contact'      => $userInfo['view_contact'],
                 'used_flush'        => $userInfo['used_flush'],
                 'used_publish'      => $userInfo['used_publish'],
                 'used_view_demand'  => $userInfo['used_view_demand'],
                 'used_view_provide' => $userInfo['used_view_provide'],
+                'used_view_contacts' => $userInfo['used_view_contacts'],
                 'remarks'           => '延期套餐',
             ]);
             $recharge_id = $UserRecharge->id;
@@ -175,21 +177,10 @@ class Userinfo extends Base
     {
         if(request()->isPost()) {
             $data = request()->post();
-            if(isset($data['business_type'])){
-                $data['business_type'] = implode('|', $data['business_type']);
-            }else{
-                $data['business_type'] = '';
-            }
-            if(isset($data['industry'])){
-                $data['industry'] = implode('|', $data['industry']);
-            }else{
-                $data['industry'] = '';
-            }
-            if(isset($data['region'])){
-                $data['region'] = implode('|', $data['region']);
-            }else{
-                $data['region'] = '';
-            }
+            $data['business_type'] = isset($data['business_type']) ? implode('|', $data['business_type']) : '';
+            $data['industry'] = isset($data['industry']) ? implode('|', $data['industry']) : '';
+            $data['region'] = isset($data['region']) ? implode('|', $data['region']) : '';
+
             $number = GetRandStr(16);
             $data['pwd'] = md5(md5($data['pwd']). $number);
             $data['salt'] = $number;
@@ -209,7 +200,7 @@ class Userinfo extends Base
                 $uid = $userModel->id;
                 $packageInfo = model('Package')->where(['id'=>1])->find();
                 $UserRechargeModel = model('UserRecharge');
-                $UserRechargeModel->save([
+                $UserRechargeModel->data([
                     'uid'               => $uid,
                     'package_id'        => 1,
                     'start_time'        => time(),
@@ -221,7 +212,7 @@ class Userinfo extends Base
                     'view_contacts'     => $packageInfo['view_contacts'],
                     'end_time'          => time() + 30 * 60 * 60 * 24,
                     'remarks'           => '注册账户' . $uid,
-                ]);
+                ])->save();
                 $UserRechargeId = $UserRechargeModel->id;
                 model('UserInfo')->data([
                     'uid' => $uid,
@@ -269,21 +260,10 @@ class Userinfo extends Base
             } else {
                 unset($data['pwd']);
             }
-            if(isset($data['business_type'])){
-                $data['business_type'] = implode('|', $data['business_type']);
-            }else{
-                $data['business_type'] = '';
-            }
-            if(isset($data['industry'])){
-                $data['industry'] = implode('|', $data['industry']);
-            }else{
-                $data['industry'] = '';
-            }
-            if(isset($data['region'])){
-                $data['region'] = implode('|', $data['region']);
-            }else{
-                $data['region'] = '';
-            }
+
+            $data['business_type'] = isset($data['business_type']) ? implode('|', $data['business_type']) : '';
+            $data['industry'] = isset($data['industry']) ? implode('|', $data['industry']) : '';
+            $data['region'] = isset($data['region']) ? implode('|', $data['region']) : '';
 
             Db::startTrans();
             try {
