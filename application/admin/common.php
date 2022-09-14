@@ -53,5 +53,8 @@ function getFirmRelevanceDatumStatus($str)
 function getFirmScale($str, $type_no){
     $DataDic = model('DataDic');
     $data = $DataDic->findType(['data_type_no' => $type_no, 'data_no' => $str]);
-    return $data->data_name;
+    if(isset($data->data_name)){
+        return $data->data_name;
+    }
+    return '-';
 }

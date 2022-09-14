@@ -24,7 +24,8 @@ class Firm extends Base
             }
 
             $count = $Firm->where($map)->count();
-            $data = $Firm->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $exp = new \think\Db\Expression('field(status, 1,2,3), id desc');
+            $data = $Firm->where($map)->order($exp)->limit($offset, $limit)->select();
 
             $DataDic = model('DataDic');
             foreach ($data as $k => $v) {
@@ -147,7 +148,8 @@ class Firm extends Base
         $id = request()->param('id');
         $Firm = model('Firm');
         if(request()->isPost()){
-            $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
+            $_post = request()->post();
+            $state = $Firm->isUpdate(true)->save(['status' => $_post['status']], ['id' => $id]);
             if($state !== false) {
                 return success_json("提交成功");
             }
