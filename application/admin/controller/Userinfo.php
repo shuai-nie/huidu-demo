@@ -3,6 +3,8 @@ namespace app\admin\controller;
 
 use think\Config;
 use think\Controller;
+use think\Db;
+use think\Exception;
 use think\Log;
 use think\Request;
 
@@ -173,6 +175,21 @@ class Userinfo extends Base
     {
         if(request()->isPost()) {
             $data = request()->post();
+            if(isset($data['business_type'])){
+                $data['business_type'] = implode('|', $data['business_type']);
+            }else{
+                $data['business_type'] = '';
+            }
+            if(isset($data['industry'])){
+                $data['industry'] = implode('|', $data['industry']);
+            }else{
+                $data['industry'] = '';
+            }
+            if(isset($data['region'])){
+                $data['region'] = implode('|', $data['region']);
+            }else{
+                $data['region'] = '';
+            }
             $number = GetRandStr(16);
             $data['pwd'] = md5(md5($data['pwd']). $number);
             $data['salt'] = $number;
@@ -186,41 +203,65 @@ class Userinfo extends Base
                 return error_json('email已存在,请修改');
             }
 
-            $state = $userModel->save($data);
-            $uid = $userModel->id;
-
-
-            if($state !== false){
-                $packageInfo = model('Package')->find(1);
+            Db::startTrans();
+            try {
+                $userModel->save($data);
+                $uid = $userModel->id;
+                $packageInfo = model('Package')->where(['id'=>1])->find();
                 $UserRechargeModel = model('UserRecharge');
                 $UserRechargeModel->save([
-                    'uid'        => $uid,
-                    'package_id' => 1,
-                    'start_time' => time(),
-                    'flush'      => $packageInfo['flush'],
-                    'publish'    => $packageInfo['publish'],
-                    'view'    => $packageInfo['view'],
-                    'end_time'   => time() + 30 * 60 * 60 * 24,
-                    'remarks' => '注册账户' . $uid,
+                    'uid'               => $uid,
+                    'package_id'        => 1,
+                    'start_time'        => time(),
+                    'flush'             => $packageInfo['flush'],
+                    'publish'           => $packageInfo['publish'],
+                    'view_provide'      => $packageInfo['view_provide'],
+                    'view_provide_give' => $packageInfo['view_provide_give'],
+                    'view_demand'       => $packageInfo['view_demand'],
+                    'view_contacts'     => $packageInfo['view_contacts'],
+                    'end_time'          => time() + 30 * 60 * 60 * 24,
+                    'remarks'           => '注册账户' . $uid,
                 ]);
                 $UserRechargeId = $UserRechargeModel->id;
-                model('UserInfo')->save([
+                model('UserInfo')->data([
                     'uid' => $uid,
                     'user_recharge_id' => $UserRechargeId
-                ]);
+                ])->save();
+                model('UserDemand')->data([
+                    'uid' => $uid,
+                    'business_type' => $data['business_type'],
+                    'industry' => $data['industry'],
+                    'region' => $data['region'],
+                ])->save();
+                $state = true;
+                Db::commit();
+            }catch (Exception $e){
+                $state = false;
+                Db::rollback();
+            }
+            if($state !== false){
                 return success_json(lang('CreateSuccess', [ lang('User')]));
             }
             return error_json(lang('CreateFail', [ lang('User')]));
         }
-        return view();
+        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no'=>'FIRM_SCALE', 'status'=>1]);
+        return view('', [
+            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE' => $FIRM_SCALE,
+        ]);
     }
-    //
 
     public function edit($id)
     {
         $UserModel = model("User");
-        $UserInfo = model('UserInfo')->find($id);
-        $UserArr = $UserModel->find($UserInfo->uid);
+        $UserDemand = model('UserDemand');
+        $UserInfo = model('UserInfo')->where(['id' => $id])->find();
+        $UserArr = $UserModel->where(['id' => $UserInfo->uid])->find();
         if(request()->isPost()) {
             $data = request()->post();
             if(!empty($data['pwd'])) {
@@ -228,14 +269,58 @@ class Userinfo extends Base
             } else {
                 unset($data['pwd']);
             }
-            $state = $UserModel->allowField(true)->save($data, ['id'=>$UserInfo->uid]);
-            if($state !== false){
+            if(isset($data['business_type'])){
+                $data['business_type'] = implode('|', $data['business_type']);
+            }else{
+                $data['business_type'] = '';
+            }
+            if(isset($data['industry'])){
+                $data['industry'] = implode('|', $data['industry']);
+            }else{
+                $data['industry'] = '';
+            }
+            if(isset($data['region'])){
+                $data['region'] = implode('|', $data['region']);
+            }else{
+                $data['region'] = '';
+            }
+
+            Db::startTrans();
+            try {
+                $UserModel->allowField(true)->isUpdate(true)->save($data, ['id' => $UserInfo->uid]);
+                $UserDemand->allowField(true)->isUpdate(true)->save([
+                    'business_type' => $data['business_type'],
+                    'industry'      => $data['industry'],
+                    'region'        => $data['region'],
+                ], ['uid' => $UserInfo->uid]);
+                $state = true;
+                Db::commit();
+            }catch (Exception $e) {
+                $state = false;
+                Db::rollback();
+            }
+
+            if ($state !== false) {
                 return success_json(lang('EditSuccess', [ lang('User')]));
             }
             return error_json(lang('EditFail', [ lang('User')]));
         }
+        $Demand = $UserDemand->where(['uid'=>$UserInfo->uid])->find();
+        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
+        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
+        $Demand['business_type'] = explode('|', $Demand['business_type']);
+        $Demand['industry'] = explode('|', $Demand['industry']);
+        $Demand['region'] = explode('|', $Demand['region']);
+
         return view('', [
-            'UserInfo' => $UserArr
+            'UserInfo'         => $UserArr,
+            'RESOURCES_TYPE'   => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE'       => $FIRM_SCALE,
+            'Demand'           => $Demand,
         ]);
     }
 

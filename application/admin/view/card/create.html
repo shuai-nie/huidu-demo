@@ -95,7 +95,33 @@
                 <button type="button" class="layui-btn contact-add "><i class="layui-icon layui-icon-add-1"></i></button>
             </div>
         </div>
+    </div>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            {volist name="RESOURCES_TYPE" id="vo"}
+            <input type="checkbox" name="business_type[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行业类型</label>
+        <div class="layui-input-block" >
+            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在地区</label>
+        <div class="layui-input-block" >
+            {volist name="RESOURCES_REGION" id="vo"}
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
     </div>
 
     <div class="layui-form-item layui-hide">

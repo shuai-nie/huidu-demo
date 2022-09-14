@@ -86,19 +86,25 @@ class Card extends Base
     public function create()
     {
         if(Request()->isPost()) {
-            $_post = Request()->post();
-            $card = model('card');
-            $userModel = model('user');
-            $cardContact = model('cardContact');
-            $number = GetRandStr(16);
-            $pwd = md5(md5(config('userPwd')) . $number);
-            $_post['business_tag'] = isset($_post['business_tag']) ? implode('|', $_post['business_tag']) : '';
-            $contact = array();
-            $state = false;
-            $userInfo = model('user_info');
-            $package = model('package');
+            $_post        = Request()->post();
+            $card         = model('card');
+            $userModel    = model('user');
+            $cardContact  = model('cardContact');
+            $userInfo     = model('user_info');
+            $package      = model('package');
             $userRecharge = model('userRecharge');
-            $cardState = false;
+
+            $number      = GetRandStr(16);
+            $pwd         = md5(md5(config('userPwd')) . $number);
+
+            $_post['business_tag']  = isset($_post['business_tag']) ? implode('|', $_post['business_tag']) : '';
+            $_post['business_type'] = isset($_post['business_type']) ? implode('|', $_post['business_type']) : '';
+            $_post['industry']      = isset($_post['industry']) ? implode('|', $_post['industry']) : '';
+            $_post['region']        = isset($_post['region']) ? implode('|', $_post['region']) : '';
+
+            $contact      = array();
+            $state        = false;
+            $cardState    = false;
             $numberNumber = "";
             foreach ($_post['contact'] as $key => $val) {
                 if(is_numeric($val) && !empty($_post['tel'][$key])){
@@ -133,20 +139,20 @@ class Card extends Base
                 ]);
                 $_post['uid'] = $userModel->id;
                 $userRecharge->isUpdate(false)->allowField(true)->save([
-                    'uid' => $_post['uid'],
-                    'package_id' => $packageInfo['id'],
-                    'flush' => $packageInfo['flush'],
-                    'publish' => $packageInfo['publish'],
-                    'view_demand' => $packageInfo['view_demand'],
-                    'view_provide' => $packageInfo['view_provide'],
+                    'uid'               => $_post['uid'],
+                    'package_id'        => $packageInfo['id'],
+                    'flush'             => $packageInfo['flush'],
+                    'publish'           => $packageInfo['publish'],
+                    'view_demand'       => $packageInfo['view_demand'],
+                    'view_provide'      => $packageInfo['view_provide'],
                     'view_provide_give' => $packageInfo['view_provide_give'],
-                    'used_flush' => 0,
-                    'used_publish' => 0,
-                    'used_view_demand' => 0,
+                    'used_flush'        => 0,
+                    'used_publish'      => 0,
+                    'used_view_demand'  => 0,
                     'used_view_provide' => 0,
-                    'start_time' => $time,
-                    'end_time' => $time + 86400 *30,
-                    'remarks' => '新建名片注册账号',
+                    'start_time'        => $time,
+                    'end_time'          => $time + 86400 * 30,
+                    'remarks'           => '新建名片注册账号',
                 ]);
                 $userInfo->allowField(true)->isUpdate(false)->save([
                     'uid' => $_post['uid'],
@@ -154,12 +160,13 @@ class Card extends Base
                 ]);
 
                 $_post['logo'] = $head_url;
-                $card->allowField(true)->isUpdate(false)->save($_post);
+
+                $card->allowField(true)->data($_post)->save();
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
-                        'card_id' => $card->id,
-                        'contact_type' => $val,
-                        'contact_number' => $_post['tel'][$key]
+                        'card_id'        => $card->id,
+                        'contact_type'   => $val,
+                        'contact_number' => $_post['tel'][$key],
                     ));
                 }
                 if($contact){
@@ -177,8 +184,16 @@ class Card extends Base
         }
         $str_name = config('usernameRand') . date('y') . GetRandStr(6) . date('md');
         $this->getDataDicTypeNo();
+        $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
+        $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         return view('', [
-            'username' => $str_name,
+            'username'         => $str_name,
+            'RESOURCES_TYPE'   => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE'       => $FIRM_SCALE,
         ]);
     }
 
@@ -205,7 +220,11 @@ class Card extends Base
                     'contact_number' => $_post['tel'][$k]
                 ]);
             }
-            $_post['business_tag'] = implode('|', $_post['business_tag']);
+            $_post['business_tag']  = implode('|', $_post['business_tag']);
+            $_post['business_type'] = isset($_post['business_type']) ? implode('|', $_post['business_type']) : '';
+            $_post['industry']      = isset($_post['industry']) ? implode('|', $_post['industry']) : '';
+            $_post['region']        = isset($_post['region']) ? implode('|', $_post['region']) : '';
+
             $state = false;
             Db::startTrans();
             try {
@@ -233,9 +252,17 @@ class Card extends Base
 
         $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
         $this->getDataDicTypeNo();
+        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
+        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no'=>'FIRM_SCALE', 'status'=>1]);
         return view('', [
             'data'=>$data,
             'CardContact' => $CardContact,
+            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE' => $FIRM_SCALE,
         ]);
     }
 
