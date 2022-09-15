@@ -57,15 +57,6 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">业务</label>
-        <div class="layui-input-block">
-            {volist name='resources' id='vo' key='k'}
-            <input type="checkbox" name="business_tag[{$k}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
-            {/volist}
-        </div>
-    </div>
-
-    <div class="layui-form-item">
         <label class="layui-form-label">打招呼语</label>
         <div class="layui-input-inline" style="width:350px;">
             <input type="text" name="greet" autocomplete="off" class="layui-input" value="您好，这是我的名片，希望能与您深聊合作，期待回复。" >
@@ -101,8 +92,14 @@
         <label class="layui-form-label">业务类型</label>
         <div class="layui-input-block">
             {volist name="RESOURCES_TYPE" id="vo"}
-            <input type="checkbox" name="business_type[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            <input type="radio" name="business_type" data-id="{$vo['id']}" value="{$vo['data_no']}" title="{$vo['data_name']}" lay-filter="business_type" />
             {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block layui-form" id="business_subdivide" lay-filter="business_subdivide" >
         </div>
     </div>
 
@@ -181,8 +178,6 @@
             }
         });
 
-
-
         $(".layui-form").on('click', '.contact-add', function(){
             var _this = $(this);
             var contactLength = _this.parent().parent().parent().children('.contact').length;
@@ -249,6 +244,34 @@
                 $(':button').removeAttr('disabled');
             });
         });
+
+        form.on("radio(business_type)", function(data){
+            var _this = $(this)
+                , _id = _this.attr('data-id');
+
+            resources_type(_id, '')
+        })
+
+        function resources_type(_id, _str=''){
+            $.ajax({
+                url: "{:url('subject/resources_type')}",
+                dataType: 'json',
+                async: true,
+                data: {id: _id},
+                success: function (objPost) {
+                    if(objPost.code == 200){
+                        var _html = "";
+                        $.each(objPost.data, function(i, v){
+                            _html += "<input type='checkbox' name='business_subdivide["+v.data_no+"]' value='"+v.data_no+"' title='"+v.data_name+"' />";
+                        })
+                        $("#business_subdivide").html(_html)
+                        form.render('checkbox', 'business_subdivide');
+                    }
+                }
+            })
+        }
+
+
 
 
     });

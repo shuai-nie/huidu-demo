@@ -48,14 +48,7 @@
         </button>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">业务</label>
-        <div class="layui-input-block">
-            {volist name='resources' id='vo'}
-            <input type="checkbox" name="business_tag[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
-            {/volist}
-        </div>
-    </div>
+
 
     <div class="layui-form-item">
         <label class="layui-form-label">打招呼语</label>
@@ -122,6 +115,39 @@
     </div>
     {/if}
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            {volist name="RESOURCES_TYPE" id="vo"}
+            <input type="radio" name="business_type" data-id="{$vo['id']}" value="{$vo['data_no']}" title="{$vo['data_name']}" lay-filter="business_type" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block layui-form" id="business_subdivide" lay-filter="business_subdivide" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行业类型</label>
+        <div class="layui-input-block" >
+            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在地区</label>
+        <div class="layui-input-block" >
+            {volist name="RESOURCES_REGION" id="vo"}
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -181,12 +207,16 @@
 
         form.val('first', {
             'name': "{$data['name']}",
-            "logo":"{$data['logo']}",
-            "logo_watermark":"{$data['logo_watermark']}",
+            "logo": "{$data['logo']}",
+            "logo_watermark": "{$data['logo_watermark']}",
             "position" : "{$data['position']}",
-            "greet":"{$data['greet']}",
-            {volist name='data["business_tag"]' id='vo'}
-            "business_tag[{$vo}]":true,
+            "greet": "{$data['greet']}",
+            "business_type": "{$data['business_type']}",
+            {volist name='data["industry"]' id='vo'}
+            "industry[{$vo}]":true,
+            {/volist}
+            {volist name='data["region"]' id='vo'}
+            "region[{$vo}]":true,
             {/volist}
         });
 
@@ -233,13 +263,64 @@
             _this.parent().parent().remove();
         })
 
+        form.on("radio(business_type)", function(data){
+            var _this = $(this)
+                , _id = _this.attr('data-id');
+            resources_type(_id, '')
+        })
 
+        resources_type2()
 
+        function resources_type(_id, _str=''){
+            $.ajax({
+                url: "{:url('subject/resources_type')}",
+                dataType: 'json',
+                async: true,
+                data: {id: _id},
+                success: function (objPost) {
+                    if(objPost.code == 200){
+                        var _html = "";
+                        $.each(objPost.data, function(i, v){
+                            _html += "<input type='checkbox' name='business_subdivide["+v.data_no+"]' value='"+v.data_no+"' title='"+v.data_name+"' />";
+                        })
+                        $("#business_subdivide").html(_html)
+                        form.render('checkbox', 'business_subdivide');
+                    }
+                }
+            })
+        }
 
+        function resources_type2(){
+            var _id = $("input[name='business_type']:checked").attr('data-id');
+            $.ajax({
+                url: "{:url('subject/resources_type')}",
+                dataType: 'json',
+                async: true,
+                data: {id: _id},
+                success: function (objPost) {
+                    if(objPost.code == 200){
+                        var _html = "";
+                        $.each(objPost.data, function(i, v){
+                            _html += "<input type='checkbox' name='business_subdivide["+v.data_no+"]' value='"+v.data_no+"' title='"+v.data_name+"' />";
+                        })
+                        $("#business_subdivide").html(_html)
+                        form.render('checkbox', 'business_subdivide');
+                        form.val('first', {
+                        {volist name='data["business_subdivide"]' id='vo'}
+                        "business_subdivide[{$vo}]": true,
+                        {/volist}
+                        });
+                    }
+                }
+            })
+        }
 
         form.on('submit(submit)', function (data) {
-
-            Api.edit(data.field, function (res) {});
+            Api.edit(data.field, function (res) {
+                if(res.code == 400){
+                    layer.msg(res.msg)
+                }
+            });
         });
 
 

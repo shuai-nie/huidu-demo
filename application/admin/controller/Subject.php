@@ -857,7 +857,7 @@ class Subject extends Base
         $dataDic = model('dataDic');
         $info = $dataDic->where(['id'=>$id])->find();
         if(!empty($info)){
-            $data = $dataDic->selectType(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $info['data_no']], "id, data_name");
+            $data = $dataDic->selectType(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_top_id' => $info['data_no']], "id, data_name,data_no");
             return success_json("获取数据成功", $data);
         } else {
             return error_json("没有数据");

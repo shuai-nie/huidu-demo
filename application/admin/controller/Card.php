@@ -62,15 +62,6 @@ class Card extends Base
             $dataDic = model('DataDic');
 
             foreach ($data as $k => $v) {
-                $business_tag = explode('|', $v['business_tag']);
-                $business_arr = [];
-                foreach ($business_tag as $val_tag){
-                    if(is_numeric($val_tag)){
-                        $dataDicInfo = $dataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1,'data_no'=>$val_tag])->field('data_type_no,data_name')->find();
-                        $business_arr[] = $dataDicInfo['data_name'];
-                    }
-                }
-                $v['business_tag'] = implode('|', $business_arr);
                 $data[$k] = $v;
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
@@ -97,8 +88,7 @@ class Card extends Base
             $number      = GetRandStr(16);
             $pwd         = md5(md5(config('userPwd')) . $number);
 
-            $_post['business_tag']  = isset($_post['business_tag']) ? implode('|', $_post['business_tag']) : '';
-            $_post['business_type'] = isset($_post['business_type']) ? implode('|', $_post['business_type']) : '';
+            $_post['business_subdivide']      = isset($_post['business_subdivide']) ? implode('|', $_post['business_subdivide']) : '';
             $_post['industry']      = isset($_post['industry']) ? implode('|', $_post['industry']) : '';
             $_post['region']        = isset($_post['region']) ? implode('|', $_post['region']) : '';
 
@@ -191,11 +181,11 @@ class Card extends Base
         $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
         $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         return view('', [
-            'username'         => $str_name,
-            'RESOURCES_TYPE'   => $RESOURCES_TYPE,
-            'RESOURCES_REGION' => $RESOURCES_REGION,
-            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
-            'FIRM_SCALE'       => $FIRM_SCALE,
+            'username'            => $str_name,
+            'RESOURCES_TYPE'      => $RESOURCES_TYPE,
+            'RESOURCES_REGION'    => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE'    => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE'          => $FIRM_SCALE,
         ]);
     }
 
@@ -222,10 +212,11 @@ class Card extends Base
                     'contact_number' => $_post['tel'][$k]
                 ]);
             }
-            $_post['business_tag']  = implode('|', $_post['business_tag']);
-            $_post['business_type'] = isset($_post['business_type']) ? implode('|', $_post['business_type']) : '';
-            $_post['industry']      = isset($_post['industry']) ? implode('|', $_post['industry']) : '';
-            $_post['region']        = isset($_post['region']) ? implode('|', $_post['region']) : '';
+
+            $_post['business_subdivide'] = isset($_post['business_subdivide']) ? implode('|', $_post['business_subdivide']) : '';
+            $_post['industry']           = isset($_post['industry']) ? implode('|', $_post['industry']) : '';
+            $_post['region']             = isset($_post['region']) ? implode('|', $_post['region']) : '';
+            unset($_post['contact'], $_post['tel']);
 
             $state = false;
             Db::startTrans();
@@ -237,34 +228,37 @@ class Card extends Base
                     'nickname' => $_post['name'],
                     'head_url' => $_post['logo'],
                 ], ['id' => $data['uid']]);
+
                 Db::commit();
                 $state = true;
             }catch (Exception $e){
                 Db::rollback();
                 $state = false;
             }
+
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
-            return error_json(lang('EditSuccess', [lang('CARD')]) );
-
+            return error_json(lang('EditFail', [lang('CARD')]) );
         }
 
-        $data['business_tag'] = explode('|', $data['business_tag']);
+        $data['business_subdivide'] = explode('|', $data['business_subdivide']);
+        $data['industry'] = explode('|', $data['industry']);
+        $data['region'] = explode('|', $data['region']);
 
         $CardContact = model('CardContact')->where(['card_id'=>$data['id'],'status'=>1])->select();
         $this->getDataDicTypeNo();
-        $RESOURCES_TYPE = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_TYPE', 'status'=>1]);
-        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no'=>'RESOURCES_REGION', 'status'=>1]);
-        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no'=>'ADVERT_ATTRIBUTE', 'status'=>1]);
-        $FIRM_SCALE = model('DataDic')->selectType(['data_type_no'=>'FIRM_SCALE', 'status'=>1]);
+        $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
+        $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         return view('', [
-            'data'=>$data,
-            'CardContact' => $CardContact,
-            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'data'             => $data,
+            'CardContact'      => $CardContact,
+            'RESOURCES_TYPE'   => $RESOURCES_TYPE,
             'RESOURCES_REGION' => $RESOURCES_REGION,
             'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
-            'FIRM_SCALE' => $FIRM_SCALE,
+            'FIRM_SCALE'       => $FIRM_SCALE,
         ]);
     }
 
@@ -282,7 +276,7 @@ class Card extends Base
             $id = \request()->post('id');
             $name = \request()->post('name');
             $val = \request()->post('val');
-            $state = model('Card')->save([$name => $val], ['id' => $id]);
+            $state = model('Card')->isUpdate(true)->save([$name => $val], ['id' => $id]);
             if($state !== false) {
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
