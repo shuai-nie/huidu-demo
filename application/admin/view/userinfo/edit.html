@@ -78,8 +78,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">合作行业</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="industry[|]" value="|" title="不限" lay-filter="industry" />
             {volist name='ADVERT_ATTRIBUTE' id='vo'}
-            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" lay-filter="industry" class="layui-input" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
@@ -87,8 +88,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">业务地区</label>
         <div class="layui-input-block">
+            <input type="checkbox" name="region[|]" value="|" title="不限" lay-filter="region" lay-filter="region" />
             {volist name="RESOURCES_REGION" id="vo"}
-            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" lay-filter="region" />
             {/volist}
         </div>
     </div>
@@ -169,6 +171,14 @@
                 }
             });
         });
+
+        form.on('checkbox(industry)', function(data){
+            var _val = data.value;
+        })
+
+        form.on('checkbox(region)', function(data){
+            var _val = data.value;
+        })
 
 
     });

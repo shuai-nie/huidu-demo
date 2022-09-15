@@ -247,8 +247,9 @@ class Userinfo extends Base
         ]);
     }
 
-    public function edit($id)
+    public function edit()
     {
+        $id = request()->param('id');
         $UserModel = model("User");
         $UserDemand = model('UserDemand');
         $UserInfo = model('UserInfo')->where(['id' => $id])->find();
@@ -290,9 +291,16 @@ class Userinfo extends Base
         $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
         $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
         $FIRM_SCALE = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
-        $Demand['business_type'] = explode('|', $Demand['business_type']);
-        $Demand['industry'] = explode('|', $Demand['industry']);
-        $Demand['region'] = explode('|', $Demand['region']);
+        if($Demand){
+            $Demand['business_type'] = explode('|', $Demand['business_type']);
+            $Demand['industry'] = explode('|', $Demand['industry']);
+            $Demand['region'] = explode('|', $Demand['region']);
+        } else {
+            $Demand['business_type'] = [];
+            $Demand['industry'] = [];
+            $Demand['region'] = [];
+        }
+
 
         return view('', [
             'UserInfo'         => $UserArr,
