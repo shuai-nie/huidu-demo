@@ -269,11 +269,22 @@ class Userinfo extends Base
             Db::startTrans();
             try {
                 $UserModel->allowField(true)->isUpdate(true)->save($data, ['id' => $UserInfo->uid]);
-                $UserDemand->allowField(true)->isUpdate(true)->save([
-                    'business_type' => $data['business_type'],
-                    'industry'      => $data['industry'],
-                    'region'        => $data['region'],
-                ], ['uid' => $UserInfo->uid]);
+                $count = $UserDemand->where(['uid' => $UserInfo->uid])->count();
+                if($count == 0){
+                    $UserDemand->allowField(true)->isUpdate(false)->data([
+                        'uid'           => $UserInfo->uid,
+                        'business_type' => $data['business_type'],
+                        'industry'      => $data['industry'],
+                        'region'        => $data['region'],
+                    ])->save();
+                }else {
+                    $UserDemand->allowField(true)->isUpdate(true)->save([
+                        'business_type' => $data['business_type'],
+                        'industry'      => $data['industry'],
+                        'region'        => $data['region'],
+                    ], ['uid' => $UserInfo->uid]);
+                }
+
                 $state = true;
                 Db::commit();
             }catch (Exception $e) {
