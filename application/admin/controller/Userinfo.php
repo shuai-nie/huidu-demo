@@ -306,9 +306,13 @@ class Userinfo extends Base
             $Demand['business_type'] = explode('|', $Demand['business_type']);
             if($Demand['industry'] != '|'){
                 $Demand['industry'] = explode('|', $Demand['industry']);
+            }else{
+                $Demand['industry'] = ['|'];
             }
             if($Demand['region'] != '|') {
                 $Demand['region'] = explode('|', $Demand['region']);
+            }else{
+                $Demand['region'] = ['|'];
             }
         } else {
             $Demand['business_type'] = [];
