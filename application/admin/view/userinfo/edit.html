@@ -174,10 +174,32 @@
 
         form.on('checkbox(industry)', function(data){
             var _val = data.value;
+            if(_val == '|'){
+                form.val('first', {
+                {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                "industry[{$vo['data_no']}]": false,
+                    {/volist}
+                })
+            } else {
+                form.val('first', {
+                    "region[|]": false,
+                })
+            }
         })
 
         form.on('checkbox(region)', function(data){
             var _val = data.value;
+            if(_val == '|'){
+                form.val('first', {
+                {volist name="RESOURCES_REGION" id="vo"}
+                "region[{$vo['data_no']}]": false,
+                    {/volist}
+                })
+            } else {
+                form.val('first', {
+                    "region[|]": false,
+                })
+            }
         })
 
 

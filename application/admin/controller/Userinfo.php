@@ -178,8 +178,8 @@ class Userinfo extends Base
         if(request()->isPost()) {
             $data = request()->post();
             $data['business_type'] = isset($data['business_type']) ? implode('|', $data['business_type']) : '';
-            $data['industry'] = isset($data['industry']) ? implode('|', $data['industry']) : '';
-            $data['region'] = isset($data['region']) ? implode('|', $data['region']) : '';
+            $data['industry'] = isset($data['industry']) ? $data['industry'] != '|' ? implode('|', $data['industry']) : $data['industry'] : '';
+            $data['region'] = isset($data['region']) ? $data['region'] != '|' ?  implode('|', $data['region']) : $data['region'] : '';
 
             $number = GetRandStr(16);
             $data['pwd'] = md5(md5($data['pwd']). $number);
@@ -263,8 +263,8 @@ class Userinfo extends Base
             }
 
             $data['business_type'] = isset($data['business_type']) ? implode('|', $data['business_type']) : '';
-            $data['industry'] = isset($data['industry']) ? implode('|', $data['industry']) : '';
-            $data['region'] = isset($data['region']) ? implode('|', $data['region']) : '';
+            $data['industry'] = isset($data['industry']) ? $data['industry'] != '|' ? implode('|', $data['industry']) : $data['industry'] : '';
+            $data['region'] = isset($data['region']) ? $data['region'] != '|' ?  implode('|', $data['region']) : $data['region'] : '';
 
             Db::startTrans();
             try {
@@ -293,8 +293,12 @@ class Userinfo extends Base
         $FIRM_SCALE = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         if($Demand){
             $Demand['business_type'] = explode('|', $Demand['business_type']);
-            $Demand['industry'] = explode('|', $Demand['industry']);
-            $Demand['region'] = explode('|', $Demand['region']);
+            if($Demand['industry'] != '|'){
+                $Demand['industry'] = explode('|', $Demand['industry']);
+            }
+            if($Demand['region'] != '|') {
+                $Demand['region'] = explode('|', $Demand['region']);
+            }
         } else {
             $Demand['business_type'] = [];
             $Demand['industry'] = [];

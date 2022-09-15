@@ -80,7 +80,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="industry[|]" value="|" title="不限" lay-filter="industry" />
             {volist name='ADVERT_ATTRIBUTE' id='vo'}
-            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" lay-filter="industry" />
             {/volist}
         </div>
     </div>
@@ -90,7 +90,7 @@
         <div class="layui-input-block">
             <input type="checkbox" name="region[|]" value="|" title="不限" lay-filter="region" />
             {volist name="RESOURCES_REGION" id="vo"}
-            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" lay-filter="region" />
             {/volist}
         </div>
     </div>
@@ -157,6 +157,37 @@
                 }
             }, 'json')
         });
+
+        form.on('checkbox(industry)', function(data){
+            var _val = data.value;
+            if(_val == '|'){
+                form.val('first', {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "industry[{$vo['data_no']}]": false,
+                    {/volist}
+                })
+            } else {
+                form.val('first', {
+                    "industry[|]": false,
+                })
+            }
+        })
+
+        form.on('checkbox(region)', function(data){
+            var _val = data.value;
+            console.log(_val);
+            if(_val == '|'){
+                form.val('first', {
+                    {volist name="RESOURCES_REGION" id="vo"}
+                    "region[{$vo['data_no']}]": false,
+                    {/volist}
+                })
+            } else {
+                form.val('first', {
+                    "region[|]": false,
+                })
+            }
+        })
 
 
     });
