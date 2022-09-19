@@ -29,7 +29,7 @@
         <label class="layui-form-label">广告属性</label>
         <div class="layui-input-block">
             {volist name='attributeAll' id='vo'}
-            <input type="checkbox" name="attribute[{$vo['id']}]" value="{$vo['id']}" title="{$vo['data_name']}" />
+            <input type="checkbox" name="attribute[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
             {/volist}
         </div>
     </div>
