@@ -50,6 +50,7 @@ class Adsense extends Base
         25 => ['id'=>25, 'title'=>'合作页·右侧栏二'],
         26 => ['id'=>26, 'title'=>'合作页·右侧栏三'],
         31 => ['id'=>31, 'title'=>'搜索页·右侧栏一'],
+        41 => ['id'=>41, 'title'=>'联系我们'],
     ];
 
     protected function setCreateIdAttr()
