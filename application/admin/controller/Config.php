@@ -32,6 +32,7 @@ class Config extends Base
             $params = request()->param();
             $state = model('Config')->save($params);
             if ($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'configList:getConfigList']);
                 return success_json();
             }
             return error_json();
@@ -50,6 +51,7 @@ class Config extends Base
 
             $state = model('Config')->save($params, ['id'=>$id]);
             if ($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'configList:getConfigList']);
                 return success_json();
             }
             return error_json();
@@ -64,6 +66,7 @@ class Config extends Base
         if ($id != "") {
             $state = model('Config')->where(['id'=>$id])->delete();
             if ($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'configList:getConfigList']);
                 return success_json();
             }
             return error_json();

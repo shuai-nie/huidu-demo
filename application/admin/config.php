@@ -5,5 +5,6 @@ return [
     'CacheUrlApi' =>
         [
             'api/advert/removeAdCache' ,
+            'api/removerCache' , // 清除缓存
         ]
 ];

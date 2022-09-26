@@ -51,6 +51,7 @@ class HomeMenu extends Controller
             $data = \request()->post('');
             $state = $HomeMenu->save($data);
             if($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'HomeTypeAll:getTypeAll']);
                 return success_json(lang('CreateSuccess', [lang('HomeMenu')]));
             }
             return error_json(lang('CreateFail', [lang('HomeMenu')]));
@@ -73,6 +74,7 @@ class HomeMenu extends Controller
             $_post = \request()->post('');
             $state = $HomeMenu->save($_post, ['id'=>$id]);
             if($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'HomeTypeAll:getTypeAll']);
                 return success_json(lang('EditSuccess', [lang('HomeMenu')]));
             }
             return error_json(lang('EditFail', [lang('HomeMenu')]));
@@ -98,6 +100,7 @@ class HomeMenu extends Controller
         if($id > 0){
             $state = $HomeMenu->save(['status' => 0], ['id' => $id]);
             if($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'HomeTypeAll:getTypeAll']);
                 return success_json(lang('DeleteSuccess', [lang('HomeMenu')]));
             }
             return error_json(lang('DeleteFail', [lang('HomeMenu')]));

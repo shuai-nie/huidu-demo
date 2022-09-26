@@ -38,6 +38,7 @@ class Banner extends Base
             $data['update_id'] = getLoginUserId();
             $state = model("Banner")->save($data);
             if($state !== false){
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'bannerList:getBannerList']);
                 return success_json();
             }
             return error_json();
@@ -59,6 +60,7 @@ class Banner extends Base
             $data['update_id'] = getLoginUserId();
             $state = model("Banner")->save($data, ['id'=>$data['id']]);
             if($state !== false){
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'bannerList:getBannerList']);
                 return success_json(lang('EditSuccess', [lang('Bannel')]) );
             }
             return error_json();
@@ -80,6 +82,7 @@ class Banner extends Base
         $id = Request()->param('id');
         $state = model("Banner")->save(['status'=>0,'update_id'=>getLoginUserId()], ['id'=>$id]);
         if($state !== false){
+            request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'bannerList:getBannerList']);
             return success_json(lang('DeleteSuccess', [lang('Bannel')]) );
         }
         return success_json(lang('DeleteFail', [lang('Bannel')]) );

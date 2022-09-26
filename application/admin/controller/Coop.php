@@ -73,6 +73,7 @@ class Coop extends Base
             $data['username'] = $fuserInfo['username'];
             $state = model("Cooperation")->save($data);
             if($state !== false){
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'CooperationList:getCooperationList']);
                 return success_json(lang('CreateSuccess', [lang('COOPERATION')]));
             }
             return error_json(lang('CreateFail', [lang('COOPERATION')]));
@@ -103,6 +104,7 @@ class Coop extends Base
             $data['username'] = $fuserInfo['username'];
             $state = model("Cooperation")->save($data, ['id'=>$id]);
             if($state !== false){
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'CooperationList:getCooperationList']);
                 return success_json(lang('EditSuccess', [lang('COOPERATION')]) );
             }
             return error_json(lang('EditFail', [lang('COOPERATION')]));
@@ -127,6 +129,7 @@ class Coop extends Base
         $id = Request()->param('id');
         $state = model("Cooperation")->save(['status'=>0], ['id'=>$id]);
         if($state !== false){
+            request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'CooperationList:getCooperationList']);
             return success_json(lang('DeleteSuccess', [lang('COOPERATION')]) );
         }
         return error_json(lang('DeleteFail', [lang('COOPERATION')]) );

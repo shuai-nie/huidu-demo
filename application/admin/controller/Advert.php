@@ -112,7 +112,7 @@ class Advert extends Base
             }
 
             if($state != false) {
-                GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'ad_all_list']);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -168,7 +168,7 @@ class Advert extends Base
             }
 
             if($state != false) {
-                GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'ad_all_list']);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -192,7 +192,7 @@ class Advert extends Base
         $id = request()->param('id');
         $state = $Advert->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
         if ($state != false) {
-            GetHttp(config('CacheHost') . config('CacheUrlApi')['0']);
+            request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'ad_all_list']);
             return success_json("刪除成功");
         }
         return error_json("删除失败");
