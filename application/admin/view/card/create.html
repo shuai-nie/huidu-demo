@@ -121,6 +121,38 @@
         </div>
     </div>
 
+    <fieldset class="layui-elem-field">
+        <legend>业务需求</legend>
+        <div style="margin: 10px 10px 10px 10px">
+
+            <div class="layui-form-item" style="border-bottom: 1px solid red;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:90px;">期望业务分类</label>
+                    <div class="layui-input-block" style="margin-left: 120px;" >
+                        <select name="">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 90px;">期望业务地区</label>
+                    <div class="layui-input-block" style="margin-left: 10px;">
+                        <input type="checkbox" name="" value="" title="泰国" />
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width:90px;">期望合作行业</label>
+                    <div class="layui-input-block" style="margin-left:10px;">
+                        <input type="checkbox" name="" value="" title="金融" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <span class="layui-btn layui-btn-sm" style="margin: 0 0 10px 10px;" id="addYwxq">增加</span>
+    </fieldset>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -250,6 +282,18 @@
                 , _id = _this.attr('data-id');
 
             resources_type(_id, '')
+        })
+
+        let _addYwxqCount = 1;
+        $("#addYwxq").on('click', function(){
+            if(_addYwxqCount>=5){
+                layer.msg('业务需求只能添加五个', {icon:2})
+                return false
+            }
+
+            _addYwxqCount++
+
+            console.log(_addYwxqCount)
         })
 
         function resources_type(_id, _str=''){

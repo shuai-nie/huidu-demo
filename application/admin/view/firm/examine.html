@@ -71,9 +71,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">审核状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="1" title="审核中" />
-            <input type="radio" name="status" value="2" title="审核通过" />
-            <input type="radio" name="status" value="3" title="审核失败" />
+            <input type="radio" name="status" value="1" lay-filter="status" title="审核中" />
+            <input type="radio" name="status" value="2" lay-filter="status" title="审核通过" />
+            <input type="radio" name="status" value="3" lay-filter="status" title="审核失败" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide" id="status_msg">
+        <label class="layui-form-label">审核留言</label>
+        <div class="layui-input-inline" >
+            <input type="text" name="status_msg" class="layui-input" />
         </div>
     </div>
 
@@ -95,10 +102,25 @@ layui.use(['form','upload'], function () {
 
     //监听提交
     form.on('submit(submit)', function (data) {
+        let DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
         Api.edit(data.field, function (res) {
-            console.log(res);
+            if(res.code != 200) {
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            }
         });
     });
+
+    form.on('radio(status)', function(data){
+        let _val = data.value;
+        if(_val == 3){
+            $("#status_msg").removeClass('layui-hide');
+        }else {
+            $("#status_msg").addClass('layui-hide');
+        }
+    })
 
 
 });

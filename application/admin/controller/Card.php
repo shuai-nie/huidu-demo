@@ -76,6 +76,7 @@ class Card extends Base
      */
     public function create()
     {
+        $userDemand = model('userDemand');
         if(Request()->isPost()) {
             $_post        = Request()->post();
             $card         = model('card');

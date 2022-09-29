@@ -57,8 +57,31 @@ class UserFirm extends Base
 
         if(request()->isPost()) {
             $_post = request()->post();
+            $FirmRelevanceInfo = $FirmRelevance->where(['id'=>$id])->find();
+            $save = ['status' => $_post['status']];
+            if($_post['status'] == 2){
+                $save = ['status' => $_post['status'], 'feedback'=>$_post['status_msg']];
+                model('message')->isUpdate(false)->save([
+                    'base_type' => 1,
+                    'subdivide_type' => 10,
+                    'uid' => $FirmRelevanceInfo['uid'],
+                    'title' => '系统消息',
+                    'content' => '用户关联企业审核失败',
+                    'is_permanent' => 1,
+                ]);
+            }elseif ($_post['status'] == 1) {
+                $save = ['status' => $_post['status']];
+                model('message')->isUpdate(false)->save([
+                    'base_type' => 1,
+                    'subdivide_type' => 11,
+                    'uid' => $FirmRelevanceInfo['uid'],
+                    'title' => '系统消息',
+                    'content' => '用户关联企业审核失败',
+                    'is_permanent' => 1,
+                ]);
+            }
 
-            $state = $FirmRelevance->isUpdate(true)->save(['status'=>$_post['status']], ['id'=>$id]);
+            $state = $FirmRelevance->isUpdate(true)->save($save, ['id'=>$id]);
 
             if($state !== false) {
                 return  success_json('审核提交成功');

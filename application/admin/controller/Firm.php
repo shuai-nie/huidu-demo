@@ -147,15 +147,42 @@ class Firm extends Base
     {
         $id = request()->param('id');
         $Firm = model('Firm');
+        $info = $Firm->where(['id'=>$id])->find();
         if(request()->isPost()){
             $_post = request()->post();
-            $state = $Firm->isUpdate(true)->save(['status' => $_post['status']], ['id' => $id]);
+            $save = ['status' => $_post['status']];
+            if($_post['status'] == 2){
+                if($info['isweb'] == 1){
+                    $save = ['status' => $_post['status']];
+                    model('message')->isUpdate(false)->save([
+                        'base_type' => 1,
+                        'subdivide_type' => 11,
+                        'uid' => $info['create_id'],
+                        'title' => '系统消息',
+                        'content' => '企业审核成功',
+                        'is_permanent' => 1,
+                    ]);
+                }
+            }elseif ($_post['status'] == 3){
+                if($info['isweb'] == 1){
+                    $save = ['status' => $_post['status']];
+                    model('message')->isUpdate(false)->save([
+                        'base_type' => 1,
+                        'subdivide_type' => 11,
+                        'uid' => $info['create_id'],
+                        'title' => '系统消息',
+                        'content' => $_post['status_msg'],
+                        'is_permanent' => 1,
+                    ]);
+                }
+            }
+
+            $state = $Firm->isUpdate(true)->save($save, ['id' => $id]);
             if($state !== false) {
                 return success_json("提交成功");
             }
             return error_json("提交失败");
         }
-        $info = $Firm->where(['id'=>$id])->find();
         $info['business_type'] = explode('|', $info['business_type']);
         $info['industry'] = explode('|', $info['industry']);
         $info['region'] = explode('|', $info['region']);

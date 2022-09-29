@@ -53,9 +53,16 @@
     <div class="layui-form-item">
         <label class="layui-form-label">审核</label>
         <div class="layui-input-block" >
-            <input type="radio" name="status" value="0" title="未审核" />
-            <input type="radio" name="status" value="1" title="通过" />
-            <input type="radio" name="status" value="2" title="未通过" />
+            <input type="radio" name="status" lay-filter="status" value="0" title="未审核" />
+            <input type="radio" name="status" lay-filter="status" value="1" title="通过" />
+            <input type="radio" name="status" lay-filter="status" value="2" title="未通过" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide" id="status_msg">
+        <label class="layui-form-label">审核留言</label>
+        <div class="layui-input-inline" >
+            <input type="text" name="status_msg" class="layui-input" />
         </div>
     </div>
 
@@ -87,6 +94,15 @@ layui.use(['form','upload'], function () {
             }
         });
     });
+
+    form.on('radio(status)', function(data){
+        let _val = data.value;
+        if(_val == 2){
+            $("#status_msg").removeClass('layui-hide');
+        }else {
+            $("#status_msg").addClass('layui-hide');
+        }
+    })
 
     $(".layui-upload-img").on('click', function(){
         var _src = $(this).attr('src');
