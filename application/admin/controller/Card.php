@@ -76,9 +76,17 @@ class Card extends Base
      */
     public function create()
     {
-        $userDemand = model('userDemand');
+        //$userDemand = model('userDemand');
         if(Request()->isPost()) {
-            $_post        = Request()->post();
+            $_post = Request()->post();
+
+            $demand_business_type = $_post['demand_business_type'];
+            $demand_industry = $_post['demand_industry'];
+            $demand_region = $_post['demand_region'];
+            unset($_post['demand_business_type']);
+            unset($_post['demand_industry']);
+            unset($_post['demand_region']);
+
             $card         = model('card');
             $userModel    = model('user');
             $cardContact  = model('cardContact');
@@ -97,6 +105,7 @@ class Card extends Base
             $state        = false;
             $cardState    = false;
             $numberNumber = "";
+
             foreach ($_post['contact'] as $key => $val) {
                 if(is_numeric($val) && !empty($_post['tel'][$key])){
                 $map = array(
@@ -118,19 +127,20 @@ class Card extends Base
 
             Db::startTrans();
             $time = time();
-            $head_url = isset($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
+            $head_url = !empty($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
+
             try {
-                $packageInfo = $package->find(1);
-                $userModel->allowField(true)->isUpdate(false)->save([
+                $packageInfo = $package->where(['id'=>1])->find();
+                $userModel->allowField(true)->isUpdate(false)->data([
                     'username' => $_post['username'],
                     'head_url' => $head_url,
                     'pwd' => $pwd,
                     'salt' => $number,
                     'nickname' => $_post['name'],
-                ]);
-                $_post['uid'] = $userModel->id;
-                $userRecharge->isUpdate(false)->allowField(true)->save([
-                    'uid'               => $_post['uid'],
+                ])->save();
+                $uid = $userModel->id;
+                $userRecharge->isUpdate(false)->allowField(true)->data([
+                    'uid'               => $uid,
                     'package_id'        => $packageInfo['id'],
                     'flush'             => $packageInfo['flush'],
                     'publish'           => $packageInfo['publish'],
@@ -146,18 +156,21 @@ class Card extends Base
                     'start_time'        => $time,
                     'end_time'          => $time + 86400 * 30,
                     'remarks'           => '新建名片注册账号',
-                ]);
-                $userInfo->allowField(true)->isUpdate(false)->save([
-                    'uid' => $_post['uid'],
-                    'user_recharge_id' => $userRecharge->id
-                ]);
+                ])->save();
+                $userRechargeId = $userRecharge->id;
+                $userInfo->allowField(true)->isUpdate(false)->data([
+                    'uid' => $uid,
+                    'user_recharge_id' =>$userRechargeId
+                ])->save();
 
                 $_post['logo'] = $head_url;
+                $_post['uid'] = $uid;
 
-                $card->allowField(true)->data($_post)->save();
+                $card->allowField(true)->isUpdate(false)->data($_post)->save();
+                $card_id = $card->id;
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
-                        'card_id'        => $card->id,
+                        'card_id'        => $card_id,
                         'contact_type'   => $val,
                         'contact_number' => $_post['tel'][$key],
                     ));
@@ -165,6 +178,22 @@ class Card extends Base
                 if($contact){
                     $cardContact->isUpdate(false)->saveAll($contact, false);
                 }
+
+                $userDemandAll = [];
+//                var_dump($demand_business_type);
+//                foreach ($demand_business_type as $key =>  $value) {
+//                    array_push($userDemandAll, [
+//                        'uid' => $_post['uid'],
+//                        'business_type' => $value,
+//                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+//                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+//                    ]);
+//                }
+
+
+//                $userDemand->isUpdate(false)->saveAll($userDemandAll, false);
+//                echo $userDemand->getLastSql();
+
                 Db::commit();
                 $state = true;
             }catch (\Exception $e) {
