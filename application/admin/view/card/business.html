@@ -1,0 +1,333 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 20px 30px;">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-inline"  >
+                <input type="text" name="username" disabled value="{$username}" class="layui-input" style="background-color:#eee;" />
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label" >名称</label>
+            <div class="layui-input-inline">
+                <input type="text" autocomplete="off" class="layui-input" value="" style="background-color:#eee;">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width:30px;">职位</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" name="position" value="" style="background-color:#eee;" >
+            </div>
+        </div>
+    </div>
+
+    <fieldset class="layui-elem-field">
+        <legend>业务需求</legend>
+        <div id="yexuxuqiu">
+            <div style="margin: 10px 10px 10px 10px">
+
+                <div class="layui-form-item" style="border-bottom: 1px solid red;">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:90px;">期望业务分类</label>
+                        <div class="layui-input-block" style="margin-left: 120px;" >
+                            {volist name='RESOURCES_TYPE' id='vo'}
+                            <input type="radio" name="demand_business_type[0]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">期望业务地区</label>
+                        <div class="layui-input-block" style="margin-left: 10px;">
+                            <input type="checkbox" name="demand_industry[0][|]" lay-key="0" value="|" lay-filter="demand_industry" title="不限" />
+
+                            {volist name='RESOURCES_REGION' id='vo'}
+                            <input type="checkbox" name="demand_industry[0][{$vo['data_no']}]" lay-key="0" value="{$vo['data_no']}" lay-filter="demand_industry" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:90px;">期望合作行业</label>
+                        <div class="layui-input-block" style="margin-left:10px;">
+                            <input type="checkbox" name="demand_region[0][|]" lay-key="0" lay-filter="demand_region" value="|" title="不限" />
+                            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                            <input type="checkbox" name="demand_region[0][{$vo['data_no']}]" lay-key="0" lay-filter="demand_region" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
+
+                    <span class="layui-btn layui-btn-sm layui-btn-danger deleteYwxq" style="margin: 0 0 10px 10px;">删除</span>
+
+                </div>
+
+            </div>
+        </div>
+        <span class="layui-btn layui-btn-sm" style="margin: 0 0 10px 10px;" id="addYwxq">增加</span>
+    </fieldset>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+    //Demo
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            upload = layui.upload;
+
+        var upload_url = "{:url('admin/Upload/upload')}";
+        var upload_accept='images';
+        var upload_acceptMime='image/*';
+        var upload_size=3145728;
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#url").show();
+                    $("#url img").attr('src', res.url);
+                    $("input[name='logo']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#test1_logo_watermark'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#logo_watermark").show();
+                    $("#logo_watermark img").attr('src', res.url);
+                    $("input[name='logo_watermark']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+
+
+        form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            // $(':button').addClass(DISABLED);
+            // $(':button').attr('disabled', 'disabled');
+            Api.add(data.field, function (res) {
+                if(res.code == 400){
+                    layer.msg(res.msg)
+                }
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            });
+        });
+
+        form.on("radio(business_type)", function(data){
+            var _this = $(this)
+                , _id = _this.attr('data-id');
+
+            resources_type(_id, '')
+        })
+
+        let _addYwxqCount = 1;
+        $("#addYwxq").on('click', function(){
+
+
+            if (_addYwxqCount >= 5) {
+                layer.msg('业务需求只能添加五个', {offset: ['200px', '100px']})
+                return false
+            }
+            let _this = $(this), _html = "<div class=\"layui-form-item\" style=\"border-bottom: 1px solid red;\">\n" +
+                "                <div class=\"layui-form-item\">\n" +
+                "                    <label class=\"layui-form-label\" style=\"width:90px;\">期望业务分类</label>\n" +
+                "                    <div class=\"layui-input-block\" style=\"margin-left: 120px;\" >\n" +
+                {volist name='RESOURCES_TYPE' id='vo'}
+            "<input type=\"radio\" name=\"demand_business_type["+_addYwxqCount+"][{$vo['data_no']}]\" lay-key='"+_addYwxqCount+"' value=\"{$vo['data_no']}\" title=\"{$vo['data_name']}\" />" +
+            {/volist}
+            "                    </div>\n" +
+            "                </div>\n" +
+            "\n" +
+            "                <div class=\"layui-form-item\">\n" +
+            "                    <label class=\"layui-form-label\" style=\"width: 90px;\">期望业务地区</label>\n" +
+            "                    <div class=\"layui-input-block\" style=\"margin-left: 10px;\">\n" +
+            "                        <input type=\"checkbox\" lay-key='"+_addYwxqCount+"' name=\"demand_industry["+_addYwxqCount+"][|]\" value=\"|\" title=\"不限\" />\n" +
+            {volist name='RESOURCES_REGION' id='vo'}
+            "                        <input type=\"checkbox\" lay-key='"+_addYwxqCount+"' name=\"demand_industry["+_addYwxqCount+"][{$vo['data_no']}]\" value=\"{$vo['data_no']}\" lay-filter=\"demand_industry\" title=\"{$vo['data_name']}\" />\n" +
+            {/volist}
+            "                    </div>\n" +
+            "                </div>\n" +
+            "\n" +
+            "                <div class=\"layui-form-item\">\n" +
+            "                    <label class=\"layui-form-label\" style=\"width:90px;\">期望合作行业</label>\n" +
+            "                    <div class=\"layui-input-block\" style=\"margin-left:10px;\">\n" +
+            "                        <input type=\"checkbox\" lay-key='"+_addYwxqCount+"' name=\"demand_region["+_addYwxqCount+"][|]\" lay-filter=\"demand_region\" value=\"|\" title=\"不限\" />\n" +
+
+            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+            "<input type=\"checkbox\" lay-key='"+_addYwxqCount+"' name=\"demand_region["+_addYwxqCount+"][{$vo['data_no']}]\" lay-filter=\"demand_region\" value=\"{$vo['data_no']}\" title=\"{$vo['data_name']}\" />\n" +
+            {/volist}
+            "                    </div>\n" +
+            "                </div>\n" +
+            "<span class=\"layui-btn layui-btn-sm layui-btn-danger deleteYwxq\" style=\"margin: 0 0 10px 10px;\">删除</span>\n" +
+            "            </div>"
+            _this.prev().after(_html);
+            form.render();
+            _addYwxqCount++
+            console.log(_addYwxqCount)
+        })
+
+        $("#yexuxuqiu").on('click', ".deleteYwxq", function(){
+            let _this = $(this)
+            _this.parent().remove()
+        })
+
+        form.on('checkbox(demand_industry)', function(data){
+            let _val = data.value
+                , _this = $(this)
+                , _key = _this.attr('lay-key')
+
+            if(_val == '|'){
+                if(_key == 0){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[0][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+                if(_key == 1){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[1][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 2){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[2][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 3){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[3][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 4){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[4][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+
+            }else{
+                if(_key == 0){form.val("first", {"demand_industry[0][|]": false})}
+                if(_key == 1){form.val("first", {"demand_industry[1][|]": false})}
+                if(_key == 2){form.val("first", {"demand_industry[2][|]": false})}
+                if(_key == 3){form.val("first", {"demand_industry[3][|]": false})}
+                if(_key == 4){form.val("first", {"demand_industry[4][|]": false})}
+            }
+        })
+
+        form.on('checkbox(demand_region)', function(data){
+            let _val = data.value
+                , _this = $(this)
+                , _key = _this.attr('lay-key');
+            if(_val == '|'){
+                if(_key == 0){
+                    form.val("first", {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "demand_region[0][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+                if(_key == 1){
+                    form.val("first", {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "demand_region[1][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 2){
+                    form.val("first", {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "demand_region[2][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 3){
+                    form.val("first", {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "demand_region[3][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+
+                if(_key == 4){
+                    form.val("first", {
+                    {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                    "demand_region[4][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
+            }else{
+                if(_key == 0){form.val("first", {"demand_region[0][|]": false})}
+                if(_key == 1){form.val("first", {"demand_region[1][|]": false})}
+                if(_key == 2){form.val("first", {"demand_region[2][|]": false})}
+                if(_key == 3){form.val("first", {"demand_region[3][|]": false})}
+                if(_key == 4){form.val("first", {"demand_region[4][|]": false})}
+            }
+        })
+
+        function resources_type(_id, _str=''){
+            $.ajax({
+                url: "{:url('subject/resources_type')}",
+                dataType: 'json',
+                async: true,
+                data: {id: _id},
+                success: function (objPost) {
+                    if(objPost.code == 200){
+                        var _html = "";
+                        $.each(objPost.data, function(i, v){
+                            _html += "<input type='checkbox' name='business_subdivide["+v.data_no+"]' value='"+v.data_no+"' title='"+v.data_name+"' />";
+                        })
+                        $("#business_subdivide").html(_html)
+                        form.render('checkbox', 'business_subdivide');
+                    }
+                }
+            })
+        }
+
+
+
+
+    });
+</script>

@@ -76,13 +76,11 @@ class Card extends Base
      */
     public function create()
     {
-        //$userDemand = model('userDemand');
+//        $userDemand = model('userDemand');
         if(Request()->isPost()) {
             $_post = Request()->post();
 
-            $demand_business_type = $_post['demand_business_type'];
-            $demand_industry = $_post['demand_industry'];
-            $demand_region = $_post['demand_region'];
+
             unset($_post['demand_business_type']);
             unset($_post['demand_industry']);
             unset($_post['demand_region']);
@@ -179,20 +177,7 @@ class Card extends Base
                     $cardContact->isUpdate(false)->saveAll($contact, false);
                 }
 
-                $userDemandAll = [];
-//                var_dump($demand_business_type);
-//                foreach ($demand_business_type as $key =>  $value) {
-//                    array_push($userDemandAll, [
-//                        'uid' => $_post['uid'],
-//                        'business_type' => $value,
-//                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
-//                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
-//                    ]);
-//                }
 
-
-//                $userDemand->isUpdate(false)->saveAll($userDemandAll, false);
-//                echo $userDemand->getLastSql();
 
                 Db::commit();
                 $state = true;
@@ -212,6 +197,47 @@ class Card extends Base
         $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         return view('', [
             'username'            => $str_name,
+            'RESOURCES_TYPE'      => $RESOURCES_TYPE,
+            'RESOURCES_REGION'    => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE'    => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE'          => $FIRM_SCALE,
+        ]);
+    }
+
+    // 业务需求
+    public function business()
+    {
+        $userDemand = model('userDemand');
+        if($this->request->isPost()){
+
+            $_post = $this->request->post();
+            $demand_business_type = $_post['demand_business_type'];
+            $demand_industry = $_post['demand_industry'];
+            $demand_region = $_post['demand_region'];
+
+            $userDemandAll = [];
+            foreach ($demand_business_type as $key =>  $value) {
+                array_push($userDemandAll, [
+                    'uid' => 111,// $uid
+                    'business_type' => $value,
+                    'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+                    'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+                ]);
+            }
+            $state = $userDemand->isUpdate(false)->saveAll($userDemandAll, false);
+            if($state !== false){
+                return success_json('添加成功');
+            }
+            return error_json('添加失败');
+
+
+        }
+        $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
+        $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
+        return view('', [
+            'username' => 111,
             'RESOURCES_TYPE'      => $RESOURCES_TYPE,
             'RESOURCES_REGION'    => $RESOURCES_REGION,
             'ADVERT_ATTRIBUTE'    => $ADVERT_ATTRIBUTE,

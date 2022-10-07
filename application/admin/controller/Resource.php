@@ -764,10 +764,11 @@ class Resource extends Base
         return success_json('返回成功', ['sub'=>$subdivide]);
     }
 
-    public function examine($id)
+    public function examine()
     {
         $Resource = model('Resource');
-        $data = $Resource->find($id);
+        $id = $this->request->param('id');
+        $data = $Resource->where(['id'=>$id])->find();
         if(\request()->isPost()){
             $auth = \request()->post('auth');
             $feedback = \request()->post('feedback');

@@ -2,11 +2,10 @@
 {include file="moban/js"}
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
-
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" disabled placeholder="" autocomplete="off" class="layui-input" style="background-color:#eee;" >
+            <input type="text" disabled placeholder="" autocomplete="off" value="{$data['title']}" class="layui-input" style="background-color:#eee;" >
         </div>
     </div>
 
@@ -42,26 +41,31 @@
 
 <script>
 layui.use(['form','upload','laydate'], function () {
-    var form = layui.form,
-        upload = layui.upload,
-        laydate = layui.laydate;
+    var form = layui.form;
 
     //监听提交
     form.on('submit(submit)', function (data) {
+        console.log('sss');
+        var DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
+
         Api.edit(data.field, function (res) {
             if(res.code == 200) {
                 layer.msg(res.msg, {icon:1,offset: ['100px', '50px'],time: 5000});
             } else {
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
                 layer.msg(res.msg, {icon:5,offset: ['100px', '50px'],time: 5000});
             }
         });
+        return false
     });
 
-    form.verify({})
 
     form.val('first', {
-        "title" : "{$data['title']}",
         "auth" : "{$data['auth']}",
+        "feedback" : "{$data['feedback']}",
     })
 
 });

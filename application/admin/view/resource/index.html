@@ -128,7 +128,7 @@ layui.use(['table','form','dropdown'], function(){
                 case 2: return '<span class="layui-btn-xs layui-border-red">后台</span>';break;
                 default:return '-';break;
             }
-            }}
+        }}
         ,{field: 'ty', title: '类型',width:80,templet:function(d){
             switch (d.ty*1) {
                 {foreach name='ty' id='vy' key='k'}
@@ -226,7 +226,7 @@ layui.use(['table','form','dropdown'], function(){
                             }
                         });
                     }else if(menudata.id === 'edit'){
-                        UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                        UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', "{:lang('edit')}");
                     }else if(menudata.id === 'flush'){
                         $.post("{:url('flush')}?id=" + data['id'], data, function (res) {
                             if(res.code==200){
@@ -238,9 +238,9 @@ layui.use(['table','form','dropdown'], function(){
                             }
                         }, 'json');
                     }else if(menudata.id === 'card'){
-                        UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
+                        UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560, '#submit', '名片');
                     }else if(menudata.id === 'examine'){
-                        UI.openLayer("{:url('examine')}?id=" + data['id'], 700, 330);
+                        UI.openLayer("{:url('examine')}?id=" + data['id'], 700, 330, '#submit', '审核');
                     }
                 }
                 , align: 'right'

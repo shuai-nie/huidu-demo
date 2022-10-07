@@ -127,7 +127,8 @@
                     elem: this
                     , show: true
                     , data: [
-                        {title: '编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i> {{d.title}}</span>'}
+                        {title: '业务需求', id:'business', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i> {{d.title}}</span>'}
+                        , {title: '编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i> {{d.title}}</span>'}
                         , {title: '删除', id:'del', templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '}
                     ]
                     , click: function(menudata){
@@ -137,6 +138,8 @@
                                     table.reload("table");
                                 }
                             });
+                        }else if(menudata.id === 'business'){
+                            UI.openLayer("{:url('business')}?id="+data['id'], 750, 600, '#submit', "业务需求");
                         }else if(menudata.id === 'edit'){
                             UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', "{:lang('edit')}");
                         }
