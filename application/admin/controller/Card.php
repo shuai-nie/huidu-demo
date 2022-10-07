@@ -208,36 +208,77 @@ class Card extends Base
     public function business()
     {
         $userDemand = model('userDemand');
+        $card = model('card');
+        $user = model('user');
+        $id = \request()->param('id');
+        $cardInfo = $card->alias('A')->join($user->getTable().' B', 'A.uid=B.id', 'left')->where(['A.id'=>$id])->field('A.*,B.username')->find();
         if($this->request->isPost()){
 
             $_post = $this->request->post();
+
             $demand_business_type = $_post['demand_business_type'];
             $demand_industry = $_post['demand_industry'];
             $demand_region = $_post['demand_region'];
+            $demand_id = $_post['demand_id'];
 
             $userDemandAll = [];
+            $userDemandAllInsert = [];
+            $userDemand->isUpdate(true)->save(['status' => 0], ['uid' => $cardInfo['uid']]);
             foreach ($demand_business_type as $key =>  $value) {
-                array_push($userDemandAll, [
-                    'uid' => 111,// $uid
-                    'business_type' => $value,
-                    'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
-                    'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
-                ]);
+                if(isset($demand_id[$key])){
+                    array_push($userDemandAll, [
+                        'id' => $demand_id[$key],
+                        'business_type' => $value,
+                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+                        'status' => 1
+                    ]);
+                }else{
+                    array_push($userDemandAllInsert, [
+                        'uid' => $cardInfo['uid'],
+                        'business_type' => $value,
+                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+                    ]);
+                }
             }
-            $state = $userDemand->isUpdate(false)->saveAll($userDemandAll, false);
+
+            $state = false;
+            Db::startTrans();
+            try {
+                if(!empty($userDemandAll)) {
+                    $userDemand->isUpdate(true)->saveAll($userDemandAll);
+                }
+                if(!empty($userDemandAllInsert)) {
+                    $userDemand->isUpdate(false)->saveAll($userDemandAllInsert, false);
+                }
+                $state = true;
+                Db::commit();
+            }catch (Exception $e){
+                Db::rollback();
+            }
+
             if($state !== false){
-                return success_json('添加成功');
+                return success_json('提交成功');
             }
-            return error_json('添加失败');
-
-
+            return error_json('提交失败');
         }
+
         $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
         $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
         $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
         $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
+
+        $userDemandAll = $userDemand->where(['uid'=>$cardInfo['uid']])->select();
+        foreach ($userDemandAll as $key => $val){
+            $val['industry'] = $val['industry'] == '|' ? $val['industry'] :  explode('|', $val['industry']);
+            $val['region'] = $val['region'] == '|' ? $val['region'] :  explode('|', $val['region']);
+
+            $userDemandAll[$key] = $val;
+        }
         return view('', [
-            'username' => 111,
+            'cardInfo' => $cardInfo,
+            'userDemandAll' => $userDemandAll,
             'RESOURCES_TYPE'      => $RESOURCES_TYPE,
             'RESOURCES_REGION'    => $RESOURCES_REGION,
             'ADVERT_ATTRIBUTE'    => $ADVERT_ATTRIBUTE,

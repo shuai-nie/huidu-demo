@@ -6,7 +6,7 @@
         <div class="layui-inline">
             <label class="layui-form-label">账号</label>
             <div class="layui-input-inline"  >
-                <input type="text" name="username" disabled value="{$username}" class="layui-input" style="background-color:#eee;" />
+                <input type="text" name="username" disabled value="{$cardInfo['username']}" class="layui-input" style="background-color:#eee;" />
             </div>
         </div>
     </div>
@@ -15,14 +15,25 @@
         <div class="layui-inline">
             <label class="layui-form-label" >名称</label>
             <div class="layui-input-inline">
-                <input type="text" autocomplete="off" class="layui-input" value="" style="background-color:#eee;">
+                <input type="text" autocomplete="off" class="layui-input" value="{$cardInfo['name']}" style="background-color:#eee;">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label" style="width:30px;">职位</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" name="position" value="" style="background-color:#eee;" >
+                <input type="text" class="layui-input" name="position" value="{$cardInfo['position']}" style="background-color:#eee;" >
             </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" >公司</label>
+        <div class="layui-input-inline">
+            <select name="" >
+                <option value="">请选择</option>
+
+
+            </select>
         </div>
     </div>
 
@@ -30,7 +41,46 @@
         <legend>业务需求</legend>
         <div id="yexuxuqiu">
             <div style="margin: 10px 10px 10px 10px">
+                {if condition="$userDemandAll"}
+                {volist name="userDemandAll" id='vo' key='k'}
+                <div class="layui-form-item" style="border-bottom: 1px solid red;">
+                    <input type="hidden" name="demand_id[{$k}]" value="{$vo['id']}">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:90px;">期望业务分类</label>
+                        <div class="layui-input-block" style="margin-left: 120px;" >
+                            {volist name='RESOURCES_TYPE' id='vo'}
+                            <input type="radio" name="demand_business_type[{$k}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
 
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">期望业务地区</label>
+                        <div class="layui-input-block" style="margin-left: 10px;">
+                            <input type="checkbox" name="demand_industry[{$k}][|]" lay-key="{$k}" value="|" lay-filter="demand_industry" title="不限" />
+
+                            {volist name='RESOURCES_REGION' id='vo'}
+                            <input type="checkbox" name="demand_industry[{$k}][{$vo['data_no']}]" lay-key="{$k}" value="{$vo['data_no']}" lay-filter="demand_industry" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width:90px;">期望合作行业</label>
+                        <div class="layui-input-block" style="margin-left:10px;">
+                            <input type="checkbox" name="demand_region[{$k}][|]" lay-key="{$k}" lay-filter="demand_region" value="|" title="不限" />
+                            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+                            <input type="checkbox" name="demand_region[{$k}][{$vo['data_no']}]" lay-key="{$k}" lay-filter="demand_region" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+                            {/volist}
+                        </div>
+                    </div>
+                    {if condition="$k gt 1"}
+                    <span class="layui-btn layui-btn-sm layui-btn-danger deleteYwxq" style="margin: 0 0 10px 10px;">删除</span>
+                    {/if}
+
+                </div>
+                {/volist}
+                {else}
                 <div class="layui-form-item" style="border-bottom: 1px solid red;">
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width:90px;">期望业务分类</label>
@@ -65,6 +115,7 @@
                     <!--<span class="layui-btn layui-btn-sm layui-btn-danger deleteYwxq" style="margin: 0 0 10px 10px;">删除</span>-->
 
                 </div>
+                {/if}
 
             </div>
         </div>
@@ -141,12 +192,13 @@
             });
         });
 
-        let _addYwxqCount = 1;
+        let _addYwxqCount = 1+{$userDemandAll|count};
         $("#addYwxq").on('click', function(){
-            if (_addYwxqCount >= 5) {
+            if (_addYwxqCount > 5) {
                 layer.msg('业务需求只能添加五个', {offset: ['200px', '100px']})
                 return false
             }
+            _addYwxqCount++
             var _this = $(this)
             var _html = "<div class=\"layui-form-item\" style=\"border-bottom: 1px solid red;\">\n" +
                 "                <div class=\"layui-form-item\">\n" +
@@ -183,7 +235,7 @@
 
             _this.prev().children(':first-child').append(_html)
             form.render();
-            _addYwxqCount++
+
         })
 
         $("#yexuxuqiu").on('click', ".deleteYwxq", function(){
@@ -195,16 +247,12 @@
         form.on('checkbox(demand_industry)', function(data){
             let _val = data.value
                 , _this = $(this)
-                , _key = _this.attr('lay-key')
+                , _key = _this.attr('lay-key');
+
+            console.log(_val)
+            console.log(_key)
 
             if(_val == '|'){
-                if(_key == 0){
-                    form.val("first", {
-                    {volist name='RESOURCES_REGION' id='vo'}
-                    "demand_industry[0][{$vo['data_no']}]": false,
-                        {/volist}
-                });
-                }
                 if(_key == 1){
                     form.val("first", {
                     {volist name='RESOURCES_REGION' id='vo'}
@@ -237,13 +285,19 @@
                 });
                 }
 
-
+                if(_key == 5){
+                    form.val("first", {
+                    {volist name='RESOURCES_REGION' id='vo'}
+                    "demand_industry[5][{$vo['data_no']}]": false,
+                        {/volist}
+                });
+                }
             }else{
-                if(_key == 0){form.val("first", {"demand_industry[0][|]": false})}
                 if(_key == 1){form.val("first", {"demand_industry[1][|]": false})}
                 if(_key == 2){form.val("first", {"demand_industry[2][|]": false})}
                 if(_key == 3){form.val("first", {"demand_industry[3][|]": false})}
                 if(_key == 4){form.val("first", {"demand_industry[4][|]": false})}
+                if(_key == 5){form.val("first", {"demand_industry[4][|]": false})}
             }
         })
 
@@ -297,6 +351,30 @@
                 if(_key == 3){form.val("first", {"demand_region[3][|]": false})}
                 if(_key == 4){form.val("first", {"demand_region[4][|]": false})}
             }
+        })
+
+        form.val("first", {
+        {volist name="userDemandAll" id='vo' key='k'}
+            "demand_business_type[{$k}]": "{$vo['business_type']}",
+
+            {if condition="$vo['industry'] eq '|'"}
+                "demand_industry[{$k}][|]":true,
+            {else}
+            {volist name="vo['industry']" id='vo_in'}
+            "demand_industry[{$k}][{$vo_in}]":true,
+            {/volist}
+            {/if}
+
+            {if condition="$vo['region'] eq '|'"}
+            "demand_region[{$k}][|]":true,
+            {else}
+            {volist name="vo['region']" id='vo_ty'}
+            "demand_region[{$k}][{$vo_ty}]":true,
+            {/volist}
+            {/if}
+
+        {/volist}
+
         })
 
 
