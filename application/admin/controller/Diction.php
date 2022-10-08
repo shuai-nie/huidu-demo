@@ -56,9 +56,9 @@ class Diction extends Base
                 'data_icon'      => $_post['data_icon'],
                 'sort'           => $_post['sort'],
                 'data_top_id'    => $_post['data_top_id'],
-                'data_dark_icon' => $_post['data_dark_icon'],
-                'recommend_icon' => $_post['recommend_icon'],
-                'demand_icon'    => $_post['demand_icon'],
+                'data_dark_icon' => isset($_post['data_dark_icon']) ? $_post['data_dark_icon'] : '',
+                'recommend_icon' => isset($_post['recommend_icon']) ? $_post['recommend_icon'] : '' ,
+                'demand_icon'    => isset($_post['demand_icon']) ? $_post['demand_icon'] : '',
                 'url_keyword'    => $_post['url_keyword'],
             ])->save();
             if($state !== false) {
@@ -90,12 +90,12 @@ class Diction extends Base
                 'data_type_no'   => $_post['data_type_no'],
                 'data_type_name' => $this->data[$_post['data_type_no']]['title'],
                 'data_name'      => $_post['data_name'],
-                'data_icon'      => $_post['data_icon'],
+                'data_icon'      => isset($_post['data_icon']) ? $_post['data_icon'] : '',
                 'sort'           => $_post['sort'],
                 'data_top_id'    => $_post['data_top_id'],
-                'data_dark_icon' => $_post['data_dark_icon'],
-                'recommend_icon' => $_post['recommend_icon'],
-                'demand_icon'    => $_post['demand_icon'],
+                'data_dark_icon' => isset($_post['data_dark_icon']) ? $_post['data_dark_icon'] : '',
+                'recommend_icon' => isset($_post['recommend_icon']) ? $_post['recommend_icon'] : '' ,
+                'demand_icon'    => isset($_post['demand_icon']) ? $_post['demand_icon'] : '',
                 'url_keyword'    => $_post['url_keyword'],
             ]);
             if($state !== false) {

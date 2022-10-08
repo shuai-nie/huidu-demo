@@ -19,19 +19,14 @@
         <input type="hidden" name="logo" />
         <div class="layui-input-inline">
             <div class="layui-upload">
-                <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+                <button type="button" class="layui-btn" id="test1"><i class="layui-icon"></i>上传文件</button>
             </div>
         </div>
 
         <div class="layui-input-inline">
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo1">
+                <img class="layui-upload-img" id="demo1" {if condition="$info['logo']"} src="{$info['logo']}" {/if} >
                 <p id="demoText"></p>
-            </div>
-            <div style="width: 95px;">
-                <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                    <div class="layui-progress-bar" lay-percent=""></div>
-                </div>
             </div>
         </div>
 
@@ -40,7 +35,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业规模</label>
         <div class="layui-input-block">
-            <input type="text" name="scale" class="layui-input" />
+            <select name="scale" >
+                <option value="">请选择</option>
+                {volist name="FIRM_SCALE" id='sc'}
+                <option value="{$sc['data_no']}">{$sc['data_name']}</option>
+                {/volist}
+            </select>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业介绍</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入" name="intro" class="layui-textarea"></textarea>
+            <textarea placeholder="请输入" name="intro" class="layui-textarea">{$info['intro']}</textarea>
         </div>
     </div>
 
@@ -110,9 +110,8 @@ layui.use(['form','upload'], function () {
         ,size: upload_size
         ,done: function(res){
             if(res.code == 0) {
-                $("#url").show();
-                $("#url img").attr('src', res.url);
-                $("input[name='url']").val(res.url);
+                $("#demo1").attr('src', res.url);
+                $("input[name='logo']").val(res.url);
             } else {
                 layui.msg('网络问题稍后再试');
             }
@@ -136,7 +135,6 @@ layui.use(['form','upload'], function () {
         {volist name="$info['region']" id="ty"}
         "region[{$ty}]": true,
         {/volist}
-        "intro": "{$info['intro']}",
         "publicity_video": "{$info['publicity_video']}",
     })
 

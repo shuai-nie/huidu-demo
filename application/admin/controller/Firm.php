@@ -105,8 +105,19 @@ class Firm extends Base
         $id = request()->param('id');
         $Firm = model('Firm');
         if(request()->isPost()) {
-
             $_post = request()->post();
+
+            if(isset($_post['business_type'])){
+                $_post['business_type'] = implode('|', $_post['business_type']);
+            }
+
+            if(isset($_post['industry'])){
+                $_post['industry'] = implode('|', $_post['industry']);
+            }
+            if(isset($_post['region'])) {
+                $_post['region'] = implode('|', $_post['region']);
+            }
+
             $state = $Firm->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state !== false) {
                 return success_json("提交成功");

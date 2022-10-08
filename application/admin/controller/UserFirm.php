@@ -108,4 +108,18 @@ class UserFirm extends Base
         ]);
     }
 
+    public function create()
+    {
+        if(request()->isPost()){
+            $_post = request()->post();
+
+            return false;
+        }
+
+        $firmAll = model('firm')->where(['status' => 2])->select();
+        return view('', [
+            'firmAll' => $firmAll,
+        ]);
+    }
+
 }
