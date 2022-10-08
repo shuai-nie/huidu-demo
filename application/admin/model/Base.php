@@ -89,7 +89,7 @@ class Base extends Model
         Card::afterInsert(function($data){
             model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
-                'text' => '新建 Banner  ID:' . \model('Card')->getLastInsID() ,
+                'text' => '新建 用户名片  ID:' . \model('Card')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
             ], true)->save();
