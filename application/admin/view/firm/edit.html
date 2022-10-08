@@ -74,7 +74,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业介绍</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入" name="intro" class="layui-textarea">{$info['intro']}</textarea>
+            <textarea placeholder="请输入" id="container" name="intro" class="layui-textarea">{$info['intro']}</textarea>
         </div>
     </div>
 
@@ -92,6 +92,19 @@
 
 </form>
 
+<script type="text/javascript" src="/static/ueditor1433/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/ueditor.all.js"></script>
+<script type="text/javascript" src="/static/ueditor1433/lang/zh-cn/zh-cn.js"></script>
+<script>
+    var ue = UE.getEditor('container', {
+        initialFrameWidth: 'auto',    //初始化宽度
+        initialFrameHeight: 300,   //初始化高度
+        maximumWords: 1000,         //最大长度限制
+        autoHeightEnabled: false,  //禁止自动长高
+        autoFloatEnabled: false,    //禁止工具条漂浮
+        zIndex: "0"
+    });
+</script>
 
 <script>
 layui.use(['form','upload'], function () {
@@ -140,6 +153,7 @@ layui.use(['form','upload'], function () {
 
     //监听提交
     form.on('submit(submit)', function (data) {
+        data.field.intro = ue.getContent();
         Api.edit(data.field, function (res) {
             console.log(res);
         });
