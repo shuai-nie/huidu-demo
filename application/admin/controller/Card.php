@@ -79,7 +79,6 @@ class Card extends Base
         if(Request()->isPost()) {
             $_post = Request()->post();
 
-
             unset($_post['demand_business_type']);
             unset($_post['demand_industry']);
             unset($_post['demand_region']);
@@ -122,11 +121,11 @@ class Card extends Base
                 return error_json('联系方式有相同的，请修改['.$numberNumber."]");
             }
 
-            Db::startTrans();
+//            Db::startTrans();
             $time = time();
             $head_url = !empty($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
 
-            try {
+//            try {
                 $packageInfo = $package->where(['id'=>1])->find();
                 $userModel->allowField(true)->isUpdate(false)->data([
                     'username' => $_post['username'],
@@ -165,6 +164,7 @@ class Card extends Base
 
                 $card->allowField(true)->isUpdate(false)->data($_post)->save();
                 $card_id = $card->id;
+                $contact = [];
                 foreach ($_post['contact'] as $key => $val) {
                     array_push($contact, array(
                         'card_id'        => $card_id,
@@ -172,22 +172,22 @@ class Card extends Base
                         'contact_number' => $_post['tel'][$key],
                     ));
                 }
-                if($contact){
+                if(!empty($contact)){
                     $cardContact->isUpdate(false)->saveAll($contact, false);
                 }
 
-
-
-                Db::commit();
-                $state = true;
-            }catch (\Exception $e) {
-                Db::rollback();;
-            }
+//                Db::commit();
+//                $state = true;
+//            }catch (\Exception $e) {
+//                Db::rollback();;
+//            }
+            exit();
             if($state !== false){
                 return success_json('添加成功');
             }
             return error_json('添加失败');
         }
+
         $str_name = config('usernameRand') . date('y') . GetRandStr(6) . date('md');
         $this->getDataDicTypeNo();
         $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
