@@ -10,72 +10,72 @@ class Base extends Model
     protected static function init()
     {
         AuthMenu::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑菜单 ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         AuthMenu::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建菜单  ID:' . \model('AuthMenu')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         Admin::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 管理人员  ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         Admin::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 管理人员  ID:' . \model('Admin')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         Advertisement::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 广告  ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         Advertisement::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 广告  ID:' . \model('Advertisement')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         Banner::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 Banner  ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         Banner::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 Banner  ID:' . \model('Banner')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ])->save();
         });
 
         Card::afterUpdate(function($data){
@@ -317,20 +317,20 @@ class Base extends Model
         });
 
         UserRecharge::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 套餐充值记录 ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         UserRecharge::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 套餐充值记录  ID:' . \model('UserRecharge')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         Channel::afterUpdate(function($data){
@@ -339,7 +339,7 @@ class Base extends Model
                 'text' => '编辑 推广渠道 ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Channel::afterInsert(function($data){
@@ -348,7 +348,7 @@ class Base extends Model
                 'text' => '新建 推广渠道 ID:' . model('Channel')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Adsense::afterUpdate(function($data){
@@ -357,7 +357,7 @@ class Base extends Model
                 'text' => '编辑 广告位表 ID:'. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Adsense::afterInsert(function($data){
@@ -366,7 +366,7 @@ class Base extends Model
                 'text' => '新建 广告位表 ID:' . model('Adsense')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Advert::afterUpdate(function($data){
@@ -375,7 +375,7 @@ class Base extends Model
                 'text' => '编辑 广告 ID:'. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Advert::afterInsert(function($data){
@@ -384,7 +384,7 @@ class Base extends Model
                 'text' => '新建 广告 ID:' . model('Advert')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Content::afterInsert(function($data){
@@ -393,7 +393,7 @@ class Base extends Model
                 'text' => '新建 文章 ID:' . model('Content')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Content::afterUpdate(function($data){
@@ -402,7 +402,7 @@ class Base extends Model
                 'text' => '编辑 文章 ID:'. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         ContentCategory::afterInsert(function($data){
@@ -411,7 +411,7 @@ class Base extends Model
                 'text' => '新建 文章分类 ID:' . model('ContentCategory')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         ContentCategory::afterUpdate(function($data){
@@ -420,7 +420,7 @@ class Base extends Model
                 'text' => '编辑 文章分类 ID:'. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         ContentHot::afterInsert(function($data){
@@ -429,7 +429,7 @@ class Base extends Model
                 'text' => '新建 文章置顶 ID:' . model('ContentHot')->getLastInsID() . '='.$data['type'],
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         ContentHot::afterUpdate(function($data){
@@ -438,7 +438,7 @@ class Base extends Model
                 'text' => '编辑 文章置顶 ID:'. request()->param('id'). '='.$data['type'],
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Firm::afterInsert(function($data){
@@ -447,7 +447,7 @@ class Base extends Model
                 'text' => '新建 企业 ID:' . model('Firm')->getLastInsID(),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         Firm::afterUpdate(function($data){
@@ -456,7 +456,7 @@ class Base extends Model
                 'text' => '编辑 文章置顶 ID:'. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         FirmRelevance::afterUpdate(function($data){
@@ -465,7 +465,7 @@ class Base extends Model
                 'text' => '用户关联 审核 '. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         FirmRelevanceDatum::afterUpdate(function($data){
@@ -474,7 +474,7 @@ class Base extends Model
                 'text' => '用户关联企业·审核记录·资料表 '  ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
     }
 
