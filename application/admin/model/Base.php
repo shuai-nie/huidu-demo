@@ -84,7 +84,7 @@ class Base extends Model
                 'text' => '编辑 用户名片  ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
         Card::afterInsert(function($data){
             model('AdminLog')->isUpdate(false)->data([
@@ -92,7 +92,7 @@ class Base extends Model
                 'text' => '新建 Banner  ID:' . \model('Card')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ])->save();
+            ], true)->save();
         });
 
         CardContact::afterUpdate(function($data){
@@ -283,37 +283,37 @@ class Base extends Model
         });
 
         User::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 用户基础表 ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         User::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 用户基础表  ID:' . \model('User')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         UserInfo::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 用户信息 ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
         UserInfo::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 用户信息  ID:' . \model('UserInfo')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ], true)->save();
         });
 
         UserRecharge::afterUpdate(function($data){
