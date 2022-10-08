@@ -29,7 +29,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label" >公司</label>
         <div class="layui-input-inline">
-            <select name="firm_relevance" >
+            <select name="firm_relevance" lay-search="" >
                 <option value="">请选择</option>
                 {volist name='firmAll' id='vo'}
                 <option value="{$vo['id']}">{$vo['name']}</option>
