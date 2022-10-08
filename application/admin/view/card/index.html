@@ -1,4 +1,7 @@
 {include file="moban/bone_header"}
+<style>
+.layui-menu-body-title .layui-btn .layui-icon{border:1px solid #e0e0e0;padding:0;}
+</style>
 
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
@@ -127,8 +130,8 @@
                     elem: this
                     , show: true
                     , data: [
-                        {title: '业务需求', id:'business', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i> {{d.title}}</span>'}
-                        , {title: '编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i> {{d.title}}</span>'}
+                        {title: '业务需求', id:'business', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span>'}
+                        , {title: '编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span>'}
                         , {title: '删除', id:'del', templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span> '}
                     ]
                     , click: function(menudata){
