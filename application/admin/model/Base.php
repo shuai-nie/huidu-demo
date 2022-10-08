@@ -79,20 +79,20 @@ class Base extends Model
         });
 
         Card::afterUpdate(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 用户名片  ID:' . request()->param('id') ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ])->save();
         });
         Card::afterInsert(function($data){
-            model('AdminLog')->isUpdate(false)->save([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 Banner  ID:' . \model('Card')->getLastInsID() ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
-            ]);
+            ])->save();
         });
 
         CardContact::afterUpdate(function($data){
