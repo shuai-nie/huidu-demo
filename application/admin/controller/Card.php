@@ -121,11 +121,11 @@ class Card extends Base
                 return error_json('联系方式有相同的，请修改['.$numberNumber."]");
             }
 
-//            Db::startTrans();
+            Db::startTrans();
             $time = time();
             $head_url = !empty($_post['logo']) ? $_post['logo'] : 'http://file.huidu.io/avatar/5.png';
 
-//            try {
+            try {
                 $packageInfo = $package->where(['id'=>1])->find();
                 $userModel->allowField(true)->isUpdate(false)->data([
                     'username' => $_post['username'],
@@ -176,12 +176,12 @@ class Card extends Base
                     $cardContact->isUpdate(false)->saveAll($contact, false);
                 }
 
-//                Db::commit();
-//                $state = true;
-//            }catch (\Exception $e) {
-//                Db::rollback();;
-//            }
-            exit();
+                Db::commit();
+                $state = true;
+            }catch (\Exception $e) {
+                Db::rollback();;
+            }
+
             if($state !== false){
                 return success_json('添加成功');
             }
