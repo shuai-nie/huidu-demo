@@ -210,20 +210,22 @@ class Card extends Base
         $userDemand = model('userDemand');
         $card = model('card');
         $user = model('user');
+        $firmRelevance = model('firmRelevance');
+
         $id = \request()->param('id');
         $cardInfo = $card->alias('A')->join($user->getTable().' B', 'A.uid=B.id', 'left')->where(['A.id'=>$id])->field('A.*,B.username')->find();
         if($this->request->isPost()){
-
             $_post = $this->request->post();
-
             $demand_business_type = $_post['demand_business_type'];
             $demand_industry = $_post['demand_industry'];
             $demand_region = $_post['demand_region'];
             $demand_id = $_post['demand_id'];
+            $firm_relevance = $_post['firm_relevance'];
+            $time = time();
 
             $userDemandAll = [];
             $userDemandAllInsert = [];
-            $userDemand->isUpdate(true)->save(['status' => 0], ['uid' => $cardInfo['uid']]);
+
             foreach ($demand_business_type as $key =>  $value) {
                 if(isset($demand_id[$key])){
                     array_push($userDemandAll, [
@@ -246,6 +248,38 @@ class Card extends Base
             $state = false;
             Db::startTrans();
             try {
+
+                if(!empty($firm_relevance)){
+                    $RelevanceCount = $firmRelevance->where(['uid'=>$cardInfo['uid']])->count();
+                    if($RelevanceCount > 0 ){
+                        $firmRelevance->isUpdate(true)->save([
+                            'firm_id' => $firm_relevance,
+                            'status' => 1,
+                        ], ['uid'=>$cardInfo['uid']]);
+                    }else{
+                        $firmRelevance->isUpdate(false)->save([
+                            'uid' => $cardInfo['uid'],
+                            'firm_id' => $firm_relevance,
+                            'status' => 1,
+                            'feedback' => '',
+                            'create_time' => $time,
+                            'update_time' => $time,
+                        ]);
+                    }
+                    $RelevanceCount = $firmRelevance->where(['uid' => $cardInfo['uid'], 'firm_id' => $firm_relevance])->count();
+                    if($RelevanceCount == 0){
+                        model('message')->isUpdate(false)->save([
+                            'base_type' => 1,
+                            'subdivide_type' => 10,
+                            'uid' => $cardInfo['uid'],
+                            'title' => '系统消息',
+                            'content' => '用户关联企业审核成功',
+                            'is_permanent' => 1,
+                        ]);
+                    }
+                }
+
+                $userDemand->isUpdate(true)->save(['status' => 0], ['uid' => $cardInfo['uid']]);
                 if(!empty($userDemandAll)) {
                     $userDemand->isUpdate(true)->saveAll($userDemandAll);
                 }
@@ -270,6 +304,8 @@ class Card extends Base
         $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
 
         $userDemandAll = $userDemand->where(['uid'=>$cardInfo['uid']])->select();
+        $firmAll = model('firm')->where(['status'=>2])->select();
+        $firmRelevanceInfo = $firmRelevance->where(['uid'=>$cardInfo['uid']])->find();
         foreach ($userDemandAll as $key => $val){
             $val['industry'] = $val['industry'] == '|' ? $val['industry'] :  explode('|', $val['industry']);
             $val['region'] = $val['region'] == '|' ? $val['region'] :  explode('|', $val['region']);
@@ -278,11 +314,13 @@ class Card extends Base
         }
         return view('', [
             'cardInfo' => $cardInfo,
+            'firmAll' => $firmAll,
+            'firmRelevanceInfo' => $firmRelevanceInfo,
             'userDemandAll' => $userDemandAll,
-            'RESOURCES_TYPE'      => $RESOURCES_TYPE,
-            'RESOURCES_REGION'    => $RESOURCES_REGION,
-            'ADVERT_ATTRIBUTE'    => $ADVERT_ATTRIBUTE,
-            'FIRM_SCALE'          => $FIRM_SCALE,
+            'RESOURCES_TYPE' => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE' => $FIRM_SCALE,
         ]);
     }
 

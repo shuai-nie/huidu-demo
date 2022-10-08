@@ -29,10 +29,11 @@
     <div class="layui-form-item">
         <label class="layui-form-label" >公司</label>
         <div class="layui-input-inline">
-            <select name="" >
+            <select name="firm_relevance" >
                 <option value="">请选择</option>
-
-
+                {volist name='firmAll' id='vo'}
+                <option value="{$vo['id']}">{$vo['name']}</option>
+                {/volist}
             </select>
         </div>
     </div>
@@ -181,11 +182,13 @@
 
         form.on('submit(submit)', function (data) {
             var DISABLED = 'layui-btn-disabled';
-            // $(':button').addClass(DISABLED);
-            // $(':button').attr('disabled', 'disabled');
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
                 if(res.code == 400){
                     layer.msg(res.msg)
+                }else{
+                    layer.msg(res.msg, {icon:1, offset: ['150px', '150px']})
                 }
                 $(':button').removeClass(DISABLED);
                 $(':button').removeAttr('disabled');
@@ -354,6 +357,7 @@
         })
 
         form.val("first", {
+            "firm_relevance": "{$firmRelevanceInfo['firm_id']|default=''}",
         {volist name="userDemandAll" id='vo' key='k'}
             "demand_business_type[{$k}]": "{$vo['business_type']}",
 

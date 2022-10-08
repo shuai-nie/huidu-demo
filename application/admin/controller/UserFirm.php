@@ -76,7 +76,7 @@ class UserFirm extends Base
                     'subdivide_type' => 11,
                     'uid' => $FirmRelevanceInfo['uid'],
                     'title' => '系统消息',
-                    'content' => '用户关联企业审核失败',
+                    'content' => '用户关联企业审核成功',
                     'is_permanent' => 1,
                 ]);
             }
