@@ -84,7 +84,7 @@ class Userinfo extends Base
         $userInfo = model("UserInfo")->alias('A')
             ->join(model('UserRecharge')->getTable().' B', 'A.user_recharge_id=B.id', 'left')
             ->join(model('User')->getTable()." C", 'C.id=A.uid')
-            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish,B.view_demand,B.view_provide,B.view_provide_give,B.used_view_demand,B.used_view_provide')
+            ->field('A.*,B.package_id,C.username,C.nickname,B.used_flush,B.used_publish,B.view_demand,B.view_provide,B.view_provide_give,B.used_view_demand,B.used_view_provide,B.view_contacts')
             ->find(['A.id'=>$id]);
         if(Request()->isPost()) {
             $_post = Request()->param();
@@ -153,7 +153,7 @@ class Userinfo extends Base
                 'view_demand'       => $userInfo['view_demand'],
                 'view_provide_give' => $userInfo['view_provide_give'],
                 'view_provide'      => $userInfo['view_provide'],
-                'view_contact'      => $userInfo['view_contact'],
+                'view_contacts'      => $userInfo['view_contacts'],
                 'used_flush'        => $userInfo['used_flush'],
                 'used_publish'      => $userInfo['used_publish'],
                 'used_view_demand'  => $userInfo['used_view_demand'],

@@ -55,14 +55,22 @@
 
         //监听提交
         form.on('submit(submit)', function (data) {
+            var DISABLED = 'layui-btn-disabled';
+            $(':button').addClass(DISABLED);
+            $(':button').attr('disabled', 'disabled');
             if(data.field.package_id != 1){
                 if(data.field.time == '' || data.field.time == null) {
                     layer.msg('使用期限必填', {icon:2})
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
                     return false;
                 }
             }
             Api.add(data.field, function (res) {
-                console.log(res);
+                if(res.code != 200){
+                    $(':button').removeClass(DISABLED);
+                    $(':button').removeAttr('disabled');
+                }
             });
         });
     });
