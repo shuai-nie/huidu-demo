@@ -1,0 +1,227 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<style>
+.disabled{background-color:#e0e0e0;}
+.layui-form-label{width:140px;}
+.layui-upload-img {width: 92px;height: 92px;}
+.image5list{position:relative;float: left;margin-left:5px;}
+.image5list-delete{position:absolute;top: 0;left: 75px;color: red;border: 1px solid red;width: 15px;height: 15px;font-size: 12px;text-align:center;background-color: #e0e0e0;cursor: pointer;}
+</style>
+
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">用户名UID</label>
+            <div class="layui-input-inline" >
+                <input type="text" class="layui-input" id="uid" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-sm" id="uid-search">搜索</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">'登录账号/用户昵称</label>
+        <div class="layui-input-inline" style="width:300px">
+            <input type="text" class="layui-input disabled" value="" disabled />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">关联企业</label>
+        <div class="layui-input-inline" >
+            <select name="firm_id" lay-search >
+                <option value="">请选择</option>
+                {volist name='firmAll' id='vo'}
+                <option value="{$vo['id']}">{$vo['name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业官网</label>
+        <div class="layui-input-block" style="margin-left:170px">
+            <input type="text" name="type_1" class="layui-input " value="" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业官方社区群</label>
+        <div class="layui-input-block" style="margin-left:170px">
+            <input type="text" name="type_2" class="layui-input " value="" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">企业邮箱</label>
+        <div class="layui-input-block" style="margin-left:170px">
+            <input type="text" name="type_3" class="layui-input " value="" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">企业工牌/名片</label>
+            <div class="layui-input-inline" style="width:90px;">
+                <input type="hidden" name="type_4" />
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1" alt="" >
+                <p id="demoText"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">企业相关证件</label>
+            <div class="layui-input-inline" style="width:90px;">
+                <button type="button" class="layui-btn" id="test2">上传图片</button>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-upload-list" id="image5list" >
+                <div class="image5list">
+                    <img src="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" class="layui-upload-img">
+                    <div class="image5list-delete">X</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核</label>
+        <div class="layui-input-block" >
+            <input type="radio" name="status" lay-filter="status" value="0" title="未审核" />
+            <input type="radio" name="status" lay-filter="status" value="1" title="通过" checked />
+            <input type="radio" name="status" lay-filter="status" value="2" title="未通过" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide" id="status_msg">
+        <label class="layui-form-label">审核留言</label>
+        <div class="layui-input-inline" >
+            <input type="text" name="status_msg" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+layui.use(['form','upload'], function () {
+    let form = layui.form,
+        upload = layui.upload;
+
+    let upload_url = "{:url('admin/Upload/upload')}";
+    let upload_accept = 'images';
+    let upload_acceptMime = 'image/*';
+    let upload_size = 3145728;
+
+    upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#image_url img").attr('src', res.url);
+                $("input[name='img_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+
+        }
+        ,error: function(){
+            //请求异常回调
+        }
+    });
+
+    let uploadKey = 0;
+    upload.render({
+        elem: '#test2'
+        , url: upload_url
+        , accept: upload_accept
+        , acceptMime: upload_acceptMime
+        , size: upload_size
+        , done: function (res) {
+            if(res.code == 0) {
+                $("#image_url img").attr('src', res.url);
+                $("input[name='img_url']").val(res.url);
+                var _html = "<div class=\"image5list\">\n" +
+                    "                    <img src=\"" + res.url + "\" class=\"layui-upload-img\">\n" +
+                    " <input type='hidden' name='type_5[" + uploadKey + "]' value='" + res.url + "'  > " +
+                    "                    <div class=\"image5list-delete\">X</div>\n" +
+                    "                </div>";
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+
+        }
+        , error: function () {}
+    });
+
+
+
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        let DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
+        Api.edit(data.field, function (res) {
+            if(res.code != 200) {
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            }
+        });
+    });
+
+    form.on('radio(status)', function(data){
+        let _val = data.value;
+        if(_val == 2){
+            $("#status_msg").removeClass('layui-hide');
+        }else {
+            $("#status_msg").addClass('layui-hide');
+        }
+    })
+
+    $(".layui-upload-img").on('click', function(){
+        let _src = $(this).attr('src');
+        layer.open({
+            type: 1
+            , title: false
+            , content: "<img src='"+_src+"' width='400' height='400' />"
+        })
+    })
+
+    $("#image5list").on('click', '.image5list-delete', function(){
+        let _this = $(this);
+        _this.parent().remove();
+
+    })
+
+    $("#uid-search").on('click', function(){
+        let _uid = $("#uid").val();
+        if(_uid == null || _uid == ''){
+            layui.msg('uid不能为空')
+            return false
+        }
+    })
+
+
+});
+</script>
