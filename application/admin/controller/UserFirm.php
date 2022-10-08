@@ -114,14 +114,88 @@ class UserFirm extends Base
     {
         if(request()->isPost()){
             $_post = request()->post();
+            $firmRelevance = model('firmRelevance');
+            $firmRelevanceDatum = model('firmRelevanceDatum');
+            $count = $firmRelevance->where(['uid'=>$_post['uid'], 'status'=>[['=', 0], ['=', 1], 'or']])->count();
+            if($count > 0){
+                return error_json('用户已关联，请修改UID');
+            }
 
-            return false;
+            $userInfo = model('User')->where(['id'=>$_post['uid']])->find();
+            if(empty($userInfo)){
+                return error_json('用户不存在，请修改UID');
+            }
+
+            $firmRelevance->isUpdate(false)->data([
+                'uid' => $_post['uid'],
+                'firm_id' => $_post['firm_id'],
+                'status' => $_post['status']
+            ])->save();
+
+            if($_post['status'] == 1){
+                model('message')->isUpdate(false)->save([
+                    'base_type' => 1,
+                    'subdivide_type' => 11,
+                    'uid' => $_post['uid'],
+                    'title' => '系统消息',
+                    'content' => '用户关联企业审核成功',
+                    'is_permanent' => 1,
+                ]);
+                model('Card')->isUpdate(true)->save(['verify_status' => 1, 'firm_id' => $_post['firm_id']], ['uid' => $_post['uid']]);
+            }
+
+
+            $firmRelevanceId = $firmRelevance->id;
+            $time = time();
+
+            $save = [];
+            if(!empty($_post['type_1'])){
+                array_push($save, ['firm_relevance_id'=>$firmRelevanceId, 'type'=>1, 'value'=>$_post['type_1'], 'create_time' => $time]);
+            }
+
+            if(!empty($_post['type_2'])){
+                array_push($save, ['firm_relevance_id'=>$firmRelevanceId, 'type'=>2, 'value'=>$_post['type_2'], 'create_time' => $time]);
+            }
+
+            if(!empty($_post['type_3'])){
+                array_push($save, ['firm_relevance_id'=>$firmRelevanceId, 'type'=>3, 'value'=>$_post['type_3'], 'create_time' => $time]);
+            }
+
+            if(!empty($_post['type_4'])){
+                array_push($save, ['firm_relevance_id'=>$firmRelevanceId, 'type'=>4, 'value'=>$_post['type_4'], 'create_time' => $time]);
+            }
+
+            if(!empty($_post['type_5'])){
+                array_push($save, ['firm_relevance_id'=>$firmRelevanceId, 'type'=>5, 'value'=>$_post['type_5'], 'create_time' => $time]);
+            }
+            if(!empty($save)){
+                $firmRelevanceDatum->isUpdate(false)->allowField(true)->saveAll($save, false);
+            }
+            return success_json('提交成功');
         }
 
         $firmAll = model('firm')->where(['status' => 2])->select();
         return view('', [
             'firmAll' => $firmAll,
         ]);
+    }
+
+    public function get_user()
+    {
+        $uid = request()->param('uid');
+        $firmRelevance = model('firmRelevance');
+        $count = $firmRelevance->where(['uid'=>$uid, 'status'=>[['=', 0], ['=', 1], 'or']])->count();
+        if($count > 0){
+            return success_json('用户已关联，请修改UID');
+        }
+
+        $userInfo = model('User')->where(['id'=>$uid])->find();
+        if(!empty($userInfo)){
+            return error_json('用户可以关联', $userInfo);
+        }else{
+            return success_json('用户不存在，请修改UID');
+        }
+
     }
 
 }

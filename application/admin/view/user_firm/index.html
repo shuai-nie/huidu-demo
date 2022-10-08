@@ -30,6 +30,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-container" lay-event="add">{:lang('create')}</a>
+</script>
+
 <script type="text/html" id="barDemo">
     {{# if(d.status == 0){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="examine">审核</a>
@@ -68,6 +72,11 @@
             return false;
         })
 
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="add"){
+                UI.openLayer("{:url('create')}", 850, 600, '#submit', "添加");
+            }
+        });
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;

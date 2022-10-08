@@ -11,10 +11,10 @@
 <form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
 
     <div class="layui-form-item">
-        <div class="layui-inline">
+        <div class="layui-inline" style="margin-right: 0;">
             <label class="layui-form-label">用户名UID</label>
-            <div class="layui-input-inline" >
-                <input type="text" class="layui-input" id="uid" />
+            <div class="layui-input-inline"  style="margin-right: 0;">
+                <input type="text" name="uid" class="layui-input" id="uid" lay-verify="required" />
             </div>
         </div>
         <div class="layui-inline">
@@ -25,14 +25,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">'登录账号/用户昵称</label>
         <div class="layui-input-inline" style="width:300px">
-            <input type="text" class="layui-input disabled" value="" disabled />
+            <input type="text" class="layui-input disabled"  disabled id="nickname" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">关联企业</label>
         <div class="layui-input-inline" >
-            <select name="firm_id" lay-search >
+            <select name="firm_id" lay-search lay-verify="required" >
                 <option value="">请选择</option>
                 {volist name='firmAll' id='vo'}
                 <option value="{$vo['id']}">{$vo['name']}</option>
@@ -83,15 +83,18 @@
         <div class="layui-inline">
             <label class="layui-form-label">企业相关证件</label>
             <div class="layui-input-inline" style="width:90px;">
+                <input type="hidden" name="type_5" />
                 <button type="button" class="layui-btn" id="test2">上传图片</button>
             </div>
         </div>
         <div class="layui-inline">
             <div class="layui-upload-list" id="image5list" >
-                <div class="image5list">
-                    <img src="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" class="layui-upload-img">
-                    <div class="image5list-delete">X</div>
-                </div>
+                <img class="layui-upload-img" id="demo2" alt="" >
+<!--                <div class="image5list">-->
+<!--                    <img src="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" class="layui-upload-img">-->
+<!--                    <input type="hidden" name="type_5[0]" value="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" >-->
+<!--                    <div class="image5list-delete">X</div>-->
+<!--                </div>-->
 
             </div>
         </div>
@@ -100,9 +103,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">审核</label>
         <div class="layui-input-block" >
-            <input type="radio" name="status" lay-filter="status" value="0" title="未审核" />
             <input type="radio" name="status" lay-filter="status" value="1" title="通过" checked />
-            <input type="radio" name="status" lay-filter="status" value="2" title="未通过" />
+            <input type="radio" name="status" lay-filter="status" value="0" title="未审核" />
         </div>
     </div>
 
@@ -180,12 +182,12 @@ layui.use(['form','upload'], function () {
     //监听提交
     form.on('submit(submit)', function (data) {
         let DISABLED = 'layui-btn-disabled';
-        $(':button').addClass(DISABLED);
-        $(':button').attr('disabled', 'disabled');
+        // $(':button').addClass(DISABLED);
+        // $(':button').attr('disabled', 'disabled');
         Api.edit(data.field, function (res) {
             if(res.code != 200) {
-                $(':button').removeClass(DISABLED);
-                $(':button').removeAttr('disabled');
+                // $(':button').removeClass(DISABLED);
+                // $(':button').removeAttr('disabled');
             }
         });
     });
@@ -217,9 +219,23 @@ layui.use(['form','upload'], function () {
     $("#uid-search").on('click', function(){
         let _uid = $("#uid").val();
         if(_uid == null || _uid == ''){
-            layui.msg('uid不能为空')
+            layer.msg('uid不能为空', {icon:2, offset: ['200px', '200px']})
             return false
         }
+        $.ajax({
+            url: "{:url('get_user')}",
+            dataType: 'json',
+            async: true,
+            data: {uid: _uid},
+            success: function (objAjax) {
+                if(objAjax.code == 200){
+                    layer.msg(objAjax.msg, {icon:2, offset: ['200px', '200px']})
+                } else {
+                    $("#nickname").val(objAjax.data.username + '/' + objAjax.data.nickname)
+                    layer.msg(objAjax.msg, {icon:1, offset: ['200px', '200px']})
+                }
+            }
+        })
     })
 
 
