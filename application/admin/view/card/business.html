@@ -27,15 +27,26 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label" >公司</label>
-        <div class="layui-input-inline">
-            <select name="firm_relevance" lay-search="" >
-                <option value="">请选择</option>
-                {volist name='firmAll' id='vo'}
-                <option value="{$vo['id']}">{$vo['name']}</option>
-                {/volist}
-            </select>
+        <div class="layui-inline">
+            <label class="layui-form-label" >公司</label>
+            <div class="layui-input-inline">
+                <select name="firm_relevance" lay-search="" >
+                    <option value="">请选择</option>
+                    {volist name='firmAll' id='vo'}
+                    <option value="{$vo['id']}">{$vo['name']}</option>
+                    {/volist}
+                </select>
+            </div>
         </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label" >审核状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="relevance_status" value="0" title="未审核" />
+                <input type="radio" name="relevance_status" value="1" title="审核通过" />
+            </div>
+        </div>
+
     </div>
 
     <fieldset class="layui-elem-field">
@@ -131,54 +142,8 @@
 </form>
 
 <script>
-    //Demo
-    layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
-
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept='images';
-        var upload_acceptMime='image/*';
-        var upload_size=3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#url").show();
-                    $("#url img").attr('src', res.url);
-                    $("input[name='logo']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
-
-        upload.render({
-            elem: '#test1_logo_watermark'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#logo_watermark").show();
-                    $("#logo_watermark img").attr('src', res.url);
-                    $("input[name='logo_watermark']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-            }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
+    layui.use(['form'], function () {
+        var form = layui.form;
 
         form.on('submit(submit)', function (data) {
             var DISABLED = 'layui-btn-disabled';
@@ -358,6 +323,7 @@
 
         form.val("first", {
             "firm_relevance": "{$firmRelevanceInfo['firm_id']|default=''}",
+            "relevance_status": "{$firmRelevanceInfo['status']|default=''}",
         {volist name="userDemandAll" id='vo' key='k'}
             "demand_business_type[{$k}]": "{$vo['business_type']}",
 

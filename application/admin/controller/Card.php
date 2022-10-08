@@ -76,7 +76,6 @@ class Card extends Base
      */
     public function create()
     {
-//        $userDemand = model('userDemand');
         if(Request()->isPost()) {
             $_post = Request()->post();
 
@@ -216,32 +215,34 @@ class Card extends Base
         $cardInfo = $card->alias('A')->join($user->getTable().' B', 'A.uid=B.id', 'left')->where(['A.id'=>$id])->field('A.*,B.username')->find();
         if($this->request->isPost()){
             $_post = $this->request->post();
-            $demand_business_type = $_post['demand_business_type'];
-            $demand_industry = $_post['demand_industry'];
-            $demand_region = $_post['demand_region'];
-            $demand_id = $_post['demand_id'];
-            $firm_relevance = $_post['firm_relevance'];
+            $demand_business_type = isset($_post['demand_business_type']) ? $_post['demand_business_type'] : '' ;
+            $demand_industry = isset($_post['demand_industry']) ? $_post['demand_industry'] : '';
+            $demand_region = isset($_post['demand_region']) ? $_post['demand_region'] : '';
+            $demand_id = isset($_post['demand_id']) ? $_post['demand_id'] : '';
+            $firm_relevance = isset($_post['firm_relevance']) ? $_post['firm_relevance'] : '';
             $time = time();
 
             $userDemandAll = [];
             $userDemandAllInsert = [];
 
-            foreach ($demand_business_type as $key =>  $value) {
-                if(isset($demand_id[$key])){
-                    array_push($userDemandAll, [
-                        'id' => $demand_id[$key],
-                        'business_type' => $value,
-                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
-                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
-                        'status' => 1
-                    ]);
-                }else{
-                    array_push($userDemandAllInsert, [
-                        'uid' => $cardInfo['uid'],
-                        'business_type' => $value,
-                        'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
-                        'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
-                    ]);
+            if(!empty($demand_business_type) && !empty($demand_industry) && !empty($demand_region) ) {
+                foreach ($demand_business_type as $key =>  $value) {
+                    if(isset($demand_id[$key])){
+                        array_push($userDemandAll, [
+                            'id' => $demand_id[$key],
+                            'business_type' => $value,
+                            'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+                            'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+                            'status' => 1
+                        ]);
+                    }else{
+                        array_push($userDemandAllInsert, [
+                            'uid' => $cardInfo['uid'],
+                            'business_type' => $value,
+                            'industry' => $demand_industry[$key] == '|' ? '|' : implode('|', $demand_industry[$key]),
+                            'region' => $demand_region[$key] == '|' ? '|' : implode('|', $demand_region[$key]),
+                        ]);
+                    }
                 }
             }
 
@@ -254,20 +255,20 @@ class Card extends Base
                     if($RelevanceCount > 0 ){
                         $firmRelevance->isUpdate(true)->save([
                             'firm_id' => $firm_relevance,
-                            'status' => 1,
+                            'status' => $_post['relevance_status'],
                         ], ['uid'=>$cardInfo['uid']]);
                     }else{
                         $firmRelevance->isUpdate(false)->save([
                             'uid' => $cardInfo['uid'],
                             'firm_id' => $firm_relevance,
-                            'status' => 1,
+                            'status' => $_post['relevance_status'],
                             'feedback' => '',
                             'create_time' => $time,
                             'update_time' => $time,
                         ]);
                     }
                     $RelevanceCount = $firmRelevance->where(['uid' => $cardInfo['uid'], 'firm_id' => $firm_relevance])->count();
-                    if($RelevanceCount == 0){
+                    if($RelevanceCount == 0 && $_post['relevance_status'] == 1){
                         model('message')->isUpdate(false)->save([
                             'base_type' => 1,
                             'subdivide_type' => 10,
@@ -276,6 +277,7 @@ class Card extends Base
                             'content' => '用户关联企业审核成功',
                             'is_permanent' => 1,
                         ]);
+                        $card->isUpdate(true)->save(['verify_status' => 1, ['firm_id' => $firm_relevance]], ['uid' => $cardInfo['uid']]);
                     }
                 }
 

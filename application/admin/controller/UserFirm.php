@@ -50,14 +50,21 @@ class UserFirm extends Base
     public function examine()
     {
         $FirmRelevance = model('FirmRelevance');
-        $FirmRelevanceDatum = model('FirmRelevanceDatum');
+
         $Firm = model('Firm');
         $User = model('User');
+
         $id = request()->param('id');
+        $map = ['A.id'=>$id];
+        $info = $FirmRelevance->alias('A')
+            ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
+            ->join($User->getTable()." C", "A.uid=C.id", "left")
+            ->field('A.*,B.name as firm_name,C.username,C.nickname')
+            ->where($map)->order('id desc')->find();
 
         if(request()->isPost()) {
             $_post = request()->post();
-            $FirmRelevanceInfo = $FirmRelevance->where(['id'=>$id])->find();
+            $FirmRelevanceInfo = $FirmRelevance->where(['id' => $id])->find();
             $save = ['status' => $_post['status']];
             if($_post['status'] == 2){
                 $save = ['status' => $_post['status'], 'feedback'=>$_post['status_msg']];
@@ -70,7 +77,6 @@ class UserFirm extends Base
                     'is_permanent' => 1,
                 ]);
             }elseif ($_post['status'] == 1) {
-                $save = ['status' => $_post['status']];
                 model('message')->isUpdate(false)->save([
                     'base_type' => 1,
                     'subdivide_type' => 11,
@@ -79,9 +85,10 @@ class UserFirm extends Base
                     'content' => '用户关联企业审核成功',
                     'is_permanent' => 1,
                 ]);
+               model('Card')->isUpdate(true)->save(['verify_status' => 1, 'firm_id' => $info['firm_id']], ['uid' => $info['uid']]);
             }
 
-            $state = $FirmRelevance->isUpdate(true)->save($save, ['id'=>$id]);
+            $state = $FirmRelevance->isUpdate(true)->save($save, ['id' => $id]);
 
             if($state !== false) {
                 return  success_json('审核提交成功');
@@ -89,12 +96,7 @@ class UserFirm extends Base
             return error_json('审核提交失败');
         }
 
-        $map = ['A.id'=>$id];
-        $info = $FirmRelevance->alias('A')
-            ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
-            ->join($User->getTable()." C", "A.uid=C.id", "left")
-            ->field('A.*,B.name as firm_name,C.username,C.nickname')
-            ->where($map)->order('id desc')->find();
+        $FirmRelevanceDatum = model('FirmRelevanceDatum');
         $datumAll = $FirmRelevanceDatum->where(['firm_relevance_id'=>$id])->select();
         foreach ($datumAll as $k => $v) {
             if($v['type'] == 4 || $v['type'] == 5 ){

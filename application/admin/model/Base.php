@@ -292,7 +292,7 @@ class Base extends Model
             ]);
         });
         User::afterInsert(function($data){
-            model('AdminLog')->save([
+            model('AdminLog')->isUpdate(false)->save([
                 'uid' => getLoginUserId(),
                 'text' => '新建 用户基础表  ID:' . \model('User')->getLastInsID() ,
                 'url' => (string)url(),
@@ -300,10 +300,8 @@ class Base extends Model
             ]);
         });
 
-
-
         UserInfo::afterUpdate(function($data){
-            model('AdminLog')->save([
+            model('AdminLog')->isUpdate(false)->save([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 用户信息 ID:' . request()->param('id') ,
                 'url' => (string)url(),
@@ -311,7 +309,7 @@ class Base extends Model
             ]);
         });
         UserInfo::afterInsert(function($data){
-            model('AdminLog')->save([
+            model('AdminLog')->isUpdate(false)->save([
                 'uid' => getLoginUserId(),
                 'text' => '新建 用户信息  ID:' . \model('UserInfo')->getLastInsID() ,
                 'url' => (string)url(),
@@ -320,7 +318,7 @@ class Base extends Model
         });
 
         UserRecharge::afterUpdate(function($data){
-            model('AdminLog')->save([
+            model('AdminLog')->isUpdate(false)->save([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 套餐充值记录 ID:' . request()->param('id') ,
                 'url' => (string)url(),
@@ -328,7 +326,7 @@ class Base extends Model
             ]);
         });
         UserRecharge::afterInsert(function($data){
-            model('AdminLog')->save([
+            model('AdminLog')->isUpdate(false)->save([
                 'uid' => getLoginUserId(),
                 'text' => '新建 套餐充值记录  ID:' . \model('UserRecharge')->getLastInsID() ,
                 'url' => (string)url(),
@@ -337,7 +335,7 @@ class Base extends Model
         });
 
         Channel::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 推广渠道 ID:' . request()->param('id') ,
                 'url' => (string)url(),
@@ -346,7 +344,7 @@ class Base extends Model
         });
 
         Channel::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 推广渠道 ID:' . model('Channel')->getLastInsID(),
                 'url' => (string)url(),
@@ -355,7 +353,7 @@ class Base extends Model
         });
 
         Adsense::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 广告位表 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -364,7 +362,7 @@ class Base extends Model
         });
 
         Adsense::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 广告位表 ID:' . model('Adsense')->getLastInsID(),
                 'url' => (string)url(),
@@ -373,7 +371,7 @@ class Base extends Model
         });
 
         Advert::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 广告 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -382,7 +380,7 @@ class Base extends Model
         });
 
         Advert::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 广告 ID:' . model('Advert')->getLastInsID(),
                 'url' => (string)url(),
@@ -391,7 +389,7 @@ class Base extends Model
         });
 
         Content::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 文章 ID:' . model('Content')->getLastInsID(),
                 'url' => (string)url(),
@@ -400,7 +398,7 @@ class Base extends Model
         });
 
         Content::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 文章 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -409,7 +407,7 @@ class Base extends Model
         });
 
         ContentCategory::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 文章分类 ID:' . model('ContentCategory')->getLastInsID(),
                 'url' => (string)url(),
@@ -418,7 +416,7 @@ class Base extends Model
         });
 
         ContentCategory::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 文章分类 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -427,7 +425,7 @@ class Base extends Model
         });
 
         ContentHot::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 文章置顶 ID:' . model('ContentHot')->getLastInsID() . '='.$data['type'],
                 'url' => (string)url(),
@@ -436,7 +434,7 @@ class Base extends Model
         });
 
         ContentHot::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 文章置顶 ID:'. request()->param('id'). '='.$data['type'],
                 'url' => (string)url(),
@@ -445,7 +443,7 @@ class Base extends Model
         });
 
         Firm::afterInsert(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '新建 企业 ID:' . model('Firm')->getLastInsID(),
                 'url' => (string)url(),
@@ -454,7 +452,7 @@ class Base extends Model
         });
 
         Firm::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
                 'text' => '编辑 文章置顶 ID:'. request()->param('id'),
                 'url' => (string)url(),
@@ -463,25 +461,22 @@ class Base extends Model
         });
 
         FirmRelevance::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
-                'text' => '用户关联 审核 ID:'. request()->param('id'),
+                'text' => '用户关联 审核 '. request()->param('id'),
                 'url' => (string)url(),
                 'ip' => request()->ip(),
             ])->save();
         });
 
         FirmRelevanceDatum::afterUpdate(function($data){
-            model('AdminLog')->data([
+            model('AdminLog')->isUpdate(false)->data([
                 'uid' => getLoginUserId(),
-                'text' => '用户关联企业·审核记录·资料表 ID:'. request()->param('id') ,
+                'text' => '用户关联企业·审核记录·资料表 '  ,
                 'url' => (string)url(),
                 'ip' => request()->ip(),
             ])->save();
         });
-
-
-
     }
 
 
