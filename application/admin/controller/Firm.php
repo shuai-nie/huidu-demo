@@ -170,7 +170,7 @@ class Firm extends Base
                         'subdivide_type' => 11,
                         'uid' => $info['create_id'],
                         'title' => '系统消息',
-                        'content' => '企业审核成功',
+                        'content' => '恭喜您，您提交的企业关联信息已通过',
                         'is_permanent' => 1,
                     ]);
                 }
@@ -182,7 +182,7 @@ class Firm extends Base
                         'subdivide_type' => 11,
                         'uid' => $info['create_id'],
                         'title' => '系统消息',
-                        'content' => $_post['status_msg'],
+                        'content' => '企业入驻信息审核未通过，操作原因('.$_post['status_msg'].')',
                         'is_permanent' => 1,
                     ]);
                 }

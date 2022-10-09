@@ -73,7 +73,7 @@ class UserFirm extends Base
                     'subdivide_type' => 10,
                     'uid' => $FirmRelevanceInfo['uid'],
                     'title' => '系统消息',
-                    'content' => '用户关联企业审核失败',
+                    'content' => '用户关联企业审核未通过，操作原因('.$_post['status_msg'].')',
                     'is_permanent' => 1,
                 ]);
             }elseif ($_post['status'] == 1) {
@@ -82,7 +82,7 @@ class UserFirm extends Base
                     'subdivide_type' => 11,
                     'uid' => $FirmRelevanceInfo['uid'],
                     'title' => '系统消息',
-                    'content' => '用户关联企业审核成功',
+                    'content' => '恭喜您，您提交的企业关联信息已通过',
                     'is_permanent' => 1,
                 ]);
                model('Card')->isUpdate(true)->save(['verify_status' => 1, 'firm_id' => $info['firm_id']], ['uid' => $info['uid']]);
@@ -138,7 +138,7 @@ class UserFirm extends Base
                     'subdivide_type' => 11,
                     'uid' => $_post['uid'],
                     'title' => '系统消息',
-                    'content' => '用户关联企业审核成功',
+                    'content' => '恭喜您，您提交的企业关联信息已通过',
                     'is_permanent' => 1,
                 ]);
                 model('Card')->isUpdate(true)->save(['verify_status' => 1, 'firm_id' => $_post['firm_id']], ['uid' => $_post['uid']]);
