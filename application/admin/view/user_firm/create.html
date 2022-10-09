@@ -140,8 +140,8 @@ layui.use(['form','upload'], function () {
         ,size: upload_size
         ,done: function(res){
             if(res.code == 0) {
-                $("#image_url img").attr('src', res.url);
-                $("input[name='img_url']").val(res.url);
+                $("#demo1").attr('src', res.url);
+                $("input[name='type_4']").val(res.url);
             } else {
                 layui.msg('网络问题稍后再试');
             }
@@ -161,13 +161,13 @@ layui.use(['form','upload'], function () {
         , size: upload_size
         , done: function (res) {
             if(res.code == 0) {
-                $("#image_url img").attr('src', res.url);
-                $("input[name='img_url']").val(res.url);
-                var _html = "<div class=\"image5list\">\n" +
-                    "                    <img src=\"" + res.url + "\" class=\"layui-upload-img\">\n" +
-                    " <input type='hidden' name='type_5[" + uploadKey + "]' value='" + res.url + "'  > " +
-                    "                    <div class=\"image5list-delete\">X</div>\n" +
-                    "                </div>";
+                $("#demo2").attr('src', res.url);
+                $("input[name='type_5']").val(res.url);
+                // var _html = "<div class=\"image5list\">\n" +
+                //     "                    <img src=\"" + res.url + "\" class=\"layui-upload-img\">\n" +
+                //     " <input type='hidden' name='type_5[" + uploadKey + "]' value='" + res.url + "'  > " +
+                //     "                    <div class=\"image5list-delete\">X</div>\n" +
+                //     "                </div>";
             } else {
                 layui.msg('网络问题稍后再试');
             }
