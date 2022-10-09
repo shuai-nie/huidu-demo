@@ -59,6 +59,12 @@
                     default: return '-';
                 }
             }}
+            , {field: 'feedback', title: '反馈结果', width: 170, templet: function(d){
+                if(d.feedback){
+                    return d.feedback
+                }
+                return '-'
+            }}
             ,{fixed: 'right',title:'操作',width:90, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auto");
 
