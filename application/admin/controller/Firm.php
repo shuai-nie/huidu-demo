@@ -167,7 +167,7 @@ class Firm extends Base
                     $save = ['status' => $_post['status']];
                     model('message')->isUpdate(false)->save([
                         'base_type' => 1,
-                        'subdivide_type' => 11,
+                        'subdivide_type' => 7,
                         'uid' => $info['create_id'],
                         'title' => '系统消息',
                         'content' => '恭喜您，您提交的企业关联信息已通过',
@@ -179,7 +179,7 @@ class Firm extends Base
                     $save = ['status' => $_post['status']];
                     model('message')->isUpdate(false)->save([
                         'base_type' => 1,
-                        'subdivide_type' => 11,
+                        'subdivide_type' => 8,
                         'uid' => $info['create_id'],
                         'title' => '系统消息',
                         'content' => '企业入驻信息审核未通过，操作原因('.$_post['status_msg'].')',
