@@ -176,18 +176,14 @@ layui.use(['form','upload'], function () {
         , error: function () {}
     });
 
-
-
-
-    //监听提交
     form.on('submit(submit)', function (data) {
         let DISABLED = 'layui-btn-disabled';
-        // $(':button').addClass(DISABLED);
-        // $(':button').attr('disabled', 'disabled');
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
         Api.edit(data.field, function (res) {
             if(res.code != 200) {
-                // $(':button').removeClass(DISABLED);
-                // $(':button').removeAttr('disabled');
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
             }
         });
     });
