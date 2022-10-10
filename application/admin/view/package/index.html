@@ -40,8 +40,9 @@ td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
                 ,{field: 'view_provide', title: "查看提供资源<br/>的名片次数", width:130}
                 ,{field: 'view_provide_give', title: '查看提供资源<br/>的名片次数-赠送', width:140}
                 ,{field: 'view_demand', title: '查看需求资源<br/>的名片次数', width:130}
-                ,{field: 'level', title: '等级', width:120}
-                ,{field: 'image_url', title: '示意图', width:120,templet(d){
+                ,{field: 'view_contacts', title: '查看人脉圈<br/>的名片次数', width:130}
+                ,{field: 'level', title: '等级', width:80}
+                ,{field: 'image_url', title: '示意图', width:80,templet(d){
                     if(d.image_url){
                         return "<img src='"+d.image_url+"' width='30' height='30' />";
                     }
@@ -58,6 +59,7 @@ td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
             , method: "post"
             , page: true
             , cols: cols
+            , id: 'table'
             , parseData: function (res) {
                 return {
                     "code": 0,
@@ -84,7 +86,7 @@ td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
                     ]
                     ,click: function(menudata){
                         if(menudata.id === 'edit'){
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
+                            UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit', "{:lang('edit')}");
                         }else if(menudata.id ==='del'){
                             UI.delete(data['id'], function(res){
                                 if(res.code==200){
@@ -92,7 +94,7 @@ td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
                                 }
                             });
                         } else if(menudata.id === 'price') {
-                            UI.openLayer("{:url('price')}?id="+data['id'], 800, 450, '#submit');
+                            UI.openLayer("{:url('price')}?id="+data['id'], 800, 450, '#submit', '价格');
                         }
                     }
 

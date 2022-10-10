@@ -1,5 +1,11 @@
 {include file="moban/bone_header"}
 
+<style>
+    th .layui-table-cell{height:auto;overflow:visible;text-overflow:inherit;white-space:normal;}
+    td .layui-table-cell{height:30px;}
+    .layui-table-view .layui-table th{height:70px;overflow:visible;text-overflow:inherit;white-space:normal;}
+</style>
+
 <div class="layui-btn-container">
     <button class="layui-btn" data-type="create">添加</button>
 </div>
@@ -99,13 +105,16 @@
             ,{field: 'used_publish', title: '(总/用)发布',width:120,templet(d){
                 return d.publish  +"/"+ d.used_publish;
             }}
-            ,{field: 'view_demand', title: '(总/用)需求资源名片次数',width:120,templet(d){
+            ,{field: 'view_demand', title: '(总/用)需求<br/>资源名片次数',width:120,templet(d){
                 return d.view_demand  +"/"+  d.used_view_demand ;
             }}
-            ,{field: 'view_provide', title: '(总/用)名片次数',width:120,templet(d){
+            ,{field: 'view_provide', title: '(总/用)<br/>资源名片次数',width:120,templet(d){
                     return d.view_provide +"/"+ d.used_view_provide;
                 }}
-            ,{field: 'view_provide_give', title: '赠送',width:120,templet(d){
+            ,{field: 'view_contacts', title: '(总/用)<br/>人脉圈名片次数',width:130,templet(d){
+                    return d.view_contacts +"/"+ d.used_view_contacts;
+                }}
+            ,{field: 'view_provide_give', title: '赠送',width:80,templet(d){
                     return d.view_provide_give ;
                 }}
             ,{field: 'start_time', title: '开始时间',width:170,templet:function (d){

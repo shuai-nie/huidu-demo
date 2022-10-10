@@ -55,7 +55,7 @@ class Userinfo extends Base
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')
                 ->join(model('User')->getTable(). ' E', 'A.uid=E.id', 'left')
                 ->join([model('Channel')->getTable()=> 'F'], 'E.channel_id=F.id', 'left')
-                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id,E.isweb,F.channel_name')
+                ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.view_contacts,B.used_view_contacts,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id,E.isweb,F.channel_name')
                 ->limit($offset, $limit)->order($order)->select();
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')

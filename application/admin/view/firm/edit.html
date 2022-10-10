@@ -81,7 +81,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">宣传视频</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入" name="publicity_video" class="layui-textarea"></textarea>
+            <textarea placeholder="请输入" name="publicity_video" class="layui-textarea">{$info['publicity_video']}</textarea>
         </div>
     </div>
 
@@ -148,7 +148,6 @@ layui.use(['form','upload'], function () {
         {volist name="$info['region']" id="ty"}
         "region[{$ty}]": true,
         {/volist}
-        "publicity_video": "{$info['publicity_video']}",
     })
 
     //监听提交

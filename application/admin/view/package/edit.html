@@ -53,6 +53,13 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label" style="width:250px">查看人脉圈的名片次数</label>
+        <div class="layui-input-block" style="margin-left:250px;">
+            <input type="number" name="view_contacts" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">等级</label>
         <div class="layui-input-block">
             <input type="number" name="level" class="layui-input" />
@@ -119,6 +126,7 @@
             "view_provide" : "{$data['view_provide']}",
             "view_provide_give" : "{$data['view_provide_give']}",
             "view_demand" : "{$data['view_demand']}",
+            "view_contacts" : "{$data['view_contacts']}",
             "image_url" : "{$data['image_url']}",
             "type" : "{$data['type']}",
         })
