@@ -260,15 +260,6 @@ class Card extends Base
                             'firm_id' => $firm_relevance,
                             'status' => 0,
                         ], ['uid'=>$cardInfo['uid']]);
-                    }else{
-                        $firmRelevance->isUpdate(false)->save([
-                            'uid' => $cardInfo['uid'],
-                            'firm_id' => $firm_relevance,
-                            'status' => 0,
-                            'feedback' => '',
-                            'create_time' => $time,
-                            'update_time' => $time,
-                        ]);
                     }
 
                     $RelevanceCount = $firmRelevance->where(['uid' => $cardInfo['uid'], 'firm_id' => $firm_relevance])->count();
