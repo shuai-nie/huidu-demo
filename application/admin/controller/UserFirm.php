@@ -180,6 +180,63 @@ class UserFirm extends Base
         ]);
     }
 
+    public function edit()
+    {
+        $id = request()->param('id');
+        $Card = model('Card');
+        $firmRelevance = model('firmRelevance');
+        $firmRelevanceDatum = model('firmRelevanceDatum');
+        if(request()->isPost()){
+
+
+        }
+
+        $firmRelevanceInfo = $firmRelevance->where(['id'=>$id])->find();
+        $firmAll = model('firm')->where(['status' => 2])->select();
+        $userInfo = model('User')->where(['id'=>$firmRelevanceInfo['uid']])->find();
+        $firmRelevanceDatumAll = $firmRelevanceDatum->where(['firm_relevance_id' => $firmRelevanceInfo['id']])->select();
+        $DatumAll = [];
+        foreach ($firmRelevanceDatumAll as $val){
+            if($val['type'] == 1){
+                $DatumAll[1] = [
+                    $val['value'],
+                    $val['id'],
+                ];
+            }
+            if($val['type'] == 2){
+                $DatumAll[2] = [
+                    $val['value'],
+                    $val['id'],
+                ];
+            }
+            if($val['type'] == 3){
+                $DatumAll[3] = [
+                    $val['value'],
+                    $val['id'],
+                ];
+            }
+            if($val['type'] == 4){
+                $DatumAll[4] = [
+                    $val['value'],
+                    $val['id'],
+                ];
+            }
+            if($val['type'] == 5){
+                $DatumAll[5] = [
+                    $val['value'],
+                    $val['id'],
+                ];
+            }
+        }
+        return view('', [
+            'firmAll' => $firmAll,
+            'firmRelevanceInfo' => $firmRelevanceInfo,
+            'userInfo' => $userInfo,
+            'DatumAll' => $DatumAll
+        ]);
+
+    }
+
     public function get_user()
     {
         $uid = request()->param('uid');
