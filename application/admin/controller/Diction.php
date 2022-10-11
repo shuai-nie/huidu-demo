@@ -62,6 +62,8 @@ class Diction extends Base
                 'url_keyword'    => $_post['url_keyword'],
             ])->save();
             if($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'dataDicTypeList:*']);
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'listByDataTypeNos:listByDataTypeNos']);
                 return success_json(lang('CreateSuccess', [lang('Dictionaries')] ));
             }
             return error_json(lang('CreateFail', [lang('Dictionaries')]) );
@@ -99,6 +101,8 @@ class Diction extends Base
                 'url_keyword'    => $_post['url_keyword'],
             ]);
             if($state !== false) {
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'dataDicTypeList:*']);
+                request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'listByDataTypeNos:listByDataTypeNos']);
                 return success_json(lang('EditSuccess', [lang('Dictionaries')] ));
             }
             return error_json(lang('EditFail', [lang('Dictionaries')]) );

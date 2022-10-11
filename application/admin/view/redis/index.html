@@ -1,0 +1,37 @@
+{include file="moban/bone_header"}
+
+<form class="layui-form" action="" lay-filter="formDemo">
+    <fieldset class="layui-elem-field">
+        <legend>缓存列表</legend>
+        <div style="margin: 10px 10px 10px 10px">
+            {volist name='redisData' id='vo'}
+            <input type="checkbox" name="key[]" lay-skin="primary" title="{$vo['title']}" value="{$vo['key']}" >
+            {/volist}
+        </div>
+    </fieldset>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+        </div>
+    </div>
+</form>
+
+<script>
+layui.use(['form'], function(){
+    var form = layui.form;
+
+    form.on('submit(formDemo)', function(data){
+        $.post('', data.field, function(objPost){
+            if(objPost.code == 200){
+                layer.msg(objPost.msg);
+            }
+        }, 'json');
+        return false;
+
+    })
+
+
+});
+</script>
+{include file="moban/bone_footer"}

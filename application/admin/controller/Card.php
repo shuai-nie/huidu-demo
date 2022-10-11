@@ -50,14 +50,17 @@ class Card extends Base
             if(!empty($isweb)){
                 $map['A.isweb'] = $isweb;
             }
+            $firm = model('firm');
             $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
-                ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number')
+                ->join($firm->getTable().' D', 'A.firm_id=D.id', 'left')
+                ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number,D.name firm_name')
                 ->where($map)->order('A.id desc')->group('A.id')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
+                ->join($firm->getTable().' D', 'A.firm_id=D.id', 'left')
                 ->where($map)->group('A.id')->count();
             $dataDic = model('DataDic');
 
@@ -255,19 +258,24 @@ class Card extends Base
                     if($RelevanceCount > 0 ){
                         $firmRelevance->isUpdate(true)->save([
                             'firm_id' => $firm_relevance,
-                            'status' => $_post['relevance_status'],
+                            'status' => 0,
                         ], ['uid'=>$cardInfo['uid']]);
                     }else{
                         $firmRelevance->isUpdate(false)->save([
                             'uid' => $cardInfo['uid'],
                             'firm_id' => $firm_relevance,
-                            'status' => $_post['relevance_status'],
+                            'status' => 0,
                             'feedback' => '',
                             'create_time' => $time,
                             'update_time' => $time,
                         ]);
                     }
+
                     $RelevanceCount = $firmRelevance->where(['uid' => $cardInfo['uid'], 'firm_id' => $firm_relevance])->count();
+                    if($cardInfo['firm_id'] !=  $firm_relevance){
+                        $card->isUpdate(true)->save(['firm_id' => $firm_relevance,'verify_status' => 0], ['uid' => $cardInfo['uid']]);
+                    }
+
                     if($RelevanceCount == 0 && $_post['relevance_status'] == 1){
                         model('message')->isUpdate(false)->save([
                             'base_type' => 1,
@@ -277,7 +285,7 @@ class Card extends Base
                             'content' => '用户关联企业审核成功',
                             'is_permanent' => 1,
                         ]);
-                        $card->isUpdate(true)->save(['verify_status' => 1, ['firm_id' => $firm_relevance]], ['uid' => $cardInfo['uid']]);
+
                     }
                 }
 
