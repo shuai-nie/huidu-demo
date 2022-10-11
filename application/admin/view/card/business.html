@@ -322,8 +322,7 @@
         })
 
         form.val("first", {
-            "firm_relevance": "{$firmRelevanceInfo['firm_id']|default=''}",
-            "relevance_status": "{$firmRelevanceInfo['status']|default=''}",
+            "firm_relevance": "{$cardInfo['firm_id']|default=''}",
         {volist name="userDemandAll" id='vo' key='k'}
             "demand_business_type[{$k}]": "{$vo['business_type']}",
 

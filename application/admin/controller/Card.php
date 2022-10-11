@@ -306,7 +306,6 @@ class Card extends Base
 
         $userDemandAll = $userDemand->where(['uid'=>$cardInfo['uid']])->select();
         $firmAll = model('firm')->where(['status'=>2])->select();
-        $firmRelevanceInfo = $firmRelevance->where(['uid'=>$cardInfo['uid']])->find();
         foreach ($userDemandAll as $key => $val){
             $val['industry'] = $val['industry'] == '|' ? $val['industry'] :  explode('|', $val['industry']);
             $val['region'] = $val['region'] == '|' ? $val['region'] :  explode('|', $val['region']);
@@ -316,7 +315,6 @@ class Card extends Base
         return view('', [
             'cardInfo' => $cardInfo,
             'firmAll' => $firmAll,
-            'firmRelevanceInfo' => $firmRelevanceInfo,
             'userDemandAll' => $userDemandAll,
             'RESOURCES_TYPE' => $RESOURCES_TYPE,
             'RESOURCES_REGION' => $RESOURCES_REGION,
