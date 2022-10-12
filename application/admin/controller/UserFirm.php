@@ -1,6 +1,8 @@
 <?php
 namespace app\admin\controller;
 
+use think\Db;
+
 class UserFirm extends Base
 {
     public function _initialize()
@@ -187,8 +189,79 @@ class UserFirm extends Base
         $firmRelevance = model('firmRelevance');
         $firmRelevanceDatum = model('firmRelevanceDatum');
         if(request()->isPost()){
+            $_post = request()->post();
 
+            $state = false;
+            Db::startTrans();
 
+            try {
+                $firmRelevance->isUpdate(true)->save([
+                    'firm_id' => $_post['firm_id'],
+                    'status' => $_post['status'],
+                    'feedback' => $_post['status_msg'],
+                ], ['id' => $id]);
+
+                if($_post['status'] == 1){
+                    $Card->isUpdate(true)->save(['verify_status' => 1], ['uid' => $_post['uid']]);
+                }else{
+                    $Card->isUpdate(true)->save(['verify_status'=>0], ['uid' => $_post['uid']]);
+                }
+
+                if(isset($_post['type_1']) && !empty($_post['type_1'])){
+                    $count = $firmRelevanceDatum->where(['firm_relevance_id' => $id, 'type' => 1])->count();
+                    if($count > 0 ){
+                        $firmRelevanceDatum->isUpdate(true)->save(['value'=>$_post['type_1']], ['firm_relevance_id' => $id, 'type' => 1]);
+                    }else{
+                        $firmRelevanceDatum->isUpdate(false)->data(['firm_relevance_id' => $id, 'type' => 1, 'value' => $_post['type_1']])->save();
+                    }
+                }
+
+                if(isset($_post['type_2']) && !empty($_post['type_2'])){
+                    $count = $firmRelevanceDatum->where(['firm_relevance_id' => $id, 'type' => 2])->count();
+                    if($count > 0 ){
+                        $firmRelevanceDatum->isUpdate(true)->save(['value'=>$_post['type_2']], ['firm_relevance_id' => $id, 'type' => 2]);
+                    }else{
+                        $firmRelevanceDatum->isUpdate(false)->data(['firm_relevance_id' => $id, 'type' => 2, 'value' => $_post['type_2']])->save();
+                    }
+                }
+
+                if(isset($_post['type_3']) && !empty($_post['type_3'])){
+                    $count = $firmRelevanceDatum->where(['firm_relevance_id' => $id, 'type' => 3])->count();
+                    if($count > 0 ){
+                        $firmRelevanceDatum->isUpdate(true)->save(['value'=>$_post['type_3']], ['firm_relevance_id' => $id, 'type' => 3]);
+                    }else{
+                        $firmRelevanceDatum->isUpdate(false)->data(['firm_relevance_id' => $id, 'type' => 3, 'value' => $_post['type_3']])->save();
+                    }
+                }
+
+                if(isset($_post['type_4']) && !empty($_post['type_4'])){
+                    $count = $firmRelevanceDatum->where(['firm_relevance_id' => $id, 'type' => 4])->count();
+                    if($count > 0 ){
+                        $firmRelevanceDatum->isUpdate(true)->save(['value'=>$_post['type_4']], ['firm_relevance_id' => $id, 'type' => 4]);
+                    }else{
+                        $firmRelevanceDatum->isUpdate(false)->data(['firm_relevance_id' => $id, 'type' => 4, 'value' => $_post['type_4']])->save();
+                    }
+                }
+
+                if(isset($_post['type_5']) && !empty($_post['type_5'])){
+                    $count = $firmRelevanceDatum->where(['firm_relevance_id' => $id, 'type' => 5])->count();
+                    if($count > 0 ){
+                        $firmRelevanceDatum->isUpdate(true)->save(['value'=>$_post['type_5']], ['firm_relevance_id' => $id, 'type' => 5]);
+                    }else{
+                        $firmRelevanceDatum->isUpdate(false)->data(['firm_relevance_id' => $id, 'type' => 5, 'value' => $_post['type_5']])->save();
+                    }
+                }
+                $state = true;
+
+                Db::commit();
+            }catch (Exception $e) {
+                Db::rollback();
+            }
+
+            if($state != false) {
+                return success_json('提交成功');
+            }
+            return error_json('提交失败');
         }
 
         $firmRelevanceInfo = $firmRelevance->where(['id'=>$id])->find();

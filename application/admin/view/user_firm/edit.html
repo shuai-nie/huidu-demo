@@ -41,21 +41,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label">企业官网</label>
         <div class="layui-input-block" style="margin-left:170px">
-            <input type="text" name="type_1" class="layui-input " value="" />
+            <input type="text" name="type_1" class="layui-input " value="{$DatumAll[1][0]|default=''}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">企业官方社区群</label>
         <div class="layui-input-block" style="margin-left:170px">
-            <input type="text" name="type_2" class="layui-input " value="" />
+            <input type="text" name="type_2" class="layui-input " value="{$DatumAll[2][0]|default=''}" />
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">企业邮箱</label>
         <div class="layui-input-block" style="margin-left:170px">
-            <input type="text" name="type_3" class="layui-input " value="" />
+            <input type="text" name="type_3" class="layui-input " value="{$DatumAll[3][0]|default=''}" />
         </div>
     </div>
 
@@ -63,13 +63,13 @@
         <div class="layui-inline">
             <label class="layui-form-label">企业工牌/名片</label>
             <div class="layui-input-inline" style="width:90px;">
-                <input type="hidden" name="type_4" />
+                <input type="hidden" name="type_4" value="{$DatumAll[4][0]|default=''}" />
                 <button type="button" class="layui-btn" id="test1">上传图片</button>
             </div>
         </div>
         <div class="layui-inline">
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="demo1" alt="" >
+                <img class="layui-upload-img" id="demo1" alt="" {if condition="isset($DatumAll[4][0])"} src="{$DatumAll[4][0]|default=''}" {/if} >
                 <p id="demoText"></p>
             </div>
         </div>
@@ -80,19 +80,18 @@
         <div class="layui-inline">
             <label class="layui-form-label">企业相关证件</label>
             <div class="layui-input-inline" style="width:90px;">
-                <input type="hidden" name="type_5" />
+                <input type="hidden" name="type_5" value="{$DatumAll[5][0]|default=''}" />
                 <button type="button" class="layui-btn" id="test2">上传图片</button>
             </div>
         </div>
         <div class="layui-inline">
             <div class="layui-upload-list" id="image5list" >
-                <img class="layui-upload-img" id="demo2" alt="" >
+                <img class="layui-upload-img" id="demo2" alt="" {if condition="isset($DatumAll[5][0])"} src="{$DatumAll[5][0]|default=''}" {/if} >
 <!--                <div class="image5list">-->
 <!--                    <img src="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" class="layui-upload-img">-->
 <!--                    <input type="hidden" name="type_5[0]" value="https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/images/20220923/1590f38c-807d-4b3f-ab93-a56bbf6c4353.jpg" >-->
 <!--                    <div class="image5list-delete">X</div>-->
 <!--                </div>-->
-
             </div>
         </div>
     </div>
@@ -102,6 +101,7 @@
         <div class="layui-input-block" >
             <input type="radio" name="status" lay-filter="status" value="1" title="通过" checked />
             <input type="radio" name="status" lay-filter="status" value="0" title="未审核" />
+            <input type="radio" name="status" lay-filter="status" value="2" title="审核不通过" />
         </div>
     </div>
 
@@ -160,11 +160,6 @@ layui.use(['form','upload'], function () {
             if(res.code == 0) {
                 $("#demo2").attr('src', res.url);
                 $("input[name='type_5']").val(res.url);
-                // var _html = "<div class=\"image5list\">\n" +
-                //     "                    <img src=\"" + res.url + "\" class=\"layui-upload-img\">\n" +
-                //     " <input type='hidden' name='type_5[" + uploadKey + "]' value='" + res.url + "'  > " +
-                //     "                    <div class=\"image5list-delete\">X</div>\n" +
-                //     "                </div>";
             } else {
                 layui.msg('网络问题稍后再试');
             }
@@ -184,6 +179,12 @@ layui.use(['form','upload'], function () {
             }
         });
     });
+
+    form.val("first", {
+        "firm_id": "{$firmRelevanceInfo['firm_id']}",
+        "status_msg": "{$firmRelevanceInfo['feedback']}",
+        'status': "{$firmRelevanceInfo['status']}",
+    })
 
     form.on('radio(status)', function(data){
         let _val = data.value;
