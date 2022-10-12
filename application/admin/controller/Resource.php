@@ -173,6 +173,10 @@ class Resource extends Base
                         'state'       => 1,
                     ]);
                 }
+                if(($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 2){
+                    model('card')->isUpdate(true)->save(['quality'=>1], ['uid'=>$_post['uid']]);
+                }
+
                 return success_json(lang('CreateSuccess', [lang('Resource')]));
             }
             return error_json(lang('CreateFail', [lang('Resource')]));
@@ -304,6 +308,11 @@ class Resource extends Base
                         'state'       => 2,
                     ]);
                 }
+
+                if( ($_post['auth'] == 1 || $_post['auth'] == 2) && $_post['ty'] == 2){
+                    model('card')->isUpdate(true)->save(['quality'=>1], ['uid'=>$_post['uid']]);
+                }
+
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
             return error_json(lang('EditFail', [lang('Resource')]));
@@ -806,9 +815,24 @@ class Resource extends Base
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
             return error_json(lang('EditFail', [lang('Resource')]));
-
-
         }
+        $data['region'] = $data['region'] == '|' ? $data['region'] : explode('|', $data['region']);
+        $DataDic = model('DataDic');
+        if(is_array($data['region'])){
+            $region = [];
+            foreach ($data['region'] as $val){
+                $ResourcesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_REGION', 'data_no' => $val, 'status' => 1])->find();
+                array_push($region , $ResourcesType['data_name']);
+            }
+            $data['region'] = $region;
+        }else{
+            $data['region'] = $data['region'] == '|' ? array('不限') : array();
+        }
+
+        $data['img'] = explode('|', $data['img']);
+//
+//        var_dump($data['region']);
+//        exit();
         return view('', ['data' => $data]);
     }
 

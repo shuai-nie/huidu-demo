@@ -3,9 +3,106 @@
 
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
+        <label class="layui-form-label">用户ID</label>
+        <div class="layui-input-inline">
+            <input type="text" disabled placeholder="" autocomplete="off" value="{$data['uid']}" class="layui-input" style="background-color:#eee;" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
             <input type="text" disabled placeholder="" autocomplete="off" value="{$data['title']}" class="layui-input" style="background-color:#eee;" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="text" disabled placeholder="" autocomplete="off" value="{if condition="$data['ty'] eq 1"}我提供{else}我需求{/if}" class="layui-input" style="background-color:#eee;" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">合作区域</label>
+        <div class="layui-input-block">
+            {volist name="data['region']" id='vo'}
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;"><span style="color:rgba(0,0,0,.85);">{$vo}</span></div>
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">合作领域</label>
+        <div class="layui-input-block">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">对应行业</label>
+        <div class="layui-input-block">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行业细分</label>
+        <div class="layui-input-block">
+        </div>
+    </div>
+
+    <div id="form_html"></div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea" disabled style="background-color:#e0e0e0;">{$data['intro']}</textarea>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品图片</label>
+        <div class="layui-input-block">
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin: 10px;">
+                预览图：
+                <div class="layui-upload-list" id="demo7">
+                    {volist name="data['img']" id='vo'}
+                    {if condition="$vo"}
+                    <div style="width:100px;float:left;position:relative;margin:10px;">
+                        <img width="100" height="100" src="{$vo}"  class="layui-upload-img">
+                    </div>
+                    {/if}
+                    {/volist}
+                </div>
+                <div style="clear:both;"></div>
+            </blockquote>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">置顶</label>
+            <div class="layui-input-block">
+                <input style="background-color: #eee;" type="text" class="layui-input " disabled value="{if condition="$data['top_start_time'] gt 1000"}{$data['top_start_time']|date='Y-m-d H:i:s', ###}{else}-{/if}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <input style="background-color: #eee;" type="text" class="layui-input " disabled value="{if condition="$data['top_end_time'] gt 1000"}{$data['top_end_time']|date='Y-m-d H:i:s', ###}{else}-{/if}">
+
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">首页滚动</label>
+        <div class="layui-input-block">
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;"><span style="color:rgba(0,0,0,.85);">{if condition="$data['home_roll'] eq 0"}否{else}是{/if}</span></div>
         </div>
     </div>
 
