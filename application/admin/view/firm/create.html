@@ -143,13 +143,13 @@ layui.use(['form','upload'], function () {
         }
     });
 
-
-
     //监听提交
     form.on('submit(submit)', function (data) {
         data.field.intro = ue.getContent();
         Api.add(data.field, function (res) {
-            console.log(res);
+            if(res.code != 200) {
+                layer.msg(res.msg, {icon:2, offset: ['200px', '200px'],zIndex:999999999999999});
+            }
         });
     });
 

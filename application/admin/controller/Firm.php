@@ -71,6 +71,12 @@ class Firm extends Base
         if(request()->isPost()) {
             $Firm = model('Firm');
             $_post = request()->post();
+
+            $nameCount = $Firm->where(['name' => $_post['name']])->count();
+            if($nameCount > 0 ){
+                return error_json('企业名称重复请修改');
+            }
+
             if(isset($_post['business_type'])){
                 $_post['business_type'] = implode('|', $_post['business_type']);
             }
