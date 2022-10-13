@@ -812,6 +812,9 @@ class Resource extends Base
                         'state'       => 2,
                     ]);
                 }
+                if( ($data['auth'] == 1 || $data['auth'] == 2) && $data['ty'] == 2){
+                    model('card')->isUpdate(true)->save(['quality'=>1], ['uid'=>$data['uid']]);
+                }
                 return success_json(lang('EditSuccess', [lang('Resource')]));
             }
             return error_json(lang('EditFail', [lang('Resource')]));
