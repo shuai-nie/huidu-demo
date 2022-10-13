@@ -156,13 +156,13 @@ layui.use(['table','form','dropdown'], function(){
                     default:return '<span class="layui-btn-xs layui-border-gray">-</span>';break;
                 }
             }}
-        ,{field: 'create_time', title: '创建时间',width:140,sort:true,align:"center"}
+        , {field: 'create_time', title: '创建时间', width: 160, sort: true, align: "center"}
         {if condition="$examine neq 'examine'"}
-        ,{field: 'flush_time', title: '刷新时间',width:140,sort:true,align:"center",templet:function(d){
-                if(d.flush_time > 10000) {
-                    return "<div>" + layui.util.toDateString(d.flush_time*1000, 'yyyy-MM-dd HH:mm') + "</div>";
-                }
-            }}
+        , {field: 'flush_time', title: '刷新时间', width: 140, sort: true, align: "center", templet: function (d) {
+            if(d.flush_time > 10000) {
+                return "<div>" + layui.util.toDateString(d.flush_time*1000, 'yyyy-MM-dd HH:mm') + "</div>";
+            }
+        }}
         {/if}
         ,{fixed: 'right',title:'操作', width:90, align:'center', toolbar: '#barDemo'}
     ], '#think-table', 'auth');
@@ -178,45 +178,21 @@ layui.use(['table','form','dropdown'], function(){
     })
 
     table.on('tool(think-table)', function(obj){
-        var data=obj.data;
-        if(obj.event==="edit"){
-            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-        }else if(obj.event==='del'){
-            UI.delete(data['id'], function(res){
-                if(res.code==200){
-                    table.reload("table");
-                }
-            });
-        } else if (obj.event === 'topping') {
-            UI.openLayer("{:url('topping')}?id="+data['id'],700, 560);
-        } else if (obj.event === 'flush') {
-            $.post("{:url('flush')}?id=" + data['id'], data, function (res) {
-                if(res.code==200){
-                    layer.msg(res.msg, {icon:1},function () {
-                        obj.update({'flush_time': res.data.time});
-                    })
-                } else {
-                    layer.msg(res.msg, {icon:5});
-                }
-            }, 'json');
-        }else if(obj.event ==='examine'){
-            UI.openLayer("{:url('examine')}?id="+data['id'],700, 560);
-        }else if(obj.event === 'card'){
-            UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560);
-        } else if(obj.event === 'more') {
+        var data = obj.data;
+        if(obj.event === 'more') {
             {if condition="$examine neq 'examine'"}
             var _data = [
                 {title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-warm layui-btn-xs ">\n' + '{{d.title}}\n' +'</button>'}
                 , {title:'删除',id:'del',templet:'<button type="button" class="layui-btn layui-btn-danger layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
-                , {title:'审核',id:'examine',templet:'<button type="button" class="layui-btn layui-btn-blue layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+                , {title:'审核',id:'examine',templet:'<button type="button" class="layui-btn layui-btn-normal layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
                 , {title:'名片',id:'card',templet:'<button type="button" class="layui-btn layui-btn-primary layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
                 , {title:'刷新',id:'flush',templet:'<button type="button" class="layui-btn layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
             ];
             {else/}
                 var _data = [
                     {title:'刷新',id:'flush',templet:'<button type="button" class="layui-btn layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
-                    ,{title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-blue layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
-                    , {title:'审核',id:'examine',templet:'<button type="button" class="layui-btn layui-btn-blue layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+                    ,{title:'编辑',id:'edit',templet:'<button type="button" class="layui-btn layui-btn-warm layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
+                    , {title:'审核',id:'examine',templet:'<button type="button" class="layui-btn layui-btn-normal layui-btn-xs ">\n' + '{{d.title}}\n' + '</button>'}
                 ];
             {/if}
             dropdown.render({
@@ -231,7 +207,7 @@ layui.use(['table','form','dropdown'], function(){
                             }
                         });
                     }else if(menudata.id === 'edit'){
-                        UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', "{:lang('edit')}");
+                        UI.openLayer("{:url('edit')}?id="+data['id'], 1100, 600, '#submit', "{:lang('edit')}");
                     }else if(menudata.id === 'flush'){
                         $.post("{:url('flush')}?id=" + data['id'], data, function (res) {
                             if(res.code==200){
@@ -245,7 +221,7 @@ layui.use(['table','form','dropdown'], function(){
                     }else if(menudata.id === 'card'){
                         UI.openLayer("{:url('card')}?uid=" + data['uid'], 700, 560, '#submit', '名片');
                     }else if(menudata.id === 'examine'){
-                        UI.openLayer("{:url('examine')}?id=" + data['id'], 900, 330, '#submit', '审核');
+                        UI.openLayer("{:url('examine')}?id=" + data['id'], 1100, 560, '#submit', '审核');
                     }
                 }
                 , align: 'right'

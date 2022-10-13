@@ -26,7 +26,9 @@ class Card extends Base
             $map = ['A.status'=>1];
             $page = Request()->post('page');
             $limit = Request()->post('limit');
-            $name = \request()->post('name');
+            $name =  request()->post('name');
+            $field = request()->post('field');
+            $order = request()->post('order');
             if(!empty($name)) {
                 $map['B.username'] = ['like', "%{$name}%"];
             }
@@ -50,13 +52,21 @@ class Card extends Base
             if(!empty($isweb)){
                 $map['A.isweb'] = $isweb;
             }
+
+            $fieldOrder = 'A.id desc';
+            if(!empty($field) && !empty($order)){
+                if($field == 'firm_name'){
+                    $fieldOrder = 'D.name '.$order;
+                }
+            }
+
             $firm = model('firm');
             $data = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
                 ->join($firm->getTable().' D', 'A.firm_id=D.id', 'left')
                 ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number,D.name firm_name')
-                ->where($map)->order('A.id desc')->group('A.id')->limit($offset, $limit)->select();
+                ->where($map)->order($fieldOrder)->group('A.id')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')

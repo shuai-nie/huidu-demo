@@ -90,33 +90,33 @@
                     default: return '-';
                 }
             }}
-            ,{field: 'name', title: '账号/昵称',width:180,templet:function (d) {
-                    return d.username + '/' +d.nickname ;
-                }}
-            ,{field: 'firm_name', title: '关联企业',width:90, sort:true,templet: function(d){
+            , { field: 'name', title: '账号/昵称',width:180,templet:function (d) {
+                return d.username + '/' +d.nickname ;
+            }}
+            , { field: 'firm_name', title: '关联企业', width: 110, sort: true, templet: function (d) {
                 if(d.firm_name){
                     return d.firm_name;
                 }
                 return '-';
             }}
-            ,{field: 'verify_status', title: '身份认证',width:90, templet: function(d){
-                if(d.firm_name){
-                switch (d.verify_status){
-                    case 0: return '未认证';
-                    case 1: return '已认证';
-                    default: return '-';
-                }
+            , { field: 'verify_status', title: '身份认证', width: 90, templet: function (d) {
+                if (d.firm_name) {
+                    switch (d.verify_status){
+                        case 0: return '未认证';
+                        case 1: return '已认证';
+                        default: return '-';
+                    }
                 }else {
                     return '-';
                 }
             }}
-            ,{field: 'logo', title: 'logo',width:70, templet:function (d) {
+            , { field: 'logo', title: 'logo', width: 70, templet: function (d) {
                 if(d.logo) {
                     return '<img src="'+d.logo+'" height="30" width="30" />';
                 }
                 return '-';
             }}
-            ,{field: 'logo_watermark', width:70,title: '水印', templet:function (d) {
+            , { field: 'logo_watermark', width: 70, title: '水印', templet: function (d) {
                 if(d.logo_watermark) {
                     return '<img src="'+d.logo_watermark+'" height="30" width="30" />';
                 }
@@ -167,6 +167,16 @@
                 });
             }
         });
+
+        table.on('sort(think-table)', function(obj){
+            table.reload('table', {
+                initSort: obj
+                ,where: {
+                    field: obj.field
+                    ,order: obj.type
+                }
+            });
+        })
         var $ = layui.$, active = {
             create:function(){
                 UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
