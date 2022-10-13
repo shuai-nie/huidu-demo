@@ -8,3 +8,7 @@
 /runtime/log
 /runtime/temp
 /public/uploads
+/application/config.php
+/application/database.php
+/application/database.php
+/application/config.php
