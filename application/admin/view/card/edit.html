@@ -53,7 +53,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">打招呼语</label>
         <div class="layui-input-block">
-            <input type="text" name="greet" autocomplete="off" class="layui-input">
+            <input type="text" name="greet" autocomplete="off" class="layui-input" value="{$data['greet']}">
         </div>
     </div>
 
@@ -157,9 +157,10 @@
 
 <script>
     //Demo
-    layui.use(['form','upload'], function () {
+    layui.use(['form','upload', 'util'], function () {
         var form = layui.form,
-            upload = layui.upload;
+            upload = layui.upload
+            , util = layui.util;
 
         var upload_url = "{:url('admin/Upload/upload')}";
         var upload_accept='images';
@@ -210,7 +211,6 @@
             "logo": "{$data['logo']}",
             "logo_watermark": "{$data['logo_watermark']}",
             "position" : "{$data['position']}",
-            "greet": "{$data['greet']}",
             "business_type": "{$data['business_type']}",
             {volist name='data["industry"]' id='vo'}
             "industry[{$vo}]":true,

@@ -460,7 +460,7 @@ class Resource extends Base
             $topId   = \request()->post('top_id');
             $DataDic = model('DataDic');
             $data = $DataDic->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'status' => 1, 'data_no' =>$topId])->find();
-            $dataAll    = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY', 'status' => 1, 'data_top_id' => $data['id']])->field('data_type_no,data_type_name,data_no,data_name')->order('sort desc')->select();
+            $dataAll = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY', 'status' => 1, 'data_top_id' => $data['id']])->field('data_type_no,data_type_name,data_no,data_name')->order('sort desc')->select();
             return success_json('成功', ['data' => $dataAll]);
         }
     }
@@ -816,6 +816,7 @@ class Resource extends Base
             }
             return error_json(lang('EditFail', [lang('Resource')]));
         }
+
         $data['region'] = $data['region'] == '|' ? $data['region'] : explode('|', $data['region']);
         $DataDic = model('DataDic');
         if(is_array($data['region'])){
@@ -829,10 +830,52 @@ class Resource extends Base
             $data['region'] = $data['region'] == '|' ? array('不限') : array();
         }
 
+        $type = explode('|', $data['type']);
+        $valueType = [];
+        foreach ($type as $val) {
+            if (is_numeric($val)) {
+                $ValuesType = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_TYPE', 'data_no' => $val, 'status' => 1])->find();
+                array_push($valueType, !empty($ValuesType) ? $ValuesType['data_name'] : '');
+            }
+        }
+        $data['type'] = $valueType;
+        $ResourcesSu = $DataDic->field('id,data_name')->where(['data_type_no' => 'RESOURCES_SUBDIVIDE', 'data_no' => $data['business_subdivide'], 'status' => 1])->find();
+        if(!empty($ResourcesSu)){
+            $data['business_subdivide'] = $ResourcesSu['data_name'];
+
+            //
+            if($data['industry'] == '|'){
+                $data['industry'] = '不限';
+            }else {
+                $industry = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY', 'status' => 1, 'data_top_id' => $ResourcesSu['id'], 'data_no'=>$data['industry']])->field('data_type_no,data_type_name,data_no,data_name')->find();
+                if(!empty($industry)) {
+                    $data['industry'] = isset($industry['data_name']) ? $industry['data_name'] : '';
+
+                    $industry_subdivide = explode('|', $data['industry_subdivide']);
+                    $subdivideAll = array();
+                    foreach ($industry_subdivide as $key => $val2) {
+                        $subdivide = $DataDic->where(['data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'status' => 1, 'data_top_id'=>$industry['data_no'], 'data_no'=>$val2])->find();
+                        array_push($subdivideAll,  isset($subdivide['data_name']) ? $subdivide['data_name'] : '' );
+                    }
+                    $data['industry_subdivide'] = $subdivideAll;
+                }
+            }
+        }
+        $resourceForm = model('resourceForm');
+        $resourceFormTemplate = model('resourceFormTemplate');
+        $resourceFromAll = $resourceForm->where(['resource_id' => $data['id']])->field('form_template_id,currency_type,content')->select();
+
+        foreach ($resourceFromAll as $key => $val3) {
+            $formTemplate = $resourceFormTemplate->where(['id'=>$val3['form_template_id']])->field('type,business_subdivide,ty,form_type,form_title,fill_flag')->find();
+            $c = array_merge($val3->toArray(), $formTemplate->toArray());
+            if($c['form_type'] == 4 || $c['form_type'] == 7) {
+                $c['content'] = explode('|', $c['content']);
+            }
+            $resourceFromAll[$key] = $c;
+        }
+
+        $data['resourceFromAll'] = $resourceFromAll;
         $data['img'] = explode('|', $data['img']);
-//
-//        var_dump($data['region']);
-//        exit();
         return view('', ['data' => $data]);
     }
 

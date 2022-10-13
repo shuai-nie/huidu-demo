@@ -27,7 +27,7 @@
         <label class="layui-form-label">合作区域</label>
         <div class="layui-input-block">
             {volist name="data['region']" id='vo'}
-            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;"><span style="color:rgba(0,0,0,.85);">{$vo}</span></div>
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;cursor: auto;"><span style="color:rgba(0,0,0,.85);">{$vo}</span></div>
             {/volist}
         </div>
     </div>
@@ -35,33 +35,114 @@
     <div class="layui-form-item">
         <label class="layui-form-label">合作领域</label>
         <div class="layui-input-block">
+            {volist name="data['type']" id='vo'}
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;cursor: auto;"><span style="color:rgba(0,0,0,.85);">{$vo}</span></div>
+            {/volist}
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">业务细分</label>
         <div class="layui-input-block">
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;cursor: auto;"><span style="color:rgba(0,0,0,.85);">{$data['business_subdivide']}</span></div>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">对应行业</label>
         <div class="layui-input-block">
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;cursor: auto;"><span style="color:rgba(0,0,0,.85);">{$data['industry']}</span></div>
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">行业细分</label>
         <div class="layui-input-block">
+            {volist name="data['industry_subdivide']" id='vo'}
+            <div class="layui-unselect layui-form-checkbox" style="padding-right: 0;cursor: auto;"><span style="color:rgba(0,0,0,.85);">{$vo}</span></div>
+            {/volist}
         </div>
     </div>
 
-    <div id="form_html"></div>
+    <div id="form_html">
+        {volist name="data['resourceFromAll']" id='vo'}
+            {if condition="$vo['form_type'] eq 0 || $vo['form_type'] eq 2 || $vo['form_type'] eq 3 "}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$vo['form_title']}</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="{$vo['content']}" disabled class="layui-input" style="background-color: #eee;" />
+                </div>
+            </div>
+            {elseif condition="$vo['form_type'] eq 1 || $vo['form_type'] eq 6 "}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$vo['form_title']}</label>
+                <div class="layui-input-block">
+                    <div class="layui-textarea" disabled style="background-color: #eee;" >{$vo['content']}</div>
+                </div>
+            </div>
+            {elseif condition="$vo['form_type'] eq 4"}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">{$vo['form_title']}</label>
+                    <div class="layui-input-inline" style="width:80px">
+                        <input type="text" value="{$vo['content'][0]}" disabled class="layui-input" style="background-color: #e0e0e0;" />
+                    </div>
+                    <div class="layui-form-mid" style="">:</div>
+                    <div class="layui-input-inline" style="width:80px">
+                        <input type="text" value="{$vo['content'][1]}" disabled class="layui-input" style="background-color: #e0e0e0;" />
+                    </div>
+                    <div class="layui-form-mid" style="">-</div>
+                    <div class="layui-input-inline" style="width:80px">
+                        <input type="text" value="{$vo['content'][2]}" disabled class="layui-input" style="background-color: #e0e0e0;" />
+                    </div>
+                    <div class="layui-form-mid" style="">:</div>
+                    <div class="layui-input-inline" style="width:80px">
+                        <input type="text" value="{$vo['content'][3]}" disabled class="layui-input" style="background-color: #e0e0e0;" />
+                    </div>
+                </div>
+            </div>
+            {elseif condition="$vo['form_type'] eq 5"}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">{$vo['form_title']}</label>
+                    <div class="layui-input-inline">
+                        <input type="text" value="{$vo['content']}" disabled class="layui-input" style="background-color: #eee;" />
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <input type="text" value="{$vo['content']}" disabled class="layui-input" style="background-color: #eee;" />
+                </div>
+            </div>
+            {elseif condition="$vo['form_type'] eq 7"}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">{$vo['form_title']}</label>
+                    <div class="layui-input-inline">
+                        {volist name="vo['content']" id='vo'}
+                        {if condition="$vo"}
+                        <img src="{$vo}" width="98" height="98" style="float:left;margin-right:10px;" />
+                        {/if}
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {elseif condition="$vo['form_type'] eq 8"}
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">{$vo['form_title']} 88</label>
+                    <div class="layui-input-inline">
+                        <img src="{$vo['content']}" width="98" height="98" />
+                    </div>
+                </div>
+            </div>
+            {/if}
+        {/volist}
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
-            <textarea class="layui-textarea" disabled style="background-color:#e0e0e0;">{$data['intro']}</textarea>
+            <div class="layui-textarea" disabled style="background-color:#e0e0e0;">{$data['intro']}</div>
         </div>
     </div>
 

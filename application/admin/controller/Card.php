@@ -278,6 +278,9 @@ class Card extends Base
                         ]);
 
                     }
+                }else{
+                    $firmRelevance->where(['uid' => $cardInfo['uid']])->delete();
+                    $card->isUpdate(true)->save(['firm_id' => 0, 'verify_status' => 0], ['uid' => $cardInfo['uid']]);
                 }
 
                 $userDemand->isUpdate(true)->save(['status' => 0], ['uid' => $cardInfo['uid']]);
