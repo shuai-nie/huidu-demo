@@ -866,7 +866,7 @@ class Resource extends Base
         }
         $resourceForm = model('resourceForm');
         $resourceFormTemplate = model('resourceFormTemplate');
-        $resourceFromAll = $resourceForm->where(['resource_id' => $data['id']])->field('form_template_id,currency_type,content')->select();
+        $resourceFromAll = $resourceForm->where(['resource_id' => $data['id'], 'status'=>1])->field('form_template_id,currency_type,content')->select();
 
         foreach ($resourceFromAll as $key => $val3) {
             $formTemplate = $resourceFormTemplate->where(['id'=>$val3['form_template_id']])->field('type,business_subdivide,ty,form_type,form_title,fill_flag')->find();
