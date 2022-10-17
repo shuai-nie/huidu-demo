@@ -21,7 +21,7 @@
 
                 <div class="layui-inline">
                     <label class="layui-form-label" >审核状态</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-block" style="width:100px;">
                         <select name="status" >
                             <option value="">请选择</option>
                             <option value="0">未审核</option>
@@ -64,9 +64,9 @@
 			, {field: 'username', title: '帐号/昵称', width:170, templet: function(d){
                 return d.username + '/'+ d.nickname ;
             }}
-            , {field: 'position', title: '职位', width: 170}
+            , {field: 'position', title: '职位', width: 120}
             , {field: 'business_tag', title: '业务', width: 170}
-            , {field: 'firm_name', title: '关联企业', width: 170}
+            , {field: 'firm_name', title: '关联企业', width: 120}
             , {field: 'userZ', title: '企业员工', width: 110, templet: function(d){
                     return d.userZ + '/' + d.userC;
                 }}

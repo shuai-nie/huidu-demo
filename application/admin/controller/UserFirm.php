@@ -37,14 +37,14 @@ class UserFirm extends Base
             $count = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
-                ->join($Card->getTable()." D", "A.uid=D.uid", "left")
+                ->join($Card->getTable()." D", "(A.uid=D.uid and D.status =1)", "left")
                 ->where($map)->count();
             $exp = new \think\Db\Expression('field(A.status, 0,1,2), id desc');
             $data = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
-                ->join($Card->getTable()." D", "A.uid=D.uid", "left")
-                ->field('A.*,B.name as firm_name,C.username,C.nickname,D.position,D.business_tag')
+                ->join($Card->getTable()." D", "(A.uid=D.uid and D.status =1)", "left")
+                ->field('A.*,B.name as firm_name,C.username,C.nickname,D.business_tag,D.position')
                 ->where($map)->order($exp)->limit($offset, $limit)->select();
 
             $DataDic = model('DataDic');
