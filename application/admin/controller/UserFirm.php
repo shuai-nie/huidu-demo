@@ -33,16 +33,38 @@ class UserFirm extends Base
                 $map['B.name'] = ['like', '%'.$firm_name.'%'];
             }
 
+            $Card = model('Card');
             $count = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
+                ->join($Card->getTable()." D", "A.uid=D.uid", "left")
                 ->where($map)->count();
             $exp = new \think\Db\Expression('field(A.status, 0,1,2), id desc');
             $data = $FirmRelevance->alias('A')
                 ->join($Firm->getTable()." B", "A.firm_id=B.id", "left")
                 ->join($User->getTable()." C", "A.uid=C.id", "left")
-                ->field('A.*,B.name as firm_name,C.username,C.nickname')
+                ->join($Card->getTable()." D", "A.uid=D.uid", "left")
+                ->field('A.*,B.name as firm_name,C.username,C.nickname,D.position,D.business_tag')
                 ->where($map)->order($exp)->limit($offset, $limit)->select();
+
+            $DataDic = model('DataDic');
+            foreach ($data as $key => $val){
+
+                if($val['business_tag']){
+                    $business_tag = explode('|', $val['business_tag']);
+                    $tag = array();
+                    foreach ($business_tag as $k => $v) {
+                        $resources = $DataDic->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1,'data_no'=>$v])->field('data_type_no,data_top_id,data_no,data_name')->find();
+                        if(isset($resources['data_name'])) {
+                            array_push($tag, $resources['data_name'] );
+                        }
+                    }
+                    $val['business_tag'] = implode('|', $tag);
+                }
+                $val['userZ'] = $Card->where(['firm_id'=>$val['firm_id'], 'status'=>1])->count();
+                $val['userC'] = $Card->where(['firm_id'=>$val['firm_id'], 'status'=>1, 'verify_status'=>1])->count();
+                $data[$key] = $val;
+            }
 
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }

@@ -8,6 +8,7 @@ class Index extends Base
 {
     public function index()
     {
+//        phpinfo(); exit();
         $Jurisdiction = new Jurisdiction();
         $menuList = $Jurisdiction->getAuthMenu(getLoginUserId(), 1);
         $userInfo = model("Admin")->find(getLoginUserId());

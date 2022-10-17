@@ -13,21 +13,27 @@ class Firm extends Base
     {
         if(request()->isPost()){
             $Firm = model('Firm');
+            $DataDic = model('DataDic');
+            $Card = model('Card');
             $page = request()->post('page', 1);
             $limit = request()->post('limit');
             $offset = ($page - 1 ) * $limit;
             $name = request()->post('name');
+            $status = request()->post('status');
 
             $map = ['status'=>['in', [1,2,3]]];
             if(!empty($name)) {
                 $map['name'] = ['like', '%'.$name.'%'];
+            }
+            if(!empty($status)) {
+                $map['status'] = $status;
             }
 
             $count = $Firm->where($map)->count();
             $exp = new \think\Db\Expression('field(status, 1,2,3), id desc');
             $data = $Firm->where($map)->order($exp)->limit($offset, $limit)->select();
 
-            $DataDic = model('DataDic');
+
             foreach ($data as $k => $v) {
                 $scale = $DataDic->where(['status' => 1, 'data_type_no' => 'FIRM_SCALE', 'data_no'=>$v['scale']])->find();
                 if($scale){
@@ -58,6 +64,9 @@ class Firm extends Base
                     array_push($regAll, $reg['data_name']);
                 }
                 $v['region'] = implode('|', $regAll);
+
+                $v['userZ'] = $Card->where(['firm_id'=>$v['id'], 'status'=>1])->count();
+                $v['userC'] = $Card->where(['firm_id'=>$v['id'], 'status'=>1, 'verify_status'=>1])->count();
 
                 $data[$k] = $v;
             }

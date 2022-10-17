@@ -15,6 +15,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label" style="">审核状态</label>
+                    <div class="layui-input-inline" style="width: 120px;">
+                        <select name="status">
+                            <option value="">请选择</option>
+                            <option value="1">未审核</option>
+                            <option value="2">已过审</option>
+                            <option value="3">未通过</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -43,12 +55,18 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            , {field: 'name', title: '企业名称', width: 100,}
             , {field: 'logo', title: 'logo', width: 70, align:'center', templet: function(d){
-               if(d.logo){
-                   return "<img src='"+d.logo+"?1.1' width='30' height='30' />";
-               }
-               return '-';
+                    if(d.logo){
+                        return "<img src='"+d.logo+"?1.1' width='30' height='30' />";
+                    }
+                    return '-';
+                }}
+            , {field: 'name', title: '企业名称', width: 100,}
+            , {field: 'region', title: '企业地区', width: 130, templet: function(d){
+                if(d.region){
+                    return d.region;
+                }
+                return '-';
             }}
             , {field: 'scale', title: '企业规模', width: 120, templet: function(d){
                 if(d.scale){
@@ -56,7 +74,7 @@
                 }
                 return '-';
             }}
-            , {field: 'business_type', title: '业务类型', width: 220, templet: function(d){
+            , {field: 'business_type', title: '业务类型', width: 140, templet: function(d){
                 if(d.business_type){
                     return d.business_type;
                 }
@@ -68,18 +86,16 @@
                 }
                 return '-';
             }}
-            , {field: 'region', title: '企业地区', width: 130, templet: function(d){
-                if(d.region){
-                    return d.region;
-                }
-                return '-';
+            , {field: 'userZ', title: '企业员工', width: 110, templet: function(d){
+                return d.userZ + '/' + d.userC;
             }}
+            , {field: 'create_time', title: '创建时间', width: 170}
             , {field: 'status', title: '审核状态',width: 90, templet: function(d){
                 switch (d.status*1){
                     case 0: return '删除';
-                    case 1: return "审核中";
-                    case 2: return "正常";
-                    case 3: return "审核失败";
+                    case 1: return "未审核";
+                    case 2: return "已过审";
+                    case 3: return "未通过";
                     default: return "-";
                 }
             }}

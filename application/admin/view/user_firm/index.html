@@ -20,6 +20,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label" >审核状态</label>
+                    <div class="layui-input-block">
+                        <select name="status" >
+                            <option value="">请选择</option>
+                            <option value="0">未审核</option>
+                            <option value="1">已过审</option>
+                            <option value="2">未通过</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
 
@@ -39,6 +51,7 @@
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="examine">审核</a>
     {{# } }}
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="card">名片</a>
 </script>
 
 <script>
@@ -49,13 +62,19 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: '', width:80, fixed: 'left'}
 			, {field: 'username', title: '帐号/昵称', width:170, templet: function(d){
-                return d.username + '/'+ d.nickname;
+                return d.username + '/'+ d.nickname ;
             }}
-            , {field: 'firm_name', title: '企业名称', width: 170}
+            , {field: 'position', title: '职位', width: 170}
+            , {field: 'business_tag', title: '业务', width: 170}
+            , {field: 'firm_name', title: '关联企业', width: 170}
+            , {field: 'userZ', title: '企业员工', width: 110, templet: function(d){
+                    return d.userZ + '/' + d.userC;
+                }}
+            , {field: 'create_time', title: '申请时间', width: 170}
             , {field: 'status', title: '状态',width:100, templet(d){
                 switch (d.status){
                     case 0: return '<span class="layui-btn-primary layui-border-blue layui-btn-xs ">未审核</span>';
-                    case 1: return '通过';
+                    case 1: return '已过审';
                     case 2: return '<span class="layui-btn-primary layui-border-red layui-btn-xs">未通过</span>';
                     default: return '-';
                 }
@@ -66,7 +85,7 @@
                 }
                 return '-'
             }}
-            ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
+            ,{fixed: 'right',title:'操作',width:170, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auto");
 
         form.on('submit(data-search-btn)', function(data){
@@ -91,6 +110,17 @@
                 UI.openLayer("{:url('examine')}?id="+data['id'], 850, 600, '#submit', "审核");
             }else if(obj.event==="edit"){
                 UI.openLayer("{:url('edit')}?id="+data['id'], 850, 600, '#submit', "编辑");
+            }else if(obj.event === 'card'){
+                layer.open({
+                    type: 2
+                    , title: '名片'
+                    , area: ['600px', '380px']
+                    , content: "/admin/resource/card.html?uid=" + data['uid']
+                    , btn: ['关闭']
+                    , function(index){
+                        layer.clone(index)
+                    }
+                });
             }
         });
 
