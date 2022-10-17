@@ -188,6 +188,8 @@ class Firm extends Base
                         'content' => '恭喜您，您提交的企业关联信息已通过',
                         'is_permanent' => 1,
                     ]);
+                    // 企业审核通过，关联添加用户
+                    model('card')->isUpdate(true)->save(['firm_id' => $info['id'], 'verify_status' => 0], ['uid' => $info['create_id']]);
                 }
             }elseif ($_post['status'] == 3){
                 if($info['isweb'] == 1){
