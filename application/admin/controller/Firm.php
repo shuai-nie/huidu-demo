@@ -194,6 +194,7 @@ class Firm extends Base
                     ]);
                     // 企业审核通过，关联添加用户
                     model('card')->isUpdate(true)->save(['firm_id' => $info['id'], 'verify_status' => 0], ['uid' => $info['create_id']]);
+                    getAdminLog(" 企业审核通过，关联添加用户 firm_id".$info['id']. " uid ". $info['create_id']);
                 }
             }elseif ($_post['status'] == 3){
                 if($info['isweb'] == 1){
@@ -211,7 +212,7 @@ class Firm extends Base
 
             $state = $Firm->isUpdate(true)->save($save, ['id' => $id]);
             if($state !== false) {
-                getAdminLog(" 审核 企业审核列表 ".$id);
+                getAdminLog(" 审核 企业审核列表 ID".$id. " status ".$_post['status']);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
