@@ -24,6 +24,7 @@ class UserFirm extends Base
             $offset = ($page - 1 ) * $limit;
             $username = request()->post('username');
             $firm_name = request()->post('firm_name');
+            $status = request()->post('status');
 
             if(!empty($username)) {
                 $map['C.username|C.nickname'] = ['like', '%'.$username.'%'];
@@ -31,6 +32,9 @@ class UserFirm extends Base
 
             if(!empty($firm_name)) {
                 $map['B.name'] = ['like', '%'.$firm_name.'%'];
+            }
+            if(is_numeric($status)){
+                $map['A.status'] = $status;
             }
 
             $Card = model('Card');
