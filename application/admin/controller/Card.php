@@ -315,7 +315,7 @@ class Card extends Base
             }
 
             if($state !== false){
-                getAdminLog("名片业务需求修改成功 id". $id." relevance_status ". $_post['relevance_status']);
+                getAdminLog("名片业务需求修改成功 id". $id." relevance_status ". $_post['relevance_status'].' firm_id '.$firm_relevance);
                 return success_json('提交成功');
             }
             return error_json('提交失败');
