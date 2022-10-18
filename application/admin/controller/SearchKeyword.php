@@ -19,6 +19,12 @@ class SearchKeyword extends Base
             }
             $count = $SearchKeyword->where($map)->count();
             $data = $SearchKeyword->where($map)->order('id desc')->limit($offset, $limit)->select();
+            $SearchKeywordExposure = model('SearchKeywordExposure');
+            foreach ($data as $k => $v){
+                $v['zong'] = $SearchKeywordExposure->where(['search_keyword_id' => $v['id']])->count();
+                $data[$k] = $v;
+
+            }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         getAdminLog("查看 热门词条列表");
