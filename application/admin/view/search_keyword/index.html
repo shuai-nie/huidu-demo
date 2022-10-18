@@ -1,0 +1,183 @@
+{include file="moban/bone_header"}
+
+<fieldset class="layui-elem-field">
+    <legend>搜索信息</legend>
+    <div style="margin: 10px 10px 10px 10px">
+        <form class="layui-form layui-form-pane" lay-filter="first" action="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">搜索名词</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+<div class="layui-tab" lay-filter="element">
+    <ul class="layui-tab-title">
+        {volist name='type' id='vo' key="k" }
+        <li lay-id="{$k}" {if condition="$k eq 1"} class="layui-this"{/if}> {$vo}</li>
+        {/volist}
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-hide" id="think-table1" lay-filter="think-table1"></table>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="think-table2" lay-filter="think-table2"></table>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="think-table3" lay-filter="think-table3"></table>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="think-table4" lay-filter="think-table4"></table>
+        </div>
+        <div class="layui-tab-item">
+            <table class="layui-hide" id="think-table5" lay-filter="think-table5"></table>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <span class="layui-btn layui-btn-xs " lay-event="create"><i class="layui-icon layui-icon-add-1"></i>{:lang('create')}</span>
+</script>
+
+<script type="text/html" id="barDemo">
+    <span class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</span>
+    <span class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</span>
+</script>
+
+<script>
+layui.use(['table','dropdown','form', 'element'], function(){
+    var table = layui.table
+        , form = layui.form
+        , dropdown = layui.dropdown
+        , element = layui.element
+        , _cols = [[
+            {field: 'id', title: '', width:80, fixed: 'left'}
+            ,{field: 'type', title: '类型', width:140, templet: function(d){
+                switch (d.type*1){
+                    {volist name='type' id='vo' key="k" }
+                        case {$k-1}: return "{$vo}";
+                    {/volist}
+
+
+                    default: return '-';
+                }
+            }}
+            ,{field: 'name', title: '搜索名词', width:140}
+            ,{field: 'create_time', title: '创建时间', width:170}
+            ,{field: 'right',title:'操作', width:160, align:'center', toolbar: '#barDemo'}
+        ]]
+        , _parseData = function (res) {
+            return {
+                "code": 0,
+                "msg": res['msg'],
+                "count": res['data']['count'],
+                "data": res['data']['list']
+            };
+        }
+        ;
+
+    var table1 = table.render({elem: "#think-table1", height: 'auto', url: "{:url('', ['type'=>0])}", method: 'post', page: true, cols: _cols, toolbar: '#toolbarDemo', defaultToolbar: ['filter','exports'], parseData: _parseData});
+    var table2 = table.render({elem: "#think-table2", height: 'auto', url: "{:url('', ['type'=>1])}", method: 'post', page: true, cols: _cols, toolbar: '#toolbarDemo', defaultToolbar: ['filter','exports'], parseData: _parseData });
+    var table3 = table.render({elem: "#think-table3", height: 'auto', url: "{:url('', ['type'=>2])}", method: 'post', page: true, cols: _cols, toolbar: '#toolbarDemo', defaultToolbar: ['filter','exports'], parseData: _parseData });
+    var table4 = table.render({elem: "#think-table4", height: 'auto', url: "{:url('', ['type'=>3])}", method: 'post', page: true, cols: _cols, toolbar: '#toolbarDemo', defaultToolbar: ['filter','exports'], parseData: _parseData });
+    var table5 = table.render({elem: "#think-table5", height: 'auto', url: "{:url('', ['type'=>4])}", method: 'post', page: true, cols: _cols, toolbar: '#toolbarDemo', defaultToolbar: ['filter','exports'], parseData: _parseData });
+
+    let _element = 1;
+    element.on('tab(element)', function(){
+        console.log(_element);
+        _element =  this.getAttribute('lay-id');
+    });
+
+    let data, _url;
+    table.on('toolbar(think-table1)', function(obj){
+        _url = "{:url('create', ['type'=>0])}";
+        active[obj.event] ? active[obj.event].call(this) : '';
+    })
+
+    table.on('tool(think-table1)', function(obj){
+        data = obj.data
+        active[obj.event] ? active[obj.event].call(this) : '';
+    });
+
+    table.on('toolbar(think-table2)', function(obj){
+        _url = "{:url('create', ['type'=>1])}";
+        active[obj.event] ? active[obj.event].call(this) : '';
+    })
+
+    table.on('tool(think-table2)', function(obj){
+        data = obj.data
+        active[obj.event] ? active[obj.event].call(this) : '';
+    });
+
+    table.on('toolbar(think-table3)', function(obj){
+        _url = "{:url('create', ['type'=>3])}";
+        active[obj.event] ? active[obj.event].call(this) : '';
+    })
+
+    table.on('tool(think-table3)', function(obj){
+        data = obj.data
+        active[obj.event] ? active[obj.event].call(this) : '';
+    });
+
+    table.on('toolbar(think-table4)', function(obj){
+        _url = "{:url('create', ['type'=>3])}";
+        active[obj.event] ? active[obj.event].call(this) : '';
+    })
+
+    table.on('tool(think-table4)', function(obj){
+        data = obj.data
+        active[obj.event] ? active[obj.event].call(this) : '';
+    });
+
+    table.on('toolbar(think-table5)', function(obj){
+        _url = "{:url('create', ['type'=>4])}";
+        active[obj.event] ? active[obj.event].call(this) : '';
+    })
+
+    table.on('tool(think-table5)', function(obj){
+        data = obj.data
+        active[obj.event] ? active[obj.event].call(this) : '';
+    });
+
+
+    var $ = layui.$, active = {
+        create: function () {
+            UI.openLayer(_url, 450, 200, '#submit', "{:lang('create')}");
+        },
+        edit: function() {
+            UI.openLayer("{:url('edit')}?id="+data['id'], 450, 200, '#submit', "编辑");
+        },
+        delete: function(){
+            $.post("{:url('delete')}", {id: data['id']}, function (res) {
+                if(res.code == 200){
+                    layer.msg(res.msg, function(){
+                        table.reload("think-table" + (res.data.type * 1 + 1));
+                    })
+                }
+                layer.msg(res.msg);
+            }, 'json')
+        }
+    };
+
+    form.on('submit(data-search-btn)', function(data){
+        console.log(_element)
+        table.reload('think-table' + _element, {
+            method:'post',
+            where : data.field,
+            page : {curr : 1}
+        });
+        return false;
+    })
+
+});
+</script>
+{include file="moban/bone_footer"}

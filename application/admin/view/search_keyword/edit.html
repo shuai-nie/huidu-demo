@@ -1,0 +1,46 @@
+{include file="moban/css"}
+{include file="moban/js"}
+
+<form class="layui-form" lay-filter="first" style="padding: 10px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">搜索名詞</label>
+        <div class="layui-input-block" >
+            <input type="text" name="name" lay-verify="required" class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+layui.use(['form','upload'], function () {
+    var form = layui.form;
+
+    form.val("first",{
+        "name": "{$info['name']}",
+    })
+
+    //监听提交
+    form.on('submit(submit)', function (data) {
+        let DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
+        $.post("", data.field, function (res) {
+            if(res.code != 200){
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            }else{
+                let index = parent.layer.getFrameIndex(window.name);
+                parent.layui.table.reload("think-table" + (res.data.type*1+1));
+                parent.layer.close(index);
+            }
+            layer.msg(res.msg);
+        }, 'json')
+    });
+
+});
+</script>
