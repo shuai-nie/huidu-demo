@@ -29,6 +29,7 @@ class Card extends Base
             $name =  request()->post('name');
             $field = request()->post('field');
             $order = request()->post('order');
+            $firm_name = request()->post('firm_name');
             if(!empty($name)) {
                 $map['B.username'] = ['like', "%{$name}%"];
             }
@@ -58,6 +59,10 @@ class Card extends Base
                 if($field == 'firm_name'){
                     $fieldOrder = 'D.name '.$order;
                 }
+            }
+
+            if(!empty($firm_name)){
+                $map['D.name'] = ['like', '%'.$firm_name.'%'];
             }
 
             $firm = model('firm');
