@@ -27,9 +27,9 @@ class SearchKeyword extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        getAdminLog("查看 热门词条列表");
+        getAdminLog("查看 搜索词推荐");
         return view('', [
-            'meta_title' => '热门词条管理',
+            'meta_title' => '搜索词推荐',
             'type' => $SearchKeyword->type
         ]);
     }
