@@ -68,6 +68,7 @@ class UserFirm extends Base
 
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        getAdminLog("查看用户关联企业审核列表");
         return view('', []);
     }
 
@@ -115,6 +116,7 @@ class UserFirm extends Base
             $state = $FirmRelevance->isUpdate(true)->save($save, ['id' => $id]);
 
             if($state !== false) {
+                getAdminLog(" 用户关联企业审核 ID".$id);
                 return  success_json('审核提交成功');
             }
             return error_json('审核提交失败');
@@ -195,6 +197,7 @@ class UserFirm extends Base
             if(!empty($save)){
                 $firmRelevanceDatum->isUpdate(false)->allowField(true)->saveAll($save, false);
             }
+            getAdminLog("添加用户关联企业审核". $firmRelevanceId);
             return success_json('提交成功');
         }
 
@@ -281,6 +284,7 @@ class UserFirm extends Base
             }
 
             if($state != false) {
+                getAdminLog(" 编辑 用户关联企业审核 ". $id);
                 return success_json('提交成功');
             }
             return error_json('提交失败');

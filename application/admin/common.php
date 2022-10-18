@@ -58,3 +58,16 @@ function getFirmScale($str, $type_no){
     }
     return '-';
 }
+
+function getAdminLog($text){
+    try {
+        model('AdminLog')->isUpdate(false)->data([
+            'uid' => getLoginUserId(),
+            'text' => $text,
+            'url' => (string)url(),
+            'ip' => request()->ip(),
+        ], true)->save();
+    } catch (Exception $e) {
+
+    }
+}

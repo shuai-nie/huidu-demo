@@ -72,6 +72,7 @@ class Firm extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        getAdminLog("查看 企业审核列表");
         return view('', []);
     }
 
@@ -99,6 +100,7 @@ class Firm extends Base
 
             $state = $Firm->data($_post)->save();
             if($state !== false) {
+                getAdminLog(" 新建 企业审核列表 ". $Firm->id);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -135,6 +137,7 @@ class Firm extends Base
 
             $state = $Firm->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state !== false) {
+                getAdminLog(" 编辑 企业审核列表 ID". $id);
                 return success_json("提交成功");
             }
             return error_json("提交失败");
@@ -164,6 +167,7 @@ class Firm extends Base
         $Firm = model('Firm');
         $state = $Firm->isUpdate(true)->save(['status' => 0], ['id' => $id]);
         if($state !== false) {
+            getAdminLog(" 删除 企业审核列表 ". $id);
             return success_json("提交成功");
         }
         return error_json("提交失败");
@@ -207,6 +211,7 @@ class Firm extends Base
 
             $state = $Firm->isUpdate(true)->save($save, ['id' => $id]);
             if($state !== false) {
+                getAdminLog(" 审核 企业审核列表 ".$id);
                 return success_json("提交成功");
             }
             return error_json("提交失败");

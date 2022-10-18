@@ -79,6 +79,7 @@ class Card extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
+        getAdminLog('访问用户名片列表');
         return view('');
     }
 
@@ -188,6 +189,8 @@ class Card extends Base
                 if(!empty($contact)){
                     $cardContact->isUpdate(false)->saveAll($contact, false);
                 }
+
+                getAdminLog("创建用户".$uid." 名片 ID". $card_id);
 
                 Db::commit();
                 $state = true;
@@ -307,6 +310,7 @@ class Card extends Base
             }
 
             if($state !== false){
+                getAdminLog("名片业务需求修改成功 id". $id." relevance_status ". $_post['relevance_status']);
                 return success_json('提交成功');
             }
             return error_json('提交失败');
@@ -384,6 +388,7 @@ class Card extends Base
             }
 
             if($state !== false) {
+                getAdminLog(" 编辑用户名片". $id);
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
             return error_json(lang('EditFail', [lang('CARD')]) );
@@ -450,6 +455,7 @@ class Card extends Base
         if($id > 0) {
             $state = model('card')->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
             if($state !== false ){
+                getAdminLog("删除用户名片 ID" . $id);
                 return success_json('删除名片成功');
             }
             return error('删除名片失败');
