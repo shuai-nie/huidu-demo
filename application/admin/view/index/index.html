@@ -157,7 +157,6 @@
   }).use(['index'], function () {
     var $ = layui.$, active = {
       logout1:function(){
-        console.log("sadasd");
         HttpUtils.post("{:url('logout')}","",function(res){
           console.log(res);
           window.location.reload();
