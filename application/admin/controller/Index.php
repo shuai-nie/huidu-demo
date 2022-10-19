@@ -33,8 +33,9 @@ class Index extends Base
 			$old = input('password_old');
 			$new = input('password_new');
 			$admin = Loader::model('admin')->where(array('id'=>getLoginUserId()))->find();
-			if($admin['password'] != md5(md5($old).$admin->str) ) error_callback('旧密码不正确');
-			$succ = Loader::model('admin')->where(array('id'=>getLoginUserId()))->update(array('password'=>md5(md5($new).$admin->str)));
+            if ($admin['password'] != md5(md5($old) . $admin->str)) error_callback('旧密码不正确');
+            $number = GetRandStr(12);
+            $succ = Loader::model('admin')->where(array('id' => getLoginUserId()))->update(array('password' => md5(md5($new) . $number), 'str' => $number));
 			if($succ !== false){
                 setLoginUserId(null);
 				return success_json();

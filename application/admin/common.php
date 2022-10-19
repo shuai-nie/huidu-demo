@@ -64,7 +64,7 @@ function getAdminLog($text){
         model('AdminLog')->isUpdate(false)->data([
             'uid' => getLoginUserId(),
             'text' => $text,
-            'url' => (string)url(),
+            'url' => (string)request()->url(),
             'ip' => request()->ip(),
         ], true)->save();
     } catch (Exception $e) {

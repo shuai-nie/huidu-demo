@@ -63,13 +63,23 @@ function getConfig($key){
 // 获取用户id
 function getLoginUserId()
 {
-    return session('user_id_with_app');
+    return cookie('user_id_with_app');
+}
+
+function getLoginUserStr()
+{
+    return cookie('user_id_with_str');
+}
+
+function setLoginUserStr($str)
+{
+    return cookie('user_id_with_str', $str);
 }
 
 // 设置用户id
 function setLoginUserId($user_id)
 {
-    session('user_id_with_app', $user_id);
+    cookie('user_id_with_app', $user_id);
 }
 
 // 设置用户权限

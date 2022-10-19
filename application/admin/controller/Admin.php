@@ -48,11 +48,13 @@ class Admin extends Base
         if (request()->isPost()) {
             $_post = request()->param();
             if(!empty($_post['password'])){
-                $_post['password'] = md5(md5($_post['password']).$info['str']);
+                $number = GetRandStr(12);
+                $_post['password'] = md5(md5($_post['password']) . $number);
+                $_post['str'] = $number;
             }else{
                 unset($_post['password']);
             }
-            $state = $Admin->save($_post, ['id'=>$id]);
+            $state = $Admin->isUpdate(true)->save($_post, ['id'=>$id]);
             if($state !== false){
                 return success_json(lang('EditSuccess', [lang('User')]));
             }
