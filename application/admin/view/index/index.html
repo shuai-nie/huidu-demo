@@ -148,7 +148,7 @@
   $('body').height($('body')[0].clientHeight);
   function edit_passowrd()
   {
-    UI.openLayer("{:url('edit')}");
+    UI.openLayer("{:url('edit')}", 750, 450, "#submit", '修改密码');
   }
   layui.config({
     base: '../../static/admin_templete/'//静态资源所在路径
@@ -158,7 +158,6 @@
     var $ = layui.$, active = {
       logout1:function(){
         HttpUtils.post("{:url('logout')}","",function(res){
-          console.log(res);
           window.location.reload();
         });
       }

@@ -21,6 +21,7 @@ class Index extends Base
     {
     	if(request()->isPost()){
            setLoginUserId(null);
+            getAdminLog("用户退出");
            success_callback("成功");
         }
 	    setLoginUserId(null);
@@ -35,6 +36,7 @@ class Index extends Base
 			if($admin['password'] != md5(md5($old).$admin->str) ) error_callback('旧密码不正确');
 			$succ = Loader::model('admin')->where(array('id'=>getLoginUserId()))->update(array('password'=>md5(md5($new).$admin->str)));
 			if($succ !== false){
+                setLoginUserId(null);
 				return success_json();
 			}
             return error_json();

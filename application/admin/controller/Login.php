@@ -25,11 +25,11 @@ class Login extends Controller
 //                setLoginStr($number);
 //                $model->where(array('id'=>$isUser['id']))->update(array('str'=>$number));
                 setLoginUserId($isUser['id']);
+                getAdminLog("用户登录");
                 return success_json(lang("LoginSuccess"), ['href'=>'http://'.$_SERVER['HTTP_HOST']]);
             }else{
                 return error_json(lang('LoginFail'));
             }
         }
-
     }
 }

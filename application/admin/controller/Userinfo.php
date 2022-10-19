@@ -68,6 +68,7 @@ class Userinfo extends Base
         }
         $id = \request()->get('id', 0);
         $packageAll = model('Package')->where(['status'=>1])->field('id,title')->select();
+        getAdminLog("查看 用户列表");
         return view('', [
             'id' => $id,
             'packageAll' => $packageAll,
@@ -113,14 +114,14 @@ class Userinfo extends Base
                 $save['end_time'] = $time + $_post['time'] * 30*60*60*24;
             } else {
                 $save['end_time'] = $time + 30*60*60*24;
-
             }
 
-            $UserRecharge->data($save)->save();
+            $UserRecharge->isUpdate(false)->data($save)->save();
             $recharge_id = $UserRecharge->id;
 
             $state = model('UserInfo')->isUpdate(true)->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
+                getAdminLog("用户变更套餐 user_recharge_id" . $recharge_id . " uid " . $_post['uid']);
                 return success_json(lang('PACKAGEDISTRIBUTION'). lang('Success'));
             }
             return error_json(lang('PACKAGEDISTRIBUTION'). lang('Fail'));
@@ -162,8 +163,9 @@ class Userinfo extends Base
                 'remarks'           => '延期套餐',
             ]);
             $recharge_id = $UserRecharge->id;
-            $state = model('UserInfo')->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
+            $state = model('UserInfo')->isUpdate(true)->save(['user_recharge_id'=>$recharge_id], ['uid'=>$_post['uid']]);
             if($state !== false) {
+                getAdminLog("延期套餐 user_recharge_id" . $recharge_id . " uid " . $_post['uid']);
                 return success_json(lang('PackageContinue'). lang('Success'));
             }
             return error_json(lang('PackageContinue'). lang('Fail'));
@@ -196,11 +198,11 @@ class Userinfo extends Base
 
             Db::startTrans();
             try {
-                $userModel->save($data);
+                $userModel->isUpdate(false)->data($data)->save();
                 $uid = $userModel->id;
                 $packageInfo = model('Package')->where(['id'=>1])->find();
                 $UserRechargeModel = model('UserRecharge');
-                $UserRechargeModel->data([
+                $UserRechargeModel->isUpdate(false)->data([
                     'uid'               => $uid,
                     'package_id'        => 1,
                     'start_time'        => time(),
@@ -214,11 +216,11 @@ class Userinfo extends Base
                     'remarks'           => '注册账户' . $uid,
                 ])->save();
                 $UserRechargeId = $UserRechargeModel->id;
-                model('UserInfo')->data([
+                model('UserInfo')->isUpdate(false)->data([
                     'uid' => $uid,
                     'user_recharge_id' => $UserRechargeId
                 ])->save();
-                model('UserDemand')->data([
+                model('UserDemand')->isUpdate(false)->data([
                     'uid' => $uid,
                     'business_type' => $data['business_type'],
                     'industry' => $data['industry'],
@@ -231,6 +233,7 @@ class Userinfo extends Base
                 Db::rollback();
             }
             if($state !== false){
+                getAdminLog("新建用户 uid". $uid. " user_recharge_id ".$UserRechargeId);
                 return success_json(lang('CreateSuccess', [ lang('User')]));
             }
             return error_json(lang('CreateFail', [ lang('User')]));
@@ -293,6 +296,7 @@ class Userinfo extends Base
             }
 
             if ($state !== false) {
+                getAdminLog("编辑用户 uid".$UserInfo->uid);
                 return success_json(lang('EditSuccess', [ lang('User')]));
             }
             return error_json(lang('EditFail', [ lang('User')]));
@@ -349,6 +353,7 @@ class Userinfo extends Base
         if($id > 0 ){
             $state = model('User')->save(['status' => 0], ['id' => $id]);
             if($state !== false) {
+                getAdminLog("删除用户 id" . $id);
                 return success_json(lang('DeleteSuccess', [lang('User')] ));
             }
             return error_json(lang('DeleteFail', [lang('User')]) );
@@ -363,6 +368,7 @@ class Userinfo extends Base
             $info = $user->where(['id'=>$uid])->find();
             $state = $user->allowField(true)->isUpdate(true)->save(['pwd' => md5(md5($info['username']) . $info['salt'])], ['id' => $uid]);
             if($state !== false) {
+                getAdminLog("用户 密码重置 uid" . $uid);
                 return success_json('密码重置成功');
             }
             return error_json('密码重置失败');
