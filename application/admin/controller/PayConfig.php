@@ -27,6 +27,7 @@ class PayConfig extends Base
                 ->where($map)->count();
             return json(['data' => [ 'count' => $count, 'list' => $data]], 200);
         }
+        getAdminLog("查看 支付二维码配置");
         return view('', []);
     }
 
@@ -37,6 +38,7 @@ class PayConfig extends Base
             $_post = request()->post();
             $state = $PayConfig->allowField(true)->save($_post);
             if($state !== false) {
+                getAdminLog("新建 支付二维码配置 ID". $PayConfig->id);
                 return success_json('新建成功');
             }
             return error_json('新建失败');
@@ -51,6 +53,7 @@ class PayConfig extends Base
             $_post = request()->post();
             $state = $PayConfig->allowField(true)->save($_post, ['id'=>$id]);
             if($state !== false) {
+                getAdminLog("编辑 支付二维码配置 ID" . $id);
                 return success_json('编辑成功');
             }
             return error_json('编辑失败');
@@ -64,6 +67,7 @@ class PayConfig extends Base
         $PayConfig = model('PayConfig');
         $state = $PayConfig->allowField(true)->save(['status' => 0], ['id' => $id]);
         if($state !== false) {
+            getAdminLog("删除 支付二维码配置 ID" . $id);
             return success_json('删除成功');
         }
         return error_json('删除失败');

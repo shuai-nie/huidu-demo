@@ -64,6 +64,7 @@ class CardView extends Controller
             }
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
+        getAdminLog(" 查看 名片查看记录表 ");
         return view('',
         [
             'meta_title' => '名片·查看记录表'

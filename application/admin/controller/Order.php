@@ -69,6 +69,7 @@ class Order extends Base
         }
 
         $packageAll = model('Package')->where(['status'=>1])->field('id,title')->select();
+        getAdminLog("查看 订单管理列表");
         return view('', [
             'meta_title' => '订单管理',
             'type' => $order->type,
@@ -129,6 +130,7 @@ class Order extends Base
                 ], ['id' => $id]);
             }
             if($state !== false) {
+                getAdminLog(" 审核 id" . $id . " status " . $_post['status'] . " feedback " . $_post['feedback'] . " type " . $info['type']);
                 return $this->success('数据提交成功');
             } else {
                 return $this->error('数据提交失败');
