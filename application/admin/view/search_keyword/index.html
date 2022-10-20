@@ -94,8 +94,12 @@ layui.use(['table','dropdown','form', 'element'], function(){
 
     let _element = 1;
     element.on('tab(element)', function(){
-        console.log(_element);
         _element =  this.getAttribute('lay-id');
+        table.reload('think-table' + _element, {
+            method:'post',
+            where : {},
+            page : {curr : 1}
+        });
     });
 
     let data, _url;
@@ -170,7 +174,6 @@ layui.use(['table','dropdown','form', 'element'], function(){
     };
 
     form.on('submit(data-search-btn)', function(data){
-        console.log(_element)
         table.reload('think-table' + _element, {
             method:'post',
             where : data.field,
