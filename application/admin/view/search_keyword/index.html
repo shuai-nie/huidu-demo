@@ -120,7 +120,7 @@ layui.use(['table','dropdown','form', 'element'], function(){
     });
 
     table.on('toolbar(think-table3)', function(obj){
-        _url = "{:url('create', ['type'=>3])}";
+        _url = "{:url('create', ['type'=>2])}";
         active[obj.event] ? active[obj.event].call(this) : '';
     })
 
