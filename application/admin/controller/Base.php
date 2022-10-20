@@ -11,11 +11,13 @@ class Base extends Controller
     {
 
     	if(empty(getLoginUserId())){
+            setLoginUserId(null);
     		$this->redirect("/Admin/Login");
     	}else{
             $str = getLoginUserStr();
             $admin = model('Admin')->where(['id'=>getLoginUserId()])->find();
             if($admin['str'] != $str) {
+                setLoginUserId(null);
                 $this->redirect("/Admin/Login");
             }
         }
