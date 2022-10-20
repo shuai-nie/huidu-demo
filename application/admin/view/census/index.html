@@ -1,7 +1,7 @@
 {include file="moban/bone_header"}
 <script src="/style/js/echarts.min.js?v=1.1"></script>
 
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -24,7 +24,13 @@
     </div>
 </fieldset>
 
-<div id="main" style="width: auto;height:600px;margin-top:20px;"></div>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <div id="main" style="width: auto;height:600px;margin-top:20px;"></div>
+    </div>
+</div>
+
+
 
 <script>
 layui.use(['table','form','laydate'], function(){

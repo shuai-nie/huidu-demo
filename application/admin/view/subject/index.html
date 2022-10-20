@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" data-type="create">{:lang('create')}</button>
-</div>
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -61,6 +57,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <span class="layui-btn layui-btn-xs" lay-event="create"><i class="layui-icon layui-icon-add-1"></i>{:lang('create')}</span>
+</script>
+
 <script type="text/html" id="barDemo">
     <span class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</span>
     <span class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</span>
@@ -110,6 +110,12 @@
             ,{field: 'create_time', title: '创建时间', width:170}
 
         ], "#think-table", "auth");
+
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==='create'){
+                UI.openLayer("{:url('create')}", 850, 550, '#submit', "{:lang('create')}");
+            }
+        })
 
         table.on('tool(think-table)', function(obj){
             var data = obj.data

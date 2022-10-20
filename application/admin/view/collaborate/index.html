@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -43,6 +39,10 @@
 </fieldset>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <span class="layui-btn layui-btn-xs" lay-event="create"><i class="layui-icon layui-icon-add-1"></i>{:lang('create')}</span>
+</script>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -89,10 +89,16 @@
             return false;
         })
 
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==='create'){
+                UI.openLayer("{:url('create')}", 750, 450, '#submit', "{:lang('create')}");
+            }
+        })
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 450, '#submit', "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -101,16 +107,7 @@
                 });
             }
         });
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 750, 450, '#submit');
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+        var $ = layui.$;
 
         form.on('switch(quality)', function(obj){
             var _val = obj.elem.checked === true ? 1 : 0,

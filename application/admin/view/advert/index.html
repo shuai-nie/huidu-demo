@@ -1,14 +1,6 @@
 {include file="moban/bone_header"}
 
-{if condition="$type eq 'log'"}
-{elseif condition="$type eq 'data'"}
-{else/}
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-{/if}
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -53,6 +45,14 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    {if condition="$type eq 'log'"}
+    {elseif condition="$type eq 'data'"}
+    {else/}
+    <a class="layui-btn layui-btn-xs" lay-event="create">添加</i></a>
+    {/if}
+</script>
+
 <script type="text/html" id="barDemo">
     {if condition="$type eq 'log'"}
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="see">查看</i></a>
@@ -76,7 +76,7 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'key', title: '', width:80, fixed: 'left'}
-            ,{field: 'adsense_title', title: '广告位',width:170,templet:function(d){
+            , { field: 'adsense_title', title: '广告位', width: 140, templet: function (d) {
                 return d.adsense_title;
             }}
             ,{field: 'title', title: '广告名称',width:170}
@@ -122,6 +122,13 @@
             }}
             ,{fixed: 'right',title:'操作',width:90, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
+
+        table.on('toolbar(think-table)', function(obj){
+            var data = obj.data;
+            if (obj.event === "create") {
+                UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
+            }
+        })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
@@ -185,8 +192,6 @@
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
-                // url: "{:url('')}",
-                // method:'post',
                 where : data.field,
                 page : {curr : 1}
             });
