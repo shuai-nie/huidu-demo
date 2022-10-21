@@ -45,6 +45,7 @@ class GetMacAddr
         if ( $this->return_array )
             return $this->return_array;
         else{
+            var_dump($_SERVER);exit();
             $ipconfig = $_SERVER["WINDIR"]."system32ipconfig.exe";
             if ( is_file($ipconfig) )
                 @exec($ipconfig." /all", $this->return_array);
