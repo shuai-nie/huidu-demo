@@ -31,7 +31,7 @@ class CardView extends Controller
             if(!empty($username)) {
                 $map['B.username'] = ['like', "%{$username}%"];
             }
-            
+
             if(!empty($nickname)) {
                 $map['B.nickname'] = ['like', "%{$nickname}%"];
             }

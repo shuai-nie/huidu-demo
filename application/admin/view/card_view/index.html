@@ -68,8 +68,13 @@
                 return d.username + '/' + d.nickname;
             }}
             ,{field: 'name', title: '名片名', width:140}
-            ,{field: 'title', title: '资源名', width:140}
-            ,{field: 'type', title: '查看来源',width:90, align:'center', templet:function (d) {
+            ,{field: 'title', title: '资源名', width:140, templet: function(d){
+                if(d.title){
+                    return d.title;
+                }
+                return '-';
+            }}
+            ,{field: 'type', title: '查看来源',width:100, align:'center', templet:function (d) {
                 switch (d.type*1){
                     {volist name='type' id='vo' key='k'}
                     case {$k}: return "{$vo}";
