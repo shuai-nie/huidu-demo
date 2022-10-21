@@ -2,6 +2,8 @@
 namespace app\admin\controller;
 use think\Controller;
 use think\Loader;
+use util\GetMacAddr;
+
 class Login extends Controller
 {
     public function index()
@@ -32,5 +34,11 @@ class Login extends Controller
                 return error_json(lang('LoginFail'));
             }
         }
+    }
+
+    public function cc()
+    {
+        $mac = new GetMacAddr();
+        var_dump($mac->GetMacAddr(PHP_OS));
     }
 }

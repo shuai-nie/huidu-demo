@@ -15,7 +15,7 @@ class SearchKeyword extends Base
         0 => '综合',
         1 => '合作',
         2 => '需求',
-        3 => '咨询',
+        3 => '资讯',
         4 => '人脉',
     ];
 
