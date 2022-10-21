@@ -1,7 +1,5 @@
 {include file="moban/bone_header"}
 
-
-
 <fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
@@ -22,6 +20,18 @@
                             <option value="1">未审核</option>
                             <option value="2">已过审</option>
                             <option value="3">未通过</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="">来源</label>
+                    <div class="layui-input-inline" style="width: 120px;">
+                        <select name="isweb">
+                            <option value="">请选择</option>
+                            {volist name="web_type" id="vo" key="k"}
+                                <option value="{$k}">{$vo}</option>
+                            {/volist}
                         </select>
                     </div>
                 </div>
@@ -88,6 +98,15 @@
             }}
             , {field: 'userZ', title: '企业员工', width: 110, templet: function(d){
                 return d.userZ + '/' + d.userC;
+            }}
+            , {field: 'isweb', title: '来源', width: 80, templet: function(d){
+                switch (d.isweb){
+                    {volist name="web_type" id="vo" key="k"}
+                    case {$k} : return "{$vo}";
+                    {/volist}
+                    default: return '-';
+                }
+                    return d.isweb;
             }}
             , {field: 'create_time', title: '创建时间', width: 170}
             , {field: 'status', title: '审核状态',width: 90, templet: function(d){

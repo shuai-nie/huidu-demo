@@ -13,9 +13,9 @@ class UserFirm extends Base
 
     public function index()
     {
+        $Firm = model('Firm');
         if(request()->isPost()) {
             $FirmRelevance = model('FirmRelevance');
-            $Firm = model('Firm');
             $User = model('User');
 
             $map = [];
@@ -25,6 +25,7 @@ class UserFirm extends Base
             $username = request()->post('username');
             $firm_name = request()->post('firm_name');
             $status = request()->post('status');
+            $isweb = request()->post('isweb');
 
             if(!empty($username)) {
                 $map['C.username|C.nickname'] = ['like', '%'.$username.'%'];
@@ -35,6 +36,10 @@ class UserFirm extends Base
             }
             if(is_numeric($status)){
                 $map['A.status'] = $status;
+            }
+
+            if(!empty($isweb)){
+                $map['A.isweb'] = $isweb;
             }
 
             $Card = model('Card');
@@ -73,7 +78,9 @@ class UserFirm extends Base
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         getAdminLog("查看用户关联企业审核列表");
-        return view('', []);
+        return view('', [
+            'web_type' => $Firm->web_type
+        ]);
     }
 
     public function examine()
@@ -173,7 +180,6 @@ class UserFirm extends Base
                 ]);
                 model('Card')->isUpdate(true)->save(['verify_status' => 1, 'firm_id' => $_post['firm_id']], ['uid' => $_post['uid']]);
             }
-
 
             $firmRelevanceId = $firmRelevance->id;
             $time = time();

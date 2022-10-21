@@ -32,6 +32,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label" style="">来源</label>
+                    <div class="layui-input-inline" style="width: 120px;">
+                        <select name="isweb">
+                            <option value="">请选择</option>
+                            {volist name="web_type" id="vo" key="k"}
+                            <option value="{$k}">{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
 
@@ -68,8 +80,17 @@
             , {field: 'business_tag', title: '业务', width: 170}
             , {field: 'firm_name', title: '关联企业', width: 120}
             , {field: 'userZ', title: '企业员工', width: 110, templet: function(d){
-                    return d.userZ + '/' + d.userC;
-                }}
+                return d.userZ + '/' + d.userC;
+            }}
+            , {field: 'isweb', title: '来源', width: 80, templet: function(d){
+                switch (d.isweb){
+                {volist name="web_type" id="vo" key="k"}
+                    case {$k} : return "{$vo}";
+                {/volist}
+                    default: return '-';
+                }
+                return d.isweb;
+            }}
             , {field: 'create_time', title: '申请时间', width: 170}
             , {field: 'status', title: '状态',width:100, templet(d){
                 switch (d.status){

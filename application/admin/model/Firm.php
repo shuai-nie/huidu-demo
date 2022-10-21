@@ -9,6 +9,10 @@ class Firm extends Base
     protected $updateTime = 'update_time';
     protected $insert = ['status' => 1, 'create_id', 'update_id', 'isweb' => 2];
     protected $update = ['update_id'];
+    public $web_type = [
+        1 => '页面',
+        2 => '后台',
+    ];
 
     protected function setCreateIdAttr()
     {

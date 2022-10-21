@@ -11,8 +11,8 @@ class Firm extends Base
 
     public function index()
     {
+        $Firm = model('Firm');
         if(request()->isPost()){
-            $Firm = model('Firm');
             $DataDic = model('DataDic');
             $Card = model('Card');
             $page = request()->post('page', 1);
@@ -20,6 +20,7 @@ class Firm extends Base
             $offset = ($page - 1 ) * $limit;
             $name = request()->post('name');
             $status = request()->post('status');
+            $isweb = request()->post('isweb');
 
             $map = ['status'=>['in', [1,2,3]]];
             if(!empty($name)) {
@@ -27,6 +28,9 @@ class Firm extends Base
             }
             if(!empty($status)) {
                 $map['status'] = $status;
+            }
+            if(!empty($isweb)) {
+                $map['isweb'] = $isweb;
             }
 
             $count = $Firm->where($map)->count();
@@ -73,7 +77,9 @@ class Firm extends Base
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
         getAdminLog("查看 企业审核列表");
-        return view('', []);
+        return view('', [
+            'web_type' => $Firm->web_type
+        ]);
     }
 
     public function create()
