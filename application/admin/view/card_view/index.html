@@ -27,6 +27,18 @@
                 </div>
 
                 <div class="layui-inline">
+                    <label class="layui-form-label">查看来源</label>
+                    <div class="layui-input-inline" style="width: 110px;">
+                        <select name="type" >
+                            <option value="">请选择</option>
+                            {volist name='type' id='vo' key='k'}
+                            <option value="{$k}">{$vo}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
                     <button type="submit" class="layui-btn layui-btn-primary" lay-submit="data-search-btn" lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
                 </div>
             </div>
@@ -53,11 +65,19 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'uid', title: '账号/昵称',width:180, templet:function (d) {
-                    return d.username + '/' + d.nickname;
-                }}
+                return d.username + '/' + d.nickname;
+            }}
             ,{field: 'name', title: '名片名', width:140}
             ,{field: 'title', title: '资源名', width:140}
-            ,{field: 'create_time', title: '时间', width:170}
+            ,{field: 'type', title: '查看来源',width:90, align:'center', templet:function (d) {
+                switch (d.type*1){
+                    {volist name='type' id='vo' key='k'}
+                    case {$k}: return "{$vo}";
+                    {/volist}
+                    default: return '-';
+                }
+            }}
+            ,{field: 'create_time', title: '查看时间', width:170, align:'center'}
         ], '#think-table', 'auth');
 
         form.on('submit(data-search-btn)', function(data){

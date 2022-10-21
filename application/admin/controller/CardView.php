@@ -26,21 +26,29 @@ class CardView extends Controller
             $username = \request()->post('username');
             $nickname = \request()->post('nickname');
             $title = \request()->post('title');
+            $type = \request()->post('type');
+
             if(!empty($username)) {
                 $map['B.username'] = ['like', "%{$username}%"];
             }
+            
             if(!empty($nickname)) {
                 $map['B.nickname'] = ['like', "%{$nickname}%"];
             }
+
             if(!empty($title)) {
                 $map['C.title'] = ['like', "%{$title}%"];
+            }
+
+            if(!empty($type)) {
+                $map['A.type'] = $type;
             }
 
             $data = $CardView->alias('A')
                     ->join($User->getTable().' B', 'A.uid=B.id', 'left')
                     ->join($Resource->getTable().' C', 'A.resources_id=C.id', 'left')
                     ->join($Card->getTable().' D', 'A.card_id=D.id', 'left')
-                    ->field('A.id,A.create_time,B.username,B.nickname,C.title,D.name')
+                    ->field('A.id,A.create_time,A.type,B.username,B.nickname,C.title,D.name')
                     ->where($map)->limit($offset, $limit)->order('id desc')->select();
             $count = $CardView->alias('A')
                 ->join($User->getTable().' B', 'A.uid=B.id', 'left')
@@ -67,7 +75,8 @@ class CardView extends Controller
         getAdminLog(" 查看 名片查看记录表 ");
         return view('',
         [
-            'meta_title' => '名片·查看记录表'
+            'meta_title' => '名片·查看记录表',
+            'type' => $CardView->type,
         ]);
     }
 
