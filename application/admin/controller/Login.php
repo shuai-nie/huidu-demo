@@ -38,7 +38,7 @@ class Login extends Controller
 
     public function cc()
     {
-        $mac = new GetMacAddr();
-        var_dump($mac->GetMacAddr(PHP_OS));
+        $mac = new GetMacAddr();// PHP_OS
+        var_dump($mac->GetMacAddr('window'));
     }
 }
