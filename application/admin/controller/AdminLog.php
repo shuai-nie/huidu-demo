@@ -25,6 +25,14 @@ class AdminLog extends Base
                 ->join($admin->getTable()." B", "A.uid=B.id", "left")
                 ->field('A.*,B.name as user_name')
                 ->where($map)->order('id desc')->limit($offset, $limit)->select();
+
+            foreach ($list as $k => $v){
+                if(!empty($name)){
+                    $v['text'] = str_ireplace($name, '<font color="red">' . $name . '</font>', $v['text']);
+                }
+                $list[$k] = $v;
+            }
+
             $data = [
                 'code' => 0, 'msg'  => '', 'data' => [
                     'count' => $count,

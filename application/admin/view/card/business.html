@@ -151,19 +151,20 @@
             $(':button').attr('disabled', 'disabled');
             Api.add(data.field, function (res) {
                 if(res.code == 400){
-                    layer.msg(res.msg)
+                    layer.msg(res.msg, {offset: ['150px', '150px']}, function(){
+                        $(':button').removeClass(DISABLED);
+                        $(':button').removeAttr('disabled');
+                    })
                 }else{
                     layer.msg(res.msg, {icon:1, offset: ['150px', '150px']})
                 }
-                $(':button').removeClass(DISABLED);
-                $(':button').removeAttr('disabled');
             });
         });
 
         let _addYwxqCount = 1+{$userDemandAll|count};
         $("#addYwxq").on('click', function(){
             if (_addYwxqCount > 5) {
-                layer.msg('业务需求只能添加五个', {offset: ['200px', '100px']})
+                layer.msg('业务需求只能添加五个', {offset: ['200px', '150px']})
                 return false
             }
             _addYwxqCount++

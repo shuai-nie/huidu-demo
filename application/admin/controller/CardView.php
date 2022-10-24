@@ -27,6 +27,7 @@ class CardView extends Controller
             $nickname = \request()->post('nickname');
             $title = \request()->post('title');
             $type = \request()->post('type');
+            $name = \request()->post('name');
 
             if(!empty($username)) {
                 $map['B.username'] = ['like', "%{$username}%"];
@@ -44,12 +45,17 @@ class CardView extends Controller
                 $map['A.type'] = $type;
             }
 
+            if(!empty($name)) {
+                $map['D.name'] = ['like', '%'.$name.'%'];
+            }
+
             $data = $CardView->alias('A')
                     ->join($User->getTable().' B', 'A.uid=B.id', 'left')
                     ->join($Resource->getTable().' C', 'A.resources_id=C.id', 'left')
                     ->join($Card->getTable().' D', 'A.card_id=D.id', 'left')
                     ->field('A.id,A.create_time,A.type,B.username,B.nickname,C.title,D.name')
                     ->where($map)->limit($offset, $limit)->order('id desc')->select();
+
             $count = $CardView->alias('A')
                 ->join($User->getTable().' B', 'A.uid=B.id', 'left')
                 ->join($Resource->getTable().' C', 'A.resources_id=C.id', 'left')
@@ -67,6 +73,10 @@ class CardView extends Controller
 
                 if(!empty($nickname)){
                     $v['nickname'] = str_ireplace($nickname, '<font color="red">' . $nickname . '</font>', $v['nickname']);
+                }
+
+                if(!empty($name)){
+                    $v['name'] = str_ireplace($name, '<font color="red">' . $name . '</font>', $v['name']);
                 }
                 $data[$k] =$v;
             }
