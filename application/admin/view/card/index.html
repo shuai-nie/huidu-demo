@@ -81,6 +81,10 @@
     <input type="checkbox" name="quality" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
 </script>
 
+<script type="text/html" id="cardOpenTpl">
+    <input type="checkbox" name="card_open" value="{{d.uid}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="card_open" {{ d.card_open == 1 ? 'checked' : '' }}>
+</script>
+
 <script>
     layui.use(['table','form','dropdown'], function(){
         var table = layui.table
@@ -122,14 +126,9 @@
                 }
                 return '-';
             }}
-            , { field: 'logo_watermark', width: 70, title: '水印', templet: function (d) {
-                if(d.logo_watermark) {
-                    return '<img src="'+d.logo_watermark+'" height="30" width="30" />';
-                }
-                return '-';
-            }}
-            ,{field: 'position', title: '职位',width: 170}
-            ,{field: 'quality', title: '优质人脉',width: 100,templet: '#switchTpl', unresize: true}
+            ,{field: 'card_open', title: '名片隐私',width: 95,templet: '#cardOpenTpl'}
+            ,{field: 'position', title: '职位',width: 120}
+            ,{field: 'quality', title: '优质人脉',width: 90,templet: '#switchTpl', unresize: true}
             ,{field: 'greet', title: '默认打招呼语',width: 100}
             ,{field: 'number', title: '联系号码',width: 170}
             ,{field: 'create_time', title: '创建时间',width: 170}
@@ -189,15 +188,15 @@
                 }
             });
         })
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
-            }
-        };
 
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
+
+        form.on('switch(card_open)', function(obj){
+            var _val = obj.elem.checked === true ? 1 : 0,
+                _id = this.value;
+            $.post("{:url('quality')}", {id:_id,name:this.name,val:_val}, function(obj){
+                layer.msg(obj.msg, {icon:1});
+            }, 'json');
+            return false;
         });
 
         form.on('switch(quality)', function(obj){

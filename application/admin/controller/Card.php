@@ -70,7 +70,7 @@ class Card extends Base
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
                 ->join($CardContact->getTable().' C', '(A.id=C.card_id AND C.status=1 )')
                 ->join($firm->getTable().' D', 'A.firm_id=D.id', 'left')
-                ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number,D.name firm_name')
+                ->field('A.*,B.username,B.nickname,GROUP_CONCAT(C.contact_number) as number,D.name firm_name,B.card_open')
                 ->where($map)->order($fieldOrder)->group('A.id')->limit($offset, $limit)->select();
             $count = $CardModel->alias('A')
                 ->join($UserModel->getTable().' B', "A.uid=B.id")
@@ -439,8 +439,14 @@ class Card extends Base
             $id = \request()->post('id');
             $name = \request()->post('name');
             $val = \request()->post('val');
-            $state = model('Card')->isUpdate(true)->save([$name => $val], ['id' => $id]);
+            if($name == 'card_open'){
+                $state = model('User')->isUpdate(true)->save([$name => $val], ['id' => $id]);
+            }else{
+                $state = model('Card')->isUpdate(true)->save([$name => $val], ['id' => $id]);
+            }
+
             if($state !== false) {
+                getAdminLog("名片修改 ".$name."=".$val.($name == 'card_open' ? ' uid' : ' id').':'.$id);
                 return success_json(lang('EditSuccess', [lang('CARD')] ));
             }
             return error_json(lang('EditSuccess', [lang('CARD')]) );
