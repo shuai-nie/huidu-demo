@@ -78,11 +78,11 @@
 </script>
 
 <script type="text/html" id="switchTpl">
-    <input type="checkbox" name="quality" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
+    <input type="checkbox" name="quality" table="user" value="{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="quality" {{ d.quality == 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="cardOpenTpl">
-    <input type="checkbox" name="card_open" value="{{d.uid}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="card_open" {{ d.card_open == 1 ? 'checked' : '' }}>
+    <input type="checkbox" name="card_open" table="card" value="{{d.uid}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="card_open" {{ d.card_open == 1 ? 'checked' : '' }}>
 </script>
 
 <script>
@@ -92,8 +92,8 @@
             , form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            ,{field: 'isweb', title: '来源', width:60,templet:function(d){
+            {field: 'uid', title: 'UID', width:80, fixed: 'left', align:'center'}
+            ,{field: 'isweb', title: '来源', width:60, align:'center',templet:function(d){
                 switch (d.isweb*1){
                     case 1: return 'PC';
                     case 2: return '后台';
@@ -109,7 +109,7 @@
                 }
                 return '-';
             }}
-            , { field: 'verify_status', title: '身份认证', width: 90, templet: function (d) {
+            , { field: 'verify_status', title: '身份认证', width: 90, align:'center', templet: function (d) {
                 if (d.firm_name) {
                     switch (d.verify_status){
                         case 0: return '未认证';
@@ -120,7 +120,7 @@
                     return '-';
                 }
             }}
-            , { field: 'logo', title: 'logo', width: 70, templet: function (d) {
+            , { field: 'logo', title: 'logo', width: 70, align:'center', templet: function (d) {
                 if(d.logo) {
                     return '<img src="'+d.logo+'" height="30" width="30" />';
                 }
@@ -128,10 +128,10 @@
             }}
             ,{field: 'card_open', title: '名片隐私',width: 95,templet: '#cardOpenTpl'}
             ,{field: 'position', title: '职位',width: 120}
-            ,{field: 'quality', title: '优质人脉',width: 90,templet: '#switchTpl', unresize: true}
+            ,{field: 'quality', title: '优质人脉',width: 90,templet: '#switchTpl', unresize: true, align:'center'}
             ,{field: 'greet', title: '默认打招呼语',width: 100}
             ,{field: 'number', title: '联系号码',width: 170}
-            ,{field: 'create_time', title: '创建时间',width: 170}
+            ,{field: 'create_time', title: '创建时间',width: 170, align:'center'}
             ,{fixed: 'right',title:'操作',width:90, align:'center',fixed: 'right', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
@@ -194,7 +194,7 @@
             var _val = obj.elem.checked === true ? 1 : 0,
                 _id = this.value;
             $.post("{:url('quality')}", {id:_id,name:this.name,val:_val}, function(obj){
-                layer.msg(obj.msg, {icon:1});
+                layer.msg(obj.msg, {icon: 1});
             }, 'json');
             return false;
         });
@@ -202,8 +202,8 @@
         form.on('switch(quality)', function(obj){
             var _val = obj.elem.checked === true ? 1 : 0,
                 _id = this.value;
-            $.post("{:url('quality')}", {id:_id,name:this.name,val:_val}, function(obj){
-                layer.msg(obj.msg, {icon:1});
+            $.post("{:url('quality')}", {id: _id, name: this.name, val: _val}, function (obj) {
+                layer.msg(obj.msg, {icon: 1});
             }, 'json');
             return false;
         });
