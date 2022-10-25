@@ -66,6 +66,7 @@ class Advert extends Base
             return json(['data'=>['count'=>$count[0]['cou'], 'list'=>$list]], 200);
         }
         $AdsenseAll = model('Adsense')->allselect();
+        getAdminLog("查看 广告列表");
         return view('', [
             'AdsenseAll' => $AdsenseAll,
             'type' => '',
@@ -105,6 +106,7 @@ class Advert extends Base
                     }
                     model('AdvertAttribute')->saveAll($attr, false);
                 }
+                getAdminLog("添加 广告列表 ID:".$advert_id);
                 Db::commit();
                 $state = true;
             }catch (Exception $e) {
@@ -160,6 +162,7 @@ class Advert extends Base
                     }
                     model('AdvertAttribute')->isUpdate(false)->saveAll($attr, false);
                 }
+                getAdminLog("编辑 广告列表 ID:".$id);
 
                 Db::commit();
                 $state = true;
@@ -192,6 +195,7 @@ class Advert extends Base
         $id = request()->param('id');
         $state = $Advert->isUpdate(true)->save(['status'=>0], ['id'=>$id]);
         if ($state != false) {
+            getAdminLog("删除 广告列表 ID:".$id);
             request_post(config('CacheHost') . config('CacheUrlApi')['1'], ['cacheName'=>'ad_all_list']);
             return success_json("刪除成功");
         }
@@ -242,6 +246,7 @@ class Advert extends Base
         $dateDay1 =  date("Y-m-d",strtotime("-1 day")) ;
         $dateDay8 =  date("Y-m-d",strtotime("-8 day")) ;
         $info = AdvertModel::where(['status'=>1, 'id'=>$id])->find();
+        getAdminLog("查看广告列表单个广告统计图 ID".$id);
         return view('', [
             'dateDay1' => $dateDay1,
             'dateDay8' => $dateDay8,
@@ -284,6 +289,7 @@ class Advert extends Base
 
             return json(['data'=>['count'=>$count, 'list'=>$list]], 200);
         }
+        getAdminLog("查看广告列表 单个广告 用户记录" . $advert_id);
         return view('', [
             'ymd' => $ymd,
             'advert_id' => $advert_id,

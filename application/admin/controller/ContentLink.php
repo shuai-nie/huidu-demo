@@ -14,6 +14,7 @@ class ContentLink extends Base
 
     public function index()
     {
+        getAdminLog("查看 关键词列表");
         return view('');
     }
 
@@ -46,6 +47,7 @@ class ContentLink extends Base
             $_post = request()->post();
             $state = $contentLink->allowField(true)->save($_post);
             if($state !== false) {
+                getAdminLog("创建 关键词列表ID:".$contentLink->id);
                 return success_json('添加成功');
             }
             return success_json('添加失败');
@@ -60,6 +62,7 @@ class ContentLink extends Base
             $_post = request()->post();
             $state = $contentLink->allowField(true)->save($_post, ['id' => $id]);
             if($state !== false) {
+                getAdminLog("编辑 关键词列表 ID:".$id);
                 return success_json('编辑成功');
             }
             return success_json('编辑失败');
@@ -73,6 +76,7 @@ class ContentLink extends Base
         $contentLink = model('ContentLink');
         $state = $contentLink->allowField(true)->save(['status' => 0], ['id' => $id]);
         if($state !== false) {
+            getAdminLog("删除 关键词列表 ID:".$id);
             return success_json('删除成功');
         }
         return success_json('删除失败');

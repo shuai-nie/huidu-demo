@@ -97,6 +97,8 @@ class Card extends Base
     {
         if(Request()->isPost()) {
             $_post = Request()->post();
+            $card_open = $_post['card_open'];
+            unset($_post['card_open']);
 
             unset($_post['demand_business_type']);
             unset($_post['demand_industry']);
@@ -152,6 +154,7 @@ class Card extends Base
                     'pwd' => $pwd,
                     'salt' => $number,
                     'nickname' => $_post['name'],
+                    'card_open' => $card_open,
                 ])->save();
                 $uid = $userModel->id;
                 $userRecharge->isUpdate(false)->allowField(true)->data([
@@ -356,10 +359,12 @@ class Card extends Base
         $UserModel = model('User');
         $data = model('Card')->alias('A')
             ->join($UserModel->getTable().' B', 'A.uid=B.id')
-            ->field('A.*,B.username,B.nickname')
+            ->field('A.*,B.username,B.nickname,B.card_open')
             ->where(['A.id'=>$id])->find();
         if(\request()->isPost()) {
             $_post = \request()->post();
+            $card_open = $_post['card_open'];
+            unset($_post['card_open']);
             $contact = [];
             foreach ($_post['contact'] as $k=>$v) {
                 array_push($contact, [
@@ -383,6 +388,7 @@ class Card extends Base
                 model('user')->allowField(true)->isUpdate(true)->save([
                     'nickname' => $_post['name'],
                     'head_url' => $_post['logo'],
+                    'card_open' => $card_open,
                 ], ['id' => $data['uid']]);
 
                 Db::commit();

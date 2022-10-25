@@ -48,7 +48,13 @@
         </button>
     </div>
 
-
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否显示</label>
+        <div class="layui-input-inline" style="width:350px;">
+            <input type="radio" name="card_open" value="1" title="显示" />
+            <input type="radio" name="card_open" value="0" title="隐藏" />
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">打招呼语</label>
@@ -209,6 +215,7 @@
         form.val('first', {
             'name': "{$data['name']}",
             "logo": "{$data['logo']}",
+            "card_open": "{$data['card_open']}",
             "logo_watermark": "{$data['logo_watermark']}",
             "position" : "{$data['position']}",
             "business_type": "{$data['business_type']}",

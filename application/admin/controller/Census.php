@@ -15,6 +15,7 @@ class Census extends Base
             $userStat = model('userStat');
             $stime = request()->post('stime');
             $etime = request()->post('etime');
+            getAdminLog("查看统计图 stime:".$stime."etime".$etime);
 
             $month_arr = [];
             $seriesUser = [];
