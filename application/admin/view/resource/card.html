@@ -1,42 +1,47 @@
 {include file="moban/css"}
 {include file="moban/js"}
 
-<!--<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">-->
 <form class="layui-form" lay-filter="first" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
-        <label class="layui-form-label">用户名字</label>
-        <div class="layui-input-block">
-            <input type="text" autocomplete="off" class="layui-input" value="{$data['username']}/{$data['nickname']}" >
+        <div class="layui-inline">
+            <label class="layui-form-label">账号/昵称</label>
+            <div class="layui-input-block">
+                <input type="text" autocomplete="off" class="layui-input" value="{$data['username']}/{$data['nickname']}" >
+            </div>
         </div>
-    </div>
-
-    <div id="url" {if condition="empty($data['logo'])"}style="display: none;"{/if}>
-    <label class="layui-form-label"></label>
-    <div class="layui-input-block">
-        <img src="{$data['logo']}" height="100" width="100" />
-    </div>
-    </div>
-
-    <div id="logo_watermark" {if condition="empty($data['logo_watermark'])"}style="display: none;"{/if}>
-    <label class="layui-form-label"></label>
-    <div class="layui-input-block">
-        <img src="{$data['logo_watermark']}" height="100" width="100" />
-    </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">业务</label>
-        <div class="layui-input-block">
-            {volist name='resources' id='vo'}
-            <input type="checkbox" name="business_tag[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}">
-            {/volist}
+        <div class="layui-inline">
+            <label class="layui-form-label">职位</label>
+            <div class="layui-input-block">
+                <input type="text" name="position" placeholder="" autocomplete="off" class="layui-input">
+            </div>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">职位</label>
+        <div class="layui-inline">
+            <div id="url" {if condition="empty($data['logo'])"}style="display: none;"{/if}>
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <img src="{$data['logo']}" height="100" width="100" />
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <div id="logo_watermark" {if condition="empty($data['logo_watermark'])"}style="display: none;"{/if}>
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <img src="{$data['logo_watermark']}" height="100" width="100" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否显示</label>
         <div class="layui-input-block">
-            <input type="text" name="position" placeholder="" autocomplete="off" class="layui-input">
+            <input type="radio" name="card_open" value="1" title="显示" />
+            <input type="radio" name="card_open" value="0" title="隐藏" />
         </div>
     </div>
 
@@ -47,11 +52,9 @@
         </div>
     </div>
 
-
     {if condition="!empty($CardContact)" }
     {volist name="CardContact" id="vo" key="k" }
     <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;">
-
         <div class="layui-form-item contact ">
             <div class="layui-inline">
                 <label class="layui-form-label" >联系方式</label>
@@ -74,9 +77,7 @@
     {/volist}
 
     {else/}
-
     <div class="contactName" contactNameLength="0" style="border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;padding-top:10px;margin-left:30px;">
-
         <div class="layui-form-item contact">
             <div class="layui-inline">
                 <label class="layui-form-label" style="" >联系方式</label>
@@ -92,6 +93,40 @@
         </div>
     </div>
     {/if}
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务类型</label>
+        <div class="layui-input-block">
+            {volist name="RESOURCES_TYPE" id="vo"}
+            <input type="radio" name="business_type" data-id="{$vo['id']}" value="{$vo['data_no']}" title="{$vo['data_name']}" lay-filter="business_type" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">业务细分</label>
+        <div class="layui-input-block layui-form" id="business_subdivide" lay-filter="business_subdivide" >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行业类型</label>
+        <div class="layui-input-block" >
+            {volist name='ADVERT_ATTRIBUTE' id='vo'}
+            <input type="checkbox" name="industry[{$vo['data_no']}]" value="{$vo['data_no']}" class="layui-input" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所在地区</label>
+        <div class="layui-input-block" >
+            {volist name="RESOURCES_REGION" id="vo"}
+            <input type="checkbox" name="region[{$vo['data_no']}]" value="{$vo['data_no']}" title="{$vo['data_name']}" />
+            {/volist}
+        </div>
+    </div>
+
 
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
@@ -152,12 +187,17 @@
 
         form.val('first', {
             'name': "{$data['name']}",
-            "logo":"{$data['logo']}",
-            "logo_watermark":"{$data['logo_watermark']}",
+            "logo": "{$data['logo']}",
+            "logo_watermark": "{$data['logo_watermark']}",
             "position" : "{$data['position']}",
-            "greet":"{$data['greet']}",
-        {volist name='data["business_tag"]' id='vo'}
-        "business_tag[{$vo}]":true,
+            "greet": "{$data['greet']}",
+            "card_open": "{$data['card_open']}",
+            "business_type": "{$data['business_type']}",
+            {volist name='data["industry"]' id='vo'}
+            "industry[{$vo}]": true,
+            {/volist}
+            {volist name='data["region"]' id='vo'}
+            "region[{$vo}]": true,
             {/volist}
     });
 
@@ -204,12 +244,36 @@
             _this.parent().parent().remove();
         })
 
+        resources_type2();
 
+        function resources_type2(){
+            var _id = $("input[name='business_type']:checked").attr('data-id');
+            $.ajax({
+                url: "{:url('subject/resources_type')}",
+                dataType: 'json',
+                async: true,
+                data: {id: _id},
+                success: function (objPost) {
+                    if(objPost.code == 200){
+                        var _html = "";
+                        $.each(objPost.data, function(i, v){
+                            _html += "<input type='checkbox' name='business_subdivide["+v.data_no+"]' value='"+v.data_no+"' title='"+v.data_name+"' />";
+                        })
+                        $("#business_subdivide").html(_html)
+                        form.render('checkbox', 'business_subdivide');
+                        form.val('first', {
+                        {volist name='data["business_subdivide"]' id='vo'}
+                        "business_subdivide[{$vo}]": true,
+                            {/volist}
+                    });
+                    }
+                }
+            })
+        }
 
 
 
         form.on('submit(submit)', function (data) {
-
             Api.edit(data.field, function (res) {});
         });
 

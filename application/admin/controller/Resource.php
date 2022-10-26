@@ -891,9 +891,13 @@ class Resource extends Base
         $UserModel = model('User');
         $data = model('Card')->alias('A')
             ->join($UserModel->getTable().' B', 'A.uid=B.id')
-            ->field('A.*,B.username,B.nickname')
+            ->field('A.*,B.username,B.nickname,B.card_open')
             ->where(['A.uid'=>$uid,'A.status'=>1])->find();
         if($data){
+            $data['business_subdivide'] = explode('|', $data['business_subdivide']);
+            $data['industry'] = explode('|', $data['industry']);
+            $data['region'] = explode('|', $data['region']);
+
             $data['business_tag'] = explode('|', $data['business_tag']);
             $DataDicData = model('DataDic')->where(['data_type_no'=>'CONTACT_TYPE','status'=>1])->order('sort desc')->select();
             $resources = model('DataDic')->where(['data_type_no'=>'RESOURCES_TYPE','status'=>1])->order('sort desc')->select();
@@ -903,11 +907,19 @@ class Resource extends Base
             $CardContact = array();
             $resources = array();
         }
+        $RESOURCES_TYPE   = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_TYPE', 'status' => 1]);
+        $RESOURCES_REGION = model('DataDic')->selectType(['data_type_no' => 'RESOURCES_REGION', 'status' => 1]);
+        $ADVERT_ATTRIBUTE = model('DataDic')->selectType(['data_type_no' => 'ADVERT_ATTRIBUTE', 'status' => 1]);
+        $FIRM_SCALE       = model('DataDic')->selectType(['data_type_no' => 'FIRM_SCALE', 'status' => 1]);
         return view('', [
             'data'=>$data,
             'DataDicData' => $DataDicData,
             'CardContact' => $CardContact,
             'resources' => $resources,
+            'RESOURCES_TYPE'   => $RESOURCES_TYPE,
+            'RESOURCES_REGION' => $RESOURCES_REGION,
+            'ADVERT_ATTRIBUTE' => $ADVERT_ATTRIBUTE,
+            'FIRM_SCALE'       => $FIRM_SCALE,
         ]);
     }
 }
