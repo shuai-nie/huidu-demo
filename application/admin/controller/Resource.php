@@ -891,7 +891,7 @@ class Resource extends Base
         $UserModel = model('User');
         $data = model('Card')->alias('A')
             ->join($UserModel->getTable().' B', 'A.uid=B.id')
-            ->field('A.*,B.username,B.nickname,B.card_open')
+            ->field('A.*,B.username,B.nickname,B.card_open,B.telegram,B.chat_id')
             ->where(['A.uid'=>$uid,'A.status'=>1])->find();
         if($data){
             $data['business_subdivide'] = explode('|', $data['business_subdivide']);

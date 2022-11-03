@@ -5,13 +5,13 @@
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label">账号/昵称</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" style="width:200px;">
                 <input type="text" autocomplete="off" class="layui-input" value="{$data['username']}/{$data['nickname']}" >
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">职位</label>
-            <div class="layui-input-block">
+            <label class="layui-form-label" style="width:30px">职位</label>
+            <div class="layui-input-block" style="margin-left:60px;">
                 <input type="text" name="position" placeholder="" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -49,6 +49,13 @@
         <label class="layui-form-label">打招呼语</label>
         <div class="layui-input-block">
             <input type="text" name="greet" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">TG账号</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data['telegram']}" autocomplete="off" class="layui-input" disabled style="background-color:#e0e0e0;" >
         </div>
     </div>
 
