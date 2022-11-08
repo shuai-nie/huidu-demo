@@ -28,6 +28,15 @@ class Feedback extends Base
                 ->where($map)->limit($offset, $limit)
                 ->field('A.*,B.username,B.nickname')
                 ->order('A.id desc')->select();
+
+            foreach ($data as $k=> $v){
+                if(!empty($username)){
+                    $v['username'] = str_ireplace($username, '<font color=\'red\'>' . $username . '</font>', $v['username']);
+                    $v['nickname'] = str_ireplace($username, '<font color=\'red\'>' . $username . '</font>', $v['nickname']);
+                }
+                $data[$k] = $v;
+            }
+
             return json(['data' => ['count' => $count, 'list' => $data]], 200);
         }
         return view('', []);
