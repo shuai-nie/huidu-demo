@@ -51,6 +51,14 @@ class Adsense extends Base
         26 => ['id'=>26, 'title'=>'合作页·右侧栏三'],
         31 => ['id'=>31, 'title'=>'搜索页·右侧栏一'],
         41 => ['id'=>41, 'title'=>'联系我们'],
+        100 => ['id'=>100, 'title'=>'h5首页·弹窗广告'],
+        101 => ['id'=>101, 'title'=>'h5首页·banner'],
+        102 => ['id'=>102, 'title'=>' h5首页·广告'],
+        111 => ['id'=>111, 'title'=>'h5资讯列表'],
+        112 => ['id'=>112, 'title'=>'h5资讯详情广告'],
+        121 => ['id'=>121, 'title'=>'h5搜索页广告'],
+        131 => ['id'=>131, 'title'=>'h5资源列表'],
+        132 => ['id'=>132, 'title'=>'h5资源详情广告'],
     ];
 
     protected function setCreateIdAttr()

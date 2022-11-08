@@ -130,15 +130,28 @@
         })
 
         table.on('tool(think-table)', function(obj){
-            var data = obj.data;
+            var data = obj.data
+                , _data ;
+
+
             if(obj.event==="more"){
+                if(data.isweb == 1){
+                    _data =  [
+                        {title:'编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span>'}
+                        ,{title:'删除', id:'del', templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span>'}
+                        ,{title:'创建人名片', id:'card', templet: '<span class="layui-btn layui-btn-normal layui-btn-xs"><i class="layui-icon layui-icon-username"></i>{{d.title}}</span>'}
+                    ];
+                }else{
+                    _data =  [
+                        {title:'编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span>'}
+                        ,{title:'删除', id:'del', templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span>'}
+                    ];
+                }
+                console.log();
                 dropdown.render({
                     elem: this
                     , show: true
-                    , data: [
-                        {title:'编辑', id:'edit', templet: '<span class="layui-btn layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>{{d.title}}</span>'}
-                        ,{title:'删除', id:'del', templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>{{d.title}}</span>'}
-                    ]
+                    , data: _data
                     , click: function(menudata){
                         if(menudata.id === 'edit'){
                             UI.openLayer("{:url('edit')}?id=" + data['id'], 750, 600, '#submit', "{:lang('edit')}");
@@ -148,6 +161,20 @@
                                     table.reload("table");
                                 }
                             });
+                        }else if(menudata.id === 'card'){
+                            layer.open({
+                                type: 2,
+                                anim: 2,
+                                title: '创建人名片',
+                                area: ['750px', '600px'],
+                                btn: ['关闭'],
+                                yes: function (index, layero) {
+                                    layer.close(index)
+                                },
+                                content: "{:url('resource/card')}?uid=" + data['create_id'],
+                                end: function () {}
+                            });
+
                         }
                     }
                 })
