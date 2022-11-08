@@ -42,10 +42,10 @@
 
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            , {field: 'username', title: '账号/昵称', width: 270, templet: function(d){
+            , {field: 'username', title: '账号/昵称', width: 120, templet: function(d){
                 return d.username + '/' + d.nickname;
             }}
-            , {field: 'content', title: '需求', width: 170}
+            , {field: 'content', title: '需求', width: 240}
             , {field: 'ip', title: 'ip', width: 140}
             ,{field: 'create_time', title: '提交时间',width: 170}
         ], "#think-table", "auth");
