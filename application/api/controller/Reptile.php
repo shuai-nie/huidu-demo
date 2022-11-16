@@ -12,9 +12,11 @@ class Reptile extends Controller
     {
         $BeginTime = microtime(true);
         $data = (new ApiReptile())->apiCifNewsBrandFacebook();
+        $c = 0;
         foreach($data as $k => $val){
             $count = Content::where(['title'=>$val['title']])->count();
             if($count == 0){
+                $c++;
                 $local = (new ApiReptile())->getRemoteFileToLocal($val['imgUrl'], ROOT_PATH . 'public/uploads/reptile/');
                 if($local['code'] == 1){
                     $val['imgUrl'] = $local['path'];
@@ -37,6 +39,7 @@ class Reptile extends Controller
             }
         }
         $EndTime = microtime(true);
+        \app\admin\model\Reptile::where(['id'=>11])->setInc('total', $c);
 
         exit($EndTime-$BeginTime);
 
