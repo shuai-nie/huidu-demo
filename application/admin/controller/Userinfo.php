@@ -296,6 +296,9 @@ class Userinfo extends Base
             }
 
             if ($state !== false) {
+                if($UserArr['telegram'] != $data['telegram'] || $UserArr['chat_id'] != $data['chat_id'] ){
+                    getAdminLog("编辑用户 uid" . $UserInfo->uid . " 修改 tg 账号 telegram：" . $UserArr['telegram'] . "=" . $data['telegram'] . "|" . $UserArr['chat_id'] . "=" . $data['chat_id']);
+                }
                 getAdminLog("编辑用户 uid".$UserInfo->uid);
                 return success_json(lang('EditSuccess', [ lang('User')]));
             }

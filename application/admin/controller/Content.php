@@ -30,6 +30,7 @@ class Content extends Controller
             $category_id = \request()->post('category_id');
             $home_top = \request()->post('home_top');
             $category_top = \request()->post('category_top');
+            $isweb = \request()->post('isweb');
             if(!empty($title)) {
                 $map['A.title'] = ['like', "%{$title}%"];
             }
@@ -43,6 +44,10 @@ class Content extends Controller
 
             if(is_numeric($category_top) ){
                 $map['A.category_top'] = $category_top;
+            }
+
+            if(is_numeric($isweb)){
+                $map['A.isweb'] = $isweb;
             }
 
             $limit = \request()->post('limit');
@@ -73,9 +78,16 @@ class Content extends Controller
         }
         $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
         $category2 = model('contentProperty')->where(['status'=>1])->field('id,name')->order("sort desc")->select();
+        $isweb = model('Content')->isweb;
+        $reptile = model('reptile')->field('id, source as title')->select();
+        if(!empty($reptile)){
+            $reptile = collection($reptile)->toArray();
+            $isweb = array_merge_recursive($isweb, $reptile);
+        }
         return view('', [
             'category'=>$category,
-            'category2' => $category2
+            'category2' => $category2,
+            'isweb' => $isweb,
         ]);
     }
 
@@ -99,6 +111,7 @@ class Content extends Controller
                 unset($data['attribute_id']);
 
                 $data['home_sort'] = 0;
+                $data['isweb'] = 2;
                 $state = $this->model->allowField(true)->data($data)->save();
                 $cid = $this->model->id;
 

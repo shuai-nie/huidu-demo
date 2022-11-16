@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
-<fieldset class="table-search-fieldset ">
+<fieldset class="layui-elem-field ">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -18,7 +14,7 @@
 
                 <div class="layui-inline">
                     <label class="layui-form-label">分类</label>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" style="width:120px;">
                         <select name="category_id" lay-filter="category_id" lay-search="">
                             <option value="">请选择</option>
                             {volist name="category" id="vo"}
@@ -30,7 +26,7 @@
 
                 <div class="layui-inline">
                     <label class="layui-form-label">首页置顶</label>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" style="width:120px;" >
                         <select name="home_top" required  lay-filter="category_id" lay-search="">
                             <option value="">请选择</option>
                             <option value="0">否</option>
@@ -41,11 +37,23 @@
 
                 <div class="layui-inline">
                     <label class="layui-form-label">分类置顶</label>
-                    <div class="layui-input-inline">
+                    <div class="layui-input-inline" style="width:100px;">
                         <select name="category_top" lay-filter="category_id" lay-search="">
                             <option value="">请选择</option>
                             <option value="0">否</option>
                             <option value="1">是</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">来源</label>
+                    <div class="layui-input-inline" style="width:120px;">
+                        <select name="isweb" lay-filter="category_id" lay-search="">
+                            <option value="">请选择</option>
+                            {volist name='isweb' id='vo'}
+                            <option value="{$vo['id']}">{$vo['title']}</option>
+                            {/volist}
                         </select>
                     </div>
                 </div>
@@ -60,12 +68,12 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <button class="layui-btn layui-btn-xs" lay-even="create">添加</button>
+</script>
+
 <script type="text/html" id="barDemo">
-<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
-<!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
-<!--    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="home_top">首页置顶</a>-->
-<!--    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="category_top">分类置顶</a>-->
-<a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
 </script>
 
 <script>
@@ -77,6 +85,14 @@
         UI.getPageTable(table, "{:url('')}", [
             {field: 'id', title: 'ID', width:80, fixed: 'left'}
             ,{field: 'category_name', title: '分类',width:100}
+            ,{field: 'isweb', title: '来源',width:80, templet: function(d){
+                switch (d.isweb * 1) {
+                    {volist name='isweb' id='vo'}
+                    case {$vo['id']}: return "{$vo['title']}";
+                    {/volist}
+                    default: return '-';
+                }
+            } }
             ,{field: 'title', title: '标题', width:270}
             ,{field: 'relevance_name', title: '属性', width:170}
             ,{field: 'cover_url', title: '封面图',width:90, templet:function (d) {

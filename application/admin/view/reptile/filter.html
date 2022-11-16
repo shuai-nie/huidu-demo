@@ -1,0 +1,51 @@
+{include file="moban/bone_header"}
+
+<form class="layui-form">
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">普通文本域</label>
+        <div class="layui-input-block">
+            <textarea name="value" placeholder="请输入内容" class="layui-textarea" style="height:250px;">{$list['value']}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="id" value="100" />
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">立即提交</button>
+        </div>
+    </div>
+
+</form>
+
+<script>
+layui.use(['form'], function(){
+    var form = layui.form;
+
+    form.on('submit(submit)', function(data){
+        $.ajax({
+            url: "{:url('')}"
+            , cache: false
+            , type: "POST"
+            , dataType: "json"
+            , data: data.field
+            , success: function (obj) {
+                if(obj.code == 200){
+                    layer.msg(obj.msg, function(){
+                        window.location.href = "{:url('')}";
+                    })
+                }
+                layer.msg(obj.msg);
+            }
+        })
+        return false;
+    });
+
+
+
+
+
+
+});
+</script>
+{include file="moban/bone_footer"}
