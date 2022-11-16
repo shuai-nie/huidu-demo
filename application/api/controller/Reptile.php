@@ -6,6 +6,7 @@ use app\admin\model\ContentDetail;
 use app\admin\model\ContentPropertyRelevance;
 use lib\Reptile as ApiReptile;
 use think\Controller;
+use app\admin\model\AdminLog;
 
 class Reptile extends Controller
 {
@@ -65,7 +66,7 @@ class Reptile extends Controller
         }
         $EndTime = microtime(true);
         \app\admin\model\Reptile::where(['id'=>11])->setInc('total', $c);
-        model('AdminLog')->isUpdate(false)->data(['uid' => 0,'text' => '爬虫脚本11','url' => (string)request()->url(),'ip' => request()->ip(),], true)->save();
+        AdminLog::create(['uid' => 0,'text' => '爬虫脚本11','url' => (string)request()->url(),'ip' => request()->ip() ]);
 
         exit($EndTime-$BeginTime);
 
