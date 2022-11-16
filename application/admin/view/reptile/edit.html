@@ -1,0 +1,109 @@
+{include file="moban/css"}
+{include file="moban/js"}
+<style>
+.layui-upload-img {width: 92px;height: 92px;}
+</style>
+<form class="layui-form " lay-filter="first" style="padding: 10px 30px 0 0;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block" >
+            <select name="type" lay-search="">
+                {volist name="CategoryAll" id="vo"}
+                    <option value="{$vo['id']}">{$vo['name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">属性</label>
+        <div class="layui-input-block" >
+            {volist name="PropertyAll" id="vo"}
+            <input type="checkbox" name="attribute[{$vo['id']}]" value="{$vo['id']}" title="{$vo['name']}" />
+            {/volist}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">来源</label>
+        <div class="layui-input-block" >
+            <input type="text" name="source" class="layui-input" disabled />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">链接</label>
+        <div class="layui-input-block" >
+            <input type="text" name="link" class="layui-input" disabled />
+            <div class="layui-form-mid layui-word-aux"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
+    </div>
+
+</form>
+
+<script>
+//Demo
+layui.use(['form','upload'], function () {
+    var form = layui.form,
+        upload = layui.upload;
+
+    var upload_url = "{:url('admin/Upload/upload')}";
+    var upload_accept = 'images';
+    var upload_acceptMime = 'image/*';
+    var upload_size = 3145728;
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#demo1").attr('src', res.url);
+                $("input[name='counselor_img_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+        }
+        ,error: function(){}
+        ,progress: function(n, elem, e){
+            element.progress('demo', n + '%');
+            if(n == 100){
+                layer.msg('上传完毕', {icon: 1});
+            }
+        }
+    });
+
+    form.on('submit(submit)', function (data) {
+        var DISABLED = 'layui-btn-disabled';
+        $(':button').addClass(DISABLED);
+        $(':button').attr('disabled', 'disabled');
+        Api.edit(data.field, function (res) {
+            if(res.code != 200){
+                $(':button').removeClass(DISABLED);
+                $(':button').removeAttr('disabled');
+            }
+        });
+    });
+
+    form.val('first', {
+        "type":"{$data['type']}",
+        "source":"{$data['source']}",
+        "link":"{$data['link']}",
+        {volist name="data['attribute']" id="vo"}
+        "attribute[{$vo}]": true,
+        {/volist}
+    })
+
+
+
+
+
+});
+</script>

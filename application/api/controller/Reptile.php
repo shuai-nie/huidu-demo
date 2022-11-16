@@ -3,6 +3,7 @@ namespace app\api\controller;
 
 use app\admin\model\Content;
 use app\admin\model\ContentDetail;
+use app\admin\model\ContentPropertyRelevance;
 use lib\Reptile as ApiReptile;
 use think\Controller;
 
@@ -13,6 +14,8 @@ class Reptile extends Controller
         $BeginTime = microtime(true);
         $data = (new ApiReptile())->apiCifNewsBrandFacebook();
         $c = 0;
+        $ReptileInfo = \app\admin\model\Reptile::where(['id'=>11])->find();
+        $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
         foreach($data as $k => $val){
             $count = Content::where(['title'=>$val['title']])->count();
             if($count == 0){
@@ -27,15 +30,23 @@ class Reptile extends Controller
 
                 $content = Content::create([
                     'title' => $val['title'],
-                    'category_id' => 0,
+                    'category_id' => $ReptileInfo['type'],
                     'intro' => $val['describes'],
                     'cover_url' => $val['imgUrl'],
                     'isweb' => 11,
                 ]);
+                $content_id = $content->id;
                 ContentDetail::create([
-                    'cid' => $content->id,
+                    'cid' => $content_id,
                     'content' => $val['detail'],
                 ]);
+                foreach ($ReptileInfo['attribute'] as $attr){
+                    ContentPropertyRelevance::create([
+                       'property_id' => $attr,
+                       'content_id' => $content_id,
+                       'status' => 1,
+                    ]);
+                }
             }
         }
         $EndTime = microtime(true);
