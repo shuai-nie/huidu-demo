@@ -77,9 +77,10 @@
 </script>
 
 <script>
-    layui.use(['table','form','dropdown'], function(){
+    layui.use(['table','form','dropdown', 'util'], function(){
         var table = layui.table
             ,form = layui.form
+            ,util = layui.util
             ,dropdown = layui.dropdown;
 
         UI.getPageTable(table, "{:url('')}", [
@@ -103,6 +104,9 @@
             } }
             ,{field: 'read_cnt', title: '浏览量',width:100,sort:true, templet: function(d){
                 if(d.read_cnt > 0){return d.read_cnt}return 0;
+            }}
+            ,{field: 'create_time', title: '创建时间',width:170,sort:true, templet: function(d){
+                return util.toDateString(d.create_time*1000)
             }}
             ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
