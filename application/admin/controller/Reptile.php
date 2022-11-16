@@ -81,18 +81,6 @@ class Reptile extends Base
             return error_json('提交失败');
         }
         $list = \app\admin\model\Config::where(['id'=>100])->find();
-//        $value = $list['value'];
-//        $str = "测试17";
-//        if(!empty($value)){
-//            $value = explode("\n", $value);
-//            foreach ($value as $val){
-//                $v = explode("=", $val);
-//                if(isset($v[0]) && isset($v[1])){
-//                    $this->strReplace($v, $str);
-//
-//                }
-//            }
-//        }
         return view('', [
             'meta_title' => '过滤关键词',
             'list' => $list

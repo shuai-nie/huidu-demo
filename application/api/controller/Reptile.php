@@ -26,7 +26,21 @@ class Reptile extends Controller
                 }else{
                     $val['imgUrl'] = '';
                 }
+
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
+
+                $list = \app\admin\model\Config::where(['id'=>100])->find();
+                if(!empty($list['value'])){
+                    $value = explode("\n", $list['value']);
+                    foreach ($value as $valCon){
+                        $vCon = explode("=", $valCon);
+                        if(isset($vCon[0]) && isset($vCon[1])){
+                            (new ApiReptile())->strReplace($vCon, $valCon['detail']);
+                            (new ApiReptile())->strReplace($vCon, $val['title']);
+                            (new ApiReptile())->strReplace($vCon, $val['describes']);
+                        }
+                    }
+                }
 
                 $content = Content::create([
                     'title' => $val['title'],
