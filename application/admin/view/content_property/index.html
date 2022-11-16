@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -25,6 +21,9 @@
 </fieldset>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="create">添加</a>
+</script>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -42,6 +41,12 @@
             ,{field: 'sort', title: '排序',width:120, sort:true}
             ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
         ]);
+
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="create"){
+                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
+            }
+        })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
