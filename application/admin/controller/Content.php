@@ -54,12 +54,15 @@ class Content extends Controller
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
 
+            $ContentStat = model('contentStat');
             $data = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
-                ->field("A.*,B.name as category_name")
+                ->join($ContentStat->getTable(). " C", "A.id=C.cid", "left")
+                ->field("A.*,B.name as category_name,C.read_cnt")
                 ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
+                ->join($ContentStat->getTable(). " C", "A.id=C.cid", "left")
                 ->where($map)->count();
 
             foreach ($data as $key=>$value) {
@@ -279,6 +282,77 @@ class Content extends Controller
             ->join($contentProperty->getTable().' B', 'A.property_id=B.id', 'left')
             ->field('A.*,B.name as property_name')
             ->where(['A.content_id' => $content_id, 'A.status' => 1])->select();
+    }
+
+    public function topping()
+    {
+        $ContentCategory = model('ContentCategory');
+        if(\request()->isPost()){
+            $map = ['A.status'=>1];
+            $title = \request()->post('title');
+            $category_id = \request()->post('category_id');
+            $home_top = \request()->post('home_top');
+            $category_top = \request()->post('category_top');
+            $isweb = \request()->post('isweb');
+            if(!empty($title)) {
+                $map['A.title'] = ['like', "%{$title}%"];
+            }
+            if(is_numeric($category_id) ){
+                $map['A.category_id'] = $category_id;
+            }
+
+            if(is_numeric($home_top) ){
+                $map['A.home_top'] = $home_top;
+            }
+
+            if(is_numeric($category_top) ){
+                $map['A.category_top'] = $category_top;
+            }
+
+            if(is_numeric($isweb)){
+                $map['A.isweb'] = $isweb;
+            }
+
+            $limit = \request()->post('limit');
+            $page = \request()->post('page');
+            $offset = ($page - 1) * $limit;
+
+            $data = $this->model->alias('A')
+                ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
+                ->field("A.*,B.name as category_name")
+                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+            $count = $this->model->alias('A')
+                ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
+                ->where($map)->count();
+
+            foreach ($data as $key=>$value) {
+                $relevance = $this->property_relevance($value['id']);
+                $relevance_arr = [];
+                foreach ($relevance as $k=>$v){
+                    if(!empty($v['property_name'])){
+                        array_push($relevance_arr, $v['property_name']);
+                    }
+                }
+                $value['relevance_name'] = implode(',', $relevance_arr);
+                $data[$key] = $value;
+            }
+
+            return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
+        }
+        $category = $ContentCategory->where(['is_del'=>0])->field('id,name')->order("sort desc")->select();
+        $category2 = model('contentProperty')->where(['status'=>1])->field('id,name')->order("sort desc")->select();
+        $isweb = model('Content')->isweb;
+        $reptile = model('reptile')->field('id, source as title')->select();
+        if(!empty($reptile)){
+            $reptile = collection($reptile)->toArray();
+            $isweb = array_merge_recursive($isweb, $reptile);
+        }
+        return view('', [
+            'category'=>$category,
+            'category2' => $category2,
+            'isweb' => $isweb,
+            'meta_title' => '文章置顶',
+        ]);
     }
 
 
