@@ -47,7 +47,7 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="toolbarDemo">
-    <button class="layui-btn layui-btn-xs" lay-even="create">添加</button>
+    <a class="layui-btn layui-btn-xs" lay-event="create">添加</a>
 </script>
 
 <script type="text/html" id="barDemo">
@@ -89,6 +89,12 @@
             ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
         ], "#think-table", "auth");
 
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="create") {
+                UI.openLayer("{:url('create')}", 750, 600, '#submit', '添加');
+            }
+        })
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="more") {
@@ -109,7 +115,7 @@
                                 }
                             });
                         }else if(menudata.id === 'edit'){
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit', '编辑');
                         }else if(menudata.id === 'home_top'){
                             UI.openLayer("{:url('homeTop')}?id="+data['id'], 600, 300, '#submit');
                         }else if(menudata.id === 'category_top'){
@@ -118,17 +124,6 @@
                     }
                 })
             }
-        });
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
         });
 
         form.on('submit(data-search-btn)', function(data){
