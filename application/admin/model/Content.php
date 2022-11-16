@@ -21,11 +21,11 @@ class Content extends Base
 
     protected function setCreateIdAttr()
     {
-        return getLoginUserId();
+        return getLoginUserId() ? getLoginUserId() : 0;
     }
 
     protected function setUpdateIdAttr()
     {
-        return getLoginUserId();
+        return getLoginUserId() ? getLoginUserId() : 0;
     }
 }
