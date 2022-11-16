@@ -49,11 +49,14 @@ class Reptile extends Controller
                     'intro' => $val['describes'],
                     'cover_url' => $val['imgUrl'],
                     'isweb' => 11,
+                    'create_id' => 0,
+                    'update_id' => 0,
                 ]);
                 $content_id = $content->id;
                 ContentDetail::create([
                     'cid' => $content_id,
                     'content' => $val['detail'].'<p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p><span style="font-size: 18px;"><strong>○ 海量供应需求资源对接&nbsp; ○ 链接精英出海人脉&nbsp; ○ 免费发布业务需求</strong></span></p><p><span style="font-size: 18px;"><strong>欢迎加入 灰度-海外资源交流群 @HUIDUZ</strong></span></p><p><span style="font-size: 18px;"><strong>商务合作：@HD_sevens&nbsp; @HuiduDy</strong></span></p><p style="text-indent: 2em;"><br/></p>',
+
                 ]);
                 foreach ($ReptileInfo['attribute'] as $attr){
                     ContentPropertyRelevance::create([
