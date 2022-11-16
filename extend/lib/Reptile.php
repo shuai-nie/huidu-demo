@@ -140,7 +140,7 @@ class Reptile
         fclose($resource);
         $this->info['code'] = 1;
         $this->info['msg']  = '图片下载成功';
-        $this->info['path'] = 'http://img.thinkcms.nf/'.date('Y-m-d').DS .$fileinfo['filename'] . '.' . $ext;
+        $this->info['path'] = 'http://img.91po.net/'.date('Y-m-d').DS .$fileinfo['filename'] . '.' . $ext;
         return $this->info;
     }
 
