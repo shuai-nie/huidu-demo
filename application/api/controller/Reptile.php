@@ -35,7 +35,7 @@ class Reptile extends Controller
                     foreach ($value as $valCon){
                         $vCon = explode("=", $valCon);
                         if(isset($vCon[0]) && isset($vCon[1])){
-                            (new ApiReptile())->strReplace($vCon, $valCon['detail']);
+                            (new ApiReptile())->strReplace($vCon, $val['detail']);
                             (new ApiReptile())->strReplace($vCon, $val['title']);
                             (new ApiReptile())->strReplace($vCon, $val['describes']);
                         }
