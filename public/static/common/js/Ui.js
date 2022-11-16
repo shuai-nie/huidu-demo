@@ -32,6 +32,7 @@ var UI = {
             title:_title,
             area: [x + 'px', y + 'px'],
             btn: ['确定', '取消'],
+            skin: 'demo-class',
             yes: function (index, layero) {
                 //点击确认触发 iframe 内容中的按钮提交
                 var submit = layero.find('iframe').contents().find(confirmButton);
