@@ -65,6 +65,7 @@ class Reptile extends Controller
         }
         $EndTime = microtime(true);
         \app\admin\model\Reptile::where(['id'=>11])->setInc('total', $c);
+        model('AdminLog')->isUpdate(false)->data(['uid' => 0,'text' => '爬虫脚本11','url' => (string)request()->url(),'ip' => request()->ip(),], true)->save();
 
         exit($EndTime-$BeginTime);
 
