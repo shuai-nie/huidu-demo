@@ -39,6 +39,8 @@ class Reptile extends Controller
                 }
 
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
+                $val['detail'] = str_replace('图虫创意', '', $val['detail']);
+                $val['detail'] = str_replace('图片来源：', '', $val['detail']);
                 if(!empty($list['value'])){
                     $value = explode("\n", $list['value']);
                     foreach ($value as $valCon){
