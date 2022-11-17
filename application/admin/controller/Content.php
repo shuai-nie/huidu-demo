@@ -87,6 +87,7 @@ class Content extends Controller
             $reptile = collection($reptile)->toArray();
             $isweb = array_merge_recursive($isweb, $reptile);
         }
+        getAdminLog("查看 文章管理");
         return view('', [
             'category'=>$category,
             'category2' => $category2,
@@ -137,6 +138,7 @@ class Content extends Controller
                 ]);
 
                 Db::commit();
+                getAdminLog("新建 文章管理 Id:".$cid);
                 return success_json(lang('CreateSuccess', [lang('Content')]));
             } catch (\Exception $e) {
                 Db::rollback();
@@ -201,6 +203,7 @@ class Content extends Controller
                     ]);
                 }
                 Db::commit();
+                getAdminLog("编辑文章 Id:".$id);
                 return success_json(lang('EditSuccess', [lang('Content')]));
             } catch (\Exception $e) {
                 Db::rollback();
@@ -234,6 +237,7 @@ class Content extends Controller
         $id = \request()->param('id');
         $state = $this->model->save(['status'=>0], ['id'=>$id]);
         if($state !== false){
+            getAdminLog("删除文章 Id:".$id);
             return success_json(lang('DeleteSuccess', [lang('Content')]) );
         }
         return error_json(lang('DeleteFail', [lang('Content')]));
@@ -248,6 +252,7 @@ class Content extends Controller
                 'home_sort' => $_post['home_sort'],
             ], ['id'=>$id]);
             if($state !== false){
+                getAdminLog("文章 首页指定排序 id" . $id . " home_top:" . $_post['home_top'] . " home_sort:" . $_post['home_sort']);
                 return success_json(lang('TopSuccess', [lang('Content')]) );
             }
             return error_json(lang('TopFail', [lang('Content')]));
@@ -265,6 +270,7 @@ class Content extends Controller
                 'category_sort' => $_post['category_sort'],
             ], ['id'=>$id]);
             if($state !== false){
+                getAdminLog("文章 分类置顶排序 id" . $id . " category_top:" . $_post['category_top'] . " category_sort:" . $_post['category_sort']);
                 return success_json(lang('TopSuccess', [lang('Content')]) );
             }
             return error_json(lang('TopFail', [lang('Content')]));
@@ -347,6 +353,7 @@ class Content extends Controller
             $reptile = collection($reptile)->toArray();
             $isweb = array_merge_recursive($isweb, $reptile);
         }
+        getAdminLog("文章 置顶列表");
         return view('', [
             'category'=>$category,
             'category2' => $category2,
