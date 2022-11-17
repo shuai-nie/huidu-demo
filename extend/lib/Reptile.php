@@ -213,6 +213,7 @@ class Reptile
      */
     public function strReplace($arr, &$str)
     {
+        $arr[1] = $arr[1]=='空白' ? $arr[1] : '';
         $str = str_replace($arr[0], $arr[1], $str);
     }
 
