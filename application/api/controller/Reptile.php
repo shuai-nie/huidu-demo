@@ -17,7 +17,17 @@ class Reptile extends Controller
         $c = 0;
         $ReptileInfo = \app\admin\model\Reptile::where(['id'=>11])->find();
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
+        $list = \app\admin\model\Config::where(['id'=>100])->find();
         foreach($data as $k => $val){
+            if(!empty($list['value'])){
+                $value = explode("\n", $list['value']);
+                foreach ($value as $valCon){
+                    $vCon = explode("=", $valCon);
+                    if(isset($vCon[0]) && isset($vCon[1])){
+                        (new ApiReptile())->strReplace($vCon, $val['title']);
+                    }
+                }
+            }
             $count = Content::where(['title'=>$val['title']])->count();
             if($count == 0){
                 $c++;
@@ -29,15 +39,12 @@ class Reptile extends Controller
                 }
 
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
-
-                $list = \app\admin\model\Config::where(['id'=>100])->find();
                 if(!empty($list['value'])){
                     $value = explode("\n", $list['value']);
                     foreach ($value as $valCon){
                         $vCon = explode("=", $valCon);
                         if(isset($vCon[0]) && isset($vCon[1])){
                             (new ApiReptile())->strReplace($vCon, $val['detail']);
-                            (new ApiReptile())->strReplace($vCon, $val['title']);
                             (new ApiReptile())->strReplace($vCon, $val['describes']);
                         }
                     }
