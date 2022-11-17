@@ -35,7 +35,7 @@ class Reptile extends Controller
                 if($local['code'] == 1){
                     $val['imgUrl'] = $local['path'];
                 }else{
-                    $val['imgUrl'] = '';
+                    $val['imgUrl'] = 'http://img.91po.net/cover_url/2022111700'.mt_rand(1, 5).'.jpg';
                 }
 
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
