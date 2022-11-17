@@ -9,7 +9,7 @@ class Reptile
     // Facebook 海外营销列表
     public function apiCifNewsBrandFacebook()
     {
-        $url = "https://www.cifnews.com/guoyuan/api/brand/facebook/all?size=20&page=1&key=google&code=all";
+        $url = "https://www.cifnews.com/guoyuan/api/brand/facebook/all?size=10&page=1&key=google&code=all";
         $data =  $this->GetHttp($url);
         $data = json_decode($data, true);
         if($data['result'] === true){
