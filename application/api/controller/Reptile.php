@@ -13,9 +13,6 @@ class Reptile extends Controller
 {
     public function index()
     {
-        $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/cover_url/20221117001.jpg');
-        var_dump($AwsImgUrl);
-        exit();
         $BeginTime = microtime(true);
         $data = (new ApiReptile())->apiCifNewsBrandFacebook();
         $c = 0;
@@ -37,10 +34,9 @@ class Reptile extends Controller
                 $c++;
                 $local = (new ApiReptile())->getRemoteFileToLocal($val['imgUrl'], ROOT_PATH . 'public/uploads/reptile/');
                 if($local['code'] == 1){
-
-                    $val['imgUrl'] = $local['path'];
+                    $val['imgUrl'] = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$local['path']);
                 }else{
-                    $val['imgUrl'] = 'http://img.91po.net/cover_url/2022111700'.mt_rand(1, 5).'.jpg';
+                    $val['imgUrl'] = 'https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/cover_url/2022111700' . mt_rand(1, 5) . '.jpg';
                 }
 
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
