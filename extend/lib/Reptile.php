@@ -22,9 +22,6 @@ class Reptile
     // Facebook 海外营销详情
     public function CifNewsArticle($url)
     {
-        $data = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/cover_url/20221117001.jpg');
-        var_dump($data);
-        exit();
         $data =  $this->GetHttp($url);
         $pos1 = strpos($data, "<div class=\"article-content article-inner leftcont");
         $pos2 = strpos($data, "<p> <strong>");
@@ -45,7 +42,8 @@ class Reptile
 
             $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
             if($data['code'] == 1){
-                $str = str_replace($src, $data['path'], $str);
+                $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
+                $str = str_replace($src, $AwsImgUrl, $str);
                 $detail = str_replace($val, $str, $detail);
             }else{
                 $detail = str_replace($val, '', $detail);
@@ -144,7 +142,7 @@ class Reptile
         fclose($resource);
         $this->info['code'] = 1;
         $this->info['msg']  = '图片下载成功';
-        $this->info['path'] = 'http://img.91po.net/'.date('Y-m-d').DS .$fileinfo['filename'] . '.' . $ext;
+        $this->info['path'] = date('Y-m-d').DS .$fileinfo['filename'] . '.' . $ext;
         return $this->info;
     }
 
