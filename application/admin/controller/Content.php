@@ -390,11 +390,20 @@ class Content extends Controller
                 $data['home_top'] = 0;
             }
 
+            if($name =='home_top' && $value == 0){
+                $data['home_sort'] = 0;
+            }
+
             if($name=='category_sort' && $value > 0){
                 $data['category_top'] = 1;
             }elseif ($name=='category_sort' && $value == 0){
                 $data['category_top'] = 0;
             }
+
+            if($name =='category_top' && $value == 0){
+                $data['category_sort'] = 0;
+            }
+
             $state = \app\admin\model\Content::update($data, ['id'=>$id]);
             if($state != false){
                 getAdminLog("文章置顶 修改 name:" . $name . "| value" . $value);
