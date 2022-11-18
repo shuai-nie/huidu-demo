@@ -406,7 +406,7 @@ class Content extends Controller
 
             $state = \app\admin\model\Content::update($data, ['id'=>$id]);
             if($state != false){
-                getAdminLog("文章置顶 修改 name:" . $name . "| value" . $value);
+                getAdminLog("文章置顶 修改 name:" . $name . "| value:" . $value);
                 return success_json('修改成功');
             }
             return error_json('修改失败');

@@ -31,7 +31,7 @@ class Reptile
         $doc = new \DOMDocument();
         foreach ($img[0] as $val){
             $str = $val;
-            $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", "", $str);
+            $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", " ", $str);
             $str = str_replace( "data-src=\"", "src=\"", $str);
             $libxml_previous_state = libxml_use_internal_errors(true);
             $doc->loadHTML($str);
@@ -49,7 +49,8 @@ class Reptile
                 $detail = str_replace($val, '', $detail);
             }
         }
-        $detail = str_replace('', '', $detail);
+        $detail = preg_replace('#alt="[^"]*"#i', '', $detail);
+//        //$detail = str_replace('', '', $detail);
         // 去掉链接
         $detail = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $detail);
         $detail .= "</div>";
@@ -215,7 +216,7 @@ class Reptile
      */
     public function strReplace($arr, &$str)
     {
-        $arr[1] = $arr[1]=='空白' ? $arr[1] : '';
+        $arr[1] = $arr[1]=='空白' ? '' : $arr[1];
         $str = str_replace($arr[0], $arr[1], $str);
     }
 

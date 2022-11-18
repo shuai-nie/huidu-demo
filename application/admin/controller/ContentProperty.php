@@ -15,10 +15,21 @@ class ContentProperty extends Base
         if(request()->isPost()){
             $map = ['status'=>1];
             $name = \request()->post('name');
+            $page = \request()->post('page', 1);
+            $limit = \request()->post('limit', 10);
+            $offset = ($page - 1) * $limit;
+            $field = \request()->post('field');
+            $order = \request()->post('order');
+            $ord = 'id desc';
             if(!empty($name)) {
                 $map['name'] = ['like', "%{$name}%"];
             }
-            $data = $ContentProperty->where($map)->order('id desc')->select();
+
+            if(!empty($field) && !empty($order)){
+                $ord = $field . " " . $order;
+            }
+
+            $data = $ContentProperty->where($map)->limit($offset, $limit)->order($ord)->select();
             $count = $ContentProperty->where($map)->count();
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }

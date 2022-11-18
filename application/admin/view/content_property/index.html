@@ -36,22 +36,22 @@
             form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            {field: 'id', title: 'ID', width:80, fixed: 'left', sort:true, align:'center'}
             ,{field: 'name', title: '名称', width:200}
-            ,{field: 'sort', title: '排序',width:120, sort:true}
+            ,{field: 'sort', title: '排序',width:80, sort:true, align:'center'}
             ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", 'auth');
 
         table.on('toolbar(think-table)', function(obj){
             if(obj.event==="create"){
-                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
+                UI.openLayer("{:url('create')}", 500, 250, "#submit", "{:lang('create')}");
             }
         })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 500, 350, "#submit", "{:lang('edit')}");
+                UI.openLayer("{:url('edit')}?id="+data['id'], 500, 250, "#submit", "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -61,16 +61,13 @@
             }
         });
 
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+        table.on('sort(think-table)', function(obj){
+            table.reload('table', {
+                initSort: obj
+                ,where: { field: obj.field, order: obj.type }
+                ,page: { curr: 1 }
+            });
+        })
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', { url: "{:url('')}", method: 'post', where: data.field, page: {curr: 1}});

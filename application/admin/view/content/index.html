@@ -62,7 +62,7 @@
             ,dropdown = layui.dropdown;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
+            {field: 'id', title: 'ID', width:80, fixed: 'left',sort:true}
             ,{field: 'title', title: '标题', width:270}
             ,{field: 'category_name', title: '分类',width:100}
             ,{field: 'relevance_name', title: '属性', width:170}
@@ -95,6 +95,14 @@
             }
         })
 
+        table.on('sort(think-table)', function(obj){
+            table.reload('table', {
+                initSort: obj
+                ,where: { field: obj.field, order: obj.type }
+                ,page: { curr: 1 }
+            });
+        })
+
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="more") {
@@ -125,11 +133,14 @@
         });
 
         form.on('submit(data-search-btn)', function(data){
+            data.field.field='id';
+            data.field.order='desc';
             table.reload('table', {
                 url: "{:url('')}",
                 method:'post',
                 where : data.field,
                 page : {curr : 1}
+
             });
             return false;
         })
