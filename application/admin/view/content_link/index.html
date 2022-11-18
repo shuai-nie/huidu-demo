@@ -1,9 +1,5 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
 <fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
@@ -26,6 +22,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="create">编辑</a>
+</script>
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -42,12 +42,18 @@
             ,{field: 'url', title: '链接', width:230}
             ,{field: 'send_cnt', title: '出现次数', width:130}
             ,{fixed: 'right',title:'操作', width:140, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", 'auth');
+
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="create"){
+                UI.openLayer("{:url('create')}",750, 320);
+            }
+        })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 550, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 320, '#submit');
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -66,17 +72,6 @@
             });
             return false;
         })
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}",750, 550);
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
 
     });
 </script>

@@ -31,6 +31,10 @@ class Content extends Controller
             $home_top = \request()->post('home_top');
             $category_top = \request()->post('category_top');
             $isweb = \request()->post('isweb');
+            $field = \request()->post('field');
+            $order = \request()->post('order');
+            $ord = 'A.id desc';
+
             if(!empty($title)) {
                 $map['A.title'] = ['like', "%{$title}%"];
             }
@@ -50,6 +54,10 @@ class Content extends Controller
                 $map['A.isweb'] = $isweb;
             }
 
+            if(!empty($field) && !empty($order)){
+                $ord = "A." . $field . " " . $order;
+            }
+
             $limit = \request()->post('limit');
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
@@ -59,7 +67,7 @@ class Content extends Controller
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->join($ContentStat->getTable(). " C", "A.id=C.cid", "left")
                 ->field("A.*,B.name as category_name,C.read_cnt")
-                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+                ->where($map)->limit($offset, $limit)->order($ord)->select();
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->join($ContentStat->getTable(). " C", "A.id=C.cid", "left")
@@ -300,6 +308,9 @@ class Content extends Controller
             $home_top = \request()->post('home_top');
             $category_top = \request()->post('category_top');
             $isweb = \request()->post('isweb');
+            $field = \request()->post('field');
+            $order = \request()->post('order');
+            $ord = 'A.id desc';
             if(!empty($title)) {
                 $map['A.title'] = ['like', "%{$title}%"];
             }
@@ -319,6 +330,10 @@ class Content extends Controller
                 $map['A.isweb'] = $isweb;
             }
 
+            if(!empty($field) && !empty($order)){
+                $ord = "A." . $field . " " . $order;
+            }
+
             $limit = \request()->post('limit');
             $page = \request()->post('page');
             $offset = ($page - 1) * $limit;
@@ -326,7 +341,7 @@ class Content extends Controller
             $data = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->field("A.*,B.name as category_name")
-                ->where($map)->limit($offset, $limit)->order('A.id desc')->select();
+                ->where($map)->limit($offset, $limit)->order($ord)->select();
             $count = $this->model->alias('A')
                 ->join($ContentCategory->getTable(). " B", "A.category_id=B.id", "left")
                 ->where($map)->count();
@@ -360,6 +375,33 @@ class Content extends Controller
             'isweb' => $isweb,
             'meta_title' => '文章置顶',
         ]);
+    }
+
+    public function sort()
+    {
+        if(request()->isPost()){
+            $id = request()->post('id');
+            $name = request()->post('name');
+            $value = request()->post('value');
+            $data = [$name=>$value];
+            if($name=='home_sort' && $value > 0){
+                $data['home_top'] = 1;
+            }elseif ($name=='home_sort' && $value == 0){
+                $data['home_top'] = 0;
+            }
+
+            if($name=='category_sort' && $value > 0){
+                $data['category_top'] = 1;
+            }elseif ($name=='category_sort' && $value == 0){
+                $data['category_top'] = 0;
+            }
+            $state = \app\admin\model\Content::update($data, ['id'=>$id]);
+            if($state != false){
+                getAdminLog("文章置顶 修改 name:" . $name . "| value" . $value);
+                return success_json('修改成功');
+            }
+            return error_json('修改失败');
+        }
     }
 
 
