@@ -2,6 +2,7 @@
 
 namespace lib;
 
+use app\admin\controller\Upload;
 use lib\Reptile as ApiReptile;
 
 class Reptile
@@ -21,6 +22,9 @@ class Reptile
     // Facebook 海外营销详情
     public function CifNewsArticle($url)
     {
+        $data = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/cover_url/20221117001.jpg');
+        var_dump($data);
+        exit();
         $data =  $this->GetHttp($url);
         $pos1 = strpos($data, "<div class=\"article-content article-inner leftcont");
         $pos2 = strpos($data, "<p> <strong>");

@@ -12,6 +12,8 @@ class Reptile extends Controller
 {
     public function index()
     {
+        (new ApiReptile())->CifNewsArticle('');
+            exit();
         $BeginTime = microtime(true);
         $data = (new ApiReptile())->apiCifNewsBrandFacebook();
         $c = 0;

@@ -219,7 +219,7 @@ class Upload extends Controller
 
     }
 
-    private function fileUpload($source)
+    public function fileUpload($source)
     {
         //设置超时
         set_time_limit(0);
