@@ -196,8 +196,8 @@
                     ,show: true
                     , data: [
                         {title: '编辑',id: 'edit'}
-                        ,{title: '删除',id: 'del'}
-                        // ,{title: '刷新',id: 'refresh'}
+                        ,{title: '删除',id: 'del',templet:'<button class="layui-btn layui-btn-xs layui-btn-danger"> <i class="layui-icon layui-icon-delete"></i> {{d.title}}</button>'}
+                        ,{title: '刷新',id: 'refresh',templet:'<button class="layui-btn layui-btn-xs layui-btn-normal"> <i class="layui-icon layui-icon-refresh"></i> {{d.title}}</button>'}
                         // ,{title: '首页置顶',id: 'home_top'}
                         // ,{title: '分类置顶',id: 'category_top'}
                     ]
@@ -212,6 +212,21 @@
                             UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
                         }else if(menudata.id === 'home_top'){
                             UI.openLayer("{:url('homeTop')}?id="+data['id'], 600, 300, '#submit');
+                        }else if(menudata.id === 'refresh'){
+                            $.ajax({
+                                url: "{:url('sort')}"
+                                , cache : false
+                                , type: "POST"
+                                , dataType: "json"
+                                , data: {
+                                    id: data.id ,
+                                    name: 'create_time' ,
+                                    value: parseInt(new Date().getTime()/1000),
+                                }
+                                , success: function(obj){
+                                    layer.msg(obj.msg)
+                                }
+                            })
                         }else if(menudata.id === 'category_top'){
                             UI.openLayer("{:url('categoryTop')}?id="+data['id'], 600, 300, '#submit');
                         }
