@@ -22,7 +22,7 @@ var UI = {
                 };
             }
             , cols: [cols]
-
+            , initSort: { field: 'id', type: 'desc' }
         });
     },
     "openLayer": function (url, x = 750, y = 600, confirmButton = "#submit", _title ="信息") {
