@@ -57,12 +57,114 @@ class Reptile
         return $detail;
     }
 
+    /**
+     * 雨果跨境-google实操 12
+     */
+    public function brandGoogle()
+    {
+        $url = "https://www.cifnews.com/guoyuan/api/brand/google/all?size=10&page=1&key=google&code=all";
+        $data =  $this->GetHttp($url);
+        $data = json_decode($data, true);
+        if($data['result'] === true){
+            return $data['data'];
+        }
+        return false;
+    }
+
+    /**
+     * 雨果跨境-google 资讯 13
+     */
+    public function platformnews()
+    {
+        $url = "https://www.cifnews.com/guoyuan/api/brand/google/platformnews?size=10&page=1&key=google&code=platformnews";
+        $data =  $this->GetHttp($url);
+        $data = json_decode($data, true);
+        if($data['result'] === true){
+            return $data['data'];
+        }
+        return false;
+    }
+
+    /**
+     * 雨果跨境-facebook - 实操 14
+     */
+    public function facebook()
+    {
+        $url = "https://www.cifnews.com/guoyuan/api/brand/facebook/all?size=10&page=1&key=facebook&code=all";
+        $data =  $this->GetHttp($url);
+        $data = json_decode($data, true);
+        if($data['result'] === true){
+            return $data['data'];
+        }
+        return false;
+    }
+
+    public function fuwutuijian()
+    {
+        $url = "https://www.cifnews.com/collection/tiktok?origin=guoyuan_fuwutuijian";
+        $data =  $this->GetHttp($url);
+
+        $pos1 = strpos($data, "<div class=\"module__cont\"");
+        $pos2 = strpos($data, "<div class=\"module__more\"");
+        $detail = substr($data, $pos1 , $pos2 - $pos1 );
+
+        $regex = '#href="([^"]+)"[^>]*>\s*([^<]+)</a>#is';
+        $reg1 = "/<a.*?>*?<\/a>/";
+        preg_match_all($reg1, $detail, $arr);
+
+
+        preg_match_all("/<div class=\"cif-article__desc ellipsis([\S\s]+?)<\/div>/", $detail, $describes);
+
+        $reg2 = "/<img .*?. alt.*?.>/";
+        preg_match_all($reg2, $detail, $arrImage);
+
+        $doc = new \DOMDocument();
+        $data = [];
+        foreach ($arr[0] as $key=>$value){
+            preg_match_all($regex, $value,$mat);
+            if(!empty($mat[1]) && !empty($mat[2])){
+                $src = '';
+                if(isset($arrImage[0][$key])){
+                    $libxml_previous_state = libxml_use_internal_errors(true);
+                    $doc->loadHTML($arrImage[0][$key]);
+                    libxml_clear_errors();
+                    $xpath = new \DOMXPath($doc);
+                    libxml_use_internal_errors($libxml_previous_state);
+                    $src = $xpath->evaluate("string(//img/@src)");
+                }
+                $describe = '';
+                if(isset($describes[0][$key])){
+                    $describe = $describes[0][$key];
+                }
+                $data[] = ['url'=>$mat[1][0], 'title'=>$mat[2][0], 'img'=> $src, 'describes'=>strip_tags( $describe)];
+
+            }
+        }
+        return $data;
+        exit();
+
+
+
+
+        exit();
+
+        preg_match_all($regex,$detail,$matches);
+
+        $detail = preg_replace('#alt="[^"]*"#i', '', $detail);
+/*        preg_match_all("/\<a.*?><img.*\>/U", $detail, $img);*/
+        preg_match_all("/\<a.*?<\a>/U", $detail, $img);
+//        $detail = explode("<div class=\"cif-article", $detail);
+
+        var_dump($matches);
+        var_dump($img);
+
+    }
 
     /**
      * get
      * @param string $url 请求地址
      */
-    private function GetHttp($url)
+    public function GetHttp($url)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

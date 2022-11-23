@@ -25,7 +25,7 @@ layui.use(['table','dropdown'], function(){
     table.on('tool(think-table)', function(obj){
         var data = obj.data;
         if(obj.event==="edit") {
-            UI.openLayer("{:url('edit')}?id="+data['id'], 650, 350, '#submit', "{:lang('edit')}");
+            UI.openLayer("{:url('edit')}?id="+data['id'], 650, 400, '#submit', "{:lang('edit')}");
         }
     });
 
