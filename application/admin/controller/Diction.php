@@ -59,6 +59,7 @@ class Diction extends Base
                 'data_dark_icon' => isset($_post['data_dark_icon']) ? $_post['data_dark_icon'] : '',
                 'recommend_icon' => isset($_post['recommend_icon']) ? $_post['recommend_icon'] : '' ,
                 'demand_icon'    => isset($_post['demand_icon']) ? $_post['demand_icon'] : '',
+                'thread_icon'    => isset($_post['thread_icon']) ? $_post['thread_icon'] : '',
                 'url_keyword'    => $_post['url_keyword'],
             ])->save();
             if($state !== false) {
@@ -98,6 +99,7 @@ class Diction extends Base
                 'data_dark_icon' => isset($_post['data_dark_icon']) ? $_post['data_dark_icon'] : '',
                 'recommend_icon' => isset($_post['recommend_icon']) ? $_post['recommend_icon'] : '' ,
                 'demand_icon'    => isset($_post['demand_icon']) ? $_post['demand_icon'] : '',
+                'thread_icon'    => isset($_post['thread_icon']) ? $_post['thread_icon'] : '',
                 'url_keyword'    => $_post['url_keyword'],
             ]);
             if($state !== false) {
