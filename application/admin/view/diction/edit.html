@@ -103,6 +103,25 @@
         </div>
     </div>
 
+    <div class="layui-form-item" >
+        <div class="layui-inline">
+            <label class="layui-form-label" >H5业务线索icon</label>
+            <div class="layui-input-inline" style="width:100px;" >
+                <input type="hidden" name="thread_icon" class="layui-input" />
+                <button type="button" class="layui-btn" id="thread_icon" >
+                    <i class="layui-icon">&#xe67c;</i>上传
+                </button>
+            </div>
+            <div class="layui-input-inline">
+                <blockquote class="layui-elem-quote layui-quote-nm">
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="thread_icon-img" {if condition="$data['thread_icon']"}src="{$data['thread_icon']}"{/if} >
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">排序</label>
         <div class="layui-input-block">
@@ -199,6 +218,24 @@
                 if(res.code == 0) {
                     $("#demand_icon-img").attr('src', res.url);
                     $("input[name='demand_icon']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }, error: function () {
+                //请求异常回调
+            }
+        });
+
+        upload.render({
+            elem: '#thread_icon'
+            , url: upload_url
+            , accept: upload_accept
+            , acceptMime: upload_acceptMime
+            , size: upload_size
+            , done: function (res) {
+                if(res.code == 0) {
+                    $("#thread_icon-img").attr('src', res.url);
+                    $("input[name='thread_icon']").val(res.url);
                 } else {
                     layui.msg('网络问题稍后再试');
                 }
@@ -306,6 +343,7 @@
             "data_dark_icon": "{$data['data_dark_icon']}",
             "recommend_icon": "{$data['recommend_icon']}",
             "demand_icon": "{$data['demand_icon']}",
+            "thread_icon": "{$data['thread_icon']}",
             "url_keyword": "{$data['url_keyword']}",
             "sort": "{$data['sort']}",
         })

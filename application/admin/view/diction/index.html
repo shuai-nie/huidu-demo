@@ -65,6 +65,12 @@ layui.use(['table','treetable'], function(){
                 }
                 return '-';
             }},
+            {field: 'thread_icon', title: 'H5业务线索icon',width:120, align: "center",templet: function(d){
+                if(d.thread_icon ) {
+                    return "<img src='"+ d.thread_icon + "?v=1.1' height='30' />";
+                }
+                return '-';
+            }},
             {field: 'sort', title: '排序',width:80, align: "center"},
             {field: 'url_keyword', title: '链接关键字',width:100},
             {templet: '#barDemo', width: 120, align: 'center', title: '操作'}

@@ -229,41 +229,41 @@ class Diction extends Base
 
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACT_TYPE'])->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>2, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'thread_icon'=>$v1['thread_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
 
         $arrCur = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCE_CURRENCY'])->select();
         foreach ($arrCur as $k1 => $v1) {
-            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' =>$v1['id'] ,'pid'=>3, 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'thread_icon'=>$v1['thread_icon'],'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
         }
         $dataAll = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_TYPE'])->select();
         foreach ($dataAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>4, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'], 'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'],'thread_icon'=>$v['thread_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
             $all = $DataDic->where(['status'=>1, 'data_type_no'=>'REPORT_DETAIL_CAUSE', 'data_top_id'=>$v['data_no']])->select();
             foreach ($all as $k1 => $v1) {
-                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'],'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
+                array_push($data, ['id' =>$v1['id'] ,'pid'=>$v['id'], 'title'=>$v1['data_name'],'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'],'recommend_icon'=>$v1['recommend_icon'], 'demand_icon'=>$v1['demand_icon'],'thread_icon'=>$v1['thread_icon'], 'sort'=>$v1['sort'], 'url_keyword'=>$v1['url_keyword']]);
             }
         }
 
         $resourcesAll = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_REGION'])->select();
         foreach ($resourcesAll as $k => $v) {
-            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id' =>$v['id'] ,'pid'=>5, 'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'],'thread_icon'=>$v['thread_icon'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         //人脉*行业
         $ContactsAll = $DataDic->where(['status'=>1, 'data_type_no'=>'CONTACTS_INDUSTRY'])->select();
         foreach ($ContactsAll as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>6,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>6,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'],'thread_icon'=>$v['thread_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'ADVERT_ATTRIBUTE'])->select();
         foreach ($advertAttribute as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>7,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>7,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'],'thread_icon'=>$v['thread_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         $advertAttribute = $DataDic->where(['status'=>1, 'data_type_no'=>'FIRM_SCALE'])->select();
         foreach ($advertAttribute as $k=>$v){
-            array_push($data, ['id'=>$v['id'],'pid'=>8,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
+            array_push($data, ['id'=>$v['id'],'pid'=>8,'title'=>$v['data_name'], 'data_no'=>$v['data_no'], 'data_name'=>$v['data_name'], 'data_icon'=>$v['data_icon'], 'data_dark_icon'=>$v['data_dark_icon'],'recommend_icon'=>$v['recommend_icon'], 'demand_icon'=>$v['demand_icon'],'thread_icon'=>$v['thread_icon'], 'sort'=>$v['sort'], 'url_keyword'=>$v['url_keyword']]);
         }
 
         echo json_encode(['code'=>0, 'count'=>count($data),'data'=> $data ]);
@@ -274,19 +274,19 @@ class Diction extends Base
         $DataDic = model('DataDic');
         $arrType = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_TYPE'])->order('sort desc')->select();
         foreach ($arrType as $k1 => $v1) {
-            array_push($data, ['id' => $v1['id'], 'pid' => 1, 'title' => '资源·合作领域：' . $v1['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'], 'sort'=>$v1['sort'],'url_keyword'=>$v1['url_keyword']]);
+            array_push($data, ['id' => $v1['id'], 'pid' => 1, 'title' => '资源·合作领域：' . $v1['data_name'], 'data_no'=>$v1['data_no'], 'data_name'=>$v1['data_name'], 'data_icon'=>$v1['data_icon'], 'data_dark_icon'=>$v1['data_dark_icon'],'recommend_icon'=>$v1['recommend_icon'],'thread_icon'=>$v1['thread_icon'], 'sort'=>$v1['sort'],'url_keyword'=>$v1['url_keyword']]);
             if($level > 1) {
             $arrSub = $DataDic->where(['status'=>1, 'data_type_no'=>'RESOURCES_SUBDIVIDE','data_top_id'=>$v1['data_no']])->order('sort desc')->select();
             foreach ($arrSub as $k2 => $v2) {
-                array_push($data, ['id' => $v2['id'], 'pid' => $v1['id'], 'title' =>"业务细分：" . $v2['data_name'], 'data_no'=>$v2['data_no'], 'data_name'=>$v2['data_name'], 'data_icon'=>$v2['data_icon'], 'data_dark_icon'=>$v2['data_dark_icon'], 'sort'=>$v2['sort'],'url_keyword'=>$v2['url_keyword']]);
+                array_push($data, ['id' => $v2['id'], 'pid' => $v1['id'], 'title' =>"业务细分：" . $v2['data_name'], 'data_no'=>$v2['data_no'], 'data_name'=>$v2['data_name'], 'data_icon'=>$v2['data_icon'], 'data_dark_icon'=>$v2['data_dark_icon'],'recommend_icon'=>$v2['recommend_icon'],'thread_icon'=>$v2['thread_icon'], 'sort'=>$v2['sort'],'url_keyword'=>$v2['url_keyword']]);
                 if($level > 2) {
                     $arrInd = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY', 'data_top_id' => $v2['id']])->order('sort desc')->select();
                     foreach ($arrInd as $k3 => $v3) {
-                        array_push($data, ['id' => $v3['id'], 'pid' => $v2['id'], 'title' =>"资源·行业类型：" . $v3['data_name'], 'data_no'=>$v3['data_no'], 'data_name'=>$v3['data_name'], 'data_icon'=>$v3['data_icon'], 'data_dark_icon'=>$v3['data_dark_icon'], 'sort'=>$v3['sort'],'url_keyword'=>$v3['url_keyword']]);
+                        array_push($data, ['id' => $v3['id'], 'pid' => $v2['id'], 'title' =>"资源·行业类型：" . $v3['data_name'], 'data_no'=>$v3['data_no'], 'data_name'=>$v3['data_name'], 'data_icon'=>$v3['data_icon'], 'data_dark_icon'=>$v3['data_dark_icon'],'recommend_icon'=>$v3['recommend_icon'],'thread_icon'=>$v3['thread_icon'], 'sort'=>$v3['sort'],'url_keyword'=>$v3['url_keyword']]);
                         if($level > 3) {
                             $arrIndSub = $DataDic->where(['status' => 1, 'data_type_no' => 'RESOURCE_INDUSTRY_SUBDIVIDE', 'data_top_id' => $v3['data_no']])->order('sort desc')->select();
                             foreach ($arrIndSub as $k4 => $v4) {
-                                array_push($data, ['id' => $v4['id'], 'pid' => $v3['id'], 'title' => "资源·行业细分：" . $v4['data_name'], 'data_no'=>$v4['data_no'], 'data_name'=>$v4['data_name'], 'data_icon'=>$v4['data_icon'], 'data_dark_icon'=>$v4['data_dark_icon'], 'sort'=>$v4['sort'],'url_keyword'=>$v4['url_keyword']]);
+                                array_push($data, ['id' => $v4['id'], 'pid' => $v3['id'], 'title' => "资源·行业细分：" . $v4['data_name'], 'data_no'=>$v4['data_no'], 'data_name'=>$v4['data_name'], 'data_icon'=>$v4['data_icon'], 'data_dark_icon'=>$v4['data_dark_icon'],'recommend_icon'=>$v4['recommend_icon'],'thread_icon'=>$v4['thread_icon'], 'sort'=>$v4['sort'],'url_keyword'=>$v4['url_keyword']]);
                             }
                         }
                     }
