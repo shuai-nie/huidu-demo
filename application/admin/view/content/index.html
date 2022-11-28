@@ -96,11 +96,12 @@
         })
 
         table.on('sort(think-table)', function(obj){
-            data.field.field = obj.field;
-            data.field.order = obj.type;
+            let data = form.val("first");
+            data.field = obj.field;
+            data.order = obj.type;
             table.reload('table', {
                 initSort: obj
-                ,where:  data.field
+                ,where:  data
                 ,page: { curr: 1 }
             });
         })
