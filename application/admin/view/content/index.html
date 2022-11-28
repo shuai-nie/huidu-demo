@@ -96,9 +96,11 @@
         })
 
         table.on('sort(think-table)', function(obj){
+            data.field.field = obj.field;
+            data.field.order = obj.type;
             table.reload('table', {
                 initSort: obj
-                ,where: { field: obj.field, order: obj.type }
+                ,where:  data.field
                 ,page: { curr: 1 }
             });
         })

@@ -55,7 +55,11 @@ class Content extends Controller
             }
 
             if(!empty($field) && !empty($order)){
-                $ord = "A." . $field . " " . $order;
+                if($field == 'read_cnt'){
+                    $ord = "C." . $field . " " . $order;
+                }else{
+                    $ord = "A." . $field . " " . $order;
+                }
             }
 
             $limit = \request()->post('limit');
