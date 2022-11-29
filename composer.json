@@ -16,7 +16,8 @@
         "aliyuncs/oss-sdk-php": "^2.4",
         "aws/aws-sdk-php-resources": "^0.3.0",
         "aws/aws-sdk-php": "^3.225",
-        "jaeger/querylist": "^4.2"
+        "jaeger/querylist": "^4.2",
+        "topthink/think-captcha": "1.0"
     },
     "config": {
         "allow-plugins": {
