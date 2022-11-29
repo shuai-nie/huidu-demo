@@ -28,6 +28,11 @@
           <input type="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input" autocomplete="off">
         </div>
         <div class="layui-form-item">
+          <!--<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>-->
+          <img width="150" style="width:150px;cursor:pointer;" height="36" id="yzm" src="/Admin/Login/yzm" class="layadmin-user-login-icon" />
+          <input type="text" style="padding-left:165px;" name="yzm" id="LAY-user-login-password1" lay-verify="required" placeholder="验证码" class="layui-input" autocomplete="off">
+        </div>
+        <div class="layui-form-item">
           <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-login-submit">登 入</button>
         </div>
         
@@ -55,15 +60,20 @@
 
     //提交
     form.on('submit(LAY-user-login-submit)', function(obj){
-      	Api.login(obj.field,function(res){
+      	Api.login(obj.field, function(res){
     	 	if(res.code==200){
           Utils.successToast(res.msg);
           window.location.href=res['data']['href'];
         }else if(res.code==400){
+          $("#yzm").attr('src', "/admin/login/yzm?time="+new Date().getTime());
           Utils.errorToast(res.msg);
         }
     	});
     });
+
+    $("#yzm").on('click', function(){
+      $(this).attr('src', "/admin/login/yzm?time="+new Date().getTime());
+    })
    
     
   });

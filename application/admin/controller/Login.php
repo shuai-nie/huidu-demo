@@ -3,9 +3,13 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Loader;
 use util\GetMacAddr;
+use think\captcha\Captcha;
+
+define('NOW_TIME', time());
 
 class Login extends Controller
 {
+
     public function index()
     {
     	return view();
@@ -16,6 +20,20 @@ class Login extends Controller
         if (request()->isPost()) {
             $model  = model('Admin');
             $data   = request()->post();
+
+            $config =    [
+                'fontSize' => 30,
+                'length'   => 4,
+                'useNoise' => false,
+                'fontttf' => '2.ttf',
+                'codeSet' => '1234567890',
+            ];
+            $captcha = new Captcha($config);
+            $IsCaptcha = $captcha->check($data['yzm'], 1234);
+            if($IsCaptcha === false){
+                return error_json('验证码错误');
+            }
+
             $isUser = $model->where(['username' => $data['username'], 'status'=>1])->find();
             if(!empty($isUser)){
                 if($isUser['password'] !== md5(md5($data['password']).$isUser['str'])){
@@ -41,4 +59,23 @@ class Login extends Controller
         $mac = new GetMacAddr();// PHP_OS
         var_dump($mac->GetMacAddr('window'));
     }
+
+    public function yzm()
+    {
+//        $captcha = new Captca // Captcha();
+//        return $captcha->entry(1);
+
+        $config =    [
+            'fontSize'    =>    30,
+            'length'      =>    4,
+            'useNoise'    =>    false,
+            'fontttf' => '2.ttf',
+            'codeSet' => '1234567890',
+        ];
+        $captcha = new Captcha($config);
+//        $captcha->codeSet = '0123456789';
+//        $captcha->fontttf = '5.ttf';
+        return $captcha->entry(1234);
+    }
+
 }
