@@ -22,8 +22,8 @@ class Login extends Controller
             $data   = request()->post();
 
             $config =    [
-                'fontSize' => 30,
-                'length'   => 4,
+                'fontSize' => 120,
+                'length' => 4,
                 'useNoise' => false,
                 'fontttf' => '2.ttf',
                 'codeSet' => '1234567890',
@@ -62,19 +62,14 @@ class Login extends Controller
 
     public function yzm()
     {
-//        $captcha = new Captca // Captcha();
-//        return $captcha->entry(1);
-
         $config =    [
-            'fontSize'    =>    30,
-            'length'      =>    4,
-            'useNoise'    =>    false,
+            'fontSize' => 120,
+            'length' => 4,
+            'useNoise' => false,
             'fontttf' => '2.ttf',
             'codeSet' => '1234567890',
         ];
         $captcha = new Captcha($config);
-//        $captcha->codeSet = '0123456789';
-//        $captcha->fontttf = '5.ttf';
         return $captcha->entry(1234);
     }
 
