@@ -90,7 +90,7 @@ class Reptile
      */
     public function facebook()
     {
-        $url = "https://www.cifnews.com/guoyuan/api/brand/facebook/all?size=10&page=1&key=facebook&code=all";
+        $url = "https://www.cifnews.com/guoyuan/api/brand/facebook/all?size=5&page=1&key=facebook&code=all";
         $data =  $this->GetHttp($url);
         $data = json_decode($data, true);
         if($data['result'] === true){
