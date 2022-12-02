@@ -54,8 +54,6 @@ class Reptile
         // 去掉链接
         $detail = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $detail);
         $detail .= "</div>";
-        var_dump($detail);
-        exit();
         return $detail;
     }
 

@@ -31,7 +31,7 @@ class Reptile extends Controller
                     }
                 }
             }
-            $count = 0;//Content::where(['title'=>$val['title']])->count();
+            $count = Content::where(['title'=>$val['title']])->count();
             if($count == 0){
                 $c++;
                 $local = (new ApiReptile())->getRemoteFileToLocal($val['imgUrl'], ROOT_PATH . 'public/uploads/reptile/');
@@ -45,7 +45,6 @@ class Reptile extends Controller
                 $val['detail'] = str_replace('图虫创意', '', $val['detail']);
                 $val['detail'] = str_replace('图片来源：', '', $val['detail']);
                 $val['detail'] = str_replace('</p>', '</p><br/>', $val['detail']);
-                exit();
                 if(!empty($list['value'])){
                     $value = explode("\n", $list['value']);
                     foreach ($value as $valCon){
@@ -262,7 +261,7 @@ class Reptile extends Controller
                 }
             }
 
-            $count = Content::where(['title' => $val['title']])->count();
+            $count = 0;//Content::where(['title' => $val['title']])->count();
             if ($count == 0) {
                 $c++;
                 $local = (new ApiReptile())->getRemoteFileToLocal($val['imgUrl'], ROOT_PATH . 'public/uploads/reptile/');
@@ -287,34 +286,35 @@ class Reptile extends Controller
                         }
                     }
                 }
+                var_dump($val['detail']);
 
-                $content    = Content::create([
-                    'title'       => $val['title'],
-                    'category_id' => $ReptileInfo['type'],
-                    'intro'       => $val['describes'],
-                    'cover_url'   => $val['imgUrl'],
-                    'isweb'       => $id,
-                    'create_id'   => 0,
-                    'update_id'   => 0,
-                ]);
-                $content_id = $content->id;
-                ContentDetail::create([
-                    'cid'     => $content_id,
-                    'content' => $val['detail'] . '<p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p><span style="font-size: 18px;"><strong>○ 海量供应需求资源对接&nbsp; ○ 链接精英<strong><a href="https://www.huidu.io/news/1629/" target="_blank">出海</a></strong>人脉&nbsp; ○ 免费发布业务需求</strong></span></p><p><span style="font-size: 18px;"><strong>欢迎加入 <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">灰度-海外资源交流群</a></strong> <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">@HUIDUZ</a></strong></strong></span></p><p><span style="font-size: 18px;"><strong>商务合作：<strong><a href="https://t.me/HD_sevens" target="_blank" ref="nofollow">@HD_sevens</a></strong>&nbsp; <strong><a href="https://t.me/HuiduDy" target="_blank" ref="nofollow">@HuiduDy</a></strong></strong></span></p><p style="text-indent: 2em;"><br/></p>',
-
-                ]);
-                foreach ($ReptileInfo['attribute'] as $attr) {
-                    ContentPropertyRelevance::create([
-                        'property_id' => $attr,
-                        'content_id'  => $content_id,
-                        'status'      => 1,
-                    ]);
-                }
+//                $content    = Content::create([
+//                    'title'       => $val['title'],
+//                    'category_id' => $ReptileInfo['type'],
+//                    'intro'       => $val['describes'],
+//                    'cover_url'   => $val['imgUrl'],
+//                    'isweb'       => $id,
+//                    'create_id'   => 0,
+//                    'update_id'   => 0,
+//                ]);
+//                $content_id = $content->id;
+//                ContentDetail::create([
+//                    'cid'     => $content_id,
+//                    'content' => $val['detail'] . '<p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p><span style="font-size: 18px;"><strong>○ 海量供应需求资源对接&nbsp; ○ 链接精英<strong><a href="https://www.huidu.io/news/1629/" target="_blank">出海</a></strong>人脉&nbsp; ○ 免费发布业务需求</strong></span></p><p><span style="font-size: 18px;"><strong>欢迎加入 <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">灰度-海外资源交流群</a></strong> <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">@HUIDUZ</a></strong></strong></span></p><p><span style="font-size: 18px;"><strong>商务合作：<strong><a href="https://t.me/HD_sevens" target="_blank" ref="nofollow">@HD_sevens</a></strong>&nbsp; <strong><a href="https://t.me/HuiduDy" target="_blank" ref="nofollow">@HuiduDy</a></strong></strong></span></p><p style="text-indent: 2em;"><br/></p>',
+//
+//                ]);
+//                foreach ($ReptileInfo['attribute'] as $attr) {
+//                    ContentPropertyRelevance::create([
+//                        'property_id' => $attr,
+//                        'content_id'  => $content_id,
+//                        'status'      => 1,
+//                    ]);
+//                }
             }
         }
         $EndTime = microtime(true);
-        \app\admin\model\Reptile::where(['id' => $id])->setInc('total', $c);
-        AdminLog::create(['uid' => 0, 'text' => '爬虫脚本' . $id . "|" . ($EndTime - $BeginTime), 'url' => (string)request()->url(), 'ip' => request()->ip()]);
+//        \app\admin\model\Reptile::where(['id' => $id])->setInc('total', $c);
+//        AdminLog::create(['uid' => 0, 'text' => '爬虫脚本' . $id . "|" . ($EndTime - $BeginTime), 'url' => (string)request()->url(), 'ip' => request()->ip()]);
         exit($EndTime - $BeginTime);
     }
 
