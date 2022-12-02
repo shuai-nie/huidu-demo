@@ -29,6 +29,7 @@ class Reptile
         preg_match_all("/\<img.*\>/U", $detail, $img);
 
         $doc = new \DOMDocument();
+        var_dump($detail);
         var_dump($img[0]);exit();
         foreach ($img[0] as $val){
             $str = $val;
