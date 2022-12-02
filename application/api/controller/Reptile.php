@@ -261,7 +261,7 @@ class Reptile extends Controller
                 }
             }
 
-            $count = Content::where(['title' => $val['title']])->count();
+            $count = 0;//Content::where(['title' => $val['title']])->count();
             if ($count == 0) {
                 $c++;
                 $local = (new ApiReptile())->getRemoteFileToLocal($val['imgUrl'], ROOT_PATH . 'public/uploads/reptile/');
