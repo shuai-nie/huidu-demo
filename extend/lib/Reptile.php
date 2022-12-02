@@ -26,11 +26,15 @@ class Reptile
         $pos1 = strpos($data, "<div class=\"article-content article-inner leftcont");
         $pos2 = strpos($data, "<p> <strong>");
         $detail = substr($data, $pos1 , $pos2 - $pos1 );
-        preg_match_all("/\<img.*\>/U", $detail, $img);
-
+        $detail = preg_replace('#alt="[^"]*"#i', '', $detail);
+        preg_match_all("/<img.*\>/U", $detail, $img, PREG_PATTERN_ORDER);
+//        header("Content-type:text/html;charset=utf-8");
+//        var_dump($detail);
+/*        $reg2 = "/[img|IMG].*?src=['|\"](.*?(?:[.gif|.jpg]))['|\"].*?[\/]?>/";*/
+//        preg_match_all($reg2, $detail, $img, PREG_PATTERN_ORDER);
         $doc = new \DOMDocument();
-        var_dump($detail);
-        var_dump($img[0]);exit();
+
+//        var_dump($img);exit();
         foreach ($img[0] as $val){
             $str = $val;
             $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", " ", $str);
@@ -51,11 +55,12 @@ class Reptile
                 $detail = str_replace($val, '', $detail);
             }
         }
-        $detail = preg_replace('#alt="[^"]*"#i', '', $detail);
+
 //        //$detail = str_replace('', '', $detail);
         // 去掉链接
         $detail = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $detail);
         $detail .= "</div>";
+        var_dump($detail);
         return $detail;
     }
 
