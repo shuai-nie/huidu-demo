@@ -251,15 +251,15 @@ class Reptile extends Controller
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
         $list = \app\admin\model\Config::where(['id' => 100])->find();
         foreach ($data as $key => $val) {
-            if (!empty($list['value'])) {
-                $value = explode("\n", $list['value']);
-                foreach ($value as $valCon) {
-                    $vCon = explode("=", $valCon);
-                    if (isset($vCon[0]) && isset($vCon[1])) {
-                        (new ApiReptile())->strReplace($vCon, $val['title']);
-                    }
-                }
-            }
+//            if (!empty($list['value'])) {
+//                $value = explode("\n", $list['value']);
+//                foreach ($value as $valCon) {
+//                    $vCon = explode("=", $valCon);
+//                    if (isset($vCon[0]) && isset($vCon[1])) {
+//                        (new ApiReptile())->strReplace($vCon, $val['title']);
+//                    }
+//                }
+//            }
 
             $count = 0;//Content::where(['title' => $val['title']])->count();
             if ($count == 0) {
@@ -286,7 +286,7 @@ class Reptile extends Controller
                         }
                     }
                 }
-                var_dump($val['detail']);
+                var_dump($val['detail']);exit();
 
 //                $content    = Content::create([
 //                    'title'       => $val['title'],
