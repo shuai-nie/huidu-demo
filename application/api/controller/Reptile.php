@@ -286,6 +286,7 @@ class Reptile extends Controller
                         }
                     }
                 }
+                var_dump(1111);
                 var_dump($val['detail']);exit();
 
 //                $content    = Content::create([
