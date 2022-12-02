@@ -55,12 +55,10 @@ class Reptile
                 $detail = str_replace($val, '', $detail);
             }
         }
-
 //        //$detail = str_replace('', '', $detail);
         // 去掉链接
         $detail = preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $detail);
         $detail .= "</div>";
-        var_dump($detail);
         return $detail;
     }
 
