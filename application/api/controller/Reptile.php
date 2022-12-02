@@ -275,6 +275,7 @@ class Reptile extends Controller
                 $val['detail'] = str_replace('图虫创意', '', $val['detail']);
                 $val['detail'] = str_replace('图片来源：', '', $val['detail']);
                 $val['detail'] = str_replace('</p>', '</p><br/>', $val['detail']);
+                exit();
                 if (!empty($list['value'])) {
                     $value = explode("\n", $list['value']);
                     foreach ($value as $valCon) {
