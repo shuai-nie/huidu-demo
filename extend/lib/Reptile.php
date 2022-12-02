@@ -29,6 +29,7 @@ class Reptile
         preg_match_all("/\<img.*\>/U", $detail, $img);
 
         $doc = new \DOMDocument();
+        var_dump($img[0]);exit();
         foreach ($img[0] as $val){
             $str = $val;
             $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", " ", $str);
