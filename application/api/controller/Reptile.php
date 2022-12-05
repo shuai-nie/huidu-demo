@@ -195,6 +195,7 @@ class Reptile extends Controller
                 }
 
                 $val['detail'] = (new ApiReptile())->CifNewsArticle($val['link']);
+
                 $val['detail'] = str_replace('图虫创意', '', $val['detail']);
                 $val['detail'] = str_replace('图片来源：', '', $val['detail']);
                 $val['detail'] = str_replace('</p>', '</p><br/>', $val['detail']);
@@ -391,6 +392,17 @@ class Reptile extends Controller
         AdminLog::create(['uid' => 0, 'text' => '爬虫脚本' . $id . "|" . ($EndTime - $BeginTime), 'url' => (string)request()->url(), 'ip' => request()->ip()]);
         exit($EndTime - $BeginTime);
     }
+
+    public function keygoogle_pg1()
+    {
+        $id = 16;
+        $BeginTime = microtime(true);
+        $data = (new ApiReptile())->keygoogle();
+        $c = 0;
+
+        $EndTime = microtime(true);
+    }
+
 
     public function dd()
     {

@@ -1,8 +1,5 @@
 <?php
-
-
 namespace util;
-
 
 use Aws\Credentials\Credentials;
 use Aws\S3\MultipartUploader;

@@ -33,11 +33,10 @@ class Reptile
 /*        $reg2 = "/[img|IMG].*?src=['|\"](.*?(?:[.gif|.jpg]))['|\"].*?[\/]?>/";*/
 //        preg_match_all($reg2, $detail, $img, PREG_PATTERN_ORDER);
         $doc = new \DOMDocument();
-
-//        var_dump($img);exit();
         foreach ($img[0] as $val){
             $str = $val;
-            $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", " ", $str);
+            $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg!/both/750x386\"", "", $str);
+            $str = str_replace( "src=\"https://pic.cifnews.com/upload/202103/04/202103041710135519.jpg\"", "", $str);
             $str = str_replace( "data-src=\"", "src=\"", $str);
             $libxml_previous_state = libxml_use_internal_errors(true);
             $doc->loadHTML($str);
@@ -46,11 +45,17 @@ class Reptile
             libxml_use_internal_errors($libxml_previous_state);
             $src = $xpath->evaluate("string(//img/@src)");
 
-            $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
-            if($data['code'] == 1){
-                $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
-                $str = str_replace($src, $AwsImgUrl, $str);
-                $detail = str_replace($val, $str, $detail);
+            if(!empty($src)){
+                $parse_url = parse_url($src);
+                $src = $parse_url['scheme'] . '://' . $parse_url['host'] . $parse_url['path'];
+                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                if($data['code'] == 1){
+                    $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
+                    $str = str_replace($src, $AwsImgUrl, $str);
+                    $detail = str_replace($val, $str, $detail);
+                }else{
+                    $detail = str_replace($val, '', $detail);
+                }
             }else{
                 $detail = str_replace($val, '', $detail);
             }
@@ -162,6 +167,23 @@ class Reptile
 
         var_dump($matches);
         var_dump($img);
+
+    }
+
+    /**
+     * 快出海·
+     */
+    public function keygoogle()
+    {
+        $url = "https://www.kchuhai.com/report/keygoogle_pg1";
+        $data = $this->GetHttp($url);
+//
+        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
+        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
+        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
+        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
+        echo "<pre>";
+        var_dump($describes[0]);
 
     }
 
