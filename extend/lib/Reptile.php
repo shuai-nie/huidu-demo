@@ -197,17 +197,9 @@ class Reptile
             $href = $xpath->evaluate("string(//a/@href)");
             preg_match_all($reg2, $val, $describes);
             preg_match_all($reg1, $val,$title);
-//            var_dump($src);
-//            var_dump($href);
-//            var_dump($title[0][0]);
-//            var_dump( strip_tags( $describes[0][0]));
             $desc = $this->GetHttp($href);
-
-
             preg_match_all($reg3, $desc,$desc2);
             preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
-
-
             foreach ($img[0] as $val2){
                 $libxml_previous_state = libxml_use_internal_errors(true);
                 $doc->loadHTML($val2);
@@ -229,6 +221,17 @@ class Reptile
 
             exit();
         }
+    }
+
+    public function keyfacebook()
+    {
+        $url = "https://www.kchuhai.com/report/keyfacebook_pg1";
+        $data = $this->GetHttp($url);
+        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
+        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
+        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
+        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
+        return $describes[0];
     }
 
     public function kchuhai_desc($url)

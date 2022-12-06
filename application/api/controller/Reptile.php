@@ -484,6 +484,38 @@ class Reptile extends Controller
         \app\admin\model\Reptile::where(['id' => $id])->setInc('total', $c);
         AdminLog::create(['uid' => 0, 'text' => '爬虫脚本' . $id . "|" . ($EndTime - $BeginTime), 'url' => (string)request()->url(), 'ip' => request()->ip()]);
         exit($EndTime - $BeginTime);
+    }
+
+    public function keyfacebook()
+    {
+        $id = 17;
+        $BeginTime = microtime(true);
+        $data = (new ApiReptile())->keyfacebook();
+        $c = 0;
+        $doc = new \DOMDocument();
+        $reg1="/<a .*?>.*?<\/a>/";
+        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
+        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+
+        $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
+        $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
+        $list = \app\admin\model\Config::where(['id' => 100])->find();
+
+        foreach ($data as $val){
+            $libxml_previous_state = libxml_use_internal_errors(true);
+            $doc->loadHTML($val);
+            libxml_clear_errors();
+            $xpath = new \DOMXPath($doc);
+            libxml_use_internal_errors($libxml_previous_state);
+            $src = $xpath->evaluate("string(//img/@src)");
+            $href = $xpath->evaluate("string(//a/@href)");
+            preg_match_all($reg2, $val, $describes);
+            preg_match_all($reg1, $val,$title);
+            $title[0][0] = strip_tags($title[0][0]);
+            $describes[0][0] = strip_tags($describes[0][0]);
+            var_dump($title[0][0]);
+        }
+
 
     }
 
