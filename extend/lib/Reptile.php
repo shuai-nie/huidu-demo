@@ -217,7 +217,6 @@ class Reptile
                     $desc2[0][0] = str_replace($val2, '',  $desc2[0][0]);
                 }
             }
-            var_dump($desc2[0][0]);
 
             exit();
         }
