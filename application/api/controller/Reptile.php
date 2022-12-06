@@ -439,7 +439,9 @@ class Reptile extends Controller
                         $img = 'https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/cover_url/2022111700' . mt_rand(1, 5) . '.jpg';
                     }
 
-                    $desc = $this->GetHttp($href);
+                    $desc = (new ApiReptile())->kchuhai_desc($href);
+
+
                     preg_match_all($reg3, $desc,$desc2);
                     preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
 

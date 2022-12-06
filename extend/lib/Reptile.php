@@ -233,14 +233,16 @@ class Reptile
 
     public function kchuhai_desc($url)
     {
-        $desc = $this->GetHttp($url);
-        $reg1="/<a .*?>.*?<\/a>/";
-        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        return $this->GetHttp($url);
 
-        preg_match_all($reg3, $desc,$desc2);
-//            var_dump($desc2[0][0]);
-        preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
+/*        $reg1="/<a .*?>.*?<\/a>/";*/
+//        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
+//        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+//
+//        preg_match_all($reg3, $desc,$desc2);
+//        preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
+
+
     }
 
     /**
