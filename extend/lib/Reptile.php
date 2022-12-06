@@ -234,6 +234,17 @@ class Reptile
         return $describes[0];
     }
 
+    public function keytiktok()
+    {
+        $url = "https://www.kchuhai.com/report/keytiktok_pg1";
+        $data = $this->GetHttp($url);
+        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
+        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
+        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
+        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
+        return $describes[0];
+    }
+
     public function kchuhai_desc($url)
     {
         $reg1="/<a .*?>.*?<\/a>/";
@@ -265,6 +276,8 @@ class Reptile
         $desc2[0][0] = str_replace('</p>', '</p><br/>', $desc2[0][0]);
         return preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $desc2[0][0]);
     }
+
+
 
     /**
      * get
