@@ -218,7 +218,7 @@ class Reptile
                 libxml_use_internal_errors($libxml_previous_state);
                 $src = $xpath->evaluate("string(//img/@src)");
 
-                var_dump($val2);
+//                var_dump($val2);
                 $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
                 if($data['code'] == 1){
                     $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
