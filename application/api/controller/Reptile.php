@@ -628,8 +628,9 @@ class Reptile extends Controller
                         $img = 'https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/cover_url/2022111700' . mt_rand(1, 5) . '.jpg';
                     }
 
-                    var_dump($href);exit();
+
                     $desc_kchuhai = (new ApiReptile())->kchuhai_desc($href);
+                    exit();
 
                     if (!empty($list['value'])) {
                         $value = explode("\n", $list['value']);

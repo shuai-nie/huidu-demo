@@ -254,6 +254,7 @@ class Reptile
         preg_match_all($reg3, $desc,$desc2);
         preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
         $doc = new \DOMDocument();
+        var_dump($img[0]);exit();
         foreach ($img[0] as $val2){
             $libxml_previous_state = libxml_use_internal_errors(true);
             $doc->loadHTML($val2);
