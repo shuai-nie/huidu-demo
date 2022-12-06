@@ -233,16 +233,31 @@ class Reptile
 
     public function kchuhai_desc($url)
     {
-        return $this->GetHttp($url);
+        $reg1="/<a .*?>.*?<\/a>/";
+        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
+        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        $desc = $this->GetHttp($url);
+        preg_match_all($reg3, $desc,$desc2);
+        preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
+        $doc = new \DOMDocument();
+        foreach ($img[0] as $val2){
+            $libxml_previous_state = libxml_use_internal_errors(true);
+            $doc->loadHTML($val2);
+            libxml_clear_errors();
+            $xpath = new \DOMXPath($doc);
+            libxml_use_internal_errors($libxml_previous_state);
+            $src = $xpath->evaluate("string(//img/@src)");
+            $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
 
-/*        $reg1="/<a .*?>.*?<\/a>/";*/
-//        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-//        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
-//
-//        preg_match_all($reg3, $desc,$desc2);
-//        preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
-
-
+            if($data['code'] == 1){
+                $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
+                $str = str_replace($src, $AwsImgUrl, $val2);
+                $desc2[0][0] = str_replace($val2, $str, $desc2[0][0]);
+            }else{
+                $desc2[0][0] = str_replace($val2, '',  $desc2[0][0]);
+            }
+        }
+        return preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $desc2[0][0]);
     }
 
     /**
