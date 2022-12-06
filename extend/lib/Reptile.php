@@ -260,6 +260,8 @@ class Reptile
                 $desc2[0][0] = str_replace($val2, '',  $desc2[0][0]);
             }
         }
+        $desc2[0][0] = preg_replace('#alt="[^"]*"#i', '', $desc2[0][0]);
+        $desc2[0][0] = preg_replace('#title="[^"]*"#i', '', $desc2[0][0]);
         return preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $desc2[0][0]);
     }
 
