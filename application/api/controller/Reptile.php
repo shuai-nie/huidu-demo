@@ -603,8 +603,6 @@ class Reptile extends Controller
             $src = $xpath->evaluate("string(//img/@src)");
             $href = $xpath->evaluate("string(//a/@href)");
 
-            var_dump($src);
-            exit();
             preg_match_all($reg2, $val, $describes);
             preg_match_all($reg1, $val,$title);
             $title[0][0] = strip_tags($title[0][0]);
