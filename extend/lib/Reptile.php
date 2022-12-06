@@ -217,9 +217,8 @@ class Reptile
                 $xpath = new \DOMXPath($doc);
                 libxml_use_internal_errors($libxml_previous_state);
                 $src = $xpath->evaluate("string(//img/@src)");
-
-                var_dump($src);
-//                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                var_dump($data);
 //                if($data['code'] == 1){
 //                    $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
 //                    $str = str_replace($src, $AwsImgUrl, $val2);
