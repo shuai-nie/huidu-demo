@@ -400,6 +400,8 @@ class Reptile extends Controller
         $data = (new ApiReptile())->keygoogle();
         $c = 0;
 
+        var_dump($data);
+
         $EndTime = microtime(true);
     }
 
