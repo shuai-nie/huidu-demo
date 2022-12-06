@@ -223,9 +223,9 @@ class Reptile
                 if($data['code'] == 1){
                     $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
                     $str = str_replace($src, $AwsImgUrl, $val2);
-                    $detail = str_replace($val2, $str, desc2[0][0]);
+                    $detail = str_replace($val2, $str, $desc2[0][0]);
                 }else{
-                    $detail = str_replace($val, '', $detail);
+                    $detail = str_replace($val, '',  $desc2[0][0]);
                 }
             }
             var_dump($detail);
