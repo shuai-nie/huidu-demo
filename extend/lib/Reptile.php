@@ -225,7 +225,7 @@ class Reptile
                     $str = str_replace($src, $AwsImgUrl, $val2);
                     $detail = str_replace($val2, $str, $desc2[0][0]);
                 }else{
-                    $detail = str_replace($val, '',  $desc2[0][0]);
+                    $detail = str_replace($val2, '',  $desc2[0][0]);
                 }
             }
             var_dump($detail);
