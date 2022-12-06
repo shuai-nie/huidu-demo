@@ -286,6 +286,8 @@ class Reptile
         }
         $desc2[0][0] = preg_replace('#alt="[^"]*"#i', '', $desc2[0][0]);
         $desc2[0][0] = preg_replace('#title="[^"]*"#i', '', $desc2[0][0]);
+        $desc2[0][0] = preg_replace('#width="[^"]*"#i', '', $desc2[0][0]);
+        $desc2[0][0] = preg_replace('#height="[^"]*"#i', '', $desc2[0][0]);
         $desc2[0][0] = str_replace('</p>', '</p><br/>', $desc2[0][0]);
         return preg_replace("/<a[^>]*>(.*?)<\/a>/is", "$1", $desc2[0][0]);
     }
