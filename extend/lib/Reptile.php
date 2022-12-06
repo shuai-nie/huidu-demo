@@ -183,7 +183,55 @@ class Reptile
         $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
         preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
         echo "<pre>";
-        var_dump($describes[0]);
+        $doc = new \DOMDocument();
+        $reg1="/<a .*?>.*?<\/a>/";
+        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
+        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        foreach ($describes[0] as $val){
+            $libxml_previous_state = libxml_use_internal_errors(true);
+            $doc->loadHTML($val);
+            libxml_clear_errors();
+            $xpath = new \DOMXPath($doc);
+            libxml_use_internal_errors($libxml_previous_state);
+            $src = $xpath->evaluate("string(//img/@src)");
+            $href = $xpath->evaluate("string(//a/@href)");
+            preg_match_all($reg2, $val, $describes);
+            preg_match_all($reg1, $val,$title);
+            var_dump($src);
+            var_dump($href);
+            var_dump($title[0][0]);
+//            var_dump( strip_tags( $describes[0][0]));
+            $desc = $this->GetHttp($href);
+
+
+            preg_match_all($reg3, $desc,$desc2);
+//            var_dump($desc2[0][0]);
+            preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
+//            var_dump($img[0]);
+
+            foreach ($img[0] as $val2){
+
+                $libxml_previous_state = libxml_use_internal_errors(true);
+                $doc->loadHTML($val2);
+                libxml_clear_errors();
+                $xpath = new \DOMXPath($doc);
+                libxml_use_internal_errors($libxml_previous_state);
+                $src = $xpath->evaluate("string(//img/@src)");
+
+                var_dump($val2);
+                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                if($data['code'] == 1){
+                    $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
+                    $str = str_replace($src, $AwsImgUrl, $val2);
+                    $detail = str_replace($val2, $str, desc2[0][0]);
+                }else{
+                    $detail = str_replace($val, '', $detail);
+                }
+            }
+            var_dump($detail);
+
+            exit();
+        }
 
     }
 
