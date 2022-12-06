@@ -642,29 +642,31 @@ class Reptile extends Controller
                             }
                         }
                     }
+                    var_dump($describes[0][0]);
+                    exit();
 
-                    $content    = Content::create([
-                        'title'       => $title[0][0],
-                        'category_id' => $ReptileInfo['type'],
-                        'intro'       => $describes[0][0],
-                        'cover_url'   => $img,
-                        'isweb'       => $id,
-                        'create_id'   => 0,
-                        'update_id'   => 0,
-                    ]);
-                    $content_id = $content->id;
-                    ContentDetail::create([
-                        'cid'     => $content_id,
-                        'content' => $desc_kchuhai . '<p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p><span style="font-size: 18px;"><strong>○ 海量供应需求资源对接&nbsp; ○ 链接精英<strong><a href="https://www.huidu.io/news/1629/" target="_blank">出海</a></strong>人脉&nbsp; ○ 免费发布业务需求</strong></span></p><p><span style="font-size: 18px;"><strong>欢迎加入 <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">灰度-海外资源交流群</a></strong> <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">@HUIDUZ</a></strong></strong></span></p><p><span style="font-size: 18px;"><strong>商务合作：<strong><a href="https://t.me/HD_sevens" target="_blank" ref="nofollow">@HD_sevens</a></strong>&nbsp; <strong><a href="https://t.me/HuiduDy" target="_blank" ref="nofollow">@HuiduDy</a></strong></strong></span></p><p style="text-indent: 2em;"><br/></p>',
-
-                    ]);
-                    foreach ($ReptileInfo['attribute'] as $attr) {
-                        ContentPropertyRelevance::create([
-                            'property_id' => $attr,
-                            'content_id'  => $content_id,
-                            'status'      => 1,
-                        ]);
-                    }
+//                    $content    = Content::create([
+//                        'title'       => $title[0][0],
+//                        'category_id' => $ReptileInfo['type'],
+//                        'intro'       => $describes[0][0],
+//                        'cover_url'   => $img,
+//                        'isweb'       => $id,
+//                        'create_id'   => 0,
+//                        'update_id'   => 0,
+//                    ]);
+//                    $content_id = $content->id;
+//                    ContentDetail::create([
+//                        'cid'     => $content_id,
+//                        'content' => $desc_kchuhai . '<p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p style="text-indent: 2em;"><br/></p><p><span style="font-size: 18px;"><strong>○ 海量供应需求资源对接&nbsp; ○ 链接精英<strong><a href="https://www.huidu.io/news/1629/" target="_blank">出海</a></strong>人脉&nbsp; ○ 免费发布业务需求</strong></span></p><p><span style="font-size: 18px;"><strong>欢迎加入 <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">灰度-海外资源交流群</a></strong> <strong><a href="https://t.me/HUIDUZ" target="_blank" ref="nofollow">@HUIDUZ</a></strong></strong></span></p><p><span style="font-size: 18px;"><strong>商务合作：<strong><a href="https://t.me/HD_sevens" target="_blank" ref="nofollow">@HD_sevens</a></strong>&nbsp; <strong><a href="https://t.me/HuiduDy" target="_blank" ref="nofollow">@HuiduDy</a></strong></strong></span></p><p style="text-indent: 2em;"><br/></p>',
+//
+//                    ]);
+//                    foreach ($ReptileInfo['attribute'] as $attr) {
+//                        ContentPropertyRelevance::create([
+//                            'property_id' => $attr,
+//                            'content_id'  => $content_id,
+//                            'status'      => 1,
+//                        ]);
+//                    }
                     $c++;
                 }
             }
