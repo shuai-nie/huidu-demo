@@ -418,6 +418,7 @@ class Reptile extends Controller
             $href = $xpath->evaluate("string(//a/@href)");
             preg_match_all($reg2, $val, $describes);
             preg_match_all($reg1, $val,$title);
+            $title[0][0] = strip_tags($title[0][0]);
 
             if(!empty($title[0][0])){
                 if (!empty($list['value'])) {
