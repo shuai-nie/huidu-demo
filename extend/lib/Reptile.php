@@ -263,20 +263,16 @@ class Reptile
             libxml_use_internal_errors($libxml_previous_state);
             $src = $xpath->evaluate("string(//img/@src)");
             if(!empty($src)){
-                var_dump($src);
-//                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
-//
-//                if($data['code'] == 1){
-//                    $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
-//                    $str = str_replace($src, $AwsImgUrl, $val2);
-//                    $desc2[0][0] = str_replace($val2, $str, $desc2[0][0]);
-//                }else{
-//                    $desc2[0][0] = str_replace($val2, '',  $desc2[0][0]);
-//                }
+                $data = $this->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                if($data['code'] == 1){
+                    $AwsImgUrl = (new Upload())->fileUpload(ROOT_PATH.'public/uploads/reptile/'.$data['path']);
+                    $str = str_replace($src, $AwsImgUrl, $val2);
+                    $desc2[0][0] = str_replace($val2, $str, $desc2[0][0]);
+                }else{
+                    $desc2[0][0] = str_replace($val2, '',  $desc2[0][0]);
+                }
             }
-
         }
-        exit();
         $desc2[0][0] = preg_replace('#alt="[^"]*"#i', '', $desc2[0][0]);
         $desc2[0][0] = preg_replace('#title="[^"]*"#i', '', $desc2[0][0]);
         $desc2[0][0] = str_replace('</p>', '</p><br/>', $desc2[0][0]);
