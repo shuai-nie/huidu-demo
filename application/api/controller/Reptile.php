@@ -419,6 +419,7 @@ class Reptile extends Controller
             preg_match_all($reg2, $val, $describes);
             preg_match_all($reg1, $val,$title);
             $title[0][0] = strip_tags($title[0][0]);
+            $describes[0][0] = strip_tags($describes[0][0]);
 
             if(!empty($title[0][0])){
                 if (!empty($list['value'])) {
