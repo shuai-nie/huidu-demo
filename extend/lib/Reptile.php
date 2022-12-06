@@ -182,7 +182,7 @@ class Reptile
         $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
         $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
         preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
-        echo "<pre>";
+//        echo "<pre>";
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
         $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
@@ -197,9 +197,9 @@ class Reptile
             $href = $xpath->evaluate("string(//a/@href)");
             preg_match_all($reg2, $val, $describes);
             preg_match_all($reg1, $val,$title);
-            var_dump($src);
-            var_dump($href);
-            var_dump($title[0][0]);
+//            var_dump($src);
+//            var_dump($href);
+//            var_dump($title[0][0]);
 //            var_dump( strip_tags( $describes[0][0]));
             $desc = $this->GetHttp($href);
 
