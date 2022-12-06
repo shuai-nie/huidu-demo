@@ -183,7 +183,6 @@ class Reptile
         preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
         return $describes[0];
 
-//        echo "<pre>";
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
         $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
@@ -206,9 +205,8 @@ class Reptile
 
 
             preg_match_all($reg3, $desc,$desc2);
-//            var_dump($desc2[0][0]);
             preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
-//            var_dump($img[0]);
+
 
             foreach ($img[0] as $val2){
                 $libxml_previous_state = libxml_use_internal_errors(true);
