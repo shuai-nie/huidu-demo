@@ -764,51 +764,5 @@ class Reptile extends Controller
     }
 
 
-    public function dd()
-    {
-//        $data = QueryList::get('https://zy.91po.net/2.html')->find('img')->attrs('src');
-//        foreach ($data->all() as $val){
-//            echo '"'.$val."\",<br/>";
-//        }
-
-//        $html = file_get_contents('https://zy.91po.net/2.html');
-//        $data = QueryList::html($html)->query()->getData();
-//        var_dump($data->all());
-//        exit();
-////        foreach ($data->all() as $val){
-////            echo '"'.$val."\",<br/>";
-////        }
-
-
-    }
-
-    public function cc()
-    {
-//        $data = (new ApiReptile())->GetHttp("https://zy.91po.net/2.html");
-//        // <a.*?.<\/a>
-//        preg_match_all('/<a.*?.<\/a>/', $data, $arr);
-//        $doc = new \DOMDocument();
-//        foreach ($arr[0] as $key => $val){
-//            if($key%2==0){
-//                $libxml_previous_state = libxml_use_internal_errors(true);
-//                $doc->loadHTML($val);
-//                libxml_clear_errors();
-//                $xpath = new \DOMXPath($doc);
-//                libxml_use_internal_errors($libxml_previous_state);
-//                $src = $xpath->evaluate("string(//img/@src)");
-//                $src = explode('/', $src);
-//                $src = $src[count($src)-1];
-//                echo "<img src='https://s3.eu-west-2.amazonaws.com/s3.dev.public.whale/currency_icon/".$src. "' art='".strip_tags( $arr[0][$key+1]). "' width='40' height='40' style='float:left;' />";
-//
-//
-//            }
-//
-//        }
-
-    }
-
-
-
-
 
 }

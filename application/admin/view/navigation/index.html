@@ -1,0 +1,124 @@
+{include file="moban/bone_header"}
+
+<div class="layui-btn-container">
+  <button class="layui-btn layui-btn-sm" data-type="addMenu">添加菜单</button>
+  <button class="layui-btn layui-btn-primary layui-btn-sm open-all" id="btn-expand">全部展开</button>
+  <button class="layui-btn layui-btn-primary layui-btn-sm close-all" id="btn-fold">全部折叠</button>
+</div>
+
+<table id="think-table" class="layui-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="show">
+  <input type="checkbox" name="show" value="{{d.id}}" lay-skin="switch" lay-text="显示|隐藏" lay-filter="show" {{ d.show == 1 ? 'checked' : '' }}>
+</script>
+
+<script>
+layui.config({
+    base: "/static/admin_templete/lib/",
+    version: true
+}).extend({
+    treetable: 'treetable-lay/treetable',
+});
+
+layui.use(['table','treetable', 'form'], function(){
+  var table = layui.table
+      , treetable = layui.treetable
+      , form = layui.form
+      , $ = layui.jquery;
+
+      var re = treetable.render({
+        treeColIndex: 1,
+        treeSpid: 0,
+        treeIdName: 'id',
+        treePidName: 'pid',
+        elem: '#think-table',
+        url: "{:url('')}",
+        method:'post',
+        page: false,
+        cols: [[
+          {type: 'numbers'},
+          {field: 'title', title: '权限名称', width:290},
+          {field: 'link', title: '菜单url', width: 270},
+          {field: 'sort', title: '排序', width: 80, edit:true},
+          {field: 'show', title: '显示', width: 100, templet: "#show"},
+          {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
+        ]],
+        done: function () {
+          layer.closeAll('loading');
+        }
+      });
+
+      $('#btn-expand').click(function () {
+        treetable.expandAll('#think-table');
+      });
+
+      $('#btn-fold').click(function () {
+        treetable.foldAll('#think-table');
+      });
+
+      table.on('tool(think-table)', function(obj){
+            var data=obj.data;
+            if(obj.event==="edit"){
+                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', "{:lang('edit')}");
+            }else if(obj.event==='del'){
+                UI.delete(data['id'], function(res){
+                if(res.code==200){
+                  table.reload("table");
+                  parent.window.location.reload();
+                }
+            });
+            }
+      });
+
+    var $ = layui.$, active = {
+      addMenu:function(){
+        UI.openLayer("{:url('add')}", '750', '480', '#submit', "{:lang('create')}");
+      }
+    };
+
+    $('.layui-btn-container .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+
+    form.on('switch(show)', function(obj){
+      var _val = obj.elem.checked == true ? 1 : 0
+          , _id = this.value
+          , _name = this.name ;
+          $.post("{:url('set_value')}", {
+            id : _id,
+            name : _name,
+            value : _val
+          }, function(objPost){
+            if(objPost.code == 200){
+              layer.msg(objPost.msg, {icon:1}, function(){
+
+              })
+            }
+          }, 'json');
+    });
+
+    table.on('edit(think-table)', function(obj){
+      var _val = obj.value
+              , _id = obj.data.id
+              , _name = obj.field ;
+
+        $.post("{:url('set_value')}", {
+          id : _id,
+          name : _name,
+          value : _val
+        }, function(objPost){
+          if(objPost.code == 200){
+            layer.msg(objPost.msg, {icon:1}, function(){})
+          }
+        }, 'json');
+    })
+
+});
+</script>
+{include file="moban/bone_footer"}
