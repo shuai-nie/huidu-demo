@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -26,6 +22,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-sm" lay-event="create">添加</a>
+</script>
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -37,9 +37,9 @@
             form = layui.form;
 
         UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width:80, fixed: 'left'}
-            ,{field: 'name', title: '名称'}
-            ,{field: 'sort', title: '排序',width:120}
+            {field: 'id', title: 'ID', width:60, fixed: 'left'}
+            ,{field: 'name', title: '名称',width:220}
+            ,{field: 'sort', title: '排序',width:80}
             ,{field: 'url_keyword', title: '链接关键字',width:120,templet:function(d){
                 if(d.type*1 == 1){
                     return d.url_keyword;
@@ -47,7 +47,13 @@
                 return '-';
             }}
             ,{fixed: 'right',title:'操作',width:140, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", 'auth');
+
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="create"){
+                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
+            }
+        })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
@@ -60,17 +66,6 @@
                     }
                 });
             }
-        });
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 500, 350, "#submit", "{:lang('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
         });
 
         form.on('submit(data-search-btn)', function(data){
