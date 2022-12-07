@@ -43,9 +43,9 @@ layui.use(['table','treetable', 'form'], function(){
         cols: [[
           {type: 'numbers'},
           {field: 'title', title: '权限名称', width:290},
-          {field: 'link', title: '菜单url', width: 270},
+          {field: 'link_url', title: '菜单url', width: 270},
           {field: 'sort', title: '排序', width: 80, edit:true},
-          {field: 'show', title: '显示', width: 100, templet: "#show"},
+          {field: 'link_type', title: '跳转类型', width: 100},
           {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
         done: function () {
@@ -64,7 +64,7 @@ layui.use(['table','treetable', 'form'], function(){
       table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '600', '#submit', "{:lang('edit')}");
+                UI.openLayer("{:url('edit')}?id="+data['id'], '750', '480', '#submit', "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                 if(res.code==200){

@@ -1,6 +1,6 @@
 {include file="moban/css"}
 {include file="moban/js"}
-<form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+<form class="layui-form" lay-filter="Navigation-form" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
         <div class="layui-input-block">
@@ -16,7 +16,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">跳转链接</label>
         <div class="layui-input-block">
-            <input type="text" name="link" placeholder="链接" autocomplete="off" class="layui-input">
+            <input type="text" name="link_url" placeholder="链接" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -33,14 +33,6 @@
         <label class="layui-form-label">排序</label>
         <div class="layui-input-block">
             <input type="text" name="sort" placeholder="排序" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">显示</label>
-        <div class="layui-input-block">
-            <input type="radio" name="show" value="1" title="显示" checked>
-            <input type="radio" name="show" value="0" title="隐藏">
         </div>
     </div>
 
@@ -76,7 +68,7 @@ layui.use(['form','treeSelect'], function () {
             // console.log(d);
 //                选中节点，根据id筛选
 //                treeSelect.checkNode('tree', 3);
-
+            treeSelect.checkNode('tree', "{$data['pid']|default=''}");
 //                获取zTree对象，可以调用zTree方法
 //                var treeObj = treeSelect.zTree('tree');
 //                console.log(treeObj);
@@ -84,6 +76,14 @@ layui.use(['form','treeSelect'], function () {
 //                treeSelect.refresh();
         }
     });
+
+    form.val('Navigation-form', {
+        "title": "{$data['title']|default=''}",
+        "link_url": "{$data['link_url']|default=''}",
+        "link_type": "{$data['link_type']|default=''}",
+        "sort": "{$data['sort']|default=''}",
+        "title": "{$data['title']|default=''}",
+    })
 
     //监听提交
     form.on('submit(submit)', function (data) {
