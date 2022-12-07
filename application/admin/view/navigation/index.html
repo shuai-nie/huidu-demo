@@ -45,7 +45,14 @@ layui.use(['table','treetable', 'form'], function(){
           {field: 'title', title: '权限名称', width:290},
           {field: 'link_url', title: '菜单url', width: 270},
           {field: 'sort', title: '排序', width: 80, edit:true},
-          {field: 'link_type', title: '跳转类型', width: 100},
+          {field: 'link_type', title: '跳转类型', width: 100, templet: function (d){
+            switch (d.link_type*1) {
+              {volist name='link_type' id='vo'}
+                case {$vo['id']}: return "{$vo['title']}";
+              {/volist}
+              default: return '-';
+            }
+          }},
           {templet: '#barDemo', width: 120, align: 'center', title: '操作'}
         ]],
         done: function () {

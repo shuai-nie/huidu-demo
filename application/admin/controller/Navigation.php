@@ -12,7 +12,7 @@ class Navigation extends Base
             $data = NavigationBar::where(['status'=>1])->order("sort desc, id desc")->select();
             return json(['code'=>0,'count'=>0,'data'=>$data], 200);
         }
-        return view('', ['meta_title' => '导航栏配置']);
+        return view('', ['meta_title' => '导航栏配置','link_type'=>NavigationBar::$link_type]);
     }
 
     public function add()
