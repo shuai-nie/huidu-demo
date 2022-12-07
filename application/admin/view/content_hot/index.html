@@ -86,18 +86,6 @@
             }
         });
 
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
                 url: "{:url('')}",
