@@ -1,10 +1,13 @@
 {include file="moban/bone_header"}
-<div class="layui-btn-container">
-    {if condition="checkAuth('groupadd')"}
-    <button class="layui-btn" data-type="addGroup">添加用户组</button>
-    {/if}
-</div>
+
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="toolbarDemo">
+    {if condition="checkAuth('groupadd')"}
+    <a class="layui-btn layui-btn-sm" lay-event="create">{:lang('create')}</a>
+    {/if}
+</script>
+
 <script type="text/html" id="barDemo">
     {{# if(d['id']!=1){ }}
     {if condition="checkAuth('groupedit')"}
@@ -21,42 +24,40 @@
     return "禁止修改";
     } }}
 </script>
+
 <script>
-    layui.use('table', function () {
-        var table = layui.table;
+layui.use('table', function () {
+    var table = layui.table;
 
-        UI.getPageTable(table, "{:url('')}", [
-            {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
-            , {field: 'group_name', title: '用户组名称', width: 120}
-            , {fixed: 'right', title: '操作', width: 220, align: 'center', toolbar: '#barDemo'}
-        ]);
+    UI.getPageTable(table, "{:url('')}", [
+        {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
+        , {field: 'group_name', title: '用户组名称', width: 120}
+        , {fixed: 'right', title: '操作', width: 220, align: 'center', toolbar: '#barDemo'}
+    ], "#think-table", 'auth');
 
-        table.on('tool(think-table)', function (obj) {
-            var data = obj.data;
-            if (obj.event === "edit") {
-                UI.openLayer("{:url('edit')}?id=" + data['id'], 500, 260, '#submit', "{:lang('edit')}", function () {
+    table.on('toolbar(think-table)', function (obj) {
+        if (obj.event === "create") {
+            UI.openLayer("{:url('add')}", 500, 260, '#submit', "{:lang('create')}");
+        }
+    })
+
+    table.on('tool(think-table)', function (obj) {
+        var data = obj.data;
+        if (obj.event === "edit") {
+            UI.openLayer("{:url('edit')}?id=" + data['id'], 500, 260, '#submit', "{:lang('edit')}", function () {
+                table.reload("table");
+            });
+        } else if (obj.event === 'del') {
+            UI.delete(data['id'], function (res) {
+                if (res.code == 200) {
                     table.reload("table");
-                });
-            } else if (obj.event === 'del') {
-                UI.delete(data['id'], function (res) {
-                    if (res.code == 200) {
-                        table.reload("table");
-                    }
-                });
-            } else if (obj.event === 'juri') {
-                UI.openLayer("{:url('juri')}?id=" + data['id']);
-            }
-        });
-        var $ = layui.$, active = {
-            addGroup: function () {
-                UI.openLayer("{:url('add')}", 500, 260);
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function () {
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+                }
+            });
+        } else if (obj.event === 'juri') {
+            UI.openLayer("{:url('juri')}?id=" + data['id']);
+        }
     });
+
+});
 </script>
 {include file="moban/bone_footer"}
