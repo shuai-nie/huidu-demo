@@ -1,5 +1,4 @@
 <?php
-
 namespace app\admin\controller;
 
 use think\Request;
@@ -21,17 +20,10 @@ class Group extends Base
             $map = [];
             $data = model("Group")->where($map)->select();
             $count = model("Group")->where($map)->count();
-            $data  = [
-                'code' => 0,
-                'msg'  => '',
-                'data' => [
-                    'count' => $count,
-                    'list'  => $data
-                ],
-            ];
+            $data  = [ 'code' => 0, 'msg'  => '', 'data' => [ 'count' => $count, 'list'  => $data], ];
             return json($data);
         }
-        return view();
+        return view('', ['meta_title' => '用户组管理']);
     }
 
     public function edit($id)
