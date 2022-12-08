@@ -37,7 +37,13 @@ layui.use(['table', 'dropdown'], function(){
             ,{field: 'level', title: '等级', width:80}
             ,{field: 'image_url', title: '示意图', width:80,templet(d){
                 if(d.image_url){
-                    return "<img src='"+d.image_url+"' width='30' height='30' />";
+                    return "<img src='" + d.image_url + "' width='30' height='30' />";
+                }
+                return '-';
+            }}
+            ,{field: 'logo', title: 'LOGO', width:80,templet(d){
+                if(d.logo){
+                    return "<img src='" + d.logo + "' width='30' height='30' />";
                 }
                 return '-';
             }}
