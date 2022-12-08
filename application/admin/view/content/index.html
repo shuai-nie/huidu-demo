@@ -47,7 +47,7 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="toolbarDemo">
-    <a class="layui-btn layui-btn-sm" lay-event="create">添加</a>
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="create">{:lang('create')}</a>
 </script>
 
 <script type="text/html" id="barDemo">
@@ -113,8 +113,8 @@
                     elem: this
                     ,show: true
                     , data: [
-                        {title: '编辑',id: 'edit'}
-                        ,{title: '删除',id: 'del'}
+                        {title: '编辑',id: 'edit',templet: '<span class="layui-btn layui-btn-warm layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>  {{d.title}} </span>'}
+                        ,{title: '删除',id: 'del',templet: '<span class="layui-btn layui-btn-danger layui-btn-xs"><i class="layui-icon layui-icon-delete"></i> {{d.title}} </span>'}
                     ]
                     , click: function(menudata) {
                         if(menudata.id === 'del'){
