@@ -1,10 +1,6 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
-<fieldset class="table-search-fieldset">
+<fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
         <form class="layui-form layui-form-pane" lay-filter="first" action="">
@@ -26,6 +22,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-sm" lay-event="create">{:lang('create')}</a>
+</script>
+
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -46,7 +46,7 @@
             ,{field: 'sort', title: '排序', width:140}
             ,{field: 'create_time', title: '时间', width:170}
             ,{fixed: 'right',title:'操作',width:120, align:'center', toolbar: '#barDemo'}
-        ]);
+        ], "#think-table", 'auth');
 
         form.on('submit(data-search-btn)', function(data){
             table.reload('table', {
@@ -61,7 +61,7 @@
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 500, '#submit', "{:lang('create')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
@@ -70,16 +70,12 @@
                 });
             }
         });
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
 
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+        table.on('toolbar(think-table)', function(obj){
+            if(obj.event==="create"){
+                UI.openLayer("{:url('create')}",750, 500, '#submit', "{:lang('create')}");
+            }
+        })
 
         form.on('switch(quality)', function(obj){
             var _val = obj.elem.checked === true ? 1 : 0,

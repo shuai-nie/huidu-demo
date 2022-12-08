@@ -1,11 +1,5 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    {if condition="$examine neq 'examine'"}
-    <button class="layui-btn" data-type="create">添加</button>
-    {/if}
-</div>
-
 <fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
@@ -101,6 +95,10 @@
 </fieldset>
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-sm" lay-event="create">{:lang('create')}</a>
+</script>
 
 <script type="text/html" id="barDemo" >
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
@@ -230,16 +228,11 @@ layui.use(['table','form','dropdown'], function(){
         }
     });
 
-    var $ = layui.$, active = {
-        create:function(){
-            UI.openLayer("{:url('create')}");
+    table.on('toolbar(think-table)', function(obj){
+        if(obj.event==="create"){
+            UI.openLayer("{:url('create')}",750, 500, '#submit', "{:lang('create')}");
         }
-    };
-
-    $('.layui-btn-container .layui-btn').on('click', function(){
-        var type = $(this).data('type');
-        active[type] ? active[type].call(this) : '';
-    });
+    })
 
     form.on('switch(home_roll)', function(obj){
         var _val = obj.elem.checked ? 1 : 0;

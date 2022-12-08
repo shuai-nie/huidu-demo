@@ -46,14 +46,14 @@
 
         table.on('toolbar(think-table)', function(obj){
             if(obj.event==="create"){
-                UI.openLayer("{:url('create')}",750, 320);
+                UI.openLayer("{:url('create')}",750, 320, '#submit', "{:lang('create')}");
             }
         })
 
         table.on('tool(think-table)', function(obj){
             var data=obj.data;
             if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 320, '#submit');
+                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 320, '#submit', "{:lang('edit')}");
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                     if(res.code==200){
