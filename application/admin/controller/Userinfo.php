@@ -72,7 +72,8 @@ class Userinfo extends Base
         return view('', [
             'id' => $id,
             'packageAll' => $packageAll,
-            'meta_title' => '用户列表'
+            'meta_title' => '用户列表',
+            'isweb' => \app\admin\model\UserInfo::$iswed,
         ]);
     }
 
