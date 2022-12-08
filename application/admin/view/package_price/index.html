@@ -1,10 +1,10 @@
 {include file="moban/bone_header"}
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-sm" lay-event="create">{:lang('create')}</a>
+</script>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -12,48 +12,48 @@
 </script>
 
 <script>
-    layui.use('table', function(){
-        var table = layui.table;
-        UI.getPageTable(table, "{:url('')}", [
-            {field: 'key', title: '', width:80, fixed: 'left'}
-            ,{field: 'package_title', title: '套餐名称', width:140,}
-            ,{field: 'type', title: '类型', width:140,templet:function(d){
-                switch (d.type*1){
-                    {volist name="type" id="vo"}
-                    case {$vo['id']}: return "{$vo['title']}";
-                    {/volist}
-                    default:
-                        return '-';
-                }
-            }}
-            ,{field: 'old_amount', title: '原价', width:140,}
-            ,{field: 'new_amount', title: '现价', width:140,}
-            ,{field: 'recommend', title: '推荐', width:140,}
-            ,{field: 'sort', title: '排序', width:140,}
-            ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
-        ]);
-        table.on('tool(think-table)', function(obj){
-            var data=obj.data;
-            if(obj.event==="edit"){
-                UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
-            }else if(obj.event==='del'){
-                UI.delete(data['id'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
-            }
-        });
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 600, 450);
-            }
-        };
+layui.use('table', function(){
+    var table = layui.table;
 
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+    UI.getPageTable(table, "{:url('')}", [
+        {field: 'key', title: '', width:80, fixed: 'left'}
+        ,{field: 'package_title', title: '套餐名称', width:140,}
+        ,{field: 'type', title: '类型', width:140,templet:function(d){
+            switch (d.type*1){
+                {volist name="type" id="vo"}
+                case {$vo['id']}: return "{$vo['title']}";
+                {/volist}
+                default:
+                    return '-';
+            }
+        }}
+        ,{field: 'old_amount', title: '原价', width:140,}
+        ,{field: 'new_amount', title: '现价', width:140,}
+        ,{field: 'recommend', title: '推荐', width:140,}
+        ,{field: 'sort', title: '排序', width:140,}
+        ,{fixed: 'right',title:'操作', width:120, align:'center', toolbar: '#barDemo'}
+    ]);
+
+    table.on('tool(think-table)', function(obj){
+        var data=obj.data;
+        if(obj.event==="edit"){
+            UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit');
+        }else if(obj.event==='del'){
+            UI.delete(data['id'], function(res){
+                if(res.code==200){
+                    table.reload("table");
+                }
+            });
+        }
     });
+
+    table.on('toolbar(think-table)', function(obj){
+        if(obj.event === 'create') {
+            UI.openLayer("{:url('create')}", 600, 450, "#submit", "{:lang('create')}");
+        }
+    })
+
+
+});
 </script>
 {include file="moban/bone_footer"}

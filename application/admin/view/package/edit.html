@@ -81,6 +81,21 @@
         </div>
     </div>
 
+    <div id="logo_url" {if condition="empty($data['logo'])"}style="display: none;"{/if} >
+        <div class="layui-input-block">
+            <img src="{$data['logo']}" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="logo">
+            <button type="button" class="layui-btn" id="test-logo">
+                <i class="layui-icon">&#xe67c;</i>套餐logo
+            </button>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -123,6 +138,7 @@
             "publish" : "{$data['publish']}",
             "flush" : "{$data['flush']}",
             "level" : "{$data['level']}",
+            "logo" : "{$data['logo']}",
             "view_provide" : "{$data['view_provide']}",
             "view_provide_give" : "{$data['view_provide_give']}",
             "view_demand" : "{$data['view_demand']}",
@@ -131,7 +147,24 @@
             "type" : "{$data['type']}",
         })
 
-        //监听提交
+        upload.render({
+            elem: '#test-logo'
+            ,url: upload_url
+            ,accept: upload_accept
+            ,acceptMime:upload_acceptMime
+            ,size: upload_size
+            ,done: function(res){
+                if(res.code == 0) {
+                    $("#logo_url").show();
+                    $("#logo_url img").attr('src', res.url);
+                    $("input[name='logo']").val(res.url);
+                } else {
+                    layui.msg('网络问题稍后再试');
+                }
+            }
+            ,error: function(){ }
+        });
+
         form.on('submit(submit)', function (data) {
             Api.edit(data.field, function (res) {
                 console.log(res);

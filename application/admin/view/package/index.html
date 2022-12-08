@@ -4,114 +4,102 @@ th .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-s
 td .layui-table-cell{height: auto;overflow:visible;text-overflow:inherit;white-space:normal;}
 </style>
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <a class="layui-btn layui-btn-sm" lay-event="create">{:lang('create')}</a>
+</script>
+
 <script type="text/html" id="barDemo">
-<!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    {{# if(d.id !=1 ){ }}
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    {{# } }}
-    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="price">价格</a>-->
-
     <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
-
 </script>
 
 <script>
-    layui.use(['table', 'dropdown'], function(){
-        var table = layui.table
-            ,dropdown = layui.dropdown
-            , cols = [
-            [
-                {field: 'id', title: 'ID', width:80}
-                ,{field: 'type', title: '类型', width:90,templet(d){
-                    switch (d.type*1){
-                        case 0: return 'vip';
-                        case 1: return '置顶';
+layui.use(['table', 'dropdown'], function(){
+    var table = layui.table
+        ,dropdown = layui.dropdown
+        , cols = [
+        [
+            {field: 'id', title: 'ID', width:60}
+            ,{field: 'type', title: '类型', width:90,templet(d){
+                switch (d.type*1){
+                    case 0: return 'vip';
+                    case 1: return '置顶';
+                }
+            }}
+            ,{field: 'title', title: '套餐标题', width:140,}
+            ,{field: 'publish', title: '发布资源次数', width:120}
+            ,{field: 'flush', title: '刷新资源次数', width:120}
+            ,{field: 'view_provide', title: "查看提供资源<br/>的名片次数", width:130}
+            ,{field: 'view_provide_give', title: '查看提供资源<br/>的名片次数-赠送', width:140}
+            ,{field: 'view_demand', title: '查看需求资源<br/>的名片次数', width:130}
+            ,{field: 'view_contacts', title: '查看人脉圈<br/>的名片次数', width:130}
+            ,{field: 'level', title: '等级', width:80}
+            ,{field: 'image_url', title: '示意图', width:80,templet(d){
+                if(d.image_url){
+                    return "<img src='"+d.image_url+"' width='30' height='30' />";
+                }
+                return '-';
+            }}
+            ,{field: 'price', title: '价格', width:220}
+            ,{field: '',title:'操作', width:80, align:'center', toolbar: '#barDemo'}
+        ]
+    ];
+
+    table.render({
+        elem: "#think-table"
+        , url: "{:url('')}"
+        , method: "post"
+        , page: true
+        , cols: cols
+        , id: 'table'
+        , toolbar: '#toolbarDemo'
+        , parseData: function (res) {
+            return {
+                "code": 0,
+                "msg": res['msg'],
+                "count": res['data']['count'],
+                "data": res['data']['list']
+            };
+        }
+    })
+
+    table.on('toolbar(think-table)', function(obj){
+        if(obj.event === 'create') {
+            UI.openLayer("{:url('create')}", 600, 450, "#submit", "{:lang('create')}");
+        }
+    })
+
+    table.on('tool(think-table)', function(obj){
+        var data = obj.data
+            ,layEvent = obj.event;
+        if(layEvent === 'more') {
+            dropdown.render({
+                elem : this
+                ,show : true
+                ,data:[
+                    {title:'编辑',id:'edit'}
+                    ,{title:'价格',id:'price'}
+                    ,{title:'删除',id:'del'}
+                ]
+                ,click: function(menudata){
+                    if(menudata.id === 'edit'){
+                        UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit', "{:lang('edit')}");
+                    }else if(menudata.id ==='del'){
+                        UI.delete(data['id'], function(res){
+                            if(res.code==200){
+                                table.reload("table");
+                            }
+                        });
+                    } else if(menudata.id === 'price') {
+                        UI.openLayer("{:url('price')}?id="+data['id'], 800, 450, '#submit', '价格');
                     }
-                }}
-                ,{field: 'title', title: '套餐标题', width:140,}
-                ,{field: 'publish', title: '发布资源次数', width:120}
-                ,{field: 'flush', title: '刷新资源次数', width:120}
-                ,{field: 'view_provide', title: "查看提供资源<br/>的名片次数", width:130}
-                ,{field: 'view_provide_give', title: '查看提供资源<br/>的名片次数-赠送', width:140}
-                ,{field: 'view_demand', title: '查看需求资源<br/>的名片次数', width:130}
-                ,{field: 'view_contacts', title: '查看人脉圈<br/>的名片次数', width:130}
-                ,{field: 'level', title: '等级', width:80}
-                ,{field: 'image_url', title: '示意图', width:80,templet(d){
-                    if(d.image_url){
-                        return "<img src='"+d.image_url+"' width='30' height='30' />";
-                    }
-                    return '-';
-                }}
-                ,{field: 'price', title: '价格', width:220}
-                ,{field: '',title:'操作', width:80, align:'center', toolbar: '#barDemo'}
-            ]
-        ];
+                }
 
-        table.render({
-            elem: "#think-table"
-            , url: "{:url('')}"
-            , method: "post"
-            , page: true
-            , cols: cols
-            , id: 'table'
-            , parseData: function (res) {
-                return {
-                    "code": 0,
-                    "msg": res['msg'],
-                    "count": res['data']['count'],
-                    "data": res['data']['list']
-                };
-            }
-        })
-
-
-
-        table.on('tool(think-table)', function(obj){
-            var data = obj.data
-                ,layEvent = obj.event;
-            if(layEvent === 'more') {
-                dropdown.render({
-                    elem : this
-                    ,show : true
-                    ,data:[
-                        {title:'编辑',id:'edit'}
-                        ,{title:'价格',id:'price'}
-                        ,{title:'删除',id:'del'}
-                    ]
-                    ,click: function(menudata){
-                        if(menudata.id === 'edit'){
-                            UI.openLayer("{:url('edit')}?id="+data['id'], 600, 450, '#submit', "{:lang('edit')}");
-                        }else if(menudata.id ==='del'){
-                            UI.delete(data['id'], function(res){
-                                if(res.code==200){
-                                    table.reload("table");
-                                }
-                            });
-                        } else if(menudata.id === 'price') {
-                            UI.openLayer("{:url('price')}?id="+data['id'], 800, 450, '#submit', '价格');
-                        }
-                    }
-
-                })
-            }
-        });
-
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}", 600, 450);
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+            })
+        }
     });
+
+});
 </script>
 {include file="moban/bone_footer"}

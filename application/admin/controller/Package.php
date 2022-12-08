@@ -1,10 +1,7 @@
 <?php
-
 namespace app\admin\controller;
 
-use think\Controller;
 use think\Db;
-use think\Request;
 
 class Package extends Base
 {
@@ -38,12 +35,11 @@ class Package extends Base
             }
             return json(['data'=>['count'=>$count, 'list'=>$data]], 200);
         }
-        return view();
+        return view('', ['meta_title' => '套餐管理']);
     }
 
     /**
      * 显示创建资源表单页.
-     *
      * @return \think\Response
      */
     public function create()

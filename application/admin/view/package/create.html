@@ -81,6 +81,21 @@
         </div>
     </div>
 
+    <div id="logo_url" style="display: none;">
+        <div class="layui-input-block">
+            <img src="#" height="100" width="100" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="logo">
+            <button type="button" class="layui-btn" id="test-logo">
+                <i class="layui-icon">&#xe67c;</i>套餐logo
+            </button>
+        </div>
+    </div>
+
     <div class="layui-form-item layui-hide">
         <input type="button" lay-submit lay-filter="submit" id="submit" value="确认">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="取消">
@@ -89,46 +104,62 @@
 </form>
 
 <script>
-    //Demo
-    layui.use(['form','upload'], function () {
-        var form = layui.form,
-            upload = layui.upload;
+layui.use(['form','upload'], function () {
+    var form = layui.form,
+        upload = layui.upload;
 
-        var upload_url = "{:url('admin/Upload/upload')}";
-        var upload_accept='images';
-        var upload_acceptMime='image/*';
-        var upload_size=3145728;
-        var uploadInst = upload.render({
-            elem: '#test1'
-            ,url: upload_url
-            ,accept: upload_accept
-            ,acceptMime:upload_acceptMime
-            ,size: upload_size
-            ,done: function(res){
-                if(res.code == 0) {
-                    $("#image_url").show();
-                    $("#image_url img").attr('src', res.url);
-                    $("input[name='image_url']").val(res.url);
-                } else {
-                    layui.msg('网络问题稍后再试');
-                }
-
+    var upload_url = "{:url('admin/Upload/upload')}";
+    var upload_accept='images';
+    var upload_acceptMime='image/*';
+    var upload_size=3145728;
+    var uploadInst = upload.render({
+        elem: '#test1'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#image_url").show();
+                $("#image_url img").attr('src', res.url);
+                $("input[name='image_url']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
             }
-            ,error: function(){
-                //请求异常回调
-            }
-        });
 
-
-
-        //监听提交
-        form.on('submit(submit)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
-            Api.add(data.field, function (res) {
-                console.log(res);
-            });
-        });
-
-
+        }
+        ,error: function(){
+            //请求异常回调
+        }
     });
+
+    upload.render({
+        elem: '#test-logo'
+        ,url: upload_url
+        ,accept: upload_accept
+        ,acceptMime:upload_acceptMime
+        ,size: upload_size
+        ,done: function(res){
+            if(res.code == 0) {
+                $("#logo_url").show();
+                $("#logo_url img").attr('src', res.url);
+                $("input[name='logo']").val(res.url);
+            } else {
+                layui.msg('网络问题稍后再试');
+            }
+
+        }
+        ,error: function(){
+            //请求异常回调
+        }
+    });
+
+    form.on('submit(submit)', function (data) {
+        // layer.msg(JSON.stringify(data.field));
+        Api.add(data.field, function (res) {
+            console.log(res);
+        });
+    });
+
+});
 </script>
