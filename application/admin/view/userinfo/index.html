@@ -6,10 +6,6 @@
     .layui-table-view .layui-table th{height:70px;overflow:visible;text-overflow:inherit;white-space:normal;}
 </style>
 
-<div class="layui-btn-container">
-    <button class="layui-btn" data-type="create">添加</button>
-</div>
-
 <fieldset class="layui-elem-field">
     <legend>搜索信息</legend>
     <div style="margin: 10px 10px 10px 10px">
@@ -68,6 +64,10 @@
 
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
+<script type="text/html" id="toolbarDemo">
+    <button class="layui-btn layui-btn-sm" lay-event="create">添加</button>
+</script>
+
 <script type="text/html" id="barDemo">
     {if condition="$id eq 0"}
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="change">变更套餐</a>
@@ -80,174 +80,170 @@
 </script>
 
 <script>
-    layui.use(['table', 'form'], function(){
-        var table = layui.table,
-            form = layui.form;
+layui.use(['table', 'form'], function(){
+    var table = layui.table,
+        form = layui.form;
 
-        UI.getPageTable(table, "{:url('')}", [
-            {if condition="$id eq 0"}
-			{field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            ,{field: 'head_url', title: '头像',width:60,templet: function(d){
-                if(d.head_url != null && d.head_url != '') {
-                    return "<img src='"+d.head_url+"' height=30 width=30 />";
-                }
-                    return "-";
-                }}
-            ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
-                return  d.username + '/' + d.nickname ;
-                }}
-            , {field: 'mobile', title: '手机号', width: 125}
-            , {field: 'email', title: '邮箱', width: 130}
-            ,{field: 'title', title: '套餐',width:120}
-            ,{field: 'used_flush', title: '(总/用)刷新',width:120,templet(d){
-                return d.flush  +"/"+ d.used_flush;
-            }}
-            ,{field: 'used_publish', title: '(总/用)发布',width:120,templet(d){
-                return d.publish  +"/"+ d.used_publish;
-            }}
-            ,{field: 'view_demand', title: '(总/用)需求<br/>资源名片次数',width:120,templet(d){
-                return d.view_demand  +"/"+  d.used_view_demand ;
-            }}
-            ,{field: 'view_provide', title: '(总/用)<br/>资源名片次数',width:120,templet(d){
-                    return d.view_provide +"/"+ d.used_view_provide;
-                }}
-            ,{field: 'view_contacts', title: '(总/用)<br/>人脉圈名片次数',width:130,templet(d){
-                    return d.view_contacts +"/"+ d.used_view_contacts;
-                }}
-            ,{field: 'view_provide_give', title: '赠送',width:80,templet(d){
-                    return d.view_provide_give ;
-                }}
-            ,{field: 'start_time', title: '开始时间',width:170,templet:function (d){
-                if(d.start_time > 10000) {
-                    return "<div>" + layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
-                }
-                return '-'
-                }}
-            ,{field: 'end_time', title: '结束时间',width:170,templet: function (d){
-                    if(d.end_time > 10000) {
-                        return "<div>" + layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
-                    }
-                    return '-'
-                }}
-            ,{fixed: 'right',title:'操作',width:350, align:'center', toolbar: '#barDemo'}
-            {else/}
-
-            {field: 'uid', title: 'UID', width:80, fixed: 'left'}
-            ,{field: 'head_url', title: '头像',width:60,templet: function(d){
-                if(d.head_url != null && d.head_url != '') {
-                    return "<img src='"+d.head_url+"' height=30 width=30 />";
-                }
+    UI.getPageTable(table, "{:url('')}", [
+        {if condition="$id eq 0"}
+        {field: 'uid', title: 'UID', width:80, fixed: 'left'}
+        ,{field: 'head_url', title: '头像',width:60,templet: function(d){
+            if(d.head_url != null && d.head_url != '') {
+                return "<img src='"+d.head_url+"' height=30 width=30 />";
+            }
                 return "-";
             }}
-            ,{field: 'isweb', title: '来源/渠道', width:120,templet:function(d){
-                var channel_name = '';
-                if(d.channel_name){
-                    channel_name = '/'+ d.channel_name;
-                }else{
-                    channel_name = '/ -';
-                }
-                switch (d.isweb*1){
-                    case 1: return 'PC'+channel_name;
-                    case 2: return '后台'+channel_name;
-                    default: return '-';
-                }
+        ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
+            return  d.username + '/' + d.nickname ;
             }}
-            ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
-                return  d.username + '/' + d.nickname ;
+        , {field: 'mobile', title: '手机号', width: 125}
+        , {field: 'email', title: '邮箱', width: 130}
+        ,{field: 'title', title: '套餐',width:120}
+        ,{field: 'used_flush', title: '(总/用)刷新',width:120,templet(d){
+            return d.flush  +"/"+ d.used_flush;
+        }}
+        ,{field: 'used_publish', title: '(总/用)发布',width:120,templet(d){
+            return d.publish  +"/"+ d.used_publish;
+        }}
+        ,{field: 'view_demand', title: '(总/用)需求<br/>资源名片次数',width:120,templet(d){
+            return d.view_demand  +"/"+  d.used_view_demand ;
+        }}
+        ,{field: 'view_provide', title: '(总/用)<br/>资源名片次数',width:120,templet(d){
+                return d.view_provide +"/"+ d.used_view_provide;
             }}
-            , {field: 'mobile', title: '手机号', width: 125,templet:function(d){
-                if(d.mobile){
-                    return d.mobile;
-                }
-                return '-';
+        ,{field: 'view_contacts', title: '(总/用)<br/>人脉圈名片次数',width:130,templet(d){
+                return d.view_contacts +"/"+ d.used_view_contacts;
             }}
-            , {field: 'chat_id', title: 'Tg(账号/ID)', width: 120,templet:function(d){
-                if(d.telegram && d.chat_id){
-                    return d.telegram + '/' + d.chat_id;
-                }
-                return '-';
+        ,{field: 'view_provide_give', title: '赠送',width:80,templet(d){
+                return d.view_provide_give ;
             }}
-            , {field: 'email', title: '邮箱', width: 130,templet:function(d){
-                if(d.email) {
-                    return d.email;
-                }
-                return '-';
+        ,{field: 'start_time', title: '开始时间',width:170,templet:function (d){
+            if(d.start_time > 10000) {
+                return "<div>" + layui.util.toDateString(d.start_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+            }
+            return '-'
             }}
-            ,{field: 'create_time', title: '注册时间',align: 'center', width:170, sort:true}
-            ,{field: 'register_ip', title: '注册ip',align: 'center', width:150}
-            ,{field: 'lately_login_time', title: '登录时间',width:170,sort:true ,align:'center',templet: function (d){
-                if(d.lately_login_time > 10000) {
-                    return "<div>" + layui.util.toDateString(d.lately_login_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+        ,{field: 'end_time', title: '结束时间',width:170,templet: function (d){
+                if(d.end_time > 10000) {
+                    return "<div>" + layui.util.toDateString(d.end_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
                 }
                 return '-'
             }}
-            ,{field: 'online_time', title: '在线时间',width:170,sort:true ,align:'center',templet: function (d){
-                    if(d.online_time > 10000) {
-                        return "<div>" + layui.util.toDateString(d.online_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
-                    }
-                    return '-'
-                }}
-            ,{fixed: 'right',title:'操作',width:200, align:'center', toolbar: '#barDemo'}
-            {/if}
-        ], "#think-table", "auto");
+        ,{fixed: 'right',title:'操作',width:350, align:'center', toolbar: '#barDemo'}
+        {else/}
 
-        form.on('submit(data-search-btn)', function(data){
-            table.reload('table', {
-                url: "{:url('')}",
-                method:'post',
-                where : data.field,
-                page : {curr : 1}
+        {field: 'uid', title: 'UID', width:80, fixed: 'left'}
+        ,{field: 'head_url', title: '头像',width:60,templet: function(d){
+            if(d.head_url != null && d.head_url != '') {
+                return "<img src='"+d.head_url+"' height=30 width=30 />";
+            }
+            return "-";
+        }}
+        ,{field: 'isweb', title: '来源/渠道', width:120,templet:function(d){
+            var channel_name = '';
+            if(d.channel_name){
+                channel_name = '/'+ d.channel_name;
+            }else{
+                channel_name = '/ -';
+            }
+            switch (d.isweb*1){
+                case 1: return 'PC'+channel_name;
+                case 2: return '后台'+channel_name;
+                default: return '-';
+            }
+        }}
+        ,{field: 'username', title: '账号/昵称',width:180,templet: function(d){
+            return  d.username + '/' + d.nickname ;
+        }}
+        , {field: 'mobile', title: '手机号', width: 125,templet:function(d){
+            if(d.mobile){
+                return d.mobile;
+            }
+            return '-';
+        }}
+        , {field: 'chat_id', title: 'Tg(账号/ID)', width: 120,templet:function(d){
+            if(d.telegram && d.chat_id){
+                return d.telegram + '/' + d.chat_id;
+            }
+            return '-';
+        }}
+        , {field: 'email', title: '邮箱', width: 130,templet:function(d){
+            if(d.email) {
+                return d.email;
+            }
+            return '-';
+        }}
+        ,{field: 'create_time', title: '注册时间',align: 'center', width:170, sort:true}
+        ,{field: 'register_ip', title: '注册ip',align: 'center', width:150}
+        ,{field: 'lately_login_time', title: '登录时间',width:170,sort:true ,align:'center',templet: function (d){
+            if(d.lately_login_time > 10000) {
+                return "<div>" + layui.util.toDateString(d.lately_login_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+            }
+            return '-'
+        }}
+        ,{field: 'online_time', title: '在线时间',width:170,sort:true ,align:'center',templet: function (d){
+                if(d.online_time > 10000) {
+                    return "<div>" + layui.util.toDateString(d.online_time*1000, 'yyyy-MM-dd HH:mm:ss') + "</div>";
+                }
+                return '-'
+            }}
+        ,{fixed: 'right',title:'操作',width:200, align:'center', toolbar: '#barDemo'}
+        {/if}
+    ], "#think-table", "auto");
+
+    form.on('submit(data-search-btn)', function(data){
+        table.reload('table', {
+            url: "{:url('')}",
+            method:'post',
+            where : data.field,
+            page : {curr : 1}
+        });
+        return false;
+    })
+
+    table.on('toolbar(think-table)', function(obj){
+        if (obj.event === "create") {
+            UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
+        }
+    })
+
+    table.on('tool(think-table)', function(obj){
+        var data=obj.data;
+        if(obj.event==="change"){
+            UI.openLayer("{:url('change')}?id="+data['id'], 750, 400, '#submit');
+        }else if(obj.event==="continue"){
+            UI.openLayer("{:url('continues')}?id="+data['id'], 750, 400, '#submit');
+        } else if(obj.event ==='edit') {
+            UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
+        } else if(obj.event ==='del') {
+            UI.delete(data['uid'], function(res){
+                if(res.code==200){
+                    table.reload("table");
+                }
             });
-            return false;
-        })
+        }else if(obj.event === 'reset'){
+            layer.confirm("是否重置账号", {icon:3, title:'提示'}, function(index){
+                $.post("{:url('reset')}", {uid:data['uid']}, function(obj){
+                    layer.msg(obj.msg, {icon:3});
+                    layer.close(index);
+                }, 'json');
 
-
-        table.on('tool(think-table)', function(obj){
-            var data=obj.data;
-            if(obj.event==="change"){
-                UI.openLayer("{:url('change')}?id="+data['id'], 750, 400, '#submit');
-            }else if(obj.event==="continue"){
-                UI.openLayer("{:url('continues')}?id="+data['id'], 750, 400, '#submit');
-            } else if(obj.event ==='edit') {
-                UI.openLayer("{:url('edit')}?id="+data['id'], 750, 600, '#submit');
-            } else if(obj.event ==='del') {
-                UI.delete(data['uid'], function(res){
-                    if(res.code==200){
-                        table.reload("table");
-                    }
-                });
-            }else if(obj.event === 'reset'){
-                layer.confirm("是否重置账号", {icon:3, title:'提示'}, function(index){
-                    $.post("{:url('reset')}", {uid:data['uid']}, function(obj){
-                        layer.msg(obj.msg, {icon:3});
-                        layer.close(index);
-                    }, 'json');
-
-                })
-
-            }
-        });
-
-        table.on('sort(think-table)', function(obj){
-            table.reload('table', {
-                initSort: obj,
-                method: 'post',
-                where: obj,
-                sort: true,
-                page: {curr: 1}
             })
-        })
 
-        var $ = layui.$, active = {
-            create:function(){
-                UI.openLayer("{:url('create')}");
-            }
-        };
-
-        $('.layui-btn-container .layui-btn').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+        }
     });
+
+    table.on('sort(think-table)', function(obj){
+        table.reload('table', {
+            initSort: obj,
+            method: 'post',
+            where: obj,
+            sort: true,
+            page: {curr: 1}
+        })
+    })
+
+
+});
 </script>
 {include file="moban/bone_footer"}

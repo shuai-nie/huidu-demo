@@ -1,11 +1,8 @@
 <?php
-
 namespace app\admin\controller;
 
-use think\Controller;
 use think\Db;
 use think\Exception;
-use think\Request;
 
 class Card extends Base
 {
@@ -178,7 +175,8 @@ class Card extends Base
                 $userRechargeId = $userRecharge->id;
                 $userInfo->allowField(true)->isUpdate(false)->data([
                     'uid' => $uid,
-                    'user_recharge_id' =>$userRechargeId
+                    'user_recharge_id' =>$userRechargeId,
+                    'register_ip' => request()->ip(),
                 ])->save();
 
                 $_post['logo'] = $head_url;

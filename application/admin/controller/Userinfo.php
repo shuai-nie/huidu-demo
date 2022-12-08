@@ -218,7 +218,8 @@ class Userinfo extends Base
                 $UserRechargeId = $UserRechargeModel->id;
                 model('UserInfo')->isUpdate(false)->data([
                     'uid' => $uid,
-                    'user_recharge_id' => $UserRechargeId
+                    'user_recharge_id' => $UserRechargeId,
+                    'register_ip' => request()->ip()
                 ])->save();
                 model('UserDemand')->isUpdate(false)->data([
                     'uid' => $uid,
