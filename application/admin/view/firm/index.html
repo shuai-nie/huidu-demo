@@ -47,7 +47,7 @@
 <table class="layui-hide" id="think-table" lay-filter="think-table"></table>
 
 <script type="text/html" id="toolbarDemo">
-    <button class="layui-btn layui-btn-xs layui-btn-normal"lay-event="add">添加</button>
+    <a class="layui-btn layui-btn-sm layui-btn-normal" lay-event="create">{:lang('create')}</a>
 </script>
 
 <script type="text/html" id="barDemo">
@@ -124,7 +124,7 @@
         table.on("toolbar(think-table)", function(obj){
             var data = obj.data
                 , layEvent = obj.event;
-            if(layEvent === 'add'){
+            if(layEvent === 'create'){
                 UI.openLayer("{:url('create')}", 750, 600, '#submit', "{:lang('create')}");
             }
         })
