@@ -75,8 +75,8 @@ layui.use(['table','treetable', 'form'], function(){
             }else if(obj.event==='del'){
                 UI.delete(data['id'], function(res){
                 if(res.code==200){
-                  table.reload("table");
-                  parent.window.location.reload();
+                    table.reload("table");
+                    window.location.reload();
                 }
             });
             }
