@@ -148,8 +148,9 @@ layui.use(['table', 'form'], function(){
                 channel_name = '/ -';
             }
             switch (d.isweb*1){
-                case 1: return 'PC'+channel_name;
-                case 2: return '后台'+channel_name;
+                {volist name='isweb' id='vo5'}
+                case {$vo5['id']}: return "{$vo5['title']}"+channel_name;
+                {/volist}
                 default: return '-';
             }
         }}
