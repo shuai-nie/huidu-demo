@@ -65,18 +65,22 @@ layui.use(['table','form','laydate'], function(){
                     title: {text: '统计图'},
                     tooltip: {trigger: 'axis'},
                     legend: {
-                        data:['网站在线人数']
+                        data:['网站在线人数', '注册人数', '名片创建数', '资源发布数']
                     },
                     grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
                     toolbox: {feature: {saveAsImage: {title: '保存为图片'}}},
-                    xAxis: {type: 'category',boundaryGap: false,
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
                         data: obj.xAxisData
                     },
                     yAxis: {type: 'value'},
-                    series: [{
-                        name: '网站在线人数', type: 'line',
-                        data: obj.seriesUserData
-                    }]
+                    series: [
+                        {name: '网站在线人数', type: 'line', data: obj.seriesUserData },
+                        {name: '注册人数', type: 'line', data: obj.registerUser },
+                        {name: '名片创建数', type: 'line', data: obj.businessCreate },
+                        {name: '资源发布数', type: 'line', data: obj.resourceCreate },
+                    ]
                 };
                 myChart.setOption(option);
             }

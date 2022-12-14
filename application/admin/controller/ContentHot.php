@@ -1,9 +1,5 @@
 <?php
-
 namespace app\admin\controller;
-
-use think\Controller;
-use think\Request;
 
 class ContentHot extends Base
 {
@@ -73,6 +69,14 @@ class ContentHot extends Base
                     $v['sort2'] = $type2['sort'];
                 } else{
                     $v['type2'] = 0;
+                }
+
+                $type3 = $this->model->where(['cid' => $v['id'],'type' => 3])->find();
+                if($type3){
+                    $v['type3'] = $type3['status'];
+                    $v['sort3'] = $type3['sort'];
+                } else{
+                    $v['type3'] = 0;
                 }
 
                 $data[$k] = $v;
