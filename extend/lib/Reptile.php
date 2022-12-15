@@ -264,7 +264,7 @@ class Reptile
         preg_match_all($reg3, $desc,$desc2);
         $desc2[0][0] = preg_replace($reg4,"", $desc2[0][0]);
         $desc2[0][0] = preg_replace($reg5,"", $desc2[0][0]);
-        $desc2[0][0] = preg_replace($reg6,"", $desc2[0][0]);
+        $desc2[0][0] = str_replace($reg6,"", $desc2[0][0]);
 
 
         var_dump($desc2[0][0]);
