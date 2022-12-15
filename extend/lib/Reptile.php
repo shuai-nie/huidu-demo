@@ -258,8 +258,9 @@ class Reptile
     {
         $reg3 = "/<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox position-relative overflow-hidden\"([\S\s]+?)<\/div>/";
         $desc = $this->GetHttp($url);
+        var_dump($desc);
         preg_match_all($reg3, $desc,$desc2);
-        var_dump($desc2[0][0]);
+        var_dump($desc2);
         exit();
         preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
         $doc = new \DOMDocument();
