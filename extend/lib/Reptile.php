@@ -266,7 +266,7 @@ class Reptile
         $desc2[0][0] = preg_replace($reg5,"", $desc2[0][0]);
         $desc2[0][0] = str_replace($reg6,"", $desc2[0][0]);
         $desc2[0][0] = str_replace("<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox\">","", $desc2[0][0]);
-        $desc2[0][0] = str_replace("<\/div>","", $desc2[0][0]);
+        $desc2[0][0] = str_replace("</div>","", $desc2[0][0]);
         var_dump($desc2[0][0]);exit();
 
         preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
