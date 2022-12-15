@@ -578,16 +578,16 @@ class Reptile extends Controller
         exit($EndTime - $BeginTime);
     }
 
-    public function keytiktok()
+    // 快出海-Tiktok
+    public function tags_tiktok()
     {
         $id = 18;
         $BeginTime = microtime(true);
-        $data = (new ApiReptile())->keytiktok();
+        $data = (new ApiReptile())->tagsGoogle("https://www.kchuhai.com/tags/TikTok");
         $c = 0;
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
-        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        $reg2 = "/<div class=\"w-490 h-40 font-14 text-999 text-ellipsis2 mb-3\"([\S\s]+?)<\/div>/";
 
         $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
@@ -670,16 +670,106 @@ class Reptile extends Controller
         exit($EndTime - $BeginTime);
     }
 
-    public function keywanghong()
+    public function kol_yingxiao()
     {
         $id = 19;
         $BeginTime = microtime(true);
-        $data = (new ApiReptile())->keywanghong();
+        $data = (new ApiReptile())->tagsGoogle("https://www.kchuhai.com/tags/KOLyingxiao");
         $c = 0;
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
-        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        $reg2 = "/<div class=\"w-490 h-40 font-14 text-999 text-ellipsis2 mb-3\"([\S\s]+?)<\/div>/";
+
+        $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
+        $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
+        $list = \app\admin\model\Config::where(['id' => 100])->find();
+
+        foreach ($data as $val){
+            $libxml_previous_state = libxml_use_internal_errors(true);
+            $doc->loadHTML($val);
+            libxml_clear_errors();
+            $xpath = new \DOMXPath($doc);
+            libxml_use_internal_errors($libxml_previous_state);
+            $src = $xpath->evaluate("string(//img/@src)");
+            $href = $xpath->evaluate("string(//a/@href)");
+
+            preg_match_all($reg2, $val, $describes);
+            preg_match_all($reg1, $val,$title);
+            $title[0][0] = strip_tags($title[0][0]);
+            $describes[0][0] = strip_tags($describes[0][0]);
+
+            if(!empty($title[0][0])){
+                if (!empty($list['value'])) {
+                    $value = explode("\n", $list['value']);
+                    foreach ($value as $valCon) {
+                        $vCon = explode("=", $valCon);
+                        if (isset($vCon[0]) && isset($vCon[1])) {
+                            (new ApiReptile())->strReplace($vCon, $title[0][0]);
+                        }
+                    }
+                }
+
+                $count = Content::where(['title' => $title[0][0] ])->count();
+                if ($count == 0) {
+                    $local = (new ApiReptile())->getRemoteFileToLocal($src, ROOT_PATH . 'public/uploads/reptile/');
+                    if ($local['code'] == 1) {
+                        $img = (new Upload())->fileUpload(ROOT_PATH . 'public/uploads/reptile/' . $local['path']);
+                    } else {
+                        $img = 'https://huidu-bucket.s3.ap-southeast-1.amazonaws.com/huidu/cover_url/2022111700' . mt_rand(1, 5) . '.jpg';
+                    }
+
+
+                    $desc_kchuhai = (new ApiReptile())->kchuhai_desc($href);
+                    if (!empty($list['value'])) {
+                        $value = explode("\n", $list['value']);
+                        foreach ($value as $valCon) {
+                            $vCon = explode("=", $valCon);
+                            if (isset($vCon[0]) && isset($vCon[1])) {
+                                (new ApiReptile())->strReplace($vCon, $desc_kchuhai);
+                                (new ApiReptile())->strReplace($vCon, $describes[0][0]);
+                            }
+                        }
+                    }
+                    $content    = Content::create([
+                        'title'       => $title[0][0],
+                        'category_id' => $ReptileInfo['type'],
+                        'intro'       => $describes[0][0],
+                        'cover_url'   => $img,
+                        'isweb'       => $id,
+                        'create_id'   => 0,
+                        'update_id'   => 0,
+                    ]);
+                    $content_id = $content->id;
+                    ContentDetail::create([
+                        'cid'     => $content_id,
+                        'content' => $desc_kchuhai . $this->lxfs ,
+                    ]);
+                    foreach ($ReptileInfo['attribute'] as $attr) {
+                        ContentPropertyRelevance::create([
+                            'property_id' => $attr,
+                            'content_id'  => $content_id,
+                            'status'      => 1,
+                        ]);
+                    }
+                    $c++;
+                }
+            }
+        }
+        $EndTime = microtime(true);
+        \app\admin\model\Reptile::where(['id' => $id])->setInc('total', $c);
+        AdminLog::create(['uid' => 0, 'text' => '爬虫脚本' . $id . "|" . ($EndTime - $BeginTime), 'url' => (string)request()->url(), 'ip' => request()->ip()]);
+        exit($EndTime - $BeginTime);
+    }
+
+    public function tags_facebook()
+    {
+        $id = 20;
+        $BeginTime = microtime(true);
+        $data = (new ApiReptile())->tagsGoogle("https://www.kchuhai.com/tags/Facebook");
+        $c = 0;
+        $doc = new \DOMDocument();
+        $reg1="/<a .*?>.*?<\/a>/";
+        $reg2 = "/<div class=\"w-490 h-40 font-14 text-999 text-ellipsis2 mb-3\"([\S\s]+?)<\/div>/";
 
         $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
