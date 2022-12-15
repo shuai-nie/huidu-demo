@@ -394,16 +394,15 @@ class Reptile extends Controller
         exit($EndTime - $BeginTime);
     }
 
-    public function keygoogle_pg1()
+    public function tags_google()
     {
         $id = 16;
         $BeginTime = microtime(true);
-        $data = (new ApiReptile())->keygoogle();
+        $data = (new ApiReptile())->tagsGoogle();
         $c = 0;
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
-        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        $reg2 = "/<div class=\"w-490 h-40 font-14 text-999 text-ellipsis2 mb-3\"([\S\s]+?)<\/div>/";
 
         $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);

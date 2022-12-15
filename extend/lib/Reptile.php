@@ -171,16 +171,16 @@ class Reptile
     }
 
     /**
-     * 快出海·
+     * 快出海·谷歌
      */
-    public function keygoogle()
+    public function tagsGoogle()
     {
-        $url = "https://www.kchuhai.com/report/keygoogle_pg1";
+        $url = "https://www.kchuhai.com/tags/Google";
         $data = $this->GetHttp($url);
-        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
-        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
+        $pos1 = strpos($data, "<div class=\"flex flex-column roll-list\"");
+        $pos2 = strpos($data, "<div class=\"w-100 flex justify-center mt-3\"");
         $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
-        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
+        preg_match_all("/<div class=\"position-relative flex justify-start my-2([\S\s]+?)<\/div>/", $detail, $describes);
         return $describes[0];
 
         $doc = new \DOMDocument();
