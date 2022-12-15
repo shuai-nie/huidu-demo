@@ -257,8 +257,10 @@ class Reptile
     public function kchuhai_desc($url)
     {
         $reg3 = "/<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox\">([\S\s]+?)<div class=\"flex justify-start flex-wrap/";
+        $reg4 = "/<div class=\"kch-zhezhaoMark pointer w-100 flex([\S\s]+?)<\/div>";
         $desc = $this->GetHttp($url);
         preg_match_all($reg3, $desc,$desc2);
+        $desc2[0][0] = preg_replace($reg4,"", $desc2[0][0]);
         var_dump($desc2[0][0]);
         exit();
         preg_match_all("/<img.*\>/U", $desc2[0][0], $img, PREG_PATTERN_ORDER);
