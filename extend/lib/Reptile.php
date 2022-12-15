@@ -173,9 +173,9 @@ class Reptile
     /**
      * 快出海·谷歌
      */
-    public function tagsGoogle()
+    public function tagsGoogle($url)
     {
-        $url = "https://www.kchuhai.com/tags/Google";
+        //$url = "https://www.kchuhai.com/tags/Google";
         $data = $this->GetHttp($url);
         $pos1 = strpos($data, "<div class=\"flex flex-column roll-list\"");
         $pos2 = strpos($data, "<div class=\"w-100 flex justify-center mt-3\"");
@@ -221,38 +221,7 @@ class Reptile
         }
     }
 
-    public function keyfacebook()
-    {
-        $url = "https://www.kchuhai.com/report/keyfacebook_pg1";
-        $data = $this->GetHttp($url);
-        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
-        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
-        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
-        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
-        return $describes[0];
-    }
 
-    public function keytiktok()
-    {
-        $url = "https://www.kchuhai.com/report/keytiktok_pg1";
-        $data = $this->GetHttp($url);
-        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
-        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
-        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
-        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
-        return $describes[0];
-    }
-
-    public function keywanghong()
-    {
-        $url = "https://www.kchuhai.com/report/key%E7%BD%91%E7%BA%A2_pg1";
-        $data = $this->GetHttp($url);
-        $pos1 = strpos($data, "<div class=\"layui-tab-item layui-show\"");
-        $pos2 = strpos($data, "<div class=\"kch-rightBox\"");
-        $detail = substr($data, $pos1 , $pos2 - $pos1-20 );
-        preg_match_all("/<div class=\"kch-information flex align-center justify-start kch-opacity border-bottom py-2([\S\s]+?)<\/div>/", $detail, $describes);
-        return $describes[0];
-    }
 
     /**
      * 出海详情

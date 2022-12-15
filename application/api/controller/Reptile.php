@@ -398,7 +398,7 @@ class Reptile extends Controller
     {
         $id = 16;
         $BeginTime = microtime(true);
-        $data = (new ApiReptile())->tagsGoogle();
+        $data = (new ApiReptile())->tagsGoogle("https://www.kchuhai.com/tags/Google");
         $c = 0;
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
@@ -486,16 +486,16 @@ class Reptile extends Controller
         exit($EndTime - $BeginTime);
     }
 
-    public function keyfacebook()
+    // 快出海-Google Adwords：
+    public function google_adwords()
     {
         $id = 17;
         $BeginTime = microtime(true);
-        $data = (new ApiReptile())->keyfacebook();
+        $data = (new ApiReptile())->tagsGoogle("https://www.kchuhai.com/tags/Google-Adwords");
         $c = 0;
         $doc = new \DOMDocument();
         $reg1="/<a .*?>.*?<\/a>/";
-        $reg2 = "/<div class=\"w-100 text-666 font-14 text-ellipsis2\"([\S\s]+?)<\/div>/";
-        $reg3 = "/<div class=\"mb-1\"([\S\s]+?)<\/div>/";
+        $reg2 = "/<div class=\"w-490 h-40 font-14 text-999 text-ellipsis2 mb-3\"([\S\s]+?)<\/div>/";
 
         $ReptileInfo = \app\admin\model\Reptile::where(['id' => $id])->find();
         $ReptileInfo['attribute'] = explode(',', $ReptileInfo['attribute']);
