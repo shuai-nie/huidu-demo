@@ -258,6 +258,7 @@ class Reptile
     {
         $reg3 = "/<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox position-relative overflow-hidden\"([\S\s]+?)<div class=\"flex justify-start flex-wrap/";
         $desc = $this->GetHttp($url);
+        var_dump($desc);
         preg_match_all($reg3, $desc,$desc2);
         var_dump($desc2);
         exit();
