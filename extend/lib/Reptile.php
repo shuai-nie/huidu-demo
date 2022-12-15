@@ -256,7 +256,7 @@ class Reptile
 
     public function kchuhai_desc($url)
     {
-        $reg3 = "/<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox\"([\S\s]+?)<\/div>/";
+        $reg3 = "/<div class=\"font-16 text-333 lineHeight flex flex-column mb-3 kch-detailBox position-relative overflow-hidden\"([\S\s]+?)<\/div><div class=\"flex justify-start flex-wrap/";
         $desc = $this->GetHttp($url);
         preg_match_all($reg3, $desc,$desc2);
         var_dump($desc2);
