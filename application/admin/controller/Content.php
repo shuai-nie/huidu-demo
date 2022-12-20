@@ -7,14 +7,15 @@ use think\Db;
 use util\AliyunOssClient;
 use util\UploadDownload;
 
-class Content extends Controller
+class Content extends Base
 {
-    protected $model;
-    protected function _initialize()
+    public $model;
+    public function _initialize()
     {
         parent::_initialize();
         $this->model = model('Content');
         $this->assign('meta_title', "文章管理");
+
     }
 
     /**

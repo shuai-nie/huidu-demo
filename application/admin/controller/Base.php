@@ -9,13 +9,13 @@ class Base extends Controller
 
 	public function _initialize()
     {
-
     	if(empty(getLoginUserId())){
             setLoginUserId(null);
     		$this->redirect("/Admin/Login");
     	}else{
             $str = getLoginUserStr();
             $admin = model('Admin')->where(['id'=>getLoginUserId()])->find();
+            $this->assign('_UserId', getLoginUserId() );
             if($admin['str'] != $str) {
                 setLoginUserId(null);
                 $this->redirect("/Admin/Login");

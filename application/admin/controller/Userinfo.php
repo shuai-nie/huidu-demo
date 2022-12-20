@@ -44,7 +44,12 @@ class Userinfo extends Base
                 $map['B.package_id'] = $package_id;
             }
             if(!empty($isweb)) {
-                $map['E.isweb'] = $isweb;
+                if($isweb == 100){
+                    $map['E.isweb'] = [['=', 1], ['=', 3],'OR'];
+                }else{
+                    $map['E.isweb'] = $isweb;
+                }
+
             }
             if($is_tg != 0){
                 $map['E.chat_id'] = ['neq', ''];
@@ -57,6 +62,7 @@ class Userinfo extends Base
                 ->join([model('Channel')->getTable()=> 'F'], 'E.channel_id=F.id', 'left')
                 ->where($map)->field('A.*,B.start_time,B.end_time,C.title,B.used_flush,B.used_publish,B.flush,B.publish,B.view_provide,B.view_provide_give,B.view_demand,B.used_view_demand,B.view_contacts,B.used_view_contacts,B.used_view_provide,E.username,E.nickname,E.head_url,E.mobile,E.email,E.telegram,E.chat_id,E.isweb,F.channel_name')
                 ->limit($offset, $limit)->order($order)->select();
+
             $count = model("UserInfo")->alias('A')
                 ->join(model('UserRecharge')->getTable() . ' B', 'A.user_recharge_id=B.id', 'left')
                 ->join(model('Package')->getTable() . ' C', 'B.package_id=C.id', 'left')

@@ -43,7 +43,7 @@ class Reptile extends Base
         return view('', [
             'type' => (new ReptileModel())->type,
             'attribute' => (new ReptileModel())->attribute,
-            'meta_title' => '爬虫来源',
+            'meta_title' => '爬虫管理',
         ]);
     }
 

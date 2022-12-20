@@ -11,5 +11,6 @@ class UserInfo extends Base
         ['id' => 1, 'title' => 'PC'],
         ['id' => 2, 'title' => '后台'],
         ['id' => 3, 'title' => 'H5'],
+        ['id' => 100, 'title' => 'PC+H5'],
     ];
 }

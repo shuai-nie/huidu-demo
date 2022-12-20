@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class CardView extends Controller
+class CardView extends Base
 {
 
     /**

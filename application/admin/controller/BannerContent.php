@@ -5,10 +5,10 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class BannerContent extends Controller
+class BannerContent extends Base
 {
-    protected $model;
-    protected function _initialize()
+    public $model;
+    public function _initialize()
     {
         parent::_initialize();
         $this->model = model('BannerContent');

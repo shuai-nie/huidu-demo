@@ -5,10 +5,10 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Request;
 
-class ContentCategory extends Controller
+class ContentCategory extends Base
 {
-    protected $model;
-    protected function _initialize()
+    public $model;
+    public function _initialize()
     {
         parent::_initialize();
         $this->model = model('ContentCategory');
