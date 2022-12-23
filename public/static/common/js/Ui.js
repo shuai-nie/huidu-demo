@@ -12,7 +12,7 @@ var UI = {
             , limits : [10,20,50,100,200,500,1000,5000,10000]
             , page: true//开启分页
             , toolbar: '#toolbarDemo'
-            , defaultToolbar: ['filter','exports']
+            , defaultToolbar: _defaultToolbar
             , parseData: function (res) {
                 return {
                     "code": 0,
